@@ -66,19 +66,6 @@ export const constantRoutes = [
     path: '/401',
     component: () => import('@/views/error-page/401'),
     hidden: true
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: '首页',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
-    ]
   }
 ]
 
@@ -88,15 +75,28 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: '任务看板',
+        meta: { title: '任务看板', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
+    alwaysShow: true,
     name: 'Permission',
     meta: {
       title: 'Permission',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['admin']
     },
     children: [
       {
@@ -105,7 +105,7 @@ export const asyncRoutes = [
         name: 'PagePermission',
         meta: {
           title: 'Page Permission',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['admin']
         }
       },
       {
@@ -114,7 +114,6 @@ export const asyncRoutes = [
         name: 'DirectivePermission',
         meta: {
           title: 'Directive Permission'
-          // if do not set roles, means: this page does not require permission
         }
       },
       {
@@ -131,8 +130,72 @@ export const asyncRoutes = [
 
   nestedRouter,
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true },
+
+  {
+    path: '/base',
+    component: Layout,
+    redirect: '/base/user',
+    alwaysShow: true, // will always show the root menu
+    name: 'Base',
+    meta: {
+      title: '基础数据',
+      icon: 'lock',
+      roles: ['admin'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'user',
+        component: () => import('@/views/base-data/user'),
+        name: '用户维护',
+        meta: {
+          title: '用户维护',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'customer',
+        component: () => import('@/views/base-data/customer'),
+        name: '客户维护',
+        meta: {
+          title: '客户维护',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'service',
+        component: () => import('@/views/base-data/service'),
+        name: '服务类型',
+        meta: {
+          title: '服务类型',
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+  {
+    path: '/lines',
+    component: Layout,
+    redirect: '/lines/list',
+    alwaysShow: true, // will always show the root menu
+    name: 'Lines',
+    meta: {
+      title: '额度管理',
+      icon: 'lock',
+      roles: ['admin'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/lines/list'),
+        name: '额度管理列表',
+        meta: {
+          title: '额度管理列表',
+          roles: ['admin']
+        }
+      }
+    ]
+  }
 ]
 
 const createRouter = () => new Router({

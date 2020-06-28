@@ -139,7 +139,6 @@ export default {
   methods: {
     handleClick() {},
     add() {
-      console.log('add')
       this.dialogVisible = true
     },
     submitForm(formName) {

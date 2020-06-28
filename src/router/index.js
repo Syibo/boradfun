@@ -7,7 +7,7 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import nestedRouter from './modules/nested'
+// import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -87,50 +87,128 @@ export const asyncRoutes = [
       }
     ]
   },
+
+  { path: '*', redirect: '/404', hidden: true },
+
   {
-    path: '/permission',
+    path: '/measure',
     component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true,
-    name: 'Permission',
-    meta: {
-      title: 'Permission',
-      icon: 'lock',
-      roles: ['admin']
-    },
+    redirect: '/measure',
+    meta: { roles: ['admin'] },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
-        meta: {
-          title: 'Page Permission',
-          roles: ['admin']
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: 'Directive Permission'
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: 'Role Permission',
-          roles: ['editor']
-        }
+        path: 'measure',
+        component: () => import('@/views/measure/list'),
+        name: '提测',
+        meta: { title: '提测', icon: 'guide' }
       }
     ]
   },
 
-  nestedRouter,
+  {
+    path: '/confirm',
+    component: Layout,
+    redirect: '/confirm',
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'confirm',
+        component: () => import('@/views/confirm/list'),
+        name: '对接待确认',
+        meta: { title: '对接待确认', icon: 'user' }
+      }
+    ]
+  },
 
-  { path: '*', redirect: '/404', hidden: true },
+  {
+    path: '/docking',
+    component: Layout,
+    redirect: '/docking',
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'docking',
+        component: () => import('@/views/docking/list'),
+        name: '需求对接中',
+        meta: { title: '需求对接中', icon: 'lock' }
+      }
+    ]
+  },
+
+  {
+    path: '/distribution',
+    component: Layout,
+    redirect: '/distribution',
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'distribution',
+        component: () => import('@/views/distribution/list'),
+        name: '待资源分配',
+        meta: { title: '待资源分配', icon: 'example' }
+      }
+    ]
+  },
+
+  {
+    path: '/wait',
+    component: Layout,
+    redirect: '/wait',
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'wait',
+        component: () => import('@/views/wait-execution/list'),
+        name: '等待执行任务',
+        meta: { title: '等待执行任务', icon: 'tab' }
+      }
+    ]
+  },
+
+  {
+    path: '/execution',
+    component: Layout,
+    redirect: '/execution',
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'execution',
+        component: () => import('@/views/execution/list'),
+        name: '执行中任务',
+        meta: { title: '执行中任务', icon: 'excel' }
+      }
+    ]
+  },
+
+  {
+    path: '/audit',
+    component: Layout,
+    redirect: '/audit',
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'audit',
+        component: () => import('@/views/audit/list'),
+        name: '待审核任务',
+        meta: { title: '待审核任务', icon: 'pdf' }
+      }
+    ]
+  },
+
+  {
+    path: '/statement',
+    component: Layout,
+    redirect: '/statement/list',
+    meta: { roles: ['admin'] },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/statement/list'),
+        name: '已结单任务',
+        meta: { title: '已结单任务', icon: 'zip' }
+      }
+    ]
+  },
 
   {
     path: '/base',
@@ -181,7 +259,7 @@ export const asyncRoutes = [
     name: 'Lines',
     meta: {
       title: '额度管理',
-      icon: 'lock',
+      icon: 'theme',
       roles: ['admin'] // you can set roles in root nav
     },
     children: [

@@ -22,8 +22,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'permission_routes',
-    ]),
+      'permission_routes'
+    ])
   },
   watch: {
     $route(route) {
@@ -42,11 +42,9 @@ export default {
       // only show routes with meta.title
       const matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       // const first = matched[0]
-
       // if (!this.isDashboard(first)) {
       //   matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
       // }
-
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
     },
     isDashboard(route) {
@@ -57,22 +55,20 @@ export default {
       return name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
     },
     pathCompile(path) {
-      // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const { params } = this.$route
       var toPath = pathToRegexp.compile(path)
       return toPath(params)
     },
     handleLink(item) {
       const { redirect, path } = item
-      
       if (redirect) {
         const matched = this.permission_routes.filter(item => item.path === path)
         const children = matched[0].children
-        let lastPath = _.split(redirect, '/');
-        let p = lastPath[lastPath.length - 1]
-        let ind = _.findIndex(children, function(o) { return o.path === p });
+        const lastPath = _.split(redirect, '/')
+        const p = lastPath[lastPath.length - 1]
+        const ind = _.findIndex(children, function(o) { return o.path === p })
         if (ind === -1) {
-          let newP = `${path}/${children[0].path}`;
+          const newP = `${path}/${children[0].path}`
           this.$router.push(newP)
         } else {
           this.$router.push(redirect)

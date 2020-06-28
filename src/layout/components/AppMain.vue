@@ -27,6 +27,13 @@ export default {
   min-height: calc(100vh - 70px);
   background: white;
   padding: 10px;
+  position: relative;
+  padding-bottom: 50px;
+}
+.baradfun-top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
 }
 </style>
 

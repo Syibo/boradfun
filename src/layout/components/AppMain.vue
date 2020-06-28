@@ -35,6 +35,13 @@ export default {
   justify-content: flex-end;
   margin-bottom: 10px;
 }
+.broadfun_block {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
 </style>
 
 <style lang="scss" scoped>

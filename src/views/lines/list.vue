@@ -6,43 +6,13 @@
       <el-button type="success">任务退次</el-button>
       <el-button type="info">额度延期</el-button>
     </el-row>
-    <el-table
-      :data="tableData"
-      border
-      style="width: 100%"
-    >
-      <el-table-column
-        prop="date"
-        align="center"
-        label="日期"
-        width="180"
-      />
-      <el-table-column
-        prop="name"
-        align="center"
-        label="客户名称"
-        width="180"
-      />
-      <el-table-column
-        prop="address"
-        align="center"
-        label="服务名称"
-      />
-      <el-table-column
-        prop="change"
-        align="center"
-        label="额度变化"
-      />
-      <el-table-column
-        prop="info"
-        align="center"
-        label="变化操作说明"
-      />
-      <el-table-column
-        prop="note"
-        align="center"
-        label="备注说明"
-      />
+    <el-table :data="tableData" border style="width: 100%">
+      <el-table-column prop="date" align="center" label="日期" />
+      <el-table-column prop="name" align="center" label="客户名称" />
+      <el-table-column prop="address" align="center" label="服务名称" />
+      <el-table-column prop="change" align="center" label="额度变化" />
+      <el-table-column prop="info" align="center" label="变化操作说明" />
+      <el-table-column prop="note" align="center" label="备注说明" />
     </el-table>
   </div>
 </template>

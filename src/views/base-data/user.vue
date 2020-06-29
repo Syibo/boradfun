@@ -28,13 +28,7 @@
       />
     </div>
 
-    <el-dialog
-      title="新增用户"
-      :visible.sync="dialogVisible"
-      :close-on-click-modal="false"
-      width="40%"
-      @close="close"
-    >
+    <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="40%" @close="close">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户邮箱" prop="email">
           <el-input v-model="ruleForm.email" />

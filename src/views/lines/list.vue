@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <el-row class="top">
-      <el-button>额度调整</el-button>
-      <el-button type="primary">额度转换</el-button>
-      <el-button type="success">任务退次</el-button>
-      <el-button type="info">额度延期</el-button>
+      <el-button v-permission="['editor']">额度调整</el-button>
+      <el-button v-permission="['editor']" type="primary">额度转换</el-button>
+      <el-button v-permission="['admin']" type="success">任务退次</el-button>
+      <el-button v-permission="['admin']" type="info">额度延期</el-button>
     </el-row>
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="date" align="center" label="日期" />
@@ -18,9 +18,10 @@
 </template>
 
 <script>
-
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
   name: 'LinesList',
+  directives: { permission },
   data() {
     return {
       tableData: [{

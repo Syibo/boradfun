@@ -250,7 +250,7 @@ export const asyncRoutes = [
     meta: {
       title: '额度管理',
       icon: 'theme',
-      roles: ['admin'] // you can set roles in root nav
+      roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
@@ -259,7 +259,7 @@ export const asyncRoutes = [
         name: '额度管理列表',
         meta: {
           title: '额度管理列表',
-          roles: ['admin']
+          roles: ['admin', 'editor']
         }
       }
     ]

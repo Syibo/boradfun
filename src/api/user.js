@@ -22,3 +22,10 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function userLeader() {
+  return request({
+    url: 'v1/user/leaders',
+    method: 'get'
+  })
+}

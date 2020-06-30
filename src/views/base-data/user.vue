@@ -71,7 +71,7 @@
 </template>
 
 <script>
-
+import { userLeader } from '@/api/user'
 export default {
   name: 'LinesList',
   data() {
@@ -127,8 +127,9 @@ export default {
       }]
     }
   },
-  mounted() {
-    console.log(1111)
+  async mounted() {
+    const res = await userLeader()
+    console.log(res.data)
   },
   methods: {
     handleClick() {},

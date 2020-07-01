@@ -73,7 +73,7 @@
 <script>
 import { userLeader } from '@/api/user'
 export default {
-  name: 'LinesList',
+  name: 'User',
   data() {
     return {
       currentPage: 2,

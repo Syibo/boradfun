@@ -6,20 +6,19 @@
 
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="serviceName" align="center" label="服务名称" />
-      <el-table-column prop="sort" align="center" label="sort" />
       <el-table-column align="center" label="是否启用">
         <template slot-scope="scope">
           <span> {{ getState(scope.row.state) }} </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="创建时间">
-        <template slot-scope="scope">
-          <span> {{ getMoment(scope.row.CreatedAt) }} </span>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="用途">
         <template slot-scope="scope">
           <span> {{ getUse(scope.row.use) }} </span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="创建时间">
+        <template slot-scope="scope">
+          <span> {{ getMoment(scope.row.CreatedAt) }} </span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">

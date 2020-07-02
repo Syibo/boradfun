@@ -7,13 +7,17 @@
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="email" align="center" label="邮箱" />
       <el-table-column prop="name" align="center" label="姓名" />
-      <el-table-column prop="wechat" align="center" label="企业微信" />
+      <el-table-column prop="wx" align="center" label="企业微信" />
       <el-table-column prop="phone" align="center" label="手机号码" />
-      <el-table-column prop="type" align="center" label="用户类型" />
+      <el-table-column align="center" label="用户类型">
+        <template slot-scope="scope">
+          {{ getUserType(scope.row.userType) }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button :disabled="true" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <el-button :disabled="true" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -28,7 +32,7 @@
       />
     </div>
 
-    <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="40%" @close="close">
+    <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="40%" @open="open">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户邮箱" prop="email">
           <el-input v-model="ruleForm.email" />
@@ -36,28 +40,28 @@
         <el-form-item label="姓名" prop="name">
           <el-input v-model="ruleForm.name" />
         </el-form-item>
-        <el-form-item label="企业微信" prop="wechat">
-          <el-input v-model="ruleForm.wechat" />
+        <el-form-item label="企业微信" prop="wx">
+          <el-input v-model="ruleForm.wx" />
         </el-form-item>
         <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="ruleForm.phone" />
+          <el-input v-model="ruleForm.phone" maxlength="11" show-word-limit />
         </el-form-item>
-        <el-form-item label="用户类型" prop="resource">
-          <el-radio-group v-model="ruleForm.resource">
-            <el-radio label="管理员" />
-            <el-radio label="销售" />
-            <el-radio label="客户服务经理" />
-            <el-radio label="资源分配" />
-            <el-radio label="实施人员" />
+        <el-form-item label="用户类型" prop="userType">
+          <el-radio-group v-model="ruleForm.userType">
+            <el-radio :label="1"> 管理员 </el-radio>
+            <el-radio :label="2"> 销售 </el-radio>
+            <el-radio :label="3"> 客户服务经理 </el-radio>
+            <el-radio :label="4"> 资源分配 </el-radio>
+            <el-radio :label="5"> 实施人员 </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="资源组长" prop="group">
-          <el-select v-model="ruleForm.group" placeholder="请选择">
+        <el-form-item label="资源组长" prop="leaderId">
+          <el-select v-model="ruleForm.leaderId" placeholder="请选择">
             <el-option
               v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.ID"
+              :label="item.name"
+              :value="item.ID"
             />
           </el-select>
         </el-form-item>
@@ -71,7 +75,7 @@
 </template>
 
 <script>
-import { userLeader } from '@/api/user'
+import { userLeader, addUser, getUserList } from '@/api/user'
 export default {
   name: 'User',
   data() {
@@ -81,74 +85,95 @@ export default {
       ruleForm: {
         name: '',
         email: '',
-        wechat: '',
+        wx: '',
         phone: '',
-        resource: '',
-        group: ''
+        userType: '',
+        leaderId: ''
       },
-      options: [
-        {
-          value: '条目一',
-          label: '条目一'
-        }, {
-          value: '条目二',
-          label: '条目二'
-        }, {
-          value: '条目三',
-          label: '条目三'
-        }
-      ],
+      options: [],
       rules: {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' }
+        ],
+        wx: [
+          { required: true, message: '请输入企业微信', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' }
+        ],
+        userType: [
+          { required: true, message: '请选择用户类型', trigger: 'change' }
         ]
       },
-      tableData: [{
-        email: 'admin@broadfun.cn',
-        name: '张三',
-        wechat: '123456789',
-        phone: '18720579999',
-        type: 'admin'
-      }, {
-        email: 'admin@broadfun.cn',
-        name: '张三',
-        wechat: '123456789',
-        phone: '18720579999',
-        type: 'admin'
-      }, {
-        email: 'admin@broadfun.cn',
-        name: '张三',
-        wechat: '123456789',
-        phone: '18720579999',
-        type: 'admin'
-      }]
+      tableData: []
     }
   },
   async mounted() {
-    const res = await userLeader()
-    console.log(res.data)
+    this.init()
+    this.getUserLeader()
   },
   methods: {
     handleClick() {},
+    async getUserLeader() {
+      const res = await userLeader()
+      this.options = res.data
+    },
+    async init() {
+      const res = await getUserList()
+      this.tableData = res.data
+    },
     add() {
       this.dialogVisible = true
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // alert('submit!')
-          this.dialogVisible = false
+          const form = this.ruleForm
+          this.addUser(form)
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    close() {
-      this.$refs['ruleForm'].resetFields()
+    async addUser(form) {
+      const res = await addUser(form)
+      if (res.ret === 0) {
+        this.dialogVisible = false
+        this.init()
+      }
+    },
+    getUserType(type) {
+      let resl = ''
+      switch (type) {
+        case 1:
+          resl = '管理员'
+          break
+        case 2:
+          resl = '销售'
+          break
+        case 3:
+          resl = '客户服务经理'
+          break
+        case 4:
+          resl = '资源分配'
+          break
+        case 5:
+          resl = '实施人员'
+          break
+        default:
+          resl = 'null'
+          break
+      }
+      return resl
+    },
+    open() {
+      if (this.$refs['ruleForm']) {
+        this.$refs['ruleForm'].resetFields()
+      }
     }
   }
 }

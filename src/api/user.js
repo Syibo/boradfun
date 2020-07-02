@@ -29,3 +29,18 @@ export function userLeader() {
     method: 'get'
   })
 }
+
+export function addUser(data) {
+  return request({
+    url: 'v1/user',
+    method: 'post',
+    data
+  })
+}
+
+export function getUserList(data = 1) {
+  return request({
+    url: `v1/user/list?type=${data}`,
+    method: 'get'
+  })
+}

@@ -32,13 +32,13 @@
       />
     </div>
 
-    <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="40%" @open="open">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="用户邮箱" prop="email">
-          <el-input v-model="ruleForm.email" />
-        </el-form-item>
+    <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" @open="open">
+      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="ruleForm.name" />
+        </el-form-item>
+        <el-form-item label="用户邮箱" prop="email">
+          <el-input v-model="ruleForm.email" />
         </el-form-item>
         <el-form-item label="企业微信" prop="wx">
           <el-input v-model="ruleForm.wx" />
@@ -55,7 +55,7 @@
             <el-radio :label="5"> 实施人员 </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="资源组长" prop="leaderId">
+        <el-form-item v-if="ruleForm.userType === 5" label="资源组长" prop="leaderId">
           <el-select v-model="ruleForm.leaderId" placeholder="请选择">
             <el-option
               v-for="item in options"
@@ -180,6 +180,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-radio {
+  margin-bottom: 3px;
+  margin-top: 5px;
+}
 .container {
   .block {
     position: absolute;

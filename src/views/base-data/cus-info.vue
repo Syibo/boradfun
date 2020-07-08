@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     客户信息ssssssss
   </div>
 </template>

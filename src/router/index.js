@@ -231,7 +231,7 @@ export const asyncRoutes = [
         },
         children: [
           {
-            path: 'cusInfo',
+            path: 'info',
             component: () => import('@/views/base-data/cus-info'),
             name: '客户信息',
             hidden: true,

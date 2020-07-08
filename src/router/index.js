@@ -95,110 +95,110 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/confirm',
-    component: Layout,
-    redirect: '/confirm',
-    meta: { roles: ['admin'] },
-    children: [
-      {
-        path: 'confirm',
-        component: () => import('@/views/confirm/list'),
-        name: '对接待确认',
-        meta: { title: '对接待确认', icon: 'user' }
-      }
-    ]
-  },
+  // {
+  //   path: '/confirm',
+  //   component: Layout,
+  //   redirect: '/confirm',
+  //   meta: { roles: ['admin'] },
+  //   children: [
+  //     {
+  //       path: 'confirm',
+  //       component: () => import('@/views/confirm/list'),
+  //       name: '对接待确认',
+  //       meta: { title: '对接待确认', icon: 'user' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/docking',
-    component: Layout,
-    redirect: '/docking',
-    meta: { roles: ['admin'] },
-    children: [
-      {
-        path: 'docking',
-        component: () => import('@/views/docking/list'),
-        name: '需求对接中',
-        meta: { title: '需求对接中', icon: 'lock' }
-      }
-    ]
-  },
+  // {
+  //   path: '/docking',
+  //   component: Layout,
+  //   redirect: '/docking',
+  //   meta: { roles: ['admin'] },
+  //   children: [
+  //     {
+  //       path: 'docking',
+  //       component: () => import('@/views/docking/list'),
+  //       name: '需求对接中',
+  //       meta: { title: '需求对接中', icon: 'lock' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/distribution',
-    component: Layout,
-    redirect: '/distribution',
-    meta: { roles: ['admin'] },
-    children: [
-      {
-        path: 'distribution',
-        component: () => import('@/views/distribution/list'),
-        name: '待资源分配',
-        meta: { title: '待资源分配', icon: 'example' }
-      }
-    ]
-  },
+  // {
+  //   path: '/distribution',
+  //   component: Layout,
+  //   redirect: '/distribution',
+  //   meta: { roles: ['admin'] },
+  //   children: [
+  //     {
+  //       path: 'distribution',
+  //       component: () => import('@/views/distribution/list'),
+  //       name: '待资源分配',
+  //       meta: { title: '待资源分配', icon: 'example' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/wait',
-    component: Layout,
-    redirect: '/wait',
-    meta: { roles: ['admin'] },
-    children: [
-      {
-        path: 'wait',
-        component: () => import('@/views/wait-execution/list'),
-        name: '等待执行任务',
-        meta: { title: '等待执行任务', icon: 'tab' }
-      }
-    ]
-  },
+  // {
+  //   path: '/wait',
+  //   component: Layout,
+  //   redirect: '/wait',
+  //   meta: { roles: ['admin'] },
+  //   children: [
+  //     {
+  //       path: 'wait',
+  //       component: () => import('@/views/wait-execution/list'),
+  //       name: '等待执行任务',
+  //       meta: { title: '等待执行任务', icon: 'tab' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/execution',
-    component: Layout,
-    redirect: '/execution',
-    meta: { roles: ['admin'] },
-    children: [
-      {
-        path: 'execution',
-        component: () => import('@/views/execution/list'),
-        name: '执行中任务',
-        meta: { title: '执行中任务', icon: 'excel' }
-      }
-    ]
-  },
+  // {
+  //   path: '/execution',
+  //   component: Layout,
+  //   redirect: '/execution',
+  //   meta: { roles: ['admin'] },
+  //   children: [
+  //     {
+  //       path: 'execution',
+  //       component: () => import('@/views/execution/list'),
+  //       name: '执行中任务',
+  //       meta: { title: '执行中任务', icon: 'excel' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/audit',
-    component: Layout,
-    redirect: '/audit',
-    meta: { roles: ['admin'] },
-    children: [
-      {
-        path: 'audit',
-        component: () => import('@/views/audit/list'),
-        name: '待审核任务',
-        meta: { title: '待审核任务', icon: 'pdf' }
-      }
-    ]
-  },
+  // {
+  //   path: '/audit',
+  //   component: Layout,
+  //   redirect: '/audit',
+  //   meta: { roles: ['admin'] },
+  //   children: [
+  //     {
+  //       path: 'audit',
+  //       component: () => import('@/views/audit/list'),
+  //       name: '待审核任务',
+  //       meta: { title: '待审核任务', icon: 'pdf' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/statement',
-    component: Layout,
-    redirect: '/statement/list',
-    meta: { roles: ['admin'] },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/statement/list'),
-        name: '已结单任务',
-        meta: { title: '已结单任务', icon: 'zip' }
-      }
-    ]
-  },
+  // {
+  //   path: '/statement',
+  //   component: Layout,
+  //   redirect: '/statement/list',
+  //   meta: { roles: ['admin'] },
+  //   children: [
+  //     {
+  //       path: 'list',
+  //       component: () => import('@/views/statement/list'),
+  //       name: '已结单任务',
+  //       meta: { title: '已结单任务', icon: 'zip' }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/base',
@@ -228,7 +228,18 @@ export const asyncRoutes = [
         meta: {
           title: '客户维护',
           roles: ['admin']
-        }
+        },
+        children: [
+          {
+            path: 'cusInfo',
+            component: () => import('@/views/base-data/cus-info'),
+            name: '客户信息',
+            hidden: true,
+            meta: {
+              title: '客户信息'
+            }
+          }
+        ]
       },
       {
         path: 'service',

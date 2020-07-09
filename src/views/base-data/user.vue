@@ -22,16 +22,6 @@
       </el-table-column>
     </el-table>
 
-    <div class="block">
-      <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
-      />
-    </div>
-
     <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" @open="open">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="姓名" prop="name">
@@ -122,7 +112,7 @@ export default {
       this.options = res.data
     },
     async init() {
-      const res = await getUserList()
+      const res = await getUserList({ type: 1 })
       this.tableData = res.data
     },
     add() {

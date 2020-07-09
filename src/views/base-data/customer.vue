@@ -13,7 +13,9 @@
             <div class="cus_name">
               <div class="cus_name_black">
                 {{ item.name }}
-                <span>{{ item.level }}</span>
+                <span v-if="item.level === 'S'" class="S">{{ item.level }}</span>
+                <span v-else-if="item.level === 'A'" class="A">{{ item.level }}</span>
+                <span v-else class="B">{{ item.level }}</span>
               </div>
               <div class="cus_type"> {{ item.type === 0 ? "内部客户" : "外部客户" }} </div>
             </div>
@@ -63,30 +65,30 @@
             </el-radio-group>
           </el-form-item>
           <div class="server_info">服务信息</div>
-          <el-form-item label="销售" prop="leaderId">
-            <el-select v-model="ruleForm.leaderId" style="width: 100%" placeholder="请选择">
+          <el-form-item label="销售">
+            <el-select v-model="ruleForm.saleId" style="width: 100%" placeholder="请选择">
               <el-option
-                v-for="item in options"
+                v-for="item in userList"
                 :key="item.ID"
                 :label="item.name"
                 :value="item.ID"
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="客户服务经理(主)" prop="leaderId">
-            <el-select v-model="ruleForm.leaderId" style="width: 100%" placeholder="请选择">
+          <el-form-item label="客户服务经理(主)">
+            <el-select v-model="ruleForm.mainManageId" style="width: 100%" placeholder="请选择">
               <el-option
-                v-for="item in options"
+                v-for="item in serviceList"
                 :key="item.ID"
                 :label="item.name"
                 :value="item.ID"
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="客户服务经理(副)" prop="leaderId">
-            <el-select v-model="ruleForm.leaderId" style="width: 100%" placeholder="请选择">
+          <el-form-item label="客户服务经理(副)">
+            <el-select v-model="ruleForm.subManageId" style="width: 100%" placeholder="请选择">
               <el-option
-                v-for="item in options"
+                v-for="item in serviceList"
                 :key="item.ID"
                 :label="item.name"
                 :value="item.ID"
@@ -104,7 +106,8 @@
 </template>
 
 <script>
-import { getClientList } from '@/api/customer'
+import { getClientList, addClient } from '@/api/customer'
+import { getUserList } from '@/api/user'
 import Moment from 'moment'
 export default {
   name: 'Customer',
@@ -116,7 +119,10 @@ export default {
         name: '',
         number: '',
         type: '',
-        level: ''
+        level: '',
+        saleId: '',
+        mainManageId: '',
+        subManageId: ''
       },
       options: [],
       rules: {
@@ -133,17 +139,29 @@ export default {
           { required: true, message: '请选择重要级别', trigger: 'change' }
         ]
       },
-      tableData: []
+      tableData: [],
+      userList: [],
+      serviceList: []
     }
   },
   async mounted() {
     this.init()
+    this.getUserList()
+    this.getSeriverist()
   },
   methods: {
     handleClick() {},
     async init() {
       const res = await getClientList()
       this.tableData = res.data
+    },
+    async getUserList() {
+      const res = await getUserList({ type: 2 })
+      this.userList = res.data
+    },
+    async getSeriverist() {
+      const res = await getUserList({ type: 3 })
+      this.serviceList = res.data
     },
     add() {
       this.dialogVisible = true
@@ -158,13 +176,20 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          console.log(form)
-          // this.addUser(form)
+          this.addClient(form)
         } else {
           console.log('error submit!!')
           return false
         }
       })
+    },
+    async addClient(form) {
+      const res = await addClient(form)
+      if (res.ret === 0) {
+        this.$message.success('客户新增成功')
+        this.init()
+        this.dialogVisible = false
+      }
     },
     getMoment(date) {
       return Moment(date).format('YYYY-MM-DD HH:mm:ss')
@@ -190,6 +215,7 @@ export default {
   .box-card {
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
     cursor: pointer;
     .cus_num {
       color: #999;
@@ -208,7 +234,6 @@ export default {
           display: inline-block;
           width: 20px;
           height: 20px;
-          background-color: chocolate;
           border-radius: 20px;
           line-height: 20px;
           text-align: center;

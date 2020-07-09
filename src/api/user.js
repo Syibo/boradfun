@@ -38,9 +38,9 @@ export function addUser(data) {
   })
 }
 
-export function getUserList(data = 1) {
+export function getUserList({ type = 1 }) {
   return request({
-    url: `v1/user/list?type=${data}`,
+    url: `v1/user/list?type=${type}`,
     method: 'get'
   })
 }

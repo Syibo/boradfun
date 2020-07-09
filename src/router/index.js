@@ -237,7 +237,18 @@ export const asyncRoutes = [
             hidden: true,
             meta: {
               title: '客户信息'
-            }
+            },
+            children: [
+              {
+                path: 'ser',
+                component: () => import('@/views/base-data/service-info'),
+                name: '服务详情',
+                hidden: true,
+                meta: {
+                  title: '服务详情'
+                }
+              }
+            ]
           }
         ]
       },

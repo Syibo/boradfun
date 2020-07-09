@@ -13,6 +13,19 @@ body {
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
 
+.level_class {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  line-height: 20px;
+  text-align: center;
+  font-weight: normal;
+  color: white;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
 .S {
   background-color: chocolate;
 }

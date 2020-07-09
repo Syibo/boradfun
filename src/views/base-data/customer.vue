@@ -8,14 +8,14 @@
 
       <el-row :gutter="20">
         <el-col v-for="item in tableData" :key="item.name" :span="8">
-          <el-card class="box-card" @click.native="goCusInfo">
+          <el-card class="box-card" @click.native="goCusInfo(item.ID)">
             <div class="cus_num"> #{{ item.number }} </div>
             <div class="cus_name">
               <div class="cus_name_black">
                 {{ item.name }}
-                <span v-if="item.level === 'S'" class="S">{{ item.level }}</span>
-                <span v-else-if="item.level === 'A'" class="A">{{ item.level }}</span>
-                <span v-else class="B">{{ item.level }}</span>
+                <span v-if="item.level === 'S'" class="level_class S">{{ item.level }}</span>
+                <span v-else-if="item.level === 'A'" class="level_class A">{{ item.level }}</span>
+                <span v-else class="level_class B">{{ item.level }}</span>
               </div>
               <div class="cus_type"> {{ item.type === 0 ? "内部客户" : "外部客户" }} </div>
             </div>
@@ -113,7 +113,6 @@ export default {
   name: 'Customer',
   data() {
     return {
-      currentPage: 2,
       dialogVisible: false,
       ruleForm: {
         name: '',
@@ -166,10 +165,12 @@ export default {
     add() {
       this.dialogVisible = true
     },
-    goCusInfo() {
-      console.log(4444)
+    goCusInfo(id) {
       this.$router.push({
-        path: '/base/customer/info'
+        path: '/base/customer/info',
+        query: {
+          id
+        }
       })
     },
     submitForm(formName) {
@@ -230,18 +231,6 @@ export default {
         font-weight: bold;
         display: flex;
         align-items: center;
-        span {
-          display: inline-block;
-          width: 20px;
-          height: 20px;
-          border-radius: 20px;
-          line-height: 20px;
-          text-align: center;
-          font-weight: normal;
-          color: white;
-          font-size: 12px;
-          margin-left: 10px;
-        }
       }
     }
     .cus_type {

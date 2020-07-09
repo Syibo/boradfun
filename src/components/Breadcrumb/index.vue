@@ -60,8 +60,18 @@ export default {
       return toPath(params)
     },
     handleLink(item) {
+      /**
+       * 如果返回的路由有query参数，则使用go(-1)
+       */
+      if (item.path === '/base/customer/info') {
+        this.$router.go(-1)
+        return false
+      }
       const { redirect, path } = item
       if (redirect) {
+        /**
+         * 如果返回的redirect没有权限，返回第一个router
+         */
         const matched = this.permission_routes.filter(item => item.path === path)
         const children = matched[0].children
         const lastPath = _.split(redirect, '/')

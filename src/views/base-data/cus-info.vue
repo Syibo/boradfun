@@ -64,7 +64,7 @@
         <div class="dialog_item">客户名称</div>
         <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="服务类型" prop="number">
-            <el-select v-model="ruleForm.type" style="width: 100%" placeholder="请选择">
+            <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择">
               <el-option
                 v-for="item in serviceList"
                 :key="item.ID"
@@ -74,22 +74,24 @@
             </el-select>
           </el-form-item>
           <el-form-item label="采购额度" prop="name">
-            <el-input-number v-model="ruleForm.number" controls-position="right" />
+            <el-input-number v-model="ruleForm.amount" controls-position="right" />
           </el-form-item>
           <el-form-item label="额度到期日期" prop="type">
             <el-date-picker
-              v-model="ruleForm.overdate"
+              v-model="ruleForm.deadline"
               type="date"
               placeholder="选择日期"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd"
             />
           </el-form-item>
           <el-form-item label="备注" prop="level">
-            <el-input type="textarea" />
+            <el-input v-model="ruleForm.remark" type="textarea" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="ç('ruleForm')">确 定</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -97,7 +99,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/service'
+import { getList, addAmount } from '@/api/service'
 export default {
   name: 'CusInfo',
   data() {
@@ -105,7 +107,14 @@ export default {
       cusId: '',
       dialogVisible: false,
       serviceList: [],
-      ruleForm: {},
+      ruleForm: {
+        clientId: '',
+        serviceId: '',
+        amount: '',
+        deadline: '',
+        orderNumber: '',
+        remark: ''
+      },
       rules: {}
     }
   },
@@ -125,12 +134,18 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          this.addClient(form)
+          this.addAmount(form)
         } else {
           console.log('error submit!!')
           return false
         }
       })
+    },
+    async addAmount(form) {
+      form.orderNumber = '20200710'
+      form.clientId = Number(this.cusId)
+      const res = await addAmount(form)
+      console.log(res)
     },
     open() {
       if (this.$refs['ruleForm']) {

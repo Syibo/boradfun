@@ -28,7 +28,7 @@
       <div class="blue_label"> <span /> <i>服务信息</i>  <el-button type="primary" @click="amountChange">额度转换</el-button></div>
       <div class="info_content">
         <el-row :gutter="20">
-          <el-col v-for="(item, index) in serviceInfo" :key="index" :span="8" @click.native="goSerInfo">
+          <el-col v-for="(item, index) in serviceInfo" :key="index" :span="8" @click.native="goSerInfo(item.service_id)">
             <div class="service_item">
               <div class="service_name">
                 {{ item.service_name }}
@@ -105,7 +105,7 @@
         <el-form ref="ruleFormChange" label-position="top" :model="ruleFormChange" :rules="rulesChange" class="demo-ruleForm">
           <div class="dialog_item">客户编号 {{ cusInfo.number }}</div>
           <div class="dialog_item">客户名称 {{ cusInfo.name }}</div>
-          <el-row>
+          <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="转出服务名称" prop="sOutId">
                 <el-select v-model="ruleFormChange.sOutId" style="width: 100%" placeholder="请选择">
@@ -315,9 +315,13 @@ export default {
         remark: ''
       }
     },
-    goSerInfo() {
+    goSerInfo(serviceId) {
       this.$router.push({
-        path: '/base/customer/info/ser'
+        path: '/base/customer/info/ser',
+        query: {
+          cusId: this.cusId,
+          serviceId
+        }
       })
     }
   }

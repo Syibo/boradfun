@@ -83,3 +83,22 @@ export function addAmount({ clientId, serviceId, amount, deadline, orderNumber, 
     }
   })
 }
+
+/**
+ * 客户额度转换
+ * @parms clientId 客户id
+ */
+export function handAmountSwitch({ clientId, sOutId, sOutNum, sInId, sInNum, remark }) {
+  return request({
+    url: `/v1/amount/switch`,
+    method: 'put',
+    data: {
+      clientId,
+      sOutId,
+      sOutNum,
+      sInId,
+      sInNum,
+      remark
+    }
+  })
+}

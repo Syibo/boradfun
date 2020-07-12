@@ -144,9 +144,11 @@ export default {
     }
   },
   async mounted() {
-    this.init()
-    this.getUserList()
-    this.getSeriverist()
+    if (this.$route.path === '/base/customer') {
+      this.init()
+      this.getUserList()
+      this.getSeriverist()
+    }
   },
   methods: {
     handleClick() {},

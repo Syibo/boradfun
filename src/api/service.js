@@ -50,6 +50,17 @@ export function switchService(data) {
 }
 
 /**
+ * 查询客户的额度列表
+ * @parms clientId 客户id
+ */
+export function getCusAmountList({ clientId, deadline }) {
+  return request({
+    url: `/v1/amount/list?clientId=${clientId}&deadline=${deadline}`,
+    method: 'get'
+  })
+}
+
+/**
  * 购买服务
  * @param clientId 客户id
  * @param serviceId 服务id

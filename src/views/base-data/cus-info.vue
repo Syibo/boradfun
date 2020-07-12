@@ -3,22 +3,26 @@
     <router-view />
     <div v-if="this.$route.path === '/base/customer/info'" style="padding: 15px">
       <div class="cus_detail">
-        <div class="cus_name">客户A <span class="level_class S">s</span></div>
-        <div class="cus_type">内部客户</div>
+        <div class="cus_name">{{ cusInfo.name }}
+          <span v-if="cusInfo.level === 'S'" class="level_class S">{{ cusInfo.level }}</span>
+          <span v-else-if="cusInfo.level === 'A'" class="level_class A">{{ cusInfo.level }}</span>
+          <span v-else class="level_class B">{{ cusInfo.level }}</span>
+        </div>
+        <div class="cus_type">{{ cusInfo.type === 0 ? "内部客户" : "外部客户" }}</div>
       </div>
       <div class="blue_label"> <span /> 基本信息 </div>
       <div class="info_container">
         <div class="info_item">
           <div class="info_type">销售</div>
-          <div class="info_name">周杰伦</div>
+          <div class="info_name">{{ cusInfo.sale.name }}</div>
         </div>
         <div class="info_item">
           <div class="info_type">客户服务经理(主)</div>
-          <div class="info_name">林俊杰</div>
+          <div class="info_name">{{ cusInfo.manager.name }}</div>
         </div>
         <div class="info_item">
           <div class="info_type">客户服务经理(副)</div>
-          <div class="info_name">王力宏</div>
+          <div class="info_name">{{ cusInfo.subManager.name }}</div>
         </div>
       </div>
       <div class="blue_label"> <span /> 服务信息 </div>
@@ -59,11 +63,11 @@
         </el-row>
       </div>
 
-      <el-dialog title="购买服务" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @open="open">
-        <div class="dialog_item">客户编号</div>
-        <div class="dialog_item">客户名称</div>
+      <el-dialog title="购买服务" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="open">
+        <div class="dialog_item">客户编号 {{ cusInfo.number }}</div>
+        <div class="dialog_item">客户名称 {{ cusInfo.name }}</div>
         <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="服务类型" prop="number">
+          <el-form-item label="服务类型">
             <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择">
               <el-option
                 v-for="item in serviceList"
@@ -73,19 +77,19 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="采购额度" prop="name">
-            <el-input-number v-model="ruleForm.amount" controls-position="right" />
+          <el-form-item label="采购额度">
+            <el-input-number v-model="ruleForm.amount" :min="1" controls-position="right" />
           </el-form-item>
-          <el-form-item label="额度到期日期" prop="type">
+          <el-form-item label="额度到期日期">
             <el-date-picker
               v-model="ruleForm.deadline"
               type="date"
               placeholder="选择日期"
               format="yyyy 年 MM 月 dd 日"
-              value-format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd HH:mm:ss"
             />
           </el-form-item>
-          <el-form-item label="备注" prop="level">
+          <el-form-item label="备注">
             <el-input v-model="ruleForm.remark" type="textarea" />
           </el-form-item>
         </el-form>
@@ -99,7 +103,9 @@
 </template>
 
 <script>
-import { getList, addAmount } from '@/api/service'
+import { getList, addAmount, getCusAmountList } from '@/api/service'
+import { getClientinfo } from '@/api/customer'
+import Moment from 'moment'
 export default {
   name: 'CusInfo',
   data() {
@@ -110,21 +116,37 @@ export default {
       ruleForm: {
         clientId: '',
         serviceId: '',
-        amount: '',
+        amount: 1,
         deadline: '',
         orderNumber: '',
         remark: ''
       },
-      rules: {}
+      rules: {},
+      cusInfo: {
+        name: '',
+        sale: {},
+        manager: {},
+        subManager: {}
+      }
     }
   },
   mounted() {
-    this.getServiceList()
     this.cusId = this.$route.query.id
+    this.getClientinfo()
+    this.getServiceList()
+    this.getCusAmountList()
   },
   methods: {
     buyService() {
       this.dialogVisible = true
+    },
+    async getClientinfo() {
+      const res = await getClientinfo({ id: this.cusId })
+      this.cusInfo = res.data
+    },
+    async getCusAmountList() {
+      const res = await getCusAmountList({ clientId: this.cusId, deadline: '2020-12-12' })
+      console.log(res)
     },
     async getServiceList() {
       const res = await getList()
@@ -142,8 +164,10 @@ export default {
       })
     },
     async addAmount(form) {
-      form.orderNumber = '20200710'
-      form.clientId = Number(this.cusId)
+      const da = new Date()
+      const bu = Moment(da).format('YYYY-MM-DD HH:mm:ss')
+      form.orderNumber = bu
+      form.clientId = Number(this.ID)
       const res = await addAmount(form)
       console.log(res)
     },

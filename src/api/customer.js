@@ -35,3 +35,14 @@ export function addClient(data) {
   })
 }
 
+/**
+ * 根据客户id查询客户
+ * @param id 客户id
+ */
+export function getClientinfo({ id }) {
+  return request({
+    url: `/v1/client/${id}`,
+    method: 'get'
+  })
+}
+

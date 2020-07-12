@@ -40,8 +40,8 @@
       />
     </div> -->
 
-    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false" width="40%" @open="close">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @open="close">
+      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" class="demo-ruleForm">
         <el-form-item label="服务名称" prop="serviceName">
           <el-input v-model="ruleForm.serviceName" />
         </el-form-item>

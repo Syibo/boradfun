@@ -262,29 +262,6 @@ export const asyncRoutes = [
         }
       }
     ]
-  },
-  {
-    path: '/lines',
-    component: Layout,
-    redirect: '/lines/list',
-    alwaysShow: true, // will always show the root menu
-    name: 'Lines',
-    meta: {
-      title: '额度管理',
-      icon: 'theme',
-      roles: ['admin', 'editor'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'list',
-        component: () => import('@/views/lines/list'),
-        name: '额度管理列表',
-        meta: {
-          title: '额度管理列表',
-          roles: ['admin', 'editor']
-        }
-      }
-    ]
   }
 ]
 

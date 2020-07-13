@@ -78,7 +78,7 @@ export default {
         wx: '',
         phone: '',
         userType: '',
-        leaderId: ''
+        leaderId: 0
       },
       options: [],
       rules: {
@@ -112,8 +112,8 @@ export default {
       this.options = res.data
     },
     async init() {
-      const res = await getUserList({ type: 1 })
-      this.tableData = res.data
+      const res = await getUserList({ type: 0 })
+      this.tableData = res.data.users
     },
     add() {
       this.dialogVisible = true
@@ -132,6 +132,7 @@ export default {
     async addUser(form) {
       const res = await addUser(form)
       if (res.ret === 0) {
+        this.$message.success('新增用户成功')
         this.dialogVisible = false
         this.init()
       }

@@ -1,4 +1,4 @@
-// import { login } from '@/api/user'
+import { login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -7,7 +7,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  userInfo: {}
 }
 
 const mutations = {
@@ -25,51 +26,63 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 }
 
 const actions = {
   // user login
-  login({ commit }) {
-    return new Promise((resolve, reject) => {
-      // login({ username: username.trim(), password: password }).then(response => {
-      commit('SET_TOKEN', 'admin-token')
-      setToken('admin-token')
-      resolve()
-      // }).catch(error => {
-      //   reject(error)
-      // })
-    })
-  },
-
-  // login({ commit }, userInfo) {
+  // login({ commit }) {
   //   return new Promise((resolve, reject) => {
-  //     const { username, password } = userInfo
-  //     console.log(username)
-  //     console.log(password)
-  //     login({ username: username.trim(), password: password }).then(response => {
-  //       const { data } = response
-  //       console.log(data)
-  //       commit('SET_TOKEN', 'admin-token')
-  //       setToken('admin-token')
-  //       resolve()
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
+  //     // login({ username: username.trim(), password: password }).then(response => {
+  //     commit('SET_TOKEN', 'admin-token')
+  //     setToken('admin-token')
+  //     resolve()
+  //     // }).catch(error => {
+  //     //   reject(error)
+  //     // })
   //   })
   // },
+
+  login({ commit }, userInfo) {
+    return new Promise((resolve, reject) => {
+      const { username, password } = userInfo
+      console.log(username)
+      console.log(password)
+      login({ username: username.trim(), password: password }).then(response => {
+        const { data } = response
+        console.log(data)
+        commit('SET_TOKEN', data)
+        setToken(data)
+        commit('SET_USERINFO', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       // getInfo(state.token).then(response => {
       // const { data } = response
-      // console.log(data)
+      let day = ''
+      if (typeof (state.token) === 'object') {
+        console.log(state.token)
+        day = state.token
+      } else {
+        console.log(JSON.parse(state.token))
+        day = JSON.parse(state.token)
+      }
+      console.log(day)
 
       const data = {
         'avatar': 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
         'introductio': 'I am a super administrator',
-        'name': 'Super Admin',
+        'name': day.name,
         'roles': ['admin']
       }
       if (!data) {
@@ -79,9 +92,9 @@ const actions = {
       const { roles, name, avatar, introduction } = data
 
       // roles must be a non-empty array
-      if (!roles || roles.length <= 0) {
-        reject('getInfo: roles must be a non-null array!')
-      }
+      // if (!roles || roles.length <= 0) {
+      //   reject('getInfo: roles must be a non-null array!')
+      // }
 
       commit('SET_ROLES', roles)
       commit('SET_NAME', name)

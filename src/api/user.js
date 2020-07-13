@@ -37,11 +37,18 @@ export function addUser(data) {
   return request({
     url: 'v1/user',
     method: 'post',
-    data
+    data: {
+      name: data.name,
+      email: data.email,
+      wx: data.wx,
+      phone: data.phone,
+      userType: data.userType,
+      leaderId: Number(data.leaderId)
+    }
   })
 }
 
-export function getUserList({ type = 1 }) {
+export function getUserList({ type = 0 }) {
   return request({
     url: `v1/user/list?type=${type}`,
     method: 'get'

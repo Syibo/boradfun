@@ -11,11 +11,6 @@
           <span> {{ getState(scope.row.state) }} </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用途">
-        <template slot-scope="scope">
-          <span> {{ getUse(scope.row.use) }} </span>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="创建时间">
         <template slot-scope="scope">
           <span> {{ getMoment(scope.row.CreatedAt) }} </span>
@@ -52,10 +47,14 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="用途" prop="use">
-          <el-radio-group v-model="ruleForm.use">
+          <!-- <el-radio-group v-model="ruleForm.use">
             <el-radio :label="1"> 可实施 </el-radio>
             <el-radio :label="2"> 可转换 </el-radio>
-          </el-radio-group>
+          </el-radio-group> -->
+          <el-checkbox-group v-model="ruleForm.use">
+            <el-checkbox :label="1">可实施</el-checkbox>
+            <el-checkbox :label="2">可转换</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -77,7 +76,7 @@ export default {
       dialogVisible: false,
       ruleForm: {
         name: '',
-        use: '',
+        use: [],
         state: ''
       },
       rules: {
@@ -101,6 +100,13 @@ export default {
   methods: {
     handleClick(row) {
       this.title = '修改服务'
+      if (row.use === 1) {
+        row.use = [1]
+      } else if (row.use === 2) {
+        row.use = [2]
+      } else {
+        row.use = [1, 2]
+      }
       this.ruleForm = JSON.parse(JSON.stringify(row))
       this.dialogVisible = true
     },
@@ -127,6 +133,13 @@ export default {
       })
     },
     async addService(form) {
+      let use = 0
+      if (form.use.length === 2) {
+        use = form.use[0] + form.use[1]
+      } else {
+        use = form.use[0]
+      }
+      form.use = use
       const res = await addService(form)
       if (res.ret === 0) {
         this.dialogVisible = false
@@ -134,6 +147,13 @@ export default {
       }
     },
     async editService(form) {
+      let use = 0
+      if (form.use.length === 2) {
+        use = form.use[0] + form.use[1]
+      } else {
+        use = form.use[0]
+      }
+      form.use = use
       const res = await editService(form)
       if (res.ret === 0) {
         this.dialogVisible = false
@@ -155,7 +175,6 @@ export default {
       const id = this.tableData[index].ID
       const idPrev = this.tableData[index + 1].ID
       const ids = `${id},${idPrev}`
-      console.log(ids)
       const res = await switchService(ids)
       if (res.ret === 0) {
         this.getList()
@@ -166,7 +185,14 @@ export default {
       return ret
     },
     getUse(use) {
-      const ret = use === 1 ? '可实施' : '可转换'
+      let ret = ''
+      if (use === 1) {
+        ret = '可实施'
+      } else if (use === 2) {
+        ret = '可转换'
+      } else {
+        ret = '可实施/可转换'
+      }
       return ret
     },
     getMoment(date) {

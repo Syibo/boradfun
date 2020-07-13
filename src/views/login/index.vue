@@ -2,11 +2,14 @@
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
+      <div class="logo">
+        LOGO
+      </div>
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">用户登陆</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="username" class="input-container">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
@@ -21,7 +24,7 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual class="input-container">
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -45,8 +48,10 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" size="medium" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登陆</el-button>
     </el-form>
+
+    <div class="fotter">Copyright © 2017 - 2020 Broadfun. All Rights Reserved</div>
   </div>
 </template>
 
@@ -188,9 +193,8 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color: black;
       height: 47px;
-      caret-color: $cursor;
 
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
@@ -209,15 +213,26 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
 
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
   overflow: hidden;
+  position: relative;
+
+  .fotter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    width: 450px;
+    margin-left: -225px;
+    font-size:12px;
+    color:rgba(194,194,194,1);
+    line-height:17px;
+    text-align: center;
+  }
 
   .login-form {
     position: relative;
@@ -248,16 +263,33 @@ $light_gray:#eee;
     display: inline-block;
   }
 
+  .logo {
+    width: 100%;
+    height: 59px;
+    background:rgba(233,234,236,1);
+    font-size:20px;
+    font-weight:bold;
+    color:rgba(51,51,51,1);
+    line-height:59px;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
   .title-container {
     position: relative;
 
     .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
+      font-size: 20px;
+      color: #2B2B2B;
+      margin: 0px auto 12px auto;
+      text-align: left;
+      font-weight: 500;
     }
+  }
+
+  .input-container {
+    background-color: white;
+    border: 1px solid rgba(217,217,217,1);
   }
 
   .show-pwd {

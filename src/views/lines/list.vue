@@ -1,10 +1,7 @@
 <template>
   <div class="container">
     <el-row class="top">
-      <el-button @click="lineChange">额度调整</el-button>
-      <el-button type="primary" @click="lineConver">额度转换</el-button>
-      <el-button type="success">任务退次</el-button>
-      <el-button type="info">额度延期</el-button>
+      <el-button>导出</el-button>
     </el-row>
 
     <el-table :data="tableData" border style="width: 100%">

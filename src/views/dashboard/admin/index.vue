@@ -19,12 +19,15 @@
       </el-col>
       <el-popover
         class="task_pop"
-        placement="bottom"
-        title="标题"
-        width="200"
+        placement="bottom-end"
+        width="420"
         trigger="click"
-        content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
       >
+        <el-table :data="tableData" header-cell-class-name="table-header-style" style="width: 100%">
+          <el-table-column width="200" property="date" label="类型" />
+          <el-table-column property="name" label="需求" />
+          <el-table-column property="address" label="实施" />
+        </el-table>
         <el-button slot="reference" class="bor_btn" circle>总览</el-button>
       </el-popover>
     </el-row>
@@ -37,11 +40,7 @@
     <el-row class="tabs_table">
       <el-tabs>
         <el-tab-pane label="急需解决 ·7" class="tabs_item">
-          <el-table :data="tableData" border="" style="width: 100%">
-            <el-table-column prop="date" align="center" label="" />
-            <el-table-column prop="name" align="center" label="需求" />
-            <el-table-column prop="address" align="center" label="实施" />
-          </el-table>
+          <table1 />
         </el-tab-pane>
         <el-tab-pane label="对接待确认(2)" class="tabs_item">配置管理</el-tab-pane>
         <el-tab-pane label="需求对接中(8)" class="tabs_item">角色管理</el-tab-pane>
@@ -53,19 +52,39 @@
 
 <script>
 import permission from '@/directive/permission/index.js'
+import table1 from '@/components/dashboard/table1.vue'
 export default {
   name: 'DashboardAdmin',
+  components: {
+    table1
+  },
   directives: { permission },
   data() {
     return {
       tableData: [{
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300'
+        date: '专家兼容精华-Android 100',
+        name: '10',
+        address: '20'
       }, {
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300'
+        date: '专家兼容精华-Android 100',
+        name: '10',
+        address: '20'
+      }, {
+        date: '专家兼容精华-Android 100',
+        name: '10',
+        address: '20'
+      }, {
+        date: '专家兼容精华-Android 100',
+        name: '10',
+        address: '20'
+      }, {
+        date: '专家兼容精华-Android 100',
+        name: '10',
+        address: '20'
+      }, {
+        date: '专家兼容精华-Android 100',
+        name: '10',
+        address: '20'
       }]
     }
   }

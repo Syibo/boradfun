@@ -157,6 +157,21 @@ export const asyncRoutes = [
         }
       }
     ]
+  },
+
+  {
+    path: '/lines',
+    component: Layout,
+    redirect: '/lines',
+    meta: { roles: [1] },
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/lines/list'),
+        name: '额度',
+        meta: { title: '额度', icon: 'guide' }
+      }
+    ]
   }
 ]
 

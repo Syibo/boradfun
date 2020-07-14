@@ -1,8 +1,11 @@
 <template>
   <div class="dashboard-editor-container">
-    <el-row :gutter="20">
-      <el-col :span="8"><div class="grid-content bg-purple" />
-        <el-card class="box-card" shadow="hover">
+    <el-row :gutter="20" class="today_container">
+      <el-col :span="12">
+        <div class="today_task">
+          s
+        </div>
+        <!-- <el-card class="box-card" shadow="hover">
           <div slot="header" class="clearfix">
             <span>今日结单/交付任务</span>
           </div>
@@ -12,22 +15,25 @@
           <div class="text item">
             <el-link type="primary">超级厉害娱乐信息公司（深度兼容--iOS 50）</el-link>
           </div>
-        </el-card>
+        </el-card> -->
       </el-col>
-      <el-col :span="8"><div class="grid-content bg-purple" />
-        <el-card class="box-card" shadow="hover">
-          <div slot="header" class="clearfix">
-            <span>明日结单/交付任务</span>
-          </div>
-          <div class="text item">
-            <el-link type="primary">超级厉害娱乐信息公司（深度兼容--Android 300）</el-link>
-          </div>
-          <div class="text item">
-            <el-link type="primary">超级厉害娱乐信息公司（深度兼容--iOS 50）</el-link>
-          </div>
-        </el-card>
+      <el-col :span="12">
+        <div class="today_task">
+          s
+        </div>
       </el-col>
-      <el-col :span="8"><div class="grid-content bg-purple" />
+
+      <el-popover
+        class="task_pop"
+        placement="bottom"
+        title="标题"
+        width="200"
+        trigger="click"
+        content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+      >
+        <el-button slot="reference" class="bor_btn" circle>总览</el-button>
+      </el-popover>
+      <!-- <el-col :span="8">
         <el-card class="box-card" shadow="hover">
           <div slot="header" class="clearfix">
             <span>总体任务看板</span>
@@ -40,11 +46,11 @@
             </el-table>
           </div>
         </el-card>
-      </el-col>
+      </el-col> -->
     </el-row>
 
     <el-row class="tabs_table">
-      <el-tabs type="border-card">
+      <el-tabs>
         <el-tab-pane label="急需关注" class="tabs_item">
           <el-table :data="tableData" border="" style="width: 100%">
             <el-table-column prop="date" align="center" label="" />
@@ -82,6 +88,26 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
+  .today_container {
+    position: relative;
+    .today_task {
+      height:280px;
+      background:rgba(247,248,250,1);
+      border-radius:4px;
+    }
+    .task_pop {
+      position: absolute;
+      right: 0;
+      top: -10px;
+      .bor_btn {
+        width: 48px;
+        height: 48px;
+        color: #17222F;
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+  }
   .item {
     margin-bottom: 5px;
   }

@@ -46,10 +46,10 @@
       <el-dialog title="新增客户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @open="open">
         <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="客户编号" prop="number">
-            <el-input v-model="ruleForm.number" />
+            <el-input v-model="ruleForm.number" placeholder="请输入客户编号" />
           </el-form-item>
           <el-form-item label="客户名称" prop="name">
-            <el-input v-model="ruleForm.name" />
+            <el-input v-model="ruleForm.name" placeholder="请输入客户名称" />
           </el-form-item>
           <el-form-item label="客户分类" prop="type">
             <el-radio-group v-model="ruleForm.type">
@@ -66,7 +66,7 @@
           </el-form-item>
           <div class="server_info">服务信息</div>
           <el-form-item label="销售">
-            <el-select v-model="ruleForm.saleId" style="width: 100%" placeholder="请选择">
+            <el-select v-model="ruleForm.saleId" style="width: 100%" placeholder="请选择销售">
               <el-option
                 v-for="item in userList"
                 :key="item.ID"
@@ -76,7 +76,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="客户服务经理(主)">
-            <el-select v-model="ruleForm.mainManageId" style="width: 100%" placeholder="请选择">
+            <el-select v-model="ruleForm.mainManageId" style="width: 100%" placeholder="请选择客户服务经理(主)">
               <el-option
                 v-for="item in serviceList"
                 :key="item.ID"
@@ -86,7 +86,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="客户服务经理(副)">
-            <el-select v-model="ruleForm.subManageId" style="width: 100%" placeholder="请选择">
+            <el-select v-model="ruleForm.subManageId" style="width: 100%" placeholder="请选择客户服务经理(副)">
               <el-option
                 v-for="item in serviceList"
                 :key="item.ID"

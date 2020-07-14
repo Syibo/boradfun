@@ -22,7 +22,7 @@
       </el-table-column>
     </el-table>
 
-    <div class="block">
+    <div class="broadfun_block">
       <el-pagination
         :current-page="pageNum"
         :page-sizes="[10, 20, 50]"
@@ -37,16 +37,16 @@
     <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" @close="open">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="ruleForm.name" />
+          <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
         </el-form-item>
         <el-form-item label="用户邮箱" prop="email">
-          <el-input v-model="ruleForm.email" />
+          <el-input v-model="ruleForm.email" placeholder="请输入邮箱" />
         </el-form-item>
         <el-form-item label="企业微信" prop="wx">
-          <el-input v-model="ruleForm.wx" />
+          <el-input v-model="ruleForm.wx" placeholder="请输入企业微信" />
         </el-form-item>
         <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="ruleForm.phone" maxlength="11" show-word-limit />
+          <el-input v-model="ruleForm.phone" placeholder="请输入手机号码" maxlength="11" show-word-limit />
         </el-form-item>
         <el-form-item label="用户类型" prop="userType">
           <el-radio-group v-model="ruleForm.userType">
@@ -58,7 +58,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item v-if="ruleForm.userType === 5" label="资源组长" prop="leaderId">
-          <el-select v-model="ruleForm.leaderId" placeholder="请选择">
+          <el-select v-model="ruleForm.leaderId" placeholder="请选择资源组长">
             <el-option
               v-for="item in options"
               :key="item.ID"

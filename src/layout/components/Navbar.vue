@@ -7,13 +7,15 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <!-- <screenfull id="screenfull" class="right-menu-item hover-effect" /> -->
 
       </template>
 
+      <!-- <div>Li</div> -->
+
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+          <span class="user-avatar">{{ name.substring(0,2) }}</span>
           {{ name }}
           <i class="el-icon-caret-bottom" />
         </div>
@@ -31,13 +33,11 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import Screenfull from '@/components/Screenfull'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger,
-    Screenfull
+    Hamburger
   },
   computed: {
     ...mapGetters([
@@ -122,12 +122,19 @@ export default {
 
       .avatar-wrapper {
         position: relative;
+        display: flex;
+        align-items: center;
 
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          width: 30px;
+          height: 30px;
+          border-radius: 30px;
+          margin-right: 10px;
+          background-color: #99CCFF;
+          line-height: 30px;
+          text-align: center;
+          color: white;
         }
 
         .el-icon-caret-bottom {

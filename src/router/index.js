@@ -84,7 +84,7 @@ export const asyncRoutes = [
     path: '/measure',
     component: Layout,
     redirect: '/measure',
-    meta: { roles: ['admin'] },
+    meta: { roles: [1] },
     children: [
       {
         path: 'measure',
@@ -104,7 +104,7 @@ export const asyncRoutes = [
     meta: {
       title: '基础数据',
       icon: 'lock',
-      roles: ['admin'] // you can set roles in root nav
+      roles: [1] // you can set roles in root nav
     },
     children: [
       {
@@ -113,7 +113,7 @@ export const asyncRoutes = [
         name: '用户维护',
         meta: {
           title: '用户维护',
-          roles: ['admin']
+          roles: [1]
         }
       },
       {
@@ -122,7 +122,7 @@ export const asyncRoutes = [
         name: '客户维护',
         meta: {
           title: '客户维护',
-          roles: ['admin']
+          roles: [1]
         },
         children: [
           {
@@ -153,7 +153,7 @@ export const asyncRoutes = [
         name: '服务类型',
         meta: {
           title: '服务类型',
-          roles: ['admin']
+          roles: [1]
         }
       }
     ]

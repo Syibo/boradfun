@@ -80,7 +80,7 @@ const actions = {
         'avatar': 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
         'introductio': 'I am a super administrator',
         'name': day.name,
-        'roles': ['admin']
+        'roles': [day.userType]
       }
       if (!data) {
         reject('Verification failed, please Login again.')

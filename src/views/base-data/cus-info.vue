@@ -110,10 +110,10 @@
               <el-form-item label="转出服务名称" prop="sOutId">
                 <el-select v-model="ruleFormChange.sOutId" style="width: 100%" placeholder="请选择">
                   <el-option
-                    v-for="item in serviceList"
-                    :key="item.ID"
-                    :label="item.serviceName"
-                    :value="item.ID"
+                    v-for="item in serviceInfo"
+                    :key="item.service_id"
+                    :label="item.service_name"
+                    :value="item.service_id"
                   />
                 </el-select>
               </el-form-item>
@@ -122,10 +122,10 @@
               <el-form-item label="转入服务名称" prop="sOutId">
                 <el-select v-model="ruleFormChange.sInId" style="width: 100%" placeholder="请选择">
                   <el-option
-                    v-for="item in serviceList"
-                    :key="item.ID"
-                    :label="item.serviceName"
-                    :value="item.ID"
+                    v-for="item in serviceInfo"
+                    :key="item.service_id"
+                    :label="item.service_name"
+                    :value="item.service_id"
                   />
                 </el-select>
               </el-form-item>
@@ -143,7 +143,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="备注说明" prop="remark">
+          <el-form-item label="备注说明">
             <el-input v-model="ruleFormChange.remark" type="textarea" />
           </el-form-item>
         </el-form>
@@ -262,7 +262,6 @@ export default {
         if (valid) {
           const form = this.ruleFormChange
           this.handAmountSwitch(form)
-          console.log(form)
         } else {
           console.log('error submit!!')
           return false
@@ -283,6 +282,10 @@ export default {
     },
     async handAmountSwitch(form) {
       form.clientId = Number(this.cusInfo.ID)
+      if (form.sInId === form.sOutId) {
+        this.$message.error('相同服务不能转换')
+        return
+      }
       const res = await handAmountSwitch(form)
       if (res.ret === 0) {
         this.$message.success('转换服务成功')

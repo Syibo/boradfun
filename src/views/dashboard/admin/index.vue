@@ -34,24 +34,105 @@
 
     <div class="measure">
       <div class="measure_label"> 任务列表 </div>
-      <el-button v-permission="[1]" icon="el-icon-circle-plus-outline" type="primary">提测</el-button>
+      <el-button v-permission="[1]" icon="el-icon-circle-plus-outline" type="primary" @click="measure">提测</el-button>
     </div>
 
     <el-row class="tabs_table">
       <el-tabs>
-        <el-tab-pane label="急需解决 ·7" class="tabs_item">
+        <el-tab-pane label="急需解决 · 7" class="tabs_item">
           <table1 />
         </el-tab-pane>
-        <el-tab-pane label="对接待确认(2)" class="tabs_item">配置管理</el-tab-pane>
-        <el-tab-pane label="需求对接中(8)" class="tabs_item">角色管理</el-tab-pane>
-        <el-tab-pane label="需求冻结待资源分配(3)" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="对接待确认 · 3" class="tabs_item">
+          <table1 />
+        </el-tab-pane>
+        <el-tab-pane label="需求对接中 · 8" class="tabs_item">角色管理</el-tab-pane>
+        <el-tab-pane label="待分配 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="待执行 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="执行中 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="待审核 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="已结单 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="任务取消 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
       </el-tabs>
     </el-row>
+
+    <el-dialog title="提测" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
+      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" class="demo-ruleForm">
+        <el-form-item label="客户名称" prop="clientId">
+          <el-select v-model="ruleForm.clientId" style="width: 100%" placeholder="请选择客户">
+            <el-option
+              v-for="item in clientData"
+              :key="item.ID"
+              :label="item.name"
+              :value="item.ID"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="游戏/应用名称" prop="appName">
+          <el-input v-model="ruleForm.appName" placeholder="请输入应用" />
+        </el-form-item>
+        <el-form-item label="任务类型" prop="serviceId">
+          <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择任务类型">
+            <el-option
+              v-for="item in serviceData"
+              :key="item.ID"
+              :label="item.serviceName"
+              :value="item.ID"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="预计提测额度" prop="preAmount">
+          <el-input-number v-model="ruleForm.preAmount" :min="1" controls-position="right" />
+        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="预计测试日期" prop="sOutNum">
+              <el-date-picker
+                v-model="ruleForm.preDate"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd"
+                :picker-options="optiondate"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="期望结单日期" prop="sOutNum">
+              <el-date-picker
+                v-model="ruleForm.expEndDate"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd"
+                :picker-options="optiondate"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="客户服务经理" prop="manageId">
+          <el-select v-model="ruleForm.manageId" style="width: 100%" placeholder="请选择客户">
+            <el-option
+              v-for="item in manData"
+              :key="item.ID"
+              :label="item.name"
+              :value="item.ID"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js'
+import { getClientList } from '@/api/customer'
+import { getList } from '@/api/service'
+import { getUserList } from '@/api/user'
 import table1 from '@/components/dashboard/table1.vue'
 export default {
   name: 'DashboardAdmin',
@@ -61,6 +142,27 @@ export default {
   directives: { permission },
   data() {
     return {
+      dialogVisible: false,
+      ruleForm: {
+        clientId: '',
+        appName: '',
+        serviceId: [],
+        preAmount: '',
+        preDate: '',
+        expEndDate: '',
+        manageId: ''
+      },
+      rules: {
+        serviceName: [
+          { required: true, message: '请输入服务名称', trigger: 'blur' }
+        ],
+        state: [
+          { required: true, message: '请选择是否启用', trigger: 'change' }
+        ],
+        use: [
+          { required: true, message: '请选择用途', trigger: 'change' }
+        ]
+      },
       tableData: [{
         date: '专家兼容精华-Android 100',
         name: '10',
@@ -85,7 +187,50 @@ export default {
         date: '专家兼容精华-Android 100',
         name: '10',
         address: '20'
-      }]
+      }],
+      clientData: [],
+      serviceData: [],
+      manData: [],
+      optiondate: {
+        disabledDate(date) {
+          return date.getTime() <= Date.now()
+        }
+      }
+    }
+  },
+  mounted() {
+    this.clientList()
+    this.getServiceList()
+    this.getManList()
+  },
+  methods: {
+    async clientList() {
+      const res = await getClientList()
+      this.clientData = res.data
+    },
+    async getServiceList() {
+      const res = await getList()
+      this.serviceData = res.data
+    },
+    async getManList() {
+      const res = await getUserList({ type: 3, pageNum: 1, pageSize: 50 })
+      if (res.ret === 0) {
+        console.log(res)
+        this.manData = res.data.users
+      }
+    },
+    close() {
+      this.ruleForm = {
+        name: '',
+        use: [],
+        state: ''
+      }
+      if (this.$refs['ruleForm']) {
+        this.$refs['ruleForm'].resetFields()
+      }
+    },
+    measure() {
+      this.dialogVisible = true
     }
   }
 }

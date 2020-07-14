@@ -25,16 +25,6 @@
       </el-table-column>
     </el-table>
 
-    <!-- <div class="block">
-      <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
-      />
-    </div> -->
-
     <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" class="demo-ruleForm">
         <el-form-item label="服务名称" prop="serviceName">
@@ -47,10 +37,6 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="用途" prop="use">
-          <!-- <el-radio-group v-model="ruleForm.use">
-            <el-radio :label="1"> 可实施 </el-radio>
-            <el-radio :label="2"> 可转换 </el-radio>
-          </el-radio-group> -->
           <el-checkbox-group v-model="ruleForm.use">
             <el-checkbox :label="1">可实施</el-checkbox>
             <el-checkbox :label="2">可转换</el-checkbox>

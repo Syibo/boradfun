@@ -23,26 +23,6 @@
         </el-col>
       </el-row>
 
-      <!-- <el-table :data="tableData" border style="width: 100%">
-        <el-table-column prop="name" align="center" label="姓名" />
-        <el-table-column prop="level" align="center" label="客户等级" />
-        <el-table-column prop="number" align="center" label="number" />
-        <el-table-column prop="saleId" align="center" label="saleId" />
-        <el-table-column prop="subManageId" align="center" label="subManageId" />
-        <el-table-column prop="type" align="center" label="type" />
-        <el-table-column align="center" label="创建时间">
-          <template slot-scope="scope">
-            <span> {{ getMoment(scope.row.CreatedAt) }} </span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" width="120">
-          <template slot-scope="scope">
-            <el-button :disabled="true" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-            <el-button :disabled="true" type="text" size="small">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table> -->
-
       <el-dialog title="新增客户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @open="open">
         <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="客户编号" prop="number">

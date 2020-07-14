@@ -53,7 +53,7 @@
             <el-radio :label="1"> 管理员 </el-radio>
             <el-radio :label="2"> 销售 </el-radio>
             <el-radio :label="3"> 客户服务经理 </el-radio>
-            <el-radio :label="4"> 资源分配 </el-radio>
+            <el-radio :label="4"> 资源分配组长 </el-radio>
             <el-radio :label="5"> 实施人员 </el-radio>
           </el-radio-group>
         </el-form-item>

@@ -35,7 +35,7 @@
       />
     </div> -->
 
-    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @open="close">
+    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" class="demo-ruleForm">
         <el-form-item label="服务名称" prop="serviceName">
           <el-input v-model="ruleForm.serviceName" />
@@ -199,6 +199,11 @@ export default {
       return Moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
     close() {
+      this.ruleForm = {
+        name: '',
+        use: [],
+        state: ''
+      }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }

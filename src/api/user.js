@@ -48,9 +48,9 @@ export function addUser(data) {
   })
 }
 
-export function getUserList({ type = 0 }) {
+export function getUserList({ type = 0, pageSize = 10, pageNum = 1 }) {
   return request({
-    url: `v1/user/list?type=${type}`,
+    url: `v1/user/list?type=${type}&pageNum=${pageNum}&pageSize=${pageSize}`,
     method: 'get'
   })
 }

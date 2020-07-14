@@ -22,7 +22,19 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" @open="open">
+    <div class="block">
+      <el-pagination
+        :current-page="pageNum"
+        :page-sizes="[10, 20, 50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
+
+    <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" @close="open">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="ruleForm.name" />
@@ -72,18 +84,22 @@ export default {
     return {
       currentPage: 2,
       dialogVisible: false,
+      pageNum: 1,
+      pageSize: 10,
+      total: 0,
       ruleForm: {
         name: '',
         email: '',
         wx: '',
         phone: '',
         userType: '',
-        leaderId: 0
+        leaderId: ''
       },
       options: [],
       rules: {
         name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
         ],
         email: [
           { required: true, message: '请输入邮箱', trigger: 'blur' }
@@ -96,6 +112,9 @@ export default {
         ],
         userType: [
           { required: true, message: '请选择用户类型', trigger: 'change' }
+        ],
+        leaderId: [
+          { required: true, message: '请选择资源组长', trigger: 'blur' }
         ]
       },
       tableData: []
@@ -112,8 +131,11 @@ export default {
       this.options = res.data
     },
     async init() {
-      const res = await getUserList({ type: 0 })
-      this.tableData = res.data.users
+      const res = await getUserList({ type: 0, pageNum: this.pageNum, pageSize: this.pageSize })
+      if (res.ret === 0) {
+        this.tableData = res.data.users
+        this.total = res.data.total
+      }
     },
     add() {
       this.dialogVisible = true
@@ -161,7 +183,24 @@ export default {
       }
       return resl
     },
+    handleSizeChange(val) {
+      this.pageNum = 1
+      this.pageSize = val
+      this.init()
+    },
+    handleCurrentChange(val) {
+      this.pageNum = val
+      this.init()
+    },
     open() {
+      this.ruleForm = {
+        name: '',
+        email: '',
+        wx: '',
+        phone: '',
+        userType: '',
+        leaderId: ''
+      }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }

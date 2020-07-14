@@ -71,10 +71,8 @@ const actions = {
       // const { data } = response
       let day = ''
       if (typeof (state.token) === 'object') {
-        console.log(state.token)
         day = state.token
       } else {
-        console.log(JSON.parse(state.token))
         day = JSON.parse(state.token)
       }
 

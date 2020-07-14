@@ -20,7 +20,6 @@
           name="username"
           type="text"
           tabindex="1"
-          autocomplete="on"
         />
       </el-form-item>
 
@@ -62,8 +61,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'lie.chen',
-        password: 'Chenlie008'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur' }],

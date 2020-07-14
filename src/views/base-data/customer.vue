@@ -158,11 +158,11 @@ export default {
     },
     async getUserList() {
       const res = await getUserList({ type: 2 })
-      this.userList = res.data
+      this.userList = res.data.users
     },
     async getSeriverist() {
       const res = await getUserList({ type: 3 })
-      this.serviceList = res.data
+      this.serviceList = res.data.users
     },
     add() {
       this.dialogVisible = true
@@ -198,6 +198,15 @@ export default {
       return Moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
     open() {
+      this.ruleForm = {
+        name: '',
+        number: '',
+        type: '',
+        level: '',
+        saleId: '',
+        mainManageId: '',
+        subManageId: ''
+      }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }

@@ -39,16 +39,16 @@
                   <div class="service_num">总额度</div>
                 </div>
                 <div class="service_mid">
-                  <div class="service_type">0</div>
+                  <div class="service_type">{{ item.used }}</div>
                   <div class="service_num">已使用</div>
                 </div>
                 <div class="service_mid">
-                  <div class="service_type">{{ item.amount }}</div>
+                  <div class="service_type">{{ item.remain }}</div>
                   <div class="service_num">剩余</div>
                 </div>
-                <!-- <div class="service_time_out">
-                  <div class="service_num">已逾期1</div>
-                </div> -->
+                <div class="service_time_out">
+                  <div class="service_num">已逾期 {{ item.delay }}</div>
+                </div>
               </div>
               <div class="service_bot">
                 最近到期时间：{{ item.deadline }}

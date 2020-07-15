@@ -85,7 +85,7 @@
         </el-form-item>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="预计测试日期" prop="sOutNum">
+            <el-form-item label="预计测试日期" prop="preDate">
               <el-date-picker
                 v-model="ruleForm.preDate"
                 type="date"
@@ -97,7 +97,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="期望结单日期" prop="sOutNum">
+            <el-form-item label="期望结单日期" prop="expEndDate">
               <el-date-picker
                 v-model="ruleForm.expEndDate"
                 type="date"
@@ -155,14 +155,26 @@ export default {
         manageId: ''
       },
       rules: {
-        serviceName: [
-          { required: true, message: '请输入服务名称', trigger: 'blur' }
+        clientId: [
+          { required: true, message: '请选择客户', trigger: 'blur' }
         ],
-        state: [
-          { required: true, message: '请选择是否启用', trigger: 'change' }
+        appName: [
+          { required: true, message: '请输入应用', trigger: 'change' }
         ],
-        use: [
-          { required: true, message: '请选择用途', trigger: 'change' }
+        serviceId: [
+          { required: true, message: '请选择服务', trigger: 'blur' }
+        ],
+        preAmount: [
+          { required: true, message: '请输入额度', trigger: 'blur' }
+        ],
+        preDate: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        expEndDate: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        manageId: [
+          { required: true, message: '请选择客户服务经理', trigger: 'blur' }
         ]
       },
       tableData: [{

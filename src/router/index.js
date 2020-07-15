@@ -87,20 +87,20 @@ export const asyncRoutes = [
 
   { path: '*', redirect: '/404', hidden: true },
 
-  {
-    path: '/measure',
-    component: Layout,
-    redirect: '/measure',
-    meta: { roles: [1] },
-    children: [
-      {
-        path: 'measure',
-        component: () => import('@/views/measure/list'),
-        name: '提测',
-        meta: { title: '提测', icon: 'guide' }
-      }
-    ]
-  },
+  // {
+  //   path: '/measure',
+  //   component: Layout,
+  //   redirect: '/measure',
+  //   meta: { roles: [1] },
+  //   children: [
+  //     {
+  //       path: 'measure',
+  //       component: () => import('@/views/measure/list'),
+  //       name: '提测',
+  //       meta: { title: '提测', icon: 'guide' }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/base',
@@ -183,17 +183,16 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () => new Router({
-  mode: 'history', // require service support
+  mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  router.matcher = newRouter.matcher
 }
 
 export default router

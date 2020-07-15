@@ -56,9 +56,9 @@
     </el-row>
 
     <el-dialog title="提测" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
-      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" class="demo-ruleForm">
+      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
         <el-form-item label="客户名称" prop="clientId">
-          <el-select v-model="ruleForm.clientId" style="width: 100%" placeholder="请选择客户">
+          <el-select v-model="ruleForm.clientId" style="width: 100%" placeholder="请选择客户" @change="getCusAmountList">
             <el-option
               v-for="item in clientData"
               :key="item.ID"
@@ -74,9 +74,9 @@
           <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择任务类型">
             <el-option
               v-for="item in serviceData"
-              :key="item.ID"
-              :label="item.serviceName"
-              :value="item.ID"
+              :key="item.service_id"
+              :label="item.service_name"
+              :value="item.service_id"
             />
           </el-select>
         </el-form-item>
@@ -91,7 +91,7 @@
                 type="date"
                 placeholder="选择日期"
                 format="yyyy 年 MM 月 dd 日"
-                value-format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="optiondate"
               />
             </el-form-item>
@@ -103,7 +103,7 @@
                 type="date"
                 placeholder="选择日期"
                 format="yyyy 年 MM 月 dd 日"
-                value-format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="optiondate"
               />
             </el-form-item>
@@ -131,8 +131,10 @@
 <script>
 import permission from '@/directive/permission/index.js'
 import { getClientList } from '@/api/customer'
-import { getList } from '@/api/service'
+// eslint-disable-next-line no-unused-vars
+import { getList, getCusAmountList } from '@/api/service'
 import { getUserList } from '@/api/user'
+import { addTask } from '@/api/task'
 import table1 from '@/components/dashboard/table1.vue'
 export default {
   name: 'DashboardAdmin',
@@ -146,7 +148,7 @@ export default {
       ruleForm: {
         clientId: '',
         appName: '',
-        serviceId: [],
+        serviceId: '',
         preAmount: '',
         preDate: '',
         expEndDate: '',
@@ -200,30 +202,64 @@ export default {
   },
   mounted() {
     this.clientList()
-    this.getServiceList()
+    // this.getServiceList()
     this.getManList()
   },
   methods: {
+    /**
+     * 获取客户信息
+     */
     async clientList() {
       const res = await getClientList()
       this.clientData = res.data
     },
-    async getServiceList() {
-      const res = await getList()
-      this.serviceData = res.data
-    },
+    // async getServiceList() {
+    //   const res = await getList()
+    //   this.serviceData = res.data
+    // },
     async getManList() {
       const res = await getUserList({ type: 3, pageNum: 1, pageSize: 50 })
       if (res.ret === 0) {
-        console.log(res)
         this.manData = res.data.users
+      }
+    },
+    /**
+     * 根据客户id获取任务类型
+     */
+    async getCusAmountList() {
+      this.ruleForm.serviceId = ''
+      this.serviceData = []
+      const res = await getCusAmountList({ clientId: this.ruleForm.clientId, deadline: '' })
+      this.serviceData = res.data
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const form = this.ruleForm
+          this.addTask(form)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async addTask(form) {
+      const res = await addTask(form)
+      if (res.ret === 0) {
+        this.dialogVisible = false
+      } else {
+        console.log(2222)
       }
     },
     close() {
       this.ruleForm = {
-        name: '',
-        use: [],
-        state: ''
+        clientId: '',
+        appName: '',
+        serviceId: '',
+        preAmount: '',
+        preDate: '',
+        expEndDate: '',
+        manageId: ''
       }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()

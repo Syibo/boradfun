@@ -246,9 +246,10 @@ export default {
     async addTask(form) {
       const res = await addTask(form)
       if (res.ret === 0) {
+        this.$message.success('提测成功')
         this.dialogVisible = false
       } else {
-        console.log(2222)
+        console.log('error')
       }
     },
     close() {

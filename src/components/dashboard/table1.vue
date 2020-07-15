@@ -4,7 +4,7 @@
       <el-table-column prop="id" label="任务ID" width="180" />
       <el-table-column label="客户名称" width="180">
         <template slot-scope="scope">
-          <span class="name">{{ scope.row.name }}</span> <level :level="scope.row.level" />
+          <span class="name" @click="goTask">{{ scope.row.name }}</span> <level :level="scope.row.level" />
         </template>
       </el-table-column>
       <el-table-column prop="app" label="应用/游戏名称" />
@@ -71,7 +71,11 @@ export default {
 
   },
   methods: {
-
+    goTask() {
+      this.$router.push({
+        path: 'task'
+      })
+    }
   }
 }
 </script>

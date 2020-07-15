@@ -73,7 +73,14 @@ export const asyncRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: '任务看板',
-        meta: { title: '任务看板', icon: 'dashboard', affix: true }
+        meta: { title: '任务看板', icon: 'dashboard' }
+      },
+      {
+        path: 'task',
+        component: () => import('@/views/dashboard/task'),
+        name: '任务',
+        hidden: true,
+        meta: { title: '任务', icon: 'dashboard' }
       }
     ]
   },

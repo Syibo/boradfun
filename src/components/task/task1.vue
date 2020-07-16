@@ -4,7 +4,8 @@
       <div class="task_name">
         <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
         <div class="task_name_btn">
-          <el-button type="primary"> 取消任务 </el-button>
+          <el-button> 取消任务 </el-button>
+          <el-button type="primary" @click="accept"> 确认接受 </el-button>
         </div>
       </div>
 
@@ -69,7 +70,23 @@
 
 <script>
 export default {
-  name: 'Task1'
+  name: 'Task1',
+  data() {
+    return {
+
+    }
+  },
+  mounted() {},
+  methods: {
+    accept() {
+      this.$confirm('确认接受此任务?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.$emit('accept')
+      }).catch(() => {})
+    }
+  }
 }
 </script>
 
@@ -100,7 +117,9 @@ export default {
         .task_info {
             margin-bottom: 50px;
             .task_info_item {
-                margin: 4px 0;
+                height: 40px;
+                display: flex;
+                align-items: center;
                 .task_info_label {
                     display: inline-block;
                     font-size:14px;
@@ -172,11 +191,10 @@ export default {
                 font-size:14px;
                 color:rgba(188,192,195,1);
                 line-height:20px;
-                width: 140px;
+                width: 150px;
             }
-            .task_record_com {
+            .task_record_con {
                 font-size:14px;
-                font-weight:400;
                 color: #202D40;
             }
         }

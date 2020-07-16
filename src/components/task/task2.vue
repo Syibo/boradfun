@@ -61,11 +61,13 @@
         </el-col>
       </el-row>
 
-      <div class="task_label"> 需求信息 </div>
+      <div class="task_label"> 需求信息 <el-button v-if="taskFrom === 3" style="float: right" type="text" @click="editTask">编辑需求</el-button> </div>
 
-      <div class="task_demand task_bule">
+      <div v-if="taskFrom === 1" class="task_demand task_bule" @click="taskFromFun">
         <i class="el-icon-circle-plus-outline" /> 填写需求
       </div>
+
+      <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
 
     </div>
     <div class="task_right">
@@ -93,12 +95,7 @@
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
         <el-form-item label="任务取消原因" prop="clientId">
           <el-select v-model="ruleForm.result" style="width: 100%" placeholder="请选择原因">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -111,8 +108,12 @@
 </template>
 
 <script>
+import Task2From from '../From/task2-from'
 export default {
   name: 'Task2',
+  components: {
+    Task2From
+  },
   props: {
     service: {
       type: Array,
@@ -121,6 +122,8 @@ export default {
   },
   data() {
     return {
+      taskFrom: 1,
+      isEdit: false,
       dialogVisible: false,
       options: [{
         value: '项目计划变更',
@@ -155,6 +158,23 @@ export default {
           return false
         }
       })
+    },
+    taskFromFun() {
+      this.taskFrom = 2
+    },
+    cacelTaskFun(ise) {
+      if (ise) {
+        this.taskFrom = 3
+      } else {
+        this.taskFrom = 1
+      }
+    },
+    saveTask() {
+      this.taskFrom = 3
+    },
+    editTask() {
+      this.isEdit = true
+      this.taskFrom = 2
     },
     close() {
       this.ruleForm = {

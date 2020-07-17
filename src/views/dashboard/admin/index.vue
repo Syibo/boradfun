@@ -43,7 +43,7 @@
           <table1 />
         </el-tab-pane>
         <el-tab-pane label="对接待确认 · 3" class="tabs_item">
-          <table1 />
+          <table1 :date="createData" />
         </el-tab-pane>
         <el-tab-pane label="需求对接中 · 8" class="tabs_item">角色管理</el-tab-pane>
         <el-tab-pane label="待分配 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
@@ -134,7 +134,7 @@ import { getClientList } from '@/api/customer'
 // eslint-disable-next-line no-unused-vars
 import { getList, getCusAmountList } from '@/api/service'
 import { getUserList } from '@/api/user'
-import { addTask } from '@/api/task'
+import { addTask, taskList } from '@/api/task'
 import table1 from '@/components/dashboard/table1.vue'
 export default {
   name: 'DashboardAdmin',
@@ -144,6 +144,7 @@ export default {
   directives: { permission },
   data() {
     return {
+      createData: [], // 对接待确认
       dialogVisible: false,
       ruleForm: {
         clientId: '',
@@ -216,6 +217,7 @@ export default {
     this.clientList()
     // this.getServiceList()
     this.getManList()
+    this.taskListCreate()
   },
   methods: {
     /**
@@ -229,6 +231,13 @@ export default {
     //   const res = await getList()
     //   this.serviceData = res.data
     // },
+    async taskListCreate() {
+      const res = await taskList({ status: 'create', pageSize: '', pageNum: '' })
+      console.log(res)
+      if (res.ret === 0) {
+        this.createData = res.data.list
+      }
+    },
     async getManList() {
       const res = await getUserList({ type: 3, pageNum: 1, pageSize: 50 })
       if (res.ret === 0) {

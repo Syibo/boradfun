@@ -38,7 +38,7 @@ export default {
   },
   data() {
     return {
-      type: 4,
+      type: 1,
       serviceData: []
     }
   },

@@ -5,7 +5,7 @@
         <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
         <div class="task_name_btn">
           <el-button v-if="type === 6" type="primary" @click="statement"> 交付结单 </el-button>
-          <el-button v-else type="primary"> 评价 </el-button>
+          <el-button v-else-if="type === 7 && !eva" type="primary" @click="evaluation"> 评价 </el-button>
         </div>
       </div>
 
@@ -55,9 +55,9 @@
         </el-col>
       </el-row>
 
-      <div class="task_label"> 需求信息 </div>
+      <div class="task_label"> <i class="el-icon-arrow-down" @click="show = !show" /> 需求信息 </div>
 
-      <div class="task_demand_detail">
+      <div v-show="show" class="task_demand_detail">
         <div class="task_demand_item"> <span>本次测试版本</span> 1.0.42 </div>
         <div class="task_demand_item"> <span>安装包内网地址</span> \\172.16.10.200\xasfasf </div>
         <div class="task_demand_item"> <span>测试环境类型</span> 正式环境 </div>
@@ -71,6 +71,22 @@
         <div class="task_demand_item"> <span>其他需求</span> 所有其他要求 </div>
         <div class="task_demand_item"> <span>文字用例内网地址</span> \\172.16.10.200\xzfsdf\用例.xlxs </div>
         <div class="task_demand_item"> <span>视频用例内网地址</span> \\172.16.10.200\xzfsdf\用例.xlxs </div>
+      </div>
+
+      <div v-if="eva" class="task_eva">
+        <div class="title">实施评价</div>
+        <div class="task_eva_con">
+          <div class="left">
+            <div class="task_eva_num">90</div>
+            <div>工作评分</div>
+          </div>
+          <div class="mid" />
+          <div class="right">
+            <div> <span>实际交付时间</span> 2020-02-02 20:20:20</div>
+            <div> <span>实施反工次数</span> 2</div>
+            <div> <span>其他补充信息</span> 这是一段其他补充信息…</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -154,6 +170,34 @@
         <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog title="实施评价" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
+      <el-form ref="ruleFormEva" label-width="120px" label-position="top" :model="ruleFormEva" :rules="rulesEva">
+        <el-form-item label="实际交付时间" prop="name">
+          <el-date-picker
+            v-model="ruleFormEva.name"
+            style="width: 100%"
+            type="datetime"
+            placeholder="选择日期"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="yyyy-MM-dd HH:mm:ss"
+          />
+        </el-form-item>
+        <el-form-item label="结单反工次数" prop="name">
+          <el-input-number v-model="ruleFormEva.name" :min="1" controls-position="right" />
+        </el-form-item>
+        <el-form-item label="客户服务评分" prop="name">
+          <el-input-number v-model="ruleFormEva.name" :min="1" controls-position="right" />
+        </el-form-item>
+        <el-form-item label="其他补充信息" prop="name">
+          <el-input v-model="ruleFormEva.name" type="textarea" rows="5" maxlength="100" show-word-limit placeholder="请输入补充信息" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleEva = false">取 消</el-button>
+        <el-button type="primary" @click="submitFormEva('ruleFormEva')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -172,7 +216,10 @@ export default {
   },
   data() {
     return {
+      eva: false,
+      show: true,
       dialogVisible: false,
+      dialogVisibleEva: false,
       options: [{
         value: '项目计划变更',
         label: '项目计划变更'
@@ -182,6 +229,14 @@ export default {
       }],
       ruleForm: {
         checked: ''
+      },
+      ruleFormEva: {
+        name: '2020'
+      },
+      rulesEva: {
+        name: [
+          { required: true, message: '请确认信息', trigger: 'blur' }
+        ]
       },
       rules: {
         checked: [
@@ -202,6 +257,9 @@ export default {
     statement() {
       this.dialogVisible = true
     },
+    evaluation() {
+      this.dialogVisibleEva = true
+    },
     statementFun() {
       this.$emit('statement')
     },
@@ -218,12 +276,34 @@ export default {
         }
       })
     },
+    submitFormEva(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const form = this.ruleFormEva
+          console.log(form)
+          this.eva = true
+          this.show = false
+          this.dialogVisibleEva = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     close() {
       this.ruleForm = {
         checked: ''
       }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
+      }
+    },
+    closeEva() {
+      this.ruleFormEva = {
+        name: ''
+      }
+      if (this.$refs['ruleFormEva']) {
+        this.$refs['ruleFormEva'].resetFields()
       }
     }
   }
@@ -248,5 +328,57 @@ export default {
 }
 .el-icon-arrow-down {
     font-size: 12px;
+}
+.task_eva {
+  background:rgba(255,178,24,0.1);
+  height: 150px;
+  border-radius:4px;
+  padding: 10px;
+  .title {
+    color: #2B2B2B;
+    font-size: 14px;
+  }
+  .task_eva_con {
+    display: flex;
+    height: 120px;
+    align-items: center;
+    .left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 118px;
+      font-size:12px;
+      font-weight:400;
+      color:rgba(43,43,43,1);
+      .task_eva_num {
+        font-size:36px;
+        font-weight:500;
+        margin-bottom: 10px;
+        color:rgba(255,178,24,1);
+      }
+    }
+    .mid {
+      width:1px;
+      height:79px;
+      background:rgba(255,232,185,1);
+    }
+    .right {
+      flex: 1;
+      display: flex;
+      height: 80px;
+      padding-left: 20px;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size:14px;
+      font-weight:400;
+      color:rgba(32,45,64,1);
+      span {
+        display: inline-block;
+        width: 110px;
+        color: #999999;
+      }
+    }
+  }
 }
 </style>

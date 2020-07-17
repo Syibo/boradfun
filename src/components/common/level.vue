@@ -1,7 +1,7 @@
 <template>
   <span>
     <span v-if="level === 'S'" class="brof_level s_col">S</span>
-    <span v-else-if="level === 'B'" class="brof_level a_col">A</span>
+    <span v-else-if="level === 'A'" class="brof_level a_col">A</span>
     <span v-else class="brof_level b_col">B</span>
   </span>
 </template>

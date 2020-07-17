@@ -4,13 +4,12 @@
       <div class="task_name">
         <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
         <div class="task_name_btn">
-          <el-button type="primary" @click="freezeTask"> 需求冻结 </el-button>
-          <el-button @click="cacelTask"> 取消任务 </el-button>
+          <el-button type="primary" @click="resources"> 资源指派 </el-button>
         </div>
       </div>
 
       <div class="task_type">
-        <el-button>需求对接中</el-button>
+        <el-button style="color: #FFB959; border-color: #FFC069" disabled>需求冻结</el-button>
       </div>
 
       <div class="task_label"> 基本信息 </div>
@@ -22,52 +21,40 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con">
-            <el-date-picker
-              v-model="baseData.time"
-              type="datetime"
-              placeholder="选择日期时间"
-            />
-          </span>
+          <span class="task_info_con"> 2020-02-02 20:20:20 </span>
+
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con">
-            <el-select v-model="baseData.service" style="width: 100%" placeholder="请选择任务类型">
-              <el-option
-                v-for="item in service"
-                :key="item.ID"
-                :label="item.serviceName"
-                :value="item.ID"
-              />
-            </el-select>
-          </span>
+          <span class="task_info_con"> 深度兼容-Android 300 </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con">
-            <el-date-picker
-              v-model="baseData.time"
-              type="datetime"
-              placeholder="选择日期时间"
-            />
-          </span>
+          <span class="task_info_con"> 2020-02-02 20:20:20 </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span class="task_info_con">
-            <el-input-number v-model="baseData.num" controls-position="right" :min="1" />
-          </span>
+          <span class="task_info_con"> 3 </span>
         </el-col>
       </el-row>
 
-      <div class="task_label"> 需求信息 <el-button v-if="taskFrom === 3" style="float: right" type="text" @click="editTask">编辑需求</el-button> </div>
+      <div class="task_label"> 需求信息 </div>
 
-      <div v-if="taskFrom === 1" class="task_demand task_bule" @click="taskFromFun">
-        <i class="el-icon-circle-plus-outline" /> 填写需求
+      <div class="task_demand_detail">
+        <div class="task_demand_item"> <span>本次测试版本</span> 1.0.42 </div>
+        <div class="task_demand_item"> <span>安装包内网地址</span> \\172.16.10.200\xasfasf </div>
+        <div class="task_demand_item"> <span>测试环境类型</span> 正式环境 </div>
+        <div class="task_demand_item"> <span /> 测试环境补充信息 </div>
+        <div class="task_demand_item"> <span>白名单</span> 无 </div>
+        <div class="task_demand_item"> <span>测试账号</span> 客户提供 </div>
+        <div class="task_demand_item"> <span>测试账号数量</span> 3 </div>
+        <div class="task_demand_item"> <span>手机号码/微信数量</span> 300 </div>
+        <div class="task_demand_item"> <span>系统并发限制</span> 30 </div>
+        <div class="task_demand_item"> <span>机型需求</span> 提供手机品牌、型号及操作系统限制等 </div>
+        <div class="task_demand_item"> <span>其他需求</span> 所有其他要求 </div>
+        <div class="task_demand_item"> <span>文字用例内网地址</span> \\172.16.10.200\xzfsdf\用例.xlxs </div>
+        <div class="task_demand_item"> <span>视频用例内网地址</span> \\172.16.10.200\xzfsdf\用例.xlxs </div>
       </div>
-
-      <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
 
     </div>
     <div class="task_right">
@@ -91,12 +78,29 @@
       </div>
     </div>
 
-    <el-dialog title="任务取消" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
+    <el-dialog title="交付侧额度评估" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
-        <el-form-item label="任务取消原因" prop="clientId">
-          <el-select v-model="ruleForm.result" style="width: 100%" placeholder="请选择原因">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-form-item label="任务类型" prop="serviceId">
+          <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择任务类型">
+            <el-option
+              v-for="item in service"
+              :key="item.ID"
+              :label="item.serviceName"
+              :value="item.ID"
+            />
           </el-select>
+        </el-form-item>
+
+        <el-form-item label="任务额度" prop="serviceId">
+          <el-input-number v-model="ruleForm.preAmount" :min="1" controls-position="right" />
+        </el-form-item>
+
+        <el-form-item label="处理人" prop="serviceId">
+          <el-radio-group v-model="ruleForm.preAmount">
+            <el-radio :label="3">TE1(0/1)</el-radio>
+            <el-radio :label="6">TE2(1/1)</el-radio>
+            <el-radio :label="9">TE3(1/1)</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -108,12 +112,8 @@
 </template>
 
 <script>
-import Task2From from '../From/task2-from'
 export default {
-  name: 'Task2',
-  components: {
-    Task2From
-  },
+  name: 'Task3',
   props: {
     service: {
       type: Array,
@@ -133,9 +133,14 @@ export default {
         label: '不想做了'
       }],
       ruleForm: {
-        result: ''
+        serviceId: '',
+        preAmount: ''
       },
-      rules: {},
+      rules: {
+        serviceId: [
+          { required: true, message: '请选择服务', trigger: 'blur' }
+        ]
+      },
       baseData: {
         time: '2020-07-16 00:00:00',
         num: 2,
@@ -144,22 +149,18 @@ export default {
     }
   },
   methods: {
-    cacelTask() {
+    resources() {
       this.dialogVisible = true
     },
-    freezeTask() {
-      this.$confirm('确认冻结此任务?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        this.$emit('freeze')
-      }).catch(() => {})
+    resourcesTask() {
+      this.$emit('resourcesTask')
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
           console.log(form)
+          this.resourcesTask()
           this.dialogVisible = false
         } else {
           console.log('error submit!!')
@@ -167,26 +168,12 @@ export default {
         }
       })
     },
-    taskFromFun() {
-      this.taskFrom = 2
-    },
-    cacelTaskFun(ise) {
-      if (ise) {
-        this.taskFrom = 3
-      } else {
-        this.taskFrom = 1
-      }
-    },
-    saveTask() {
-      this.taskFrom = 3
-    },
-    editTask() {
-      this.isEdit = true
-      this.taskFrom = 2
-    },
     close() {
       this.ruleForm = {
         result: ''
+      }
+      if (this.$refs['ruleForm']) {
+        this.$refs['ruleForm'].resetFields()
       }
     }
   }
@@ -194,8 +181,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.task_bule {
-	color: #1F8DFB !important;
-	cursor: pointer;
+.task_demand_item {
+  display: flex;
+  color: #2B2B2B;
+  font-size: 14px;
+  height: 30px;
+  align-items: center;
+  span {
+    width: 140px;
+    color: #808387;
+  }
 }
 </style>

@@ -117,7 +117,7 @@ export default {
         .task_info {
             margin-bottom: 50px;
             .task_info_item {
-                height: 40px;
+                height: 35px;
                 display: flex;
                 align-items: center;
                 .task_info_label {

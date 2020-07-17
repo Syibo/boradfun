@@ -8,7 +8,9 @@
       :type="type"
       :service="serviceData"
       @startTask="startTask"
+      @complete="complete"
     />
+    <Task6 v-else-if="type === 6" :service="serviceData" />
     <div v-else>else</div>
   </div>
 </template>
@@ -18,6 +20,7 @@ import Task1 from '@/components/task/task1'
 import Task2 from '@/components/task/task2'
 import Task3 from '@/components/task/task3'
 import Task4 from '@/components/task/task4'
+import Task6 from '@/components/task/task6'
 import { getList } from '@/api/service'
 export default {
   name: 'Task',
@@ -25,7 +28,8 @@ export default {
     Task1,
     Task2,
     Task3,
-    Task4
+    Task4,
+    Task6
   },
   data() {
     return {
@@ -52,6 +56,9 @@ export default {
     },
     startTask() {
       this.type = 5
+    },
+    complete() {
+      this.type = 6
     }
   }
 }

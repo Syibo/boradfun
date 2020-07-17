@@ -4,26 +4,12 @@
       <div class="task_name">
         <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
         <div class="task_name_btn">
-          <el-button v-if="type === 4" type="primary" @click="startTask"> 启动执行 </el-button>
-          <div v-else>
-            <el-button type="primary" style="margin-right: 10px" @click="completeTask"> 执行完成 </el-button>
-            <el-dropdown>
-              <span class="el-dropdown-link">
-                更多操作<i class="el-icon-arrow-down el-icon--right" />
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>任务暂停</el-dropdown-item>
-                <el-dropdown-item>需求变更</el-dropdown-item>
-                <el-dropdown-item>任务取消</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </div>
+          <el-button type="primary" @click="statement"> 交付结单 </el-button>
         </div>
       </div>
 
       <div class="task_type">
-        <el-button v-if="type === 4" disabled>待执行</el-button>
-        <el-button v-else style="color: #FFB959; border-color: #FFC069" disabled>执行中</el-button>
+        <el-button disabled>待审核</el-button>
       </div>
 
       <div class="task_label"> 基本信息 </div>
@@ -107,30 +93,59 @@
       </div>
     </div>
 
-    <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
-      <el-form ref="ruleForm" label-width="120px" label-position="left" :model="ruleForm" :rules="rules">
-        <el-form-item label="任务执行时长" prop="serviceId">
-          <el-input-number v-model="ruleForm.serviceId" :min="1" controls-position="right" />
+    <el-dialog title="结单确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
+      <el-form ref="ruleForm" label-width="120px" label-position="top" :model="ruleForm" :rules="rules">
+        <el-form-item label="包体信息" prop="checked">
+          <el-row>
+            <el-col :span="8">本次测试版本</el-col>
+            <el-col :span="10">1.0.42</el-col>
+            <el-col :span="6">
+              <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">安装包内网地址</el-col>
+            <el-col :span="10">\\172.16.10.200\xasfasf</el-col>
+          </el-row>
         </el-form-item>
-        <el-form-item label="执行批次" prop="serviceId">
-          <el-input-number v-model="ruleForm.serviceId" :min="1" controls-position="right" />
+
+        <el-form-item label="测试环境信息" prop="checked">
+          <el-row>
+            <el-col :span="8">本次测试版本</el-col>
+            <el-col :span="10">1.0.42</el-col>
+            <el-col :span="6">
+              <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox>
+            </el-col>
+          </el-row>
         </el-form-item>
-        <el-form-item label="执行台次" prop="serviceId">
-          <el-input-number v-model="ruleForm.serviceId" :min="1" controls-position="right" />
+
+        <el-form-item label="测试账号信息" prop="checked">
+          <el-row> <el-col :span="8">测试账号</el-col> <el-col :span="10">客户提供</el-col>
+            <el-col :span="6"> <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox> </el-col>
+          </el-row>
+          <el-row> <el-col :span="8">测试账号数量</el-col> <el-col :span="10">3</el-col> </el-row>
+          <el-row> <el-col :span="8">手机号码/微信数量</el-col> <el-col :span="10">300</el-col> </el-row>
+          <el-row> <el-col :span="8">系统并发限制</el-col> <el-col :span="10">30</el-col> </el-row>
         </el-form-item>
-        <el-form-item label="外部延误时长" prop="serviceId">
-          <el-input-number v-model="ruleForm.serviceId" :min="1" controls-position="right" />
+
+        <el-form-item label="机型需求" prop="checked">
+          <el-row> <el-col :span="8">机型需求</el-col> <el-col :span="10">提供手机品牌、型号及操作系统限制等</el-col>
+            <el-col :span="6"> <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox> </el-col>
+          </el-row>
         </el-form-item>
-        <el-form-item label="整体任务说明" prop="serviceId">
-          <el-input v-model="ruleForm.version" type="textarea" rows="5" maxlength="250" show-word-limit placeholder="整体任务说明" />
+
+        <el-form-item label="其他需求" prop="checked">
+          <el-row> <el-col :span="8">其他需求</el-col> <el-col :span="10">所有其他要求</el-col>
+            <el-col :span="6"> <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox> </el-col>
+          </el-row>
         </el-form-item>
-        <el-checkbox-group v-model="ruleForm.checkList">
-          <el-checkbox label="无执行难度" />
-          <el-checkbox label="文件上传指定目录" />
-          <el-checkbox label="小容量热度" />
-          <el-checkbox label="GM指令操作" />
-          <el-checkbox label="其他途径安装包" />
-        </el-checkbox-group>
+
+        <el-form-item label="用例信息" prop="checked">
+          <el-row> <el-col :span="8">文字用例内网地址</el-col> <el-col :span="10">\\172.16.10.200\xzfsdf\用例.xlxs</el-col>
+            <el-col :span="6"> <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox> </el-col>
+          </el-row>
+          <el-row> <el-col :span="8">视频用例内网地址</el-col> <el-col :span="10">\\172.16.10.200\xzfsdf\用例.mp4</el-col> </el-row>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -142,15 +157,11 @@
 
 <script>
 export default {
-  name: 'Task4',
+  name: 'Task6',
   props: {
     service: {
       type: Array,
       default: () => []
-    },
-    type: {
-      type: Number,
-      default: 4
     }
   },
   data() {
@@ -164,12 +175,11 @@ export default {
         label: '不想做了'
       }],
       ruleForm: {
-        serviceId: '',
-        checkList: []
+        checked: ''
       },
       rules: {
-        serviceId: [
-          { required: true, message: '请选择服务', trigger: 'blur' }
+        checked: [
+          { required: true, message: '请确认信息', trigger: 'blur' }
         ]
       }
     }
@@ -183,18 +193,14 @@ export default {
         this.$emit('startTask')
       }).catch(() => {})
     },
-    completeTask() {
+    statement() {
       this.dialogVisible = true
-    },
-    complete() {
-      this.$emit('complete')
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
           console.log(form)
-          this.complete()
           this.dialogVisible = false
         } else {
           console.log('error submit!!')
@@ -204,8 +210,7 @@ export default {
     },
     close() {
       this.ruleForm = {
-        result: '',
-        checkList: []
+        checked: ''
       }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()

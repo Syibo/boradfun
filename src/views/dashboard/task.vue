@@ -10,7 +10,12 @@
       @startTask="startTask"
       @complete="complete"
     />
-    <Task6 v-else-if="type === 6" :service="serviceData" />
+    <Task6
+      v-else-if="type === 6 || type === 7"
+      :type="type"
+      :service="serviceData"
+      @statement="statement"
+    />
     <div v-else>else</div>
   </div>
 </template>
@@ -59,6 +64,9 @@ export default {
     },
     complete() {
       this.type = 6
+    },
+    statement() {
+      this.type = 7
     }
   }
 }

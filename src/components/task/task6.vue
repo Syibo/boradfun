@@ -4,12 +4,14 @@
       <div class="task_name">
         <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
         <div class="task_name_btn">
-          <el-button type="primary" @click="statement"> 交付结单 </el-button>
+          <el-button v-if="type === 6" type="primary" @click="statement"> 交付结单 </el-button>
+          <el-button v-else type="primary"> 评价 </el-button>
         </div>
       </div>
 
       <div class="task_type">
-        <el-button disabled>待审核</el-button>
+        <el-button v-if="type === 6" disabled>待审核</el-button>
+        <el-button v-else disabled>已结单</el-button>
       </div>
 
       <div class="task_label"> 基本信息 </div>
@@ -162,6 +164,10 @@ export default {
     service: {
       type: Array,
       default: () => []
+    },
+    type: {
+      type: Number,
+      default: 6
     }
   },
   data() {
@@ -196,11 +202,15 @@ export default {
     statement() {
       this.dialogVisible = true
     },
+    statementFun() {
+      this.$emit('statement')
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
           console.log(form)
+          this.statementFun()
           this.dialogVisible = false
         } else {
           console.log('error submit!!')

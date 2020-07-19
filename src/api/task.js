@@ -57,7 +57,7 @@ export function getOneTask({ id }) {
 }
 
 /**
- * 取消任务
+ * 任务取消
  * @param id 任务id
  * @param userId 操作人id
  * @param reason 取消原因
@@ -70,5 +70,16 @@ export function cancelTask({ id, userId, reason }) {
       userId,
       reason
     }
+  })
+}
+
+/**
+ * 任务确认
+ * @param id 任务id
+ */
+export function confirmTask({ id }) {
+  return request({
+    url: `/v1/task/confirm/${id}`,
+    method: 'put'
   })
 }

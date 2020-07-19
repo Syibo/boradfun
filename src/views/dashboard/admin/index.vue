@@ -242,7 +242,7 @@ export default {
       }
     },
     async taskListCancel() {
-      const res = await taskList({ status: 'cacel ', pageSize: '', pageNum: '' })
+      const res = await taskList({ status: 'cacel', pageSize: '', pageNum: '' })
       console.log(res)
       if (res.ret === 0) {
         this.cancelData = res.data.list

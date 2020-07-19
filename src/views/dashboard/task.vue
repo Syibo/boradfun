@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <Task1 v-if="type === 'create'" :data="taskData" @accept="accept" />
-    <Task2 v-else-if="type === 2" :service="serviceData" @freeze="freezeTask" />
+    <Task1 v-if="type === 'create'" :task-id="taskId" :data="taskData" @accept="accept" />
+    <Task2 v-else-if="type === 'Frozen'" :service="serviceData" @freeze="freezeTask" />
     <Task3 v-else-if="type === 3" :service="serviceData" @resourcesTask="resourcesTask" />
     <Task4
       v-else-if="type === 4 || type === 5"
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       type: 'create',
-      taskId: '',
+      taskId: 0,
       serviceData: [],
       taskData: {
         client: {},
@@ -51,7 +51,8 @@ export default {
   },
   mounted() {
     this.type = this.$route.query.type
-    this.taskId = this.$route.query.id
+    this.taskId = Number(this.$route.query.id)
+    console.log(this.taskId)
     this.getServiceList()
     this.getOneTask()
   },
@@ -67,7 +68,7 @@ export default {
       }
     },
     accept() {
-      this.type = 2
+      this.type = 'Frozen'
     },
     freezeTask() {
       this.type = 3

@@ -84,12 +84,17 @@
 
 <script>
 // import { parseTime } from './../../utils/index'
+import { cancelTask, confirmTask } from '@/api/task'
 export default {
   name: 'Task1',
   props: {
     data: {
       type: Object,
       default: () => {}
+    },
+    taskId: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -120,20 +125,33 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$emit('accept')
+        this.confirmTask()
       }).catch(() => {})
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          console.log(form)
+          this.cancelTask(form)
           this.dialogVisible = false
         } else {
           console.log('error submit!!')
           return false
         }
       })
+    },
+    async cancelTask(from) {
+      const res = await cancelTask({ id: this.taskId, userId: 1, reason: from.result })
+      if (res.ret === 0) {
+        this.$message.success('任务取消成功')
+      }
+    },
+    async confirmTask() {
+      const res = await confirmTask({ id: this.taskId })
+      if (res.ret === 0) {
+        console.log(res)
+        this.$emit('accept')
+      }
     },
     close() {
       this.ruleForm = {

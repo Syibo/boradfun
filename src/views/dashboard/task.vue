@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Task1 v-if="type === 'create'" :task-id="taskId" :data="taskData" @accept="accept" />
-    <Task2 v-else-if="type === 'Frozen'" :service="serviceData" @freeze="freezeTask" />
+    <Task2 v-else-if="type === 'frozen'" :service="serviceData" @freeze="freezeTask" />
     <Task3 v-else-if="type === 3" :service="serviceData" @resourcesTask="resourcesTask" />
     <Task4
       v-else-if="type === 4 || type === 5"
@@ -68,7 +68,7 @@ export default {
       }
     },
     accept() {
-      this.type = 'Frozen'
+      this.type = 'frozen'
     },
     freezeTask() {
       this.type = 3

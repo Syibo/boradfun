@@ -10,7 +10,7 @@
       </div>
 
       <div class="task_type">
-        <el-button>需求对接中</el-button>
+        <el-button disabled>需求对接中</el-button>
       </div>
 
       <div class="task_label"> 基本信息 </div>

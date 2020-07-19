@@ -43,9 +43,11 @@
           <table1 />
         </el-tab-pane>
         <el-tab-pane :label="`对接待确认 · ${createData.length}`" class="tabs_item">
-          <table1 :date="createData" />
+          <table1 :date="createData" :type="'create'" />
         </el-tab-pane>
-        <el-tab-pane label="需求对接中 · 8" class="tabs_item">角色管理</el-tab-pane>
+        <el-tab-pane :label="`需求对接中 · ${confirmData.length}`" class="tabs_item">
+          <table1 :date="confirmData" :type="'frozen'" />
+        </el-tab-pane>
         <el-tab-pane label="待分配 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
         <el-tab-pane label="待执行 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
         <el-tab-pane label="执行中 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
@@ -148,6 +150,7 @@ export default {
     return {
       createData: [], // 对接待确认
       cancelData: [], // 任务取消
+      confirmData: [], // 需求对接中
       dialogVisible: false,
       ruleForm: {
         clientId: '',
@@ -222,6 +225,7 @@ export default {
     this.getManList()
     this.taskListCreate()
     this.taskListCancel()
+    this.taskListConfirm()
   },
   methods: {
     /**
@@ -243,9 +247,15 @@ export default {
     },
     async taskListCancel() {
       const res = await taskList({ status: 'cacel', pageSize: '', pageNum: '' })
-      console.log(res)
       if (res.ret === 0) {
         this.cancelData = res.data.list
+      }
+    },
+    async taskListConfirm() {
+      const res = await taskList({ status: 'confirm', pageSize: '', pageNum: '' })
+      if (res.ret === 0) {
+        console.log(res)
+        this.confirmData = res.data.list
       }
     },
     async getManList() {

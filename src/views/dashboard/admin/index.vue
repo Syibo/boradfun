@@ -42,7 +42,7 @@
         <el-tab-pane label="急需解决 · 7" class="tabs_item">
           <table1 />
         </el-tab-pane>
-        <el-tab-pane label="对接待确认 · 3" class="tabs_item">
+        <el-tab-pane :label="`对接待确认 · ${createData.length}`" class="tabs_item">
           <table1 :date="createData" />
         </el-tab-pane>
         <el-tab-pane label="需求对接中 · 8" class="tabs_item">角色管理</el-tab-pane>
@@ -51,7 +51,9 @@
         <el-tab-pane label="执行中 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
         <el-tab-pane label="待审核 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
         <el-tab-pane label="已结单 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
-        <el-tab-pane label="任务取消 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane :label="`任务取消 · ${cancelData.length}`" class="tabs_item">
+          <table1 :date="cancelData" />
+        </el-tab-pane>
       </el-tabs>
     </el-row>
 
@@ -145,6 +147,7 @@ export default {
   data() {
     return {
       createData: [], // 对接待确认
+      cancelData: [], // 任务取消
       dialogVisible: false,
       ruleForm: {
         clientId: '',
@@ -218,6 +221,7 @@ export default {
     // this.getServiceList()
     this.getManList()
     this.taskListCreate()
+    this.taskListCancel()
   },
   methods: {
     /**
@@ -233,9 +237,15 @@ export default {
     // },
     async taskListCreate() {
       const res = await taskList({ status: 'create', pageSize: '', pageNum: '' })
-      console.log(res)
       if (res.ret === 0) {
         this.createData = res.data.list
+      }
+    },
+    async taskListCancel() {
+      const res = await taskList({ status: 'cacel ', pageSize: '', pageNum: '' })
+      console.log(res)
+      if (res.ret === 0) {
+        this.cancelData = res.data.list
       }
     },
     async getManList() {

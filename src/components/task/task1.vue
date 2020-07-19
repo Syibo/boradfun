@@ -2,9 +2,9 @@
   <div class="broadfun_task">
     <div class="task_left">
       <div class="task_name">
-        <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
+        <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
-          <el-button> 取消任务 </el-button>
+          <el-button @click="cacelTask"> 取消任务 </el-button>
           <el-button type="primary" @click="accept"> 确认接受 </el-button>
         </div>
       </div>
@@ -18,23 +18,23 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> 王者荣耀 </span>
+          <span class="task_info_con"> {{ data.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> 2020-02-03 </span>
+          <span class="task_info_con"> {{ data.preDate }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con"> 深度兼容-Android 300 </span>
+          <span class="task_info_con"> {{ data.service.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con"> 2020-02-03 </span>
+          <span class="task_info_con"> {{ data.expEndDate }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span class="task_info_con"> 3 </span>
+          <span class="task_info_con"> {{ data.preAmount }} </span>
         </el-col>
       </el-row>
 
@@ -65,19 +65,56 @@
         <div class="task_record_con">先旭创建任务</div>
       </div>
     </div>
+
+    <el-dialog title="任务取消" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
+      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
+        <el-form-item label="任务取消原因" prop="clientId">
+          <el-select v-model="ruleForm.result" style="width: 100%" placeholder="请选择原因">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+// import { parseTime } from './../../utils/index'
 export default {
   name: 'Task1',
-  data() {
-    return {
-
+  props: {
+    data: {
+      type: Object,
+      default: () => {}
     }
   },
-  mounted() {},
+  data() {
+    return {
+      dialogVisible: false,
+      options: [{
+        value: '项目计划变更',
+        label: '项目计划变更'
+      }, {
+        value: '不想做了',
+        label: '不想做了'
+      }],
+      ruleForm: {
+        result: ''
+      },
+      rules: {}
+    }
+  },
+  mounted() {
+    // console.log(
+  },
   methods: {
+    cacelTask() {
+      this.dialogVisible = true
+    },
     accept() {
       this.$confirm('确认接受此任务?', '提示', {
         confirmButtonText: '确定',
@@ -85,6 +122,23 @@ export default {
       }).then(() => {
         this.$emit('accept')
       }).catch(() => {})
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const form = this.ruleForm
+          console.log(form)
+          this.dialogVisible = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    close() {
+      this.ruleForm = {
+        result: ''
+      }
     }
   }
 }

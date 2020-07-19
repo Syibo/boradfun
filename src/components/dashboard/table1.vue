@@ -4,7 +4,7 @@
       <el-table-column prop="ID" label="任务ID" width="180" />
       <el-table-column label="客户名称" width="180">
         <template slot-scope="scope">
-          <span class="name" @click="goTask">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
+          <span class="name" @click="goTask(scope.row.ID)">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
         </template>
       </el-table-column>
       <el-table-column prop="appName" label="应用/游戏名称" />
@@ -26,6 +26,10 @@ export default {
     date: {
       type: Array,
       default: () => []
+    },
+    type: {
+      type: String,
+      default: 'create'
     }
   },
   data() {
@@ -37,9 +41,13 @@ export default {
 
   },
   methods: {
-    goTask() {
+    goTask(id) {
       this.$router.push({
-        path: 'task'
+        path: 'task',
+        query: {
+          type: this.type,
+          id
+        }
       })
     }
   }

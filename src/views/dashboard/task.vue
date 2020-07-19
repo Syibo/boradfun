@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Task1 v-if="type === 1" @accept="accept" />
+    <Task1 v-if="type === 'create'" :data="taskData" @accept="accept" />
     <Task2 v-else-if="type === 2" :service="serviceData" @freeze="freezeTask" />
     <Task3 v-else-if="type === 3" :service="serviceData" @resourcesTask="resourcesTask" />
     <Task4
@@ -27,6 +27,7 @@ import Task3 from '@/components/task/task3'
 import Task4 from '@/components/task/task4'
 import Task6 from '@/components/task/task6'
 import { getList } from '@/api/service'
+import { getOneTask } from '@/api/task'
 export default {
   name: 'Task',
   components: {
@@ -38,17 +39,32 @@ export default {
   },
   data() {
     return {
-      type: 1,
-      serviceData: []
+      type: 'create',
+      taskId: '',
+      serviceData: [],
+      taskData: {
+        client: {},
+        service: {},
+        taskDetail: {}
+      }
     }
   },
   mounted() {
+    this.type = this.$route.query.type
+    this.taskId = this.$route.query.id
     this.getServiceList()
+    this.getOneTask()
   },
   methods: {
     async getServiceList() {
       const res = await getList()
       this.serviceData = res.data
+    },
+    async getOneTask() {
+      const res = await getOneTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.taskData = res.data
+      }
     },
     accept() {
       this.type = 2

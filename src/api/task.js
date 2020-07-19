@@ -33,16 +33,8 @@ export function addTask({ clientId, appName, serviceId, preAmount, preDate, expE
 }
 
 /**
- * 任务提测
+ * 任务列表
  * @param status 状态
- *  create 对接待确认
-    Frozen 需求冻结
-    Confirm 执行中
-    assign 待分配
-    execute 执行中
-    finish 待审核
-    end 已结单
-    cancel 取消
  * @param pageSize
  * @param pageNum
  */
@@ -53,3 +45,30 @@ export function taskList({ status, pageSize, pageNum }) {
   })
 }
 
+/**
+ * 单个任务
+ * @param id 任务id
+ */
+export function getOneTask({ id }) {
+  return request({
+    url: `/v1/task/${id}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 取消任务
+ * @param id 任务id
+ * @param userId 操作人id
+ * @param reason 取消原因
+ */
+export function cancelTask({ id, userId, reason }) {
+  return request({
+    url: `/v1/task/cancel/${id}`,
+    method: 'put',
+    data: {
+      userId,
+      reason
+    }
+  })
+}

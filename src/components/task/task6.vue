@@ -4,13 +4,13 @@
       <div class="task_name">
         <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
         <div class="task_name_btn">
-          <el-button v-if="type === 6" type="primary" @click="statement"> 交付结单 </el-button>
+          <el-button v-if="type === 'finish'" type="primary" @click="statement"> 交付结单 </el-button>
           <el-button v-else-if="type === 7 && !eva" type="primary" @click="evaluation"> 评价 </el-button>
         </div>
       </div>
 
       <div class="task_type">
-        <el-button v-if="type === 6" disabled>待审核</el-button>
+        <el-button v-if="type === 'finish'" disabled>待审核</el-button>
         <el-button v-else disabled>已结单</el-button>
       </div>
 
@@ -19,23 +19,23 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> 王者荣耀 </span>
+          <span class="task_info_con"> {{ data.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> 2020-02-02 20:20:20 </span>
+          <span class="task_info_con"> {{ data.preDate }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con"> 深度兼容-Android 300 </span>
+          <span class="task_info_con"> {{ data.service.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con"> 2020-02-02 20:20:20 </span>
+          <span class="task_info_con"> {{ data.expEndDate }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span class="task_info_con"> 3 </span>
+          <span class="task_info_con"> {{ data.realAmount }} </span>
         </el-col>
       </el-row>
 
@@ -43,34 +43,34 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con"> 深度兼容-Android 300 </span>
+          <span class="task_info_con"> {{ data.service.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 处理人 </span>
-          <span class="task_info_con"> tony </span>
+          <span class="task_info_con"> {{ data.exeUser.name }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span class="task_info_con"> 3 </span>
+          <span class="task_info_con"> {{ data.deliverAmount }} </span>
         </el-col>
       </el-row>
 
       <div class="task_label"> <i class="el-icon-arrow-down" @click="show = !show" /> 需求信息 </div>
 
       <div v-show="show" class="task_demand_detail">
-        <div class="task_demand_item"> <span>本次测试版本</span> 1.0.42 </div>
-        <div class="task_demand_item"> <span>安装包内网地址</span> \\172.16.10.200\xasfasf </div>
-        <div class="task_demand_item"> <span>测试环境类型</span> 正式环境 </div>
-        <div class="task_demand_item"> <span /> 测试环境补充信息 </div>
-        <div class="task_demand_item"> <span>白名单</span> 无 </div>
-        <div class="task_demand_item"> <span>测试账号</span> 客户提供 </div>
-        <div class="task_demand_item"> <span>测试账号数量</span> 3 </div>
-        <div class="task_demand_item"> <span>手机号码/微信数量</span> 300 </div>
-        <div class="task_demand_item"> <span>系统并发限制</span> 30 </div>
-        <div class="task_demand_item"> <span>机型需求</span> 提供手机品牌、型号及操作系统限制等 </div>
-        <div class="task_demand_item"> <span>其他需求</span> 所有其他要求 </div>
-        <div class="task_demand_item"> <span>文字用例内网地址</span> \\172.16.10.200\xzfsdf\用例.xlxs </div>
-        <div class="task_demand_item"> <span>视频用例内网地址</span> \\172.16.10.200\xzfsdf\用例.xlxs </div>
+        <div class="task_demand_item"> <span>本次测试版本</span> {{ data.taskDetail.version }} </div>
+        <div class="task_demand_item"> <span>安装包内网地址</span> {{ data.taskDetail.pkgAddress }} </div>
+        <div class="task_demand_item"> <span>测试环境类型</span> {{ data.taskDetail.testType }} </div>
+        <div class="task_demand_item"> <span /> {{ data.taskDetail.testExtInfo }} </div>
+        <div class="task_demand_item"> <span>白名单</span> {{ data.taskDetail.whiteList }} </div>
+        <div class="task_demand_item"> <span>测试账号</span> {{ data.taskDetail.testAccountType }} </div>
+        <div class="task_demand_item"> <span>测试账号数量</span> {{ data.taskDetail.accountNum }} </div>
+        <div class="task_demand_item"> <span>手机号码/微信数量</span> {{ data.taskDetail.phoneNum }} </div>
+        <div class="task_demand_item"> <span>系统并发限制</span> {{ data.taskDetail.concurrentNum }} </div>
+        <div class="task_demand_item"> <span>机型需求</span> {{ data.taskDetail.reqPhone }} </div>
+        <div class="task_demand_item"> <span>其他需求</span> {{ data.taskDetail.extReq }} </div>
+        <div class="task_demand_item"> <span>文字用例内网地址</span> {{ data.taskDetail.instanceTxt }} </div>
+        <div class="task_demand_item"> <span>视频用例内网地址</span> {{ data.taskDetail.instanceMv }} </div>
       </div>
 
       <div v-if="eva" class="task_eva">
@@ -113,56 +113,76 @@
 
     <el-dialog title="结单确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
       <el-form ref="ruleForm" label-width="120px" label-position="top" :model="ruleForm" :rules="rules">
-        <el-form-item label="包体信息" prop="checked">
+        <el-form-item label="包体信息" prop="checkedInfo">
           <el-row>
             <el-col :span="8">本次测试版本</el-col>
-            <el-col :span="10">1.0.42</el-col>
+            <el-col :span="10">{{ data.taskDetail.version }}</el-col>
             <el-col :span="6">
-              <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox>
+              <el-checkbox-group v-model="ruleForm.checkedInfo">
+                <el-checkbox :label="'确认无误'" name="checkedInfo" />
+              </el-checkbox-group>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">安装包内网地址</el-col>
-            <el-col :span="10">\\172.16.10.200\xasfasf</el-col>
+            <el-col :span="10">{{ data.taskDetail.pkgAddress }}</el-col>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="测试环境信息" prop="checked">
+        <el-form-item label="测试环境信息" prop="checkedEnv">
           <el-row>
-            <el-col :span="8">本次测试版本</el-col>
-            <el-col :span="10">1.0.42</el-col>
+            <el-col :span="8">测试环境类型</el-col>
+            <el-col :span="10">{{ data.taskDetail.testType }}</el-col>
             <el-col :span="6">
-              <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox>
+              <el-checkbox-group v-model="ruleForm.checkedEnv">
+                <el-checkbox label="确认无误" />
+              </el-checkbox-group>
             </el-col>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="测试账号信息" prop="checked">
-          <el-row> <el-col :span="8">测试账号</el-col> <el-col :span="10">客户提供</el-col>
-            <el-col :span="6"> <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox> </el-col>
+        <el-form-item label="测试账号信息" prop="checkedNum">
+          <el-row> <el-col :span="8">测试账号</el-col> <el-col :span="10">{{ data.taskDetail.testAccountType }}</el-col>
+            <el-col :span="6">
+              <el-checkbox-group v-model="ruleForm.checkedNum">
+                <el-checkbox label="确认无误" />
+              </el-checkbox-group>
+            </el-col>
           </el-row>
-          <el-row> <el-col :span="8">测试账号数量</el-col> <el-col :span="10">3</el-col> </el-row>
-          <el-row> <el-col :span="8">手机号码/微信数量</el-col> <el-col :span="10">300</el-col> </el-row>
-          <el-row> <el-col :span="8">系统并发限制</el-col> <el-col :span="10">30</el-col> </el-row>
+          <el-row> <el-col :span="8">测试账号数量</el-col> <el-col :span="10">{{ data.taskDetail.accountNum }}</el-col> </el-row>
+          <el-row> <el-col :span="8">手机号码/微信数量</el-col> <el-col :span="10">{{ data.taskDetail.phoneNum }}</el-col> </el-row>
+          <el-row> <el-col :span="8">系统并发限制</el-col> <el-col :span="10">{{ data.taskDetail.concurrentNum }}</el-col> </el-row>
         </el-form-item>
 
-        <el-form-item label="机型需求" prop="checked">
-          <el-row> <el-col :span="8">机型需求</el-col> <el-col :span="10">提供手机品牌、型号及操作系统限制等</el-col>
-            <el-col :span="6"> <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox> </el-col>
+        <el-form-item label="机型需求" prop="checkedPhone">
+          <el-row> <el-col :span="8">机型需求</el-col> <el-col :span="10"> {{ data.taskDetail.reqPhone }} </el-col>
+            <el-col :span="6">
+              <el-checkbox-group v-model="ruleForm.checkedPhone">
+                <el-checkbox label="确认无误" />
+              </el-checkbox-group>
+            </el-col>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="其他需求" prop="checked">
-          <el-row> <el-col :span="8">其他需求</el-col> <el-col :span="10">所有其他要求</el-col>
-            <el-col :span="6"> <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox> </el-col>
+        <el-form-item label="其他需求" prop="checkedOther">
+          <el-row> <el-col :span="8">其他需求</el-col> <el-col :span="10"> {{ data.taskDetail.extReq }} </el-col>
+            <el-col :span="6">
+              <el-checkbox-group v-model="ruleForm.checkedOther">
+                <el-checkbox label="确认无误" />
+              </el-checkbox-group>
+            </el-col>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="用例信息" prop="checked">
-          <el-row> <el-col :span="8">文字用例内网地址</el-col> <el-col :span="10">\\172.16.10.200\xzfsdf\用例.xlxs</el-col>
-            <el-col :span="6"> <el-checkbox v-model="ruleForm.checked">确认无误</el-checkbox> </el-col>
+        <el-form-item label="用例信息" prop="checkedCase">
+          <el-row> <el-col :span="8">文字用例内网地址</el-col> <el-col :span="10">{{ data.taskDetail.instanceTxt }} </el-col>
+            <el-col :span="6">
+              <el-checkbox-group v-model="ruleForm.checkedCase">
+                <el-checkbox label="确认无误" />
+              </el-checkbox-group>
+            </el-col>
           </el-row>
-          <el-row> <el-col :span="8">视频用例内网地址</el-col> <el-col :span="10">\\172.16.10.200\xzfsdf\用例.mp4</el-col> </el-row>
+          <el-row> <el-col :span="8">视频用例内网地址</el-col> <el-col :span="10">{{ data.taskDetail.instanceMv }} </el-col> </el-row>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -202,16 +222,25 @@
 </template>
 
 <script>
+import { endTask } from '@/api/task'
 export default {
   name: 'Task6',
   props: {
+    data: {
+      type: Object,
+      default: () => {}
+    },
+    taskId: {
+      type: Number,
+      default: 0
+    },
     service: {
       type: Array,
       default: () => []
     },
     type: {
-      type: Number,
-      default: 6
+      type: String,
+      default: 'finish'
     }
   },
   data() {
@@ -228,7 +257,12 @@ export default {
         label: '不想做了'
       }],
       ruleForm: {
-        checked: ''
+        checkedInfo: [],
+        checkedEnv: [],
+        checkedNum: [],
+        checkedPhone: [],
+        checkedOther: [],
+        checkedCase: []
       },
       ruleFormEva: {
         name: '2020'
@@ -239,8 +273,23 @@ export default {
         ]
       },
       rules: {
-        checked: [
-          { required: true, message: '请确认信息', trigger: 'blur' }
+        checkedInfo: [
+          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
+        ],
+        checkedEnv: [
+          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
+        ],
+        checkedNum: [
+          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
+        ],
+        checkedPhone: [
+          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
+        ],
+        checkedOther: [
+          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
+        ],
+        checkedCase: [
+          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
         ]
       }
     }
@@ -260,15 +309,24 @@ export default {
     evaluation() {
       this.dialogVisibleEva = true
     },
-    statementFun() {
-      this.$emit('statement')
+    async statementFun(form) {
+      const data = {
+        'other': 'string',
+        'reExeTimes': 1,
+        'realTime': {},
+        'score': 1
+      }
+      const res = await endTask({ id: this.data.ID, data: data })
+      if (res.ret === 0) {
+        console.log(res)
+        this.$emit('statement')
+      }
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          console.log(form)
-          this.statementFun()
+          this.statementFun(form)
           this.dialogVisible = false
         } else {
           console.log('error submit!!')
@@ -292,7 +350,12 @@ export default {
     },
     close() {
       this.ruleForm = {
-        checked: ''
+        checkedInfo: [],
+        checkedEnv: [],
+        checkedNum: [],
+        checkedPhone: [],
+        checkedOther: [],
+        checkedCase: []
       }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()

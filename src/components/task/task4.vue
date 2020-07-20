@@ -109,27 +109,23 @@
 
     <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
       <el-form ref="ruleForm" label-width="120px" label-position="left" :model="ruleForm" :rules="rules">
-        <el-form-item label="任务执行时长" prop="serviceId">
-          <el-input-number v-model="ruleForm.serviceId" :min="1" controls-position="right" />
+        <el-form-item label="任务执行时长" prop="usedTime">
+          <el-input-number v-model="ruleForm.usedTime" :min="1" controls-position="right" />
         </el-form-item>
-        <el-form-item label="执行批次" prop="serviceId">
-          <el-input-number v-model="ruleForm.serviceId" :min="1" controls-position="right" />
+        <el-form-item label="执行批次" prop="executeBatch">
+          <el-input-number v-model="ruleForm.executeBatch" :min="1" controls-position="right" />
         </el-form-item>
-        <el-form-item label="执行台次" prop="serviceId">
-          <el-input-number v-model="ruleForm.serviceId" :min="1" controls-position="right" />
+        <el-form-item label="执行台次" prop="executeTai">
+          <el-input-number v-model="ruleForm.executeTai" :min="1" controls-position="right" />
         </el-form-item>
-        <el-form-item label="外部延误时长" prop="serviceId">
-          <el-input-number v-model="ruleForm.serviceId" :min="1" controls-position="right" />
+        <el-form-item label="外部延误时长" prop="delayTime">
+          <el-input-number v-model="ruleForm.delayTime" :min="1" controls-position="right" />
         </el-form-item>
-        <el-form-item label="整体任务说明" prop="serviceId">
-          <el-input v-model="ruleForm.version" type="textarea" rows="5" maxlength="250" show-word-limit placeholder="整体任务说明" />
+        <el-form-item label="整体任务说明" prop="desc">
+          <el-input v-model="ruleForm.desc" type="textarea" rows="5" maxlength="250" show-word-limit placeholder="整体任务说明" />
         </el-form-item>
-        <el-checkbox-group v-model="ruleForm.checkList">
-          <el-checkbox label="无执行难度" />
-          <el-checkbox label="文件上传指定目录" />
-          <el-checkbox label="小容量热度" />
-          <el-checkbox label="GM指令操作" />
-          <el-checkbox label="其他途径安装包" />
+        <el-checkbox-group v-model="ruleForm.tags">
+          <el-checkbox v-for="item in tagsList" :key="item.id" style="width: 110px" :label="item.id"> {{ item.name }} </el-checkbox>
         </el-checkbox-group>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -141,7 +137,7 @@
 </template>
 
 <script>
-import { executeTask } from '@/api/task'
+import { executeTask, tagsTask, finishTask } from '@/api/task'
 export default {
   name: 'Task4',
   props: {
@@ -173,15 +169,23 @@ export default {
         label: '不想做了'
       }],
       ruleForm: {
-        serviceId: '',
-        checkList: []
+        delayTime: '',
+        desc: '',
+        executeBatch: '',
+        executeTai: '',
+        usedTime: '',
+        tags: []
       },
       rules: {
         serviceId: [
           { required: true, message: '请选择服务', trigger: 'blur' }
         ]
-      }
+      },
+      tagsList: []
     }
+  },
+  mounted() {
+    this.tagsTask()
   },
   methods: {
     startTask() {
@@ -198,19 +202,25 @@ export default {
         this.$emit('startTask')
       }
     },
+    async tagsTask() {
+      const res = await tagsTask()
+      this.tagsList = res.data
+    },
     completeTask() {
       this.dialogVisible = true
     },
-    complete() {
-      this.$emit('complete')
+    async finishTask(form) {
+      const res = await finishTask({ id: this.data.ID, data: form })
+      if (res.ret === 0) {
+        this.$emit('complete')
+      }
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          console.log(form)
-          this.complete()
-          this.dialogVisible = false
+          this.finishTask(form)
+          // this.dialogVisible = false
         } else {
           console.log('error submit!!')
           return false

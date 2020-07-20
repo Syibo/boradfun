@@ -149,3 +149,46 @@ export function executeTask({ id }) {
     method: 'put'
   })
 }
+
+/**
+ * 标签列表
+ * @param id 任务id
+ */
+export function tagsTask() {
+  return request({
+    url: `/v1/task/tags`,
+    method: 'get'
+  })
+}
+
+/**
+ * 任务完成
+ * @param id 任务id
+ *"delayTime": 0,
+  "desc": "string",
+  "executeBatch": 0,
+  "executeTai": 0,
+  "tags": [
+    0
+  ],
+  "usedTime": 0
+ */
+export function finishTask({ id, data }) {
+  return request({
+    url: `/v1/task/finish/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 任务结单
+ * @param id 任务id
+ */
+export function endTask({ id, data }) {
+  return request({
+    url: `/v1/task/end/${id}`,
+    method: 'put',
+    data
+  })
+}

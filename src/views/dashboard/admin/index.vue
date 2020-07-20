@@ -57,8 +57,12 @@
         <el-tab-pane :label="`执行中 · ${executeData.length}`" class="tabs_item">
           <table1 :date="executeData" :type="'execute'" />
         </el-tab-pane>
-        <el-tab-pane label="待审核 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
-        <el-tab-pane label="已结单 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane :label="`待审核 · ${finishData.length}`" class="tabs_item">
+          <table1 :date="finishData" :type="'finish'" />
+        </el-tab-pane>
+        <el-tab-pane :label="`已结单 · ${endData.length}`" class="tabs_item">
+          <table1 :date="endData" :type="'end'" />
+        </el-tab-pane>
         <el-tab-pane :label="`任务取消 · ${cancelData.length}`" class="tabs_item">
           <table1 :date="cancelData" :type="'cancel'" />
         </el-tab-pane>
@@ -160,6 +164,8 @@ export default {
       frozenData: [], // 待分配
       assignData: [], // 待执行
       executeData: [], // 执行中
+      finishData: [], // 待审核
+      endData: [], // 已结单
       dialogVisible: false,
       ruleForm: {
         clientId: '',
@@ -238,6 +244,8 @@ export default {
     this.taskListFrozen()
     this.taskListAssign()
     this.taskListExecute()
+    this.taskListFinish()
+    this.taskListEnd()
   },
   methods: {
     /**
@@ -284,8 +292,20 @@ export default {
     async taskListExecute() {
       const res = await taskList({ status: 'execute', pageSize: '', pageNum: '' })
       if (res.ret === 0) {
-        console.log(res)
         this.executeData = res.data.list
+      }
+    },
+    async taskListFinish() {
+      const res = await taskList({ status: 'finish', pageSize: '', pageNum: '' })
+      if (res.ret === 0) {
+        this.finishData = res.data.list
+      }
+    },
+    async taskListEnd() {
+      const res = await taskList({ status: 'end', pageSize: '', pageNum: '' })
+      if (res.ret === 0) {
+        console.log(res)
+        this.endData = res.data.list
       }
     },
     async getManList() {

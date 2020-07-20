@@ -339,14 +339,14 @@ export default {
     flex-direction: column;
     margin-bottom: 30px;
     .cus_name {
-      color: #333;
+      color: #202D40;
       font-size: 20px;
       display: flex;
       align-items: center;
       margin-bottom: 10px;
     }
     .cus_type {
-      color: #999;
+      color: #8592A6;
     }
   }
   .blue_label {
@@ -362,7 +362,7 @@ export default {
     span {
       width: 3px;
       height: 15px;
-      background-color: blue;
+      background-color: #1F8DFB;
       margin-right: 5px;
     }
   }
@@ -372,11 +372,11 @@ export default {
       height: 30px;
       align-items: center;
       .info_type {
-        color: #999;
+        color: #8592A6;
         width: 200px;
       }
       .info_name {
-        color: #333;
+        color: #202D40;
       }
     }
   }
@@ -386,9 +386,12 @@ export default {
     .service_item {
       background-color: white;
       margin-bottom: 20px;
+      border-radius:4px;
       cursor: pointer;
       .service_name {
         height: 40px;
+        color: #0336B7;
+        font-weight:500;
         line-height: 40px;
         padding: 0 10px;
         border-bottom: 1px solid #f1f1f1;
@@ -403,14 +406,16 @@ export default {
           display: flex;
           flex-direction: column;
           margin-right: 5px;
+          width: 55px;
           .service_type {
-            color: #333;
+            color: #2B2B2B;
+            font-weight:500;
             font-size: 20px;
             margin-bottom: 5px;
           }
           .service_num {
-            color: #999;
-            font-size: 12px;
+            color: #808387;
+            font-size: 13px;
           }
         }
         .service_time_out {
@@ -419,14 +424,14 @@ export default {
           flex-direction: column;
           justify-content: flex-end;
           font-size: 12px;
-          color: red;
+          color: #EA5445;
         }
       }
       .service_bot {
         height: 40px;
         line-height: 40px;
         padding: 0 10px;
-        color: #666;
+        color: #808387;
         font-size: 14px;
       }
     }

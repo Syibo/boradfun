@@ -218,8 +218,8 @@ export default {
       display: flex;
       align-items: center;
       .cus_name_black {
-        color: #333;
-        font-weight: bold;
+        color: #202D40;
+        font-weight: 500;
         display: flex;
         align-items: center;
       }
@@ -228,6 +228,7 @@ export default {
       display: flex;
       flex: 1;
       justify-content: flex-end;
+      color: #8592A6;
     }
   }
   .server_info {

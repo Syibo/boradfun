@@ -110,8 +110,7 @@ export const asyncRoutes = [
     name: 'Base',
     meta: {
       title: '基础数据',
-      icon: 'lock',
-      roles: [1] // you can set roles in root nav
+      icon: 'lock'
     },
     children: [
       {
@@ -119,8 +118,7 @@ export const asyncRoutes = [
         component: () => import('@/views/base-data/user'),
         name: '用户维护',
         meta: {
-          title: '用户维护',
-          roles: [1]
+          title: '用户维护'
         }
       },
       {
@@ -128,8 +126,7 @@ export const asyncRoutes = [
         component: () => import('@/views/base-data/customer'),
         name: '客户维护',
         meta: {
-          title: '客户维护',
-          roles: [1]
+          title: '客户维护'
         },
         children: [
           {

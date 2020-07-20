@@ -22,7 +22,7 @@
       </div>
 
       <div class="task_type">
-        <el-button v-if="type === 4" disabled>待执行</el-button>
+        <el-button v-if="type === 'allot'" disabled>待执行</el-button>
         <el-button v-else style="color: #FFB959; border-color: #FFC069" disabled>执行中</el-button>
       </div>
 
@@ -59,7 +59,7 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 处理人 </span>
-          <span class="task_info_con"> {{ data.exeUserId }} </span>
+          <span class="task_info_con"> {{ data.exeUser.name }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
@@ -141,6 +141,7 @@
 </template>
 
 <script>
+import { executeTask } from '@/api/task'
 export default {
   name: 'Task4',
   props: {
@@ -188,8 +189,14 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$emit('startTask')
+        this.executeTask()
       }).catch(() => {})
+    },
+    async executeTask() {
+      const res = await executeTask({ id: this.data.ID })
+      if (res.ret === 0) {
+        this.$emit('startTask')
+      }
     },
     completeTask() {
       this.dialogVisible = true

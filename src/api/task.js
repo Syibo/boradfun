@@ -138,3 +138,14 @@ export function assignTask({ id, data }) {
     data
   })
 }
+
+/**
+ * 任务启动执行
+ * @param id 任务id
+ */
+export function executeTask({ id }) {
+  return request({
+    url: `/v1/task/execute/${id}`,
+    method: 'put'
+  })
+}

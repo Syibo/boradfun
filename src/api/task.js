@@ -122,3 +122,19 @@ export function frozenTask({ id }) {
     method: 'put'
   })
 }
+
+/**
+ * 任务指派
+ * @param id 任务id
+ * {
+    "amount": 0,
+    "exeUserId": 0
+  }
+ */
+export function assignTask({ id, data }) {
+  return request({
+    url: `/v1/task/assign/${id}`,
+    method: 'put',
+    data
+  })
+}

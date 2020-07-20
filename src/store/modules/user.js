@@ -5,6 +5,7 @@ import router, { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
+  userId: 0,
   avatar: '',
   introduction: '',
   roles: [],
@@ -20,6 +21,9 @@ const mutations = {
   },
   SET_NAME: (state, name) => {
     state.name = name
+  },
+  SET_USERID: (state, id) => {
+    state.userId = id
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -80,13 +84,14 @@ const actions = {
         'avatar': 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
         'introductio': 'I am a super administrator',
         'name': day.name,
+        'id': day.ID,
         'roles': [day.userType]
       }
       if (!data) {
         reject('Verification failed, please Login again.')
       }
 
-      const { roles, name, avatar, introduction } = data
+      const { roles, name, avatar, introduction, id } = data
 
       // roles must be a non-empty array
       // if (!roles || roles.length <= 0) {
@@ -95,6 +100,7 @@ const actions = {
 
       commit('SET_ROLES', roles)
       commit('SET_NAME', name)
+      commit('SET_USERID', id)
       commit('SET_AVATAR', avatar)
       commit('SET_INTRODUCTION', introduction)
       resolve(data)

@@ -17,24 +17,23 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> 王者荣耀 </span>
+          <span class="task_info_con"> {{ data.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> 2020-02-02 20:20:20 </span>
-
+          <span class="task_info_con"> {{ data.preDate }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con"> 深度兼容-Android 300 </span>
+          <span class="task_info_con"> {{ data.service.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con"> 2020-02-02 20:20:20 </span>
+          <span class="task_info_con"> {{ data.expEndDate }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span class="task_info_con"> 3 </span>
+          <span class="task_info_con"> {{ data.realAmount }} </span>
         </el-col>
       </el-row>
 
@@ -80,27 +79,36 @@
 
     <el-dialog title="交付侧额度评估" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
-        <el-form-item label="任务类型" prop="serviceId">
-          <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择任务类型">
+        <el-form-item label="任务类型">
+          <!-- <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择任务类型">
             <el-option
               v-for="item in service"
               :key="item.ID"
               :label="item.serviceName"
               :value="item.ID"
             />
-          </el-select>
+          </el-select> -->
+          {{ data.service.serviceName }}
         </el-form-item>
 
-        <el-form-item label="任务额度" prop="serviceId">
-          <el-input-number v-model="ruleForm.preAmount" :min="1" controls-position="right" />
+        <el-form-item label="任务额度">
+          <el-input-number v-model="ruleForm.amount" :min="1" controls-position="right" />
         </el-form-item>
 
-        <el-form-item label="处理人" prop="serviceId">
-          <el-radio-group v-model="ruleForm.preAmount">
+        <el-form-item label="处理人">
+          <!-- <el-radio-group v-model="ruleForm.preAmount">
             <el-radio :label="3">TE1(0/1)</el-radio>
             <el-radio :label="6">TE2(1/1)</el-radio>
             <el-radio :label="9">TE3(1/1)</el-radio>
-          </el-radio-group>
+          </el-radio-group> -->
+          <el-select v-model="ruleForm.exeUserId" style="width: 100%" placeholder="请选择处理人">
+            <el-option
+              v-for="item in userImpls"
+              :key="item.Id"
+              :label="item.Name"
+              :value="item.Id"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -112,6 +120,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { getUserImpls } from '@/api/user'
+import { assignTask } from '@/api/task'
 export default {
   name: 'Task3',
   props: {
@@ -141,34 +152,48 @@ export default {
         label: '不想做了'
       }],
       ruleForm: {
-        serviceId: '',
-        preAmount: ''
+        exeUserId: '',
+        amount: ''
       },
       rules: {
         serviceId: [
           { required: true, message: '请选择服务', trigger: 'blur' }
         ]
       },
-      baseData: {
-        time: '2020-07-16 00:00:00',
-        num: 2,
-        service: 1
-      }
+      userImpls: []
     }
   },
+  computed: {
+    ...mapGetters([
+      'userId',
+      'name'
+    ])
+  },
+  mounted() {
+    this.getUserImpls()
+  },
   methods: {
+    async getUserImpls() {
+      const res = await getUserImpls({ leaderId: this.userId })
+      if (res.ret === 0) {
+        this.userImpls = res.data
+      }
+    },
     resources() {
       this.dialogVisible = true
     },
-    resourcesTask() {
-      this.$emit('resourcesTask')
+    async resourcesTask(form) {
+      const res = await assignTask({ id: this.data.ID, data: form })
+      if (res.ret === 0) {
+        this.$emit('resourcesTask')
+      }
+      // this.$emit('resourcesTask')
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          console.log(form)
-          this.resourcesTask()
+          this.resourcesTask(form)
           this.dialogVisible = false
         } else {
           console.log('error submit!!')

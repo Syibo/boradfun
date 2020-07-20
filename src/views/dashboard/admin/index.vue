@@ -48,10 +48,12 @@
         <el-tab-pane :label="`需求对接中 · ${confirmData.length}`" class="tabs_item">
           <table1 :date="confirmData" :type="'frozen'" />
         </el-tab-pane>
-        <el-tab-pane :label="`待分配 · ${assignData.length}`" class="tabs_item">
-          <table1 :date="assignData" :type="'assign'" />
+        <el-tab-pane :label="`待分配 · ${frozenData.length}`" class="tabs_item">
+          <table1 :date="frozenData" :type="'assign'" />
         </el-tab-pane>
-        <el-tab-pane label="待执行 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
+        <el-tab-pane :label="`待执行 · ${assignData.length}`" class="tabs_item">
+          <table1 :date="assignData" :type="'allot'" />
+        </el-tab-pane>
         <el-tab-pane label="执行中 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
         <el-tab-pane label="待审核 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
         <el-tab-pane label="已结单 · 4" class="tabs_item">定时任务补偿</el-tab-pane>
@@ -153,7 +155,8 @@ export default {
       createData: [], // 对接待确认
       cancelData: [], // 任务取消
       confirmData: [], // 需求对接中
-      assignData: [], // 待分配
+      frozenData: [], // 待分配
+      assignData: [], // 待执行
       dialogVisible: false,
       ruleForm: {
         clientId: '',
@@ -229,6 +232,7 @@ export default {
     this.taskListCreate()
     this.taskListCancel()
     this.taskListConfirm()
+    this.taskListFrozen()
     this.taskListAssign()
   },
   methods: {
@@ -261,8 +265,14 @@ export default {
         this.confirmData = res.data.list
       }
     },
-    async taskListAssign() {
+    async taskListFrozen() {
       const res = await taskList({ status: 'frozen', pageSize: '', pageNum: '' })
+      if (res.ret === 0) {
+        this.frozenData = res.data.list
+      }
+    },
+    async taskListAssign() {
+      const res = await taskList({ status: 'assign', pageSize: '', pageNum: '' })
       if (res.ret === 0) {
         console.log(res)
         this.assignData = res.data.list

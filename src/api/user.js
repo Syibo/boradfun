@@ -54,3 +54,14 @@ export function getUserList({ type = 0, pageSize = 10, pageNum = 1 }) {
     method: 'get'
   })
 }
+
+/**
+ * 实施人员列表, 任务指派时根据leaderId筛选
+ * @param leaderId 组长id
+ */
+export function getUserImpls({ leaderId }) {
+  return request({
+    url: `/v1/user/impls?leaderId=${leaderId}`,
+    method: 'get'
+  })
+}

@@ -4,8 +4,10 @@
     <Task2 v-else-if="type === 'frozen'" :task-id="taskId" :data="taskData" :service="serviceData" @freeze="freezeTask" />
     <Task3 v-else-if="type === 'assign'" :task-id="taskId" :data="taskData" :service="serviceData" @resourcesTask="resourcesTask" />
     <Task4
-      v-else-if="type === 4 || type === 5"
+      v-else-if="type === 'allot' || type === 5"
       :type="type"
+      :task-id="taskId"
+      :data="taskData"
       :service="serviceData"
       @startTask="startTask"
       @complete="complete"
@@ -73,7 +75,7 @@ export default {
       this.type = 'assign'
     },
     resourcesTask() {
-      this.type = 4
+      this.type = 'allot'
     },
     startTask() {
       this.type = 5

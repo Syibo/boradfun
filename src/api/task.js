@@ -83,3 +83,42 @@ export function confirmTask({ id }) {
     method: 'put'
   })
 }
+
+/**
+ * 任务信息录入
+ * @param id 任务id
+ *  Version         string `gorm:"size:30;comment:'测试版本'" json:"version"`
+    PkgAddress      string `gorm:"size:256;comment:'安装包地址'" json:"pkgAddress"`
+    TestType        string `gorm:"comment:'环境类型'" json:"testType"`
+    TestExtInfo     string `gorm:"size:256;comment:'测试环境补充信息'" json:"testExtInfo"`
+    WhiteList       string `gorm:"size:512;comment:'白名单'" json:"whiteList"`
+    TestAccountType string `gorm:"size:40;comment:'测试账号类型'" json:"testAccountType"`
+    AccountReUse    int    `gorm:"type:tinyint;default:0;comment:'账号是否重复使用'" json:"reUse"`
+    AccountAddress  string `gorm:"size:256;comment:'账号文件地址'" json:"accountAddress"`
+    ChangeLog       string `gorm:"size:256;comment:'变更说明'" json:"changeLog"`
+    AccountNum      int    `gorm:"comment:'账号数量'" json:"accountNum"`
+    PhoneNum        int    `gorm:"comment:'手机号/微信数量'" json:"phoneNum"`
+    ConcurrentNum   int    `gorm:"comment:'并发数'" json:"concurrentNum"`
+    ReqPhone        string `gorm:"size:256;comment:'机型需求'" json:"reqPhone"`
+    ExtReq          string `gorm:"size:256;comment:'其他需求'" json:"extReq"`
+    InstanceTxt     string `gorm:"size:256;comment:'文字用例内网地址'" json:"instanceTxt"`
+    InstanceMv      string `gorm:"size:256;comment:'视频用例内网地址'" json:"instanceMv"`
+ */
+export function saveTaskInfo({ id, data }) {
+  return request({
+    url: `/v1/task/save/${id}`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 任务冻结
+ * @param id 任务id
+ */
+export function frozenTask({ id }) {
+  return request({
+    url: `/v1/task/frozen/${id}`,
+    method: 'put'
+  })
+}

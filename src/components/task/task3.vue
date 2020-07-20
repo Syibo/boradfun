@@ -41,19 +41,19 @@
       <div class="task_label"> 需求信息 </div>
 
       <div class="task_demand_detail">
-        <div class="task_demand_item"> <span>本次测试版本</span> 1.0.42 </div>
-        <div class="task_demand_item"> <span>安装包内网地址</span> \\172.16.10.200\xasfasf </div>
-        <div class="task_demand_item"> <span>测试环境类型</span> 正式环境 </div>
-        <div class="task_demand_item"> <span /> 测试环境补充信息 </div>
-        <div class="task_demand_item"> <span>白名单</span> 无 </div>
-        <div class="task_demand_item"> <span>测试账号</span> 客户提供 </div>
-        <div class="task_demand_item"> <span>测试账号数量</span> 3 </div>
-        <div class="task_demand_item"> <span>手机号码/微信数量</span> 300 </div>
-        <div class="task_demand_item"> <span>系统并发限制</span> 30 </div>
-        <div class="task_demand_item"> <span>机型需求</span> 提供手机品牌、型号及操作系统限制等 </div>
-        <div class="task_demand_item"> <span>其他需求</span> 所有其他要求 </div>
-        <div class="task_demand_item"> <span>文字用例内网地址</span> \\172.16.10.200\xzfsdf\用例.xlxs </div>
-        <div class="task_demand_item"> <span>视频用例内网地址</span> \\172.16.10.200\xzfsdf\用例.xlxs </div>
+        <div class="task_demand_item"> <span>本次测试版本</span> {{ data.taskDetail.version }} </div>
+        <div class="task_demand_item"> <span>安装包内网地址</span> {{ data.taskDetail.pkgAddress }} </div>
+        <div class="task_demand_item"> <span>测试环境类型</span> {{ data.taskDetail.testType }} </div>
+        <div class="task_demand_item"> <span /> {{ data.taskDetail.testExtInfo }} </div>
+        <div class="task_demand_item"> <span>白名单</span> {{ data.taskDetail.whiteList }} </div>
+        <div class="task_demand_item"> <span>测试账号</span> {{ data.taskDetail.testAccountType }} </div>
+        <div class="task_demand_item"> <span>测试账号数量</span> {{ data.taskDetail.accountNum }} </div>
+        <div class="task_demand_item"> <span>手机号码/微信数量</span> {{ data.taskDetail.phoneNum }} </div>
+        <div class="task_demand_item"> <span>系统并发限制</span> {{ data.taskDetail.concurrentNum }} </div>
+        <div class="task_demand_item"> <span>机型需求</span> {{ data.taskDetail.reqPhone }} </div>
+        <div class="task_demand_item"> <span>其他需求</span> {{ data.taskDetail.extReq }} </div>
+        <div class="task_demand_item"> <span>文字用例内网地址</span> {{ data.taskDetail.instanceTxt }} </div>
+        <div class="task_demand_item"> <span>视频用例内网地址</span> {{ data.taskDetail.instanceMv }} </div>
       </div>
 
     </div>
@@ -115,6 +115,14 @@
 export default {
   name: 'Task3',
   props: {
+    data: {
+      type: Object,
+      default: () => {}
+    },
+    taskId: {
+      type: Number,
+      default: 0
+    },
     service: {
       type: Array,
       default: () => []

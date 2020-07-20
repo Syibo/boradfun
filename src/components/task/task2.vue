@@ -2,7 +2,7 @@
   <div class="broadfun_task">
     <div class="task_left">
       <div class="task_name">
-        <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
+        <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
           <el-button type="primary" @click="freezeTask"> 需求冻结 </el-button>
           <el-button @click="cacelTask"> 取消任务 </el-button>
@@ -18,13 +18,14 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> 王者荣耀 </span>
+          <span class="task_info_con"> {{ data.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con">
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.preDate }} </span>
+          <span v-else class="task_info_con">
             <el-date-picker
-              v-model="baseData.time"
+              v-model="data.preDate"
               type="datetime"
               placeholder="选择日期时间"
             />
@@ -32,8 +33,9 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con">
-            <el-select v-model="baseData.service" style="width: 100%" placeholder="请选择任务类型">
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.service.serviceName }} </span>
+          <span v-else class="task_info_con">
+            <el-select v-model="data.serviceId" style="width: 100%" placeholder="请选择任务类型">
               <el-option
                 v-for="item in service"
                 :key="item.ID"
@@ -45,9 +47,10 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con">
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.expEndDate }} </span>
+          <span v-else class="task_info_con">
             <el-date-picker
-              v-model="baseData.time"
+              v-model="data.expEndDate"
               type="datetime"
               placeholder="选择日期时间"
             />
@@ -55,8 +58,9 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span class="task_info_con">
-            <el-input-number v-model="baseData.num" controls-position="right" :min="1" />
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.realAmount }} </span>
+          <span v-else class="task_info_con">
+            <el-input-number v-model="data.realAmount" controls-position="right" :min="1" />
           </span>
         </el-col>
       </el-row>
@@ -67,7 +71,7 @@
         <i class="el-icon-circle-plus-outline" /> 填写需求
       </div>
 
-      <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
+      <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :data="data" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
 
     </div>
     <div class="task_right">
@@ -109,12 +113,21 @@
 
 <script>
 import Task2From from '../From/task2-from'
+import { saveTaskInfo, cancelTask, frozenTask } from '@/api/task'
 export default {
   name: 'Task2',
   components: {
     Task2From
   },
   props: {
+    data: {
+      type: Object,
+      default: () => {}
+    },
+    taskId: {
+      type: Number,
+      default: 0
+    },
     service: {
       type: Array,
       default: () => []
@@ -143,6 +156,19 @@ export default {
       }
     }
   },
+  watch: {
+    data(newData, prevData) {
+      console.log(333333333333)
+      console.log(newData.taskDetail.version)
+      if (newData.taskDetail.version !== '' && newData.taskDetail.version !== undefined) {
+        console.log(666666666666)
+        this.taskFrom = 3
+      }
+    }
+  },
+  mounted() {
+
+  },
   methods: {
     cacelTask() {
       this.dialogVisible = true
@@ -152,7 +178,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$emit('freeze')
+        this.frozenTask()
       }).catch(() => {})
     },
     submitForm(formName) {
@@ -167,6 +193,18 @@ export default {
         }
       })
     },
+    async frozenTask() {
+      const res = await frozenTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.$emit('freeze')
+      }
+    },
+    async cancelTask(from) {
+      const res = await cancelTask({ id: this.taskId, userId: 1, reason: from.result })
+      if (res.ret === 0) {
+        this.$message.success('任务取消成功')
+      }
+    },
     taskFromFun() {
       this.taskFrom = 2
     },
@@ -177,8 +215,16 @@ export default {
         this.taskFrom = 1
       }
     },
-    saveTask() {
-      this.taskFrom = 3
+    async saveTask(ruleFormInfo) {
+      ruleFormInfo.realServiceId = this.data.serviceId
+      ruleFormInfo.realAmount = this.data.realAmount
+      ruleFormInfo.expDeliverTime = this.data.preDate
+      ruleFormInfo.expEndTime = this.data.expEndDate
+      ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
+      const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
+      if (res.ret === 0) {
+        this.taskFrom = 3
+      }
     },
     editTask() {
       this.isEdit = true

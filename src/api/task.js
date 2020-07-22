@@ -192,3 +192,27 @@ export function endTask({ id, data }) {
     data
   })
 }
+
+/**
+ * 评价
+ * @param id 任务id
+ */
+export function commentTask({ id, data }) {
+  return request({
+    url: `/v1/task/comment/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 获取评价
+ * @param id 任务id
+ */
+export function getCommentTask({ id, data }) {
+  return request({
+    url: `/v1/task/comment/${id}`,
+    method: 'get',
+    data
+  })
+}

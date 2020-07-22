@@ -13,7 +13,7 @@
       @complete="complete"
     />
     <Task6
-      v-else-if="type === 'finish' || type === 7"
+      v-else-if="type === 'finish' || type === 'end'"
       :type="type"
       :task-id="taskId"
       :data="taskData"
@@ -87,7 +87,7 @@ export default {
       this.type = 'finish'
     },
     statement() {
-      this.type = 7
+      this.type = 'end'
     }
   }
 }

@@ -5,7 +5,7 @@
         <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
         <div class="task_name_btn">
           <el-button v-if="type === 'finish'" type="primary" @click="statement"> 交付结单 </el-button>
-          <el-button v-else-if="type === 7 && !eva" type="primary" @click="evaluation"> 评价 </el-button>
+          <el-button v-else-if="type === 'end' && !eva" type="primary" @click="evaluation"> 评价 </el-button>
         </div>
       </div>
 
@@ -77,14 +77,14 @@
         <div class="title">实施评价</div>
         <div class="task_eva_con">
           <div class="left">
-            <div class="task_eva_num">90</div>
+            <div class="task_eva_num">{{ evaData.score }}</div>
             <div>工作评分</div>
           </div>
           <div class="mid" />
           <div class="right">
-            <div> <span>实际交付时间</span> 2020-02-02 20:20:20</div>
-            <div> <span>实施反工次数</span> 2</div>
-            <div> <span>其他补充信息</span> 这是一段其他补充信息…</div>
+            <div> <span>实际交付时间</span> {{ evaData.realTime }} </div>
+            <div> <span>实施反工次数</span> {{ evaData.reExeTimes }}</div>
+            <div> <span>其他补充信息</span> {{ evaData.other }} </div>
           </div>
         </div>
       </div>
@@ -193,24 +193,23 @@
 
     <el-dialog title="实施评价" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
       <el-form ref="ruleFormEva" label-width="120px" label-position="top" :model="ruleFormEva" :rules="rulesEva">
-        <el-form-item label="实际交付时间" prop="name">
+        <el-form-item label="实际交付时间">
           <el-date-picker
-            v-model="ruleFormEva.name"
+            v-model="ruleFormEva.realTime"
             style="width: 100%"
             type="datetime"
             placeholder="选择日期"
-            format="yyyy 年 MM 月 dd 日"
             value-format="yyyy-MM-dd HH:mm:ss"
           />
         </el-form-item>
-        <el-form-item label="结单反工次数" prop="name">
-          <el-input-number v-model="ruleFormEva.name" :min="1" controls-position="right" />
+        <el-form-item label="结单反工次数">
+          <el-input-number v-model="ruleFormEva.reExeTimes" :min="1" controls-position="right" />
         </el-form-item>
-        <el-form-item label="客户服务评分" prop="name">
-          <el-input-number v-model="ruleFormEva.name" :min="1" controls-position="right" />
+        <el-form-item label="客户服务评分">
+          <el-input-number v-model="ruleFormEva.score" :min="1" controls-position="right" />
         </el-form-item>
-        <el-form-item label="其他补充信息" prop="name">
-          <el-input v-model="ruleFormEva.name" type="textarea" rows="5" maxlength="100" show-word-limit placeholder="请输入补充信息" />
+        <el-form-item label="其他补充信息">
+          <el-input v-model="ruleFormEva.other" type="textarea" rows="5" maxlength="100" show-word-limit placeholder="请输入补充信息" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -222,7 +221,7 @@
 </template>
 
 <script>
-import { endTask } from '@/api/task'
+import { endTask, commentTask, getCommentTask } from '@/api/task'
 export default {
   name: 'Task6',
   props: {
@@ -249,6 +248,7 @@ export default {
       show: true,
       dialogVisible: false,
       dialogVisibleEva: false,
+      evaData: {},
       options: [{
         value: '项目计划变更',
         label: '项目计划变更'
@@ -265,7 +265,11 @@ export default {
         checkedCase: []
       },
       ruleFormEva: {
-        name: '2020'
+        other: '',
+        reExeTimes: 0,
+        realTime: '',
+        score: 0,
+        type: 0
       },
       rulesEva: {
         name: [
@@ -294,6 +298,10 @@ export default {
       }
     }
   },
+  mounted() {
+    console.log(44444444)
+    this.getCommentTask()
+  },
   methods: {
     startTask() {
       this.$confirm('确认启动此任务?', '提示', {
@@ -309,6 +317,16 @@ export default {
     evaluation() {
       this.dialogVisibleEva = true
     },
+    async getCommentTask() {
+      const res = await getCommentTask({ id: this.taskId })
+      if (res.ret === 0) {
+        if (res.data[0].realTime) {
+          this.eva = true
+          this.show = false
+          this.evaData = res.data[0]
+        }
+      }
+    },
     async statementFun(form) {
       const data = {
         'other': 'string',
@@ -318,7 +336,6 @@ export default {
       }
       const res = await endTask({ id: this.data.ID, data: data })
       if (res.ret === 0) {
-        console.log(res)
         this.$emit('statement')
       }
     },
@@ -334,14 +351,20 @@ export default {
         }
       })
     },
+    async commentTask(form) {
+      const res = await commentTask({ id: this.taskId, data: form })
+      if (res.ret === 0) {
+        this.eva = true
+        this.show = false
+        this.dialogVisibleEva = false
+      }
+    },
     submitFormEva(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleFormEva
           console.log(form)
-          this.eva = true
-          this.show = false
-          this.dialogVisibleEva = false
+          this.commentTask(form)
         } else {
           console.log('error submit!!')
           return false

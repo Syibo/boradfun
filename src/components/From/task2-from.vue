@@ -186,10 +186,12 @@ export default {
     data(newData, prevData) {
       this.ruleFormInfo = newData.taskDetail
       this.ruleFormInfo.reUse = newData.taskDetail.reUse.split(',') || []
-      console.log(this.ruleFormInfo)
+      console.log(11111111111)
     }
   },
-  mounted() {},
+  mounted() {
+    this.ruleFormInfo = this.data.taskDetail
+  },
   methods: {
     cacelTask() {
       this.$emit('cacelTask', this.isEdit)

@@ -338,6 +338,7 @@ export default {
       const res = await addTask(form)
       if (res.ret === 0) {
         this.$message.success('提测成功')
+        this.taskListCreate()
         this.dialogVisible = false
       } else {
         console.log('error')

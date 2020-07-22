@@ -158,10 +158,9 @@ export default {
   },
   watch: {
     data(newData, prevData) {
-      console.log(333333333333)
-      console.log(newData.taskDetail.version)
+      this.data = newData
+      console.log(this.data)
       if (newData.taskDetail.version !== '' && newData.taskDetail.version !== undefined) {
-        console.log(666666666666)
         this.taskFrom = 3
       }
     }
@@ -216,6 +215,7 @@ export default {
       }
     },
     async saveTask(ruleFormInfo) {
+      console.log(ruleFormInfo)
       ruleFormInfo.realServiceId = this.data.serviceId
       ruleFormInfo.realAmount = this.data.realAmount
       ruleFormInfo.expDeliverTime = this.data.preDate
@@ -223,6 +223,7 @@ export default {
       ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
+        this.data.taskDetail = ruleFormInfo
         this.taskFrom = 3
       }
     },

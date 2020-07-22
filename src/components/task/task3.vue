@@ -21,15 +21,15 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> {{ data.preDate }} </span>
+          <span class="task_info_con"> {{ data.expDeliverTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con"> {{ data.service.serviceName }} </span>
+          <span class="task_info_con"> {{ data.realService.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con"> {{ data.expEndDate }} </span>
+          <span class="task_info_con"> {{ data.expEndTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
@@ -88,7 +88,8 @@
               :value="item.ID"
             />
           </el-select> -->
-          {{ data.service.serviceName }}
+          <!-- {{ data.realService.serviceName }}
+           -->
         </el-form-item>
 
         <el-form-item label="任务额度">
@@ -187,7 +188,6 @@ export default {
       if (res.ret === 0) {
         this.$emit('resourcesTask')
       }
-      // this.$emit('resourcesTask')
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

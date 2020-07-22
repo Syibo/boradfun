@@ -144,12 +144,13 @@ export default {
       const res = await cancelTask({ id: this.taskId, userId: 1, reason: from.result })
       if (res.ret === 0) {
         this.$message.success('任务取消成功')
+        this.$router.go(-1)
       }
     },
     async confirmTask() {
       const res = await confirmTask({ id: this.taskId })
       if (res.ret === 0) {
-        console.log(res)
+        this.$message.success('任务已经接受')
         this.$emit('accept')
       }
     },

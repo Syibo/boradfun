@@ -22,20 +22,21 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.preDate }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.expDeliverTime }} </span>
           <span v-else class="task_info_con">
             <el-date-picker
-              v-model="data.preDate"
+              v-model="data.expDeliverTime"
               type="datetime"
               placeholder="选择日期时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
             />
           </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.service.serviceName }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.realService.serviceName }} </span>
           <span v-else class="task_info_con">
-            <el-select v-model="data.serviceId" style="width: 100%" placeholder="请选择任务类型">
+            <el-select v-model="data.realServiceId" style="width: 100%" placeholder="请选择任务类型">
               <el-option
                 v-for="item in service"
                 :key="item.ID"
@@ -47,12 +48,13 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.expEndDate }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.expEndTime }} </span>
           <span v-else class="task_info_con">
             <el-date-picker
-              v-model="data.expEndDate"
+              v-model="data.expEndTime"
               type="datetime"
               placeholder="选择日期时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
             />
           </span>
         </el-col>
@@ -135,6 +137,7 @@ export default {
   },
   data() {
     return {
+      datacopy: {},
       taskFrom: 1,
       isEdit: false,
       dialogVisible: false,
@@ -159,7 +162,13 @@ export default {
   watch: {
     data(newData, prevData) {
       this.data = newData
-      console.log(this.data)
+      this.datacopy = JSON.parse(JSON.stringify(newData))
+      if (this.data.expDeliverTime === '0001-01-01 00:00:00') {
+        this.data.expDeliverTime = this.data.preDate
+        this.data.expEndTime = this.data.expEndDate
+        this.data.realServiceId = this.data.serviceId
+        this.data.realAmount = this.data.preAmount
+      }
       if (newData.taskDetail.version !== '' && newData.taskDetail.version !== undefined) {
         this.taskFrom = 3
       }
@@ -173,10 +182,15 @@ export default {
       this.dialogVisible = true
     },
     freezeTask() {
+      if (this.taskFrom !== 3) {
+        this.$message.error('请先填写需求')
+        return
+      }
       this.$confirm('确认冻结此任务?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
+        this.$message.success('任务冻结成功')
         this.frozenTask()
       }).catch(() => {})
     },
@@ -184,7 +198,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          console.log(form)
+          this.cancelTask(form)
           this.dialogVisible = false
         } else {
           console.log('error submit!!')
@@ -202,12 +216,14 @@ export default {
       const res = await cancelTask({ id: this.taskId, userId: 1, reason: from.result })
       if (res.ret === 0) {
         this.$message.success('任务取消成功')
+        this.$router.go(-1)
       }
     },
     taskFromFun() {
       this.taskFrom = 2
     },
     cacelTaskFun(ise) {
+      this.data = this.datacopy
       if (ise) {
         this.taskFrom = 3
       } else {
@@ -215,16 +231,20 @@ export default {
       }
     },
     async saveTask(ruleFormInfo) {
-      console.log(ruleFormInfo)
-      ruleFormInfo.realServiceId = this.data.serviceId
+      ruleFormInfo.realServiceId = this.data.realServiceId
       ruleFormInfo.realAmount = this.data.realAmount
-      ruleFormInfo.expDeliverTime = this.data.preDate
-      ruleFormInfo.expEndTime = this.data.expEndDate
+      ruleFormInfo.expDeliverTime = this.data.expDeliverTime
+      ruleFormInfo.expEndTime = this.data.expEndTime
+      console.log(ruleFormInfo.reUse)
       ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
-        this.data.taskDetail = ruleFormInfo
-        this.taskFrom = 3
+        // this.data.taskDetail = ruleFormInfo
+        this.$message.success('保存成功')
+        this.$emit('saveTask')
+        setTimeout(() => {
+          this.taskFrom = 3
+        }, 1000)
       }
     },
     editTask() {

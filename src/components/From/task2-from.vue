@@ -179,24 +179,42 @@ export default {
       }, {
         value: '自己mock',
         label: '自己mock'
-      }]
+      }],
+      ruleFormInfoCopy: {}
     }
   },
   watch: {
     data(newData, prevData) {
       this.ruleFormInfo = newData.taskDetail
-      this.ruleFormInfo.reUse = newData.taskDetail.reUse.split(',') || []
-      console.log(11111111111)
+      this.ruleFormInfoCopy = JSON.parse(JSON.stringify(newData.taskDetail))
+      if (this.ruleFormInfo.reUse === '') {
+        this.ruleFormInfo.reUse = []
+        this.ruleFormInfoCopy.reUse = []
+      } else {
+        this.ruleFormInfo.reUse = newData.taskDetail.reUse.split(',')
+        this.ruleFormInfoCopy.reUse = newData.taskDetail.reUse
+      }
     }
   },
   mounted() {
     this.ruleFormInfo = this.data.taskDetail
+    this.ruleFormInfoCopy = JSON.parse(JSON.stringify(this.data.taskDetail))
+    console.log(this.ruleFormInfo.reUse)
+    if (this.ruleFormInfo.reUse === '') {
+      this.ruleFormInfo.reUse = []
+      this.ruleFormInfoCopy.reUse = []
+    } else {
+      this.ruleFormInfo.reUse = this.data.taskDetail.reUse.split(',')
+      this.ruleFormInfoCopy.reUse = this.data.taskDetail.reUse
+    }
   },
   methods: {
     cacelTask() {
+      this.ruleFormInfo = this.ruleFormInfoCopy
       this.$emit('cacelTask', this.isEdit)
     },
     checkTask() {
+      this.ruleFormInfoCopy = JSON.parse(JSON.stringify(this.ruleFormInfo))
       this.$emit('saveTask', this.ruleFormInfo)
     }
   }

@@ -35,15 +35,15 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> {{ data.preDate }} </span>
+          <span class="task_info_con"> {{ data.expDeliverTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con"> {{ data.service.serviceName }} </span>
+          <span class="task_info_con"> {{ data.realService.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con"> {{ data.expEndDate }} </span>
+          <span class="task_info_con"> {{ data.expEndTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
@@ -199,6 +199,7 @@ export default {
     async executeTask() {
       const res = await executeTask({ id: this.data.ID })
       if (res.ret === 0) {
+        this.$message.success('任务启动成功')
         this.$emit('startTask')
       }
     },
@@ -212,6 +213,7 @@ export default {
     async finishTask(form) {
       const res = await finishTask({ id: this.data.ID, data: form })
       if (res.ret === 0) {
+        this.$message.success('任务执行成功')
         this.$emit('complete')
       }
     },
@@ -229,8 +231,12 @@ export default {
     },
     close() {
       this.ruleForm = {
-        result: '',
-        checkList: []
+        delayTime: '',
+        desc: '',
+        executeBatch: '',
+        executeTai: '',
+        usedTime: '',
+        tags: []
       }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()

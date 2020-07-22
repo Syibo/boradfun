@@ -23,7 +23,7 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> {{ data.preDate }} </span>
+          <span class="task_info_con"> {{ data.expDeliverTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
@@ -31,7 +31,7 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con"> {{ data.expEndDate }} </span>
+          <span class="task_info_con"> {{ data.expEndTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
@@ -299,18 +299,9 @@ export default {
     }
   },
   mounted() {
-    console.log(44444444)
     this.getCommentTask()
   },
   methods: {
-    startTask() {
-      this.$confirm('确认启动此任务?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        this.$emit('startTask')
-      }).catch(() => {})
-    },
     statement() {
       this.dialogVisible = true
     },
@@ -320,7 +311,7 @@ export default {
     async getCommentTask() {
       const res = await getCommentTask({ id: this.taskId })
       if (res.ret === 0) {
-        if (res.data[0].realTime) {
+        if (res.data.length !== 0) {
           this.eva = true
           this.show = false
           this.evaData = res.data[0]
@@ -336,6 +327,7 @@ export default {
       }
       const res = await endTask({ id: this.data.ID, data: data })
       if (res.ret === 0) {
+        this.$message.success('结单成功')
         this.$emit('statement')
       }
     },
@@ -354,6 +346,8 @@ export default {
     async commentTask(form) {
       const res = await commentTask({ id: this.taskId, data: form })
       if (res.ret === 0) {
+        this.$message.success('评价成功')
+        this.evaData = form
         this.eva = true
         this.show = false
         this.dialogVisibleEva = false

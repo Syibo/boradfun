@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Task1 v-if="type === 'create'" :task-id="taskId" :data="taskData" @accept="accept" />
-    <Task2 v-else-if="type === 'frozen'" :task-id="taskId" :data="taskData" :service="serviceData" @freeze="freezeTask" />
+    <Task2 v-else-if="type === 'frozen'" :task-id="taskId" :data="taskData" :service="serviceData" @saveTask="saveTask" @freeze="freezeTask" />
     <Task3 v-else-if="type === 'assign'" :task-id="taskId" :data="taskData" :service="serviceData" @resourcesTask="resourcesTask" />
     <Task4
       v-else-if="type === 'allot' || type === 'execute'"
@@ -50,7 +50,8 @@ export default {
         client: {},
         service: {},
         taskDetail: {},
-        exeUser: {}
+        exeUser: {},
+        realService: {}
       }
     }
   },
@@ -73,21 +74,68 @@ export default {
     },
     accept() {
       this.type = 'frozen'
+      this.getOneTask()
+      this.$router.replace({
+        path: 'task',
+        query: {
+          type: 'frozen',
+          id: this.taskId
+        }
+      })
+    },
+    saveTask() {
+      this.getOneTask()
     },
     freezeTask() {
       this.type = 'assign'
+      this.$router.replace({
+        path: 'task',
+        query: {
+          type: 'assign',
+          id: this.taskId
+        }
+      })
     },
     resourcesTask() {
+      this.getOneTask()
       this.type = 'allot'
+      this.$router.replace({
+        path: 'task',
+        query: {
+          type: 'allot',
+          id: this.taskId
+        }
+      })
     },
     startTask() {
       this.type = 'execute'
+      this.$router.replace({
+        path: 'task',
+        query: {
+          type: 'execute',
+          id: this.taskId
+        }
+      })
     },
     complete() {
       this.type = 'finish'
+      this.$router.replace({
+        path: 'task',
+        query: {
+          type: 'finish',
+          id: this.taskId
+        }
+      })
     },
     statement() {
       this.type = 'end'
+      this.$router.replace({
+        path: 'task',
+        query: {
+          type: 'end',
+          id: this.taskId
+        }
+      })
     }
   }
 }

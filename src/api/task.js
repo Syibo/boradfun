@@ -216,3 +216,14 @@ export function getCommentTask({ id, data }) {
     data
   })
 }
+
+/**
+ * 亟需关注
+ * @param type 默认今天，1明天
+ */
+export function getFocusList({ type = '' }) {
+  return request({
+    url: `/v1/task/focus?type=${type}`,
+    method: 'get'
+  })
+}

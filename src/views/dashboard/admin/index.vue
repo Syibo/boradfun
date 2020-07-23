@@ -4,7 +4,7 @@
       <el-col :span="12">
         <div class="today_task">
           <div class="title"> 今日结单任务（4） </div>
-          <div v-for="item in 3" :key="item" class="item">
+          <div v-for="item in focusData" :key="item" class="item">
             超级厉害娱乐信息公司 <span>深度兼容-Android 300</span>
           </div>
         </div>
@@ -39,8 +39,8 @@
 
     <el-row class="tabs_table">
       <el-tabs>
-        <el-tab-pane label="急需解决 · 7" class="tabs_item">
-          <table1 />
+        <el-tab-pane :label="`急需解决 · ${focusData.length}`" class="tabs_item">
+          <!-- <table1 :date="focusData" /> -->
         </el-tab-pane>
         <el-tab-pane :label="`对接待确认 · ${createData.length}`" class="tabs_item">
           <table1 :date="createData" :type="'create'" />
@@ -148,7 +148,7 @@ import { getClientList } from '@/api/customer'
 // eslint-disable-next-line no-unused-vars
 import { getList, getCusAmountList } from '@/api/service'
 import { getUserList } from '@/api/user'
-import { addTask, taskList } from '@/api/task'
+import { addTask, taskList, getFocusList } from '@/api/task'
 import table1 from '@/components/dashboard/table1.vue'
 export default {
   name: 'DashboardAdmin',
@@ -166,6 +166,7 @@ export default {
       executeData: [], // 执行中
       finishData: [], // 待审核
       endData: [], // 已结单
+      focusData: [], // 已结单
       dialogVisible: false,
       ruleForm: {
         clientId: '',
@@ -237,6 +238,7 @@ export default {
   mounted() {
     this.clientList()
     // this.getServiceList()
+    this.getFocusList()
     this.getManList()
     this.taskListCreate()
     this.taskListCancel()
@@ -259,6 +261,12 @@ export default {
     //   const res = await getList()
     //   this.serviceData = res.data
     // },
+    async getFocusList() {
+      const res = await getFocusList({ type: '' })
+      if (res.ret === 0) {
+        this.focusData = res.data
+      }
+    },
     async taskListCreate() {
       const res = await taskList({ status: 'create', pageSize: '', pageNum: '' })
       if (res.ret === 0) {

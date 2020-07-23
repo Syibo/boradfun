@@ -41,7 +41,7 @@
       :service="serviceData"
       @statement="statement"
     />
-    <div v-else>发生一个错误</div>
+    <div v-else>以取消</div>
     <el-dialog title="任务取消" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
         <el-form-item label="任务取消原因" prop="result">

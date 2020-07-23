@@ -4,8 +4,8 @@
       <div class="task_name">
         <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
-          <el-button type="primary" @click="freezeTask"> 需求冻结 </el-button>
-          <el-button @click="cacelTask"> 取消任务 </el-button>
+          <el-button v-permission="[1, 2, 3, 4, 5]" type="primary" @click="freezeTask"> 需求冻结 </el-button>
+          <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
         </div>
       </div>
 
@@ -18,14 +18,14 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> {{ data.appName }} </span>
+          <span class="task_info_con"> {{ baseData.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.expDeliverTime }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.expDeliverTime }} </span>
           <span v-else class="task_info_con">
             <el-date-picker
-              v-model="data.expDeliverTime"
+              v-model="baseData.expDeliverTime"
               type="datetime"
               placeholder="选择日期时间"
               value-format="yyyy-MM-dd HH:mm:ss"
@@ -34,9 +34,9 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.realService.serviceName }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realService.serviceName }} </span>
           <span v-else class="task_info_con">
-            <el-select v-model="data.realServiceId" style="width: 100%" placeholder="请选择任务类型">
+            <el-select v-model="baseData.realServiceId" style="width: 100%" placeholder="请选择任务类型">
               <el-option
                 v-for="item in service"
                 :key="item.ID"
@@ -48,10 +48,10 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.expEndTime }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.expEndTime }} </span>
           <span v-else class="task_info_con">
             <el-date-picker
-              v-model="data.expEndTime"
+              v-model="baseData.expEndTime"
               type="datetime"
               placeholder="选择日期时间"
               value-format="yyyy-MM-dd HH:mm:ss"
@@ -60,9 +60,9 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ data.realAmount }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realAmount }} </span>
           <span v-else class="task_info_con">
-            <el-input-number v-model="data.realAmount" controls-position="right" :min="1" />
+            <el-input-number v-model="baseData.realAmount" controls-position="right" :min="1" />
           </span>
         </el-col>
       </el-row>
@@ -73,7 +73,7 @@
         <i class="el-icon-circle-plus-outline" /> 填写需求
       </div>
 
-      <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :data="data" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
+      <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :data="baseData" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
 
     </div>
     <div class="task_right">
@@ -96,28 +96,16 @@
         <div class="task_record_con">先旭创建任务</div>
       </div>
     </div>
-
-    <el-dialog title="任务取消" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
-      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
-        <el-form-item label="任务取消原因" prop="clientId">
-          <el-select v-model="ruleForm.result" style="width: 100%" placeholder="请选择原因">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
+import permission from '@/directive/permission/index.js'
 import Task2From from '../From/task2-from'
-import { saveTaskInfo, cancelTask, frozenTask } from '@/api/task'
+import { saveTaskInfo, frozenTask } from '@/api/task'
 export default {
   name: 'Task2',
+  directives: { permission },
   components: {
     Task2From
   },
@@ -137,49 +125,31 @@ export default {
   },
   data() {
     return {
+      baseData: {},
       datacopy: {},
       taskFrom: 1,
-      isEdit: false,
-      dialogVisible: false,
-      options: [{
-        value: '项目计划变更',
-        label: '项目计划变更'
-      }, {
-        value: '不想做了',
-        label: '不想做了'
-      }],
-      ruleForm: {
-        result: ''
-      },
-      rules: {},
-      baseData: {
-        time: '2020-07-16 00:00:00',
-        num: 2,
-        service: 1
-      }
+      isEdit: false
     }
   },
   watch: {
     data(newData, prevData) {
       this.data = newData
+      this.baseData = JSON.parse(JSON.stringify(newData))
       this.datacopy = JSON.parse(JSON.stringify(newData))
       if (this.data.expDeliverTime === '0001-01-01 00:00:00') {
-        this.data.expDeliverTime = this.data.preDate
-        this.data.expEndTime = this.data.expEndDate
-        this.data.realServiceId = this.data.serviceId
-        this.data.realAmount = this.data.preAmount
+        this.baseData.expDeliverTime = this.baseData.preDate
+        this.baseData.expEndTime = this.baseData.expEndDate
+        this.baseData.realServiceId = this.baseData.serviceId
+        this.baseData.realAmount = this.baseData.preAmount
       }
       if (newData.taskDetail.version !== '' && newData.taskDetail.version !== undefined) {
         this.taskFrom = 3
       }
     }
   },
-  mounted() {
-
-  },
   methods: {
     cacelTask() {
-      this.dialogVisible = true
+      this.$emit('cacelTask')
     },
     freezeTask() {
       if (this.taskFrom !== 3) {
@@ -194,36 +164,17 @@ export default {
         this.frozenTask()
       }).catch(() => {})
     },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const form = this.ruleForm
-          this.cancelTask(form)
-          this.dialogVisible = false
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
     async frozenTask() {
       const res = await frozenTask({ id: this.taskId })
       if (res.ret === 0) {
         this.$emit('freeze')
       }
     },
-    async cancelTask(from) {
-      const res = await cancelTask({ id: this.taskId, userId: 1, reason: from.result })
-      if (res.ret === 0) {
-        this.$message.success('任务取消成功')
-        this.$router.go(-1)
-      }
-    },
     taskFromFun() {
       this.taskFrom = 2
     },
     cacelTaskFun(ise) {
-      this.data = this.datacopy
+      this.baseData = this.datacopy
       if (ise) {
         this.taskFrom = 3
       } else {
@@ -231,11 +182,10 @@ export default {
       }
     },
     async saveTask(ruleFormInfo) {
-      ruleFormInfo.realServiceId = this.data.realServiceId
-      ruleFormInfo.realAmount = this.data.realAmount
-      ruleFormInfo.expDeliverTime = this.data.expDeliverTime
-      ruleFormInfo.expEndTime = this.data.expEndTime
-      console.log(ruleFormInfo.reUse)
+      ruleFormInfo.realServiceId = this.baseData.realServiceId
+      ruleFormInfo.realAmount = this.baseData.realAmount
+      ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
+      ruleFormInfo.expEndTime = this.baseData.expEndTime
       ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {

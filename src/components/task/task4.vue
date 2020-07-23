@@ -2,12 +2,12 @@
   <div class="broadfun_task">
     <div class="task_left">
       <div class="task_name">
-        <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
-        <div class="task_name_btn">
+        <div class="task_name_left"> {{ data.client.name }} </div>
+        <div class="task_name_btn" style="display: flex">
           <el-button v-if="type === 'allot'" type="primary" @click="startTask"> 启动执行 </el-button>
           <div v-else>
             <el-button type="primary" style="margin-right: 10px" @click="completeTask"> 执行完成 </el-button>
-            <el-dropdown>
+            <el-dropdown style="margin-right: 10px">
               <span class="el-dropdown-link">
                 更多操作<i class="el-icon-arrow-down el-icon--right" />
               </span>
@@ -18,6 +18,7 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
+          <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
         </div>
       </div>
 
@@ -137,9 +138,11 @@
 </template>
 
 <script>
+import permission from '@/directive/permission/index.js'
 import { executeTask, tagsTask, finishTask } from '@/api/task'
 export default {
   name: 'Task4',
+  directives: { permission },
   props: {
     data: {
       type: Object,
@@ -195,6 +198,9 @@ export default {
       }).then(() => {
         this.executeTask()
       }).catch(() => {})
+    },
+    cacelTask() {
+      this.$emit('cacelTask')
     },
     async executeTask() {
       const res = await executeTask({ id: this.data.ID })

@@ -3,17 +3,17 @@
     <el-row :gutter="20" class="today_container">
       <el-col :span="12">
         <div class="today_task">
-          <div class="title"> 今日结单任务（4） </div>
-          <div v-for="item in focusData" :key="item" class="item">
-            超级厉害娱乐信息公司 <span>深度兼容-Android 300</span>
+          <div class="title"> 今日结单任务 {{ focusData.length }} </div>
+          <div v-for="item in focusData" :key="item.ID" class="item">
+            {{ item.appName }} <span>深度兼容-Android 300</span>
           </div>
         </div>
       </el-col>
       <el-col :span="12">
         <div class="today_task">
-          <div class="title"> 明日结单任务（4） </div>
-          <div v-for="item in 6" :key="item" class="item">
-            超级厉害娱乐信息公司 <span>深度兼容-Android 300</span>
+          <div class="title"> 明日结单任务{{ temData.length }} </div>
+          <div v-for="item in temData" :key="item.ID" class="item">
+            {{ item.appName }} <span>深度兼容-Android 300</span>
           </div>
         </div>
       </el-col>
@@ -167,6 +167,7 @@ export default {
       finishData: [], // 待审核
       endData: [], // 已结单
       focusData: [], // 已结单
+      temData: [], // 明日结单
       dialogVisible: false,
       ruleForm: {
         clientId: '',
@@ -239,6 +240,7 @@ export default {
     this.clientList()
     // this.getServiceList()
     this.getFocusList()
+    this.getTemList()
     this.getManList()
     this.taskListCreate()
     this.taskListCancel()
@@ -265,6 +267,12 @@ export default {
       const res = await getFocusList({ type: '' })
       if (res.ret === 0) {
         this.focusData = res.data
+      }
+    },
+    async getTemList() {
+      const res = await getFocusList({ type: 1 })
+      if (res.ret === 0) {
+        this.temData = res.data
       }
     },
     async taskListCreate() {
@@ -312,7 +320,6 @@ export default {
     async taskListEnd() {
       const res = await taskList({ status: 'end', pageSize: '', pageNum: '' })
       if (res.ret === 0) {
-        console.log(res)
         this.endData = res.data.list
       }
     },

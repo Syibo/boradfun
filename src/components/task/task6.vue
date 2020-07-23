@@ -2,7 +2,7 @@
   <div class="broadfun_task">
     <div class="task_left">
       <div class="task_name">
-        <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
+        <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
           <el-button v-if="type === 'finish'" type="primary" @click="statement"> 交付结单 </el-button>
           <el-button v-else-if="type === 'end' && !eva" type="primary" @click="evaluation"> 评价 </el-button>

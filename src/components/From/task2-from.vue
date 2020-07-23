@@ -199,7 +199,6 @@ export default {
   mounted() {
     this.ruleFormInfo = this.data.taskDetail
     this.ruleFormInfoCopy = JSON.parse(JSON.stringify(this.data.taskDetail))
-    console.log(this.ruleFormInfo.reUse)
     if (this.ruleFormInfo.reUse === '') {
       this.ruleFormInfo.reUse = []
       this.ruleFormInfoCopy.reUse = []

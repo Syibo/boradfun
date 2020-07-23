@@ -2,9 +2,10 @@
   <div class="broadfun_task">
     <div class="task_left">
       <div class="task_name">
-        <div class="task_name_left"> 超级厉害娱乐信息公司 </div>
+        <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
           <el-button type="primary" @click="resources"> 资源指派 </el-button>
+          <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
         </div>
       </div>
 
@@ -121,11 +122,13 @@
 </template>
 
 <script>
+import permission from '@/directive/permission/index.js'
 import { mapGetters } from 'vuex'
 import { getUserImpls } from '@/api/user'
 import { assignTask } from '@/api/task'
 export default {
   name: 'Task3',
+  directives: { permission },
   props: {
     data: {
       type: Object,
@@ -179,6 +182,9 @@ export default {
       if (res.ret === 0) {
         this.userImpls = res.data
       }
+    },
+    cacelTask() {
+      this.$emit('cacelTask')
     },
     resources() {
       this.dialogVisible = true

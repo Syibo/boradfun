@@ -157,7 +157,7 @@ export const asyncRoutes = [
         name: '服务类型',
         meta: {
           title: '服务类型',
-          roles: [1]
+          roles: [1, 2, 3, 4, 5]
         }
       }
     ]
@@ -167,7 +167,7 @@ export const asyncRoutes = [
     path: '/lines',
     component: Layout,
     redirect: '/lines',
-    meta: { roles: [1] },
+    meta: { roles: [1, 2, 3, 4, 5] },
     children: [
       {
         path: '',

@@ -110,7 +110,8 @@ export const asyncRoutes = [
     name: 'Base',
     meta: {
       title: '基础数据',
-      icon: 'lock'
+      icon: 'lock',
+      roles: [1]
     },
     children: [
       {

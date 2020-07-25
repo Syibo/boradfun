@@ -4,8 +4,8 @@
       <div class="task_name">
         <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
-          <el-button v-if="type === 'finish'" type="primary" @click="statement"> 交付结单 </el-button>
-          <el-button v-else-if="type === 'end' && !eva" type="primary" @click="evaluation"> 评价 </el-button>
+          <el-button v-if="type === 'finish'" v-permission="[3]" type="primary" @click="statement"> 交付结单 </el-button>
+          <el-button v-else-if="type === 'end' && !eva" v-permission="[1, 3]" type="primary" @click="evaluation"> 评价 </el-button>
         </div>
       </div>
 
@@ -204,9 +204,11 @@
 </template>
 
 <script>
+import permission from '@/directive/permission/index.js'
 import { endTask, commentTask, getCommentTask } from '@/api/task'
 export default {
   name: 'Task6',
+  directives: { permission },
   props: {
     data: {
       type: Object,
@@ -340,7 +342,6 @@ export default {
       const res = await commentTask({ id: this.taskId, data: form })
       if (res.ret === 0) {
         this.$message.success('评价成功')
-        console.log(form)
         this.evaData = JSON.parse(JSON.stringify(form))
         this.eva = true
         this.show = false

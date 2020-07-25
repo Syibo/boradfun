@@ -34,7 +34,7 @@
 
     <div class="measure">
       <div class="measure_label"> 任务列表 </div>
-      <el-button v-permission="[1, 2, 3, 4]" icon="el-icon-circle-plus-outline" type="primary" @click="measure">提测</el-button>
+      <el-button v-permission="[1, 2, 3]" icon="el-icon-circle-plus-outline" type="primary" @click="measure">提测</el-button>
     </div>
 
     <el-row class="tabs_table">

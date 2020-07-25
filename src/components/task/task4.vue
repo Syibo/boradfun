@@ -4,28 +4,28 @@
       <div class="task_name">
         <div class="task_name_left"> {{ baseData.client.name }} </div>
         <div class="task_name_btn">
-          <el-button v-if="type === 'allot'" type="primary" @click="startTask"> 启动执行 </el-button>
+          <el-button v-if="type === 'allot'" v-permission="[5]" type="primary" @click="startTask"> 启动执行 </el-button>
           <div v-else-if="type === 'execute'">
-            <el-button type="primary" style="margin-right: 10px" @click="completeTask"> 执行完成 </el-button>
+            <el-button v-permission="[5]" type="primary" style="margin-right: 10px" @click="completeTask"> 执行完成 </el-button>
             <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
                 更多操作<i class="el-icon-arrow-down el-icon--right" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="stop">任务暂停</el-dropdown-item>
-                <el-dropdown-item command="cancel">任务取消</el-dropdown-item>
+                <el-dropdown-item v-permission="[5]" command="stop">任务暂停</el-dropdown-item>
+                <el-dropdown-item v-permission="[1, 2, 3]" command="cancel">任务取消</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
           <div v-else>
-            <el-button v-if="taskFrom === 3 && changeOver" type="primary" style="margin-right: 10px" @click="startTaskAgain"> 重新启动 </el-button>
+            <el-button v-if="taskFrom === 3 && changeOver" v-permission="[5]" type="primary" style="margin-right: 10px" @click="startTaskAgain"> 重新启动 </el-button>
             <el-dropdown @command="handleCommandPa">
               <span class="el-dropdown-link">
                 更多操作<i class="el-icon-arrow-down el-icon--right" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="change">无需变更</el-dropdown-item>
-                <el-dropdown-item command="cancel">任务取消</el-dropdown-item>
+                <el-dropdown-item v-permission="[3]" command="change">无需变更</el-dropdown-item>
+                <el-dropdown-item v-permission="[1, 2, 3]" command="cancel">任务取消</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -37,7 +37,7 @@
         <el-button v-else-if="type === 'execute'" style="color: #FFB959; border-color: #FFC069" disabled>执行中</el-button>
         <div v-else>
           <el-button style="color: #FF5C5C; border-color: #FF5C5C" disabled>任务暂停</el-button>
-          <div class="stop-info">
+          <div v-permission="[3]" class="stop-info">
             <i class="el-icon-warning" /> 你好！现在任务处于暂停中，您可以选择进行 <span @click="changeInfo">需求变更</span> 或是 <span @click="noChange">无需变更</span> ，通知实施人员重新执行！
           </div>
         </div>

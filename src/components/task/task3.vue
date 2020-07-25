@@ -4,7 +4,7 @@
       <div class="task_name">
         <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
-          <el-button type="primary" @click="resources"> 资源指派 </el-button>
+          <el-button v-permission="[4]" type="primary" @click="resources"> 资源指派 </el-button>
           <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
         </div>
       </div>

@@ -4,7 +4,7 @@
       <div class="task_name">
         <div class="task_name_left"> {{ baseData.client.name }} </div>
         <div class="task_name_btn">
-          <el-button v-permission="[1, 2, 3, 4, 5]" type="primary" @click="freezeTask"> 需求冻结 </el-button>
+          <el-button v-permission="[3]" type="primary" @click="freezeTask"> 需求冻结 </el-button>
           <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
         </div>
       </div>
@@ -67,7 +67,7 @@
         </el-col>
       </el-row>
 
-      <div class="task_label"> 需求信息 <el-button v-if="taskFrom === 3" style="float: right" type="text" @click="editTask">编辑需求</el-button> </div>
+      <div class="task_label"> 需求信息 <el-button v-if="taskFrom === 3" v-permission="[3]" style="float: right" type="text" @click="editTask">编辑需求</el-button> </div>
 
       <div v-if="taskFrom === 1" class="task_demand task_bule" @click="taskFromFun">
         <i class="el-icon-circle-plus-outline" /> 填写需求

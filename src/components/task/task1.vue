@@ -10,7 +10,7 @@
       </div>
 
       <div class="task_type">
-        <el-button>对接待确认</el-button>
+        <el-button disabled>对接待确认</el-button>
       </div>
 
       <div class="task_label"> 基本信息 </div>
@@ -85,7 +85,7 @@
 <script>
 // import { parseTime } from './../../utils/index'
 import permission from '@/directive/permission/index.js'
-import { cancelTask, confirmTask } from '@/api/task'
+import { confirmTask } from '@/api/task'
 export default {
   name: 'Task1',
   directives: { permission },
@@ -100,27 +100,14 @@ export default {
     }
   },
   data() {
-    return {
-      dialogVisible: false,
-      options: [{
-        value: '项目计划变更',
-        label: '项目计划变更'
-      }, {
-        value: '不想做了',
-        label: '不想做了'
-      }],
-      ruleForm: {
-        result: ''
-      },
-      rules: {}
-    }
+    return {}
   },
   mounted() {
     // console.log(
   },
   methods: {
     cacelTask() {
-      this.dialogVisible = true
+      this.$emit('cacelTask')
     },
     accept() {
       this.$confirm('确认接受此任务?', '提示', {
@@ -130,35 +117,11 @@ export default {
         this.confirmTask()
       }).catch(() => {})
     },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const form = this.ruleForm
-          this.cancelTask(form)
-          this.dialogVisible = false
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    async cancelTask(from) {
-      const res = await cancelTask({ id: this.taskId, userId: 1, reason: from.result })
-      if (res.ret === 0) {
-        this.$message.success('任务取消成功')
-        this.$router.go(-1)
-      }
-    },
     async confirmTask() {
       const res = await confirmTask({ id: this.taskId })
       if (res.ret === 0) {
         this.$message.success('任务已经接受')
         this.$emit('accept')
-      }
-    },
-    close() {
-      this.ruleForm = {
-        result: ''
       }
     }
   }

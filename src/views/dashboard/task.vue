@@ -5,6 +5,7 @@
       :task-id="taskId"
       :data="taskData"
       @accept="accept"
+      @cacelTask="cacelTask"
     />
     <Task2
       v-else-if="type === 'frozen'"
@@ -24,12 +25,13 @@
       @cacelTask="cacelTask"
     />
     <Task4
-      v-else-if="type === 'allot' || type === 'execute'"
+      v-else-if="type === 'allot' || type === 'execute' || type === 'pause'"
       :type="type"
       :task-id="taskId"
       :data="taskData"
       :service="serviceData"
       @startTask="startTask"
+      @stopTask="stopTask"
       @complete="complete"
       @cacelTask="cacelTask"
     />
@@ -194,6 +196,16 @@ export default {
         path: 'task',
         query: {
           type: 'execute',
+          id: this.taskId
+        }
+      })
+    },
+    stopTask() {
+      this.type = 'pause'
+      this.$router.replace({
+        path: 'task',
+        query: {
+          type: 'pause',
           id: this.taskId
         }
       })

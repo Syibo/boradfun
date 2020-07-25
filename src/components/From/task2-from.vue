@@ -199,7 +199,7 @@ export default {
   mounted() {
     this.ruleFormInfo = this.data.taskDetail
     this.ruleFormInfoCopy = JSON.parse(JSON.stringify(this.data.taskDetail))
-    if (this.ruleFormInfo.reUse === '') {
+    if (this.ruleFormInfo.reUse === '' || this.ruleFormInfo.reUse === undefined) {
       this.ruleFormInfo.reUse = []
       this.ruleFormInfoCopy.reUse = []
     } else {

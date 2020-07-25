@@ -151,6 +151,17 @@ export function executeTask({ id }) {
 }
 
 /**
+ * 暂停任务
+ * @param id 任务id
+ */
+export function stopTask({ id }) {
+  return request({
+    url: `/v1/task/pause/${id}`,
+    method: 'put'
+  })
+}
+
+/**
  * 标签列表
  * @param id 任务id
  */

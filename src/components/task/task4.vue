@@ -3,28 +3,45 @@
     <div class="task_left">
       <div class="task_name">
         <div class="task_name_left"> {{ data.client.name }} </div>
-        <div class="task_name_btn" style="display: flex">
+        <div class="task_name_btn">
           <el-button v-if="type === 'allot'" type="primary" @click="startTask"> 启动执行 </el-button>
-          <div v-else>
+          <div v-else-if="type === 'execute'">
             <el-button type="primary" style="margin-right: 10px" @click="completeTask"> 执行完成 </el-button>
-            <el-dropdown style="margin-right: 10px">
+            <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
                 更多操作<i class="el-icon-arrow-down el-icon--right" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>任务暂停</el-dropdown-item>
-                <el-dropdown-item>需求变更</el-dropdown-item>
-                <el-dropdown-item>任务取消</el-dropdown-item>
+                <el-dropdown-item command="stop">任务暂停</el-dropdown-item>
+                <el-dropdown-item command="change">需求变更</el-dropdown-item>
+                <el-dropdown-item command="cancel">任务取消</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
+          <div v-else>
+            <el-button v-if="taskFrom === 3 && changeOver" type="primary" style="margin-right: 10px" @click="startTaskAgain"> 重新启动 </el-button>
+            <el-dropdown @command="handleCommandPa">
+              <span class="el-dropdown-link">
+                更多操作<i class="el-icon-arrow-down el-icon--right" />
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="change">无需变更</el-dropdown-item>
+                <el-dropdown-item command="cancel">任务取消</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
         </div>
       </div>
 
       <div class="task_type">
         <el-button v-if="type === 'allot'" disabled>待执行</el-button>
-        <el-button v-else style="color: #FFB959; border-color: #FFC069" disabled>执行中</el-button>
+        <el-button v-else-if="type === 'execute'" style="color: #FFB959; border-color: #FFC069" disabled>执行中</el-button>
+        <div v-else>
+          <el-button style="color: #FF5C5C; border-color: #FF5C5C" disabled>任务暂停</el-button>
+          <div class="stop-info">
+            <i class="el-icon-warning" /> 你好！现在任务处于暂停中，您可以选择进行 <span @click="changeInfo">需求变更</span> 或是 <span>无需变更</span> ，通知实施人员重新执行！
+          </div>
+        </div>
       </div>
 
       <div class="task_label"> 基本信息 </div>
@@ -32,23 +49,52 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> {{ data.appName }} </span>
+          <span class="task_info_con"> {{ baseData.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> {{ data.expDeliverTime }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.expDeliverTime }} </span>
+          <span v-else class="task_info_con">
+            <el-date-picker
+              v-model="baseData.expDeliverTime"
+              type="datetime"
+              placeholder="选择日期时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
+            />
+          </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con"> {{ data.realService.serviceName }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realService.serviceName }} </span>
+          <span v-else class="task_info_con">
+            <el-select v-model="baseData.realServiceId" style="width: 100%" placeholder="请选择任务类型">
+              <el-option
+                v-for="item in service"
+                :key="item.ID"
+                :label="item.serviceName"
+                :value="item.ID"
+              />
+            </el-select>
+          </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单日期 </span>
-          <span class="task_info_con"> {{ data.expEndTime }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.expEndTime }} </span>
+          <span v-else class="task_info_con">
+            <el-date-picker
+              v-model="baseData.expEndTime"
+              type="datetime"
+              placeholder="选择日期时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
+            />
+          </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span class="task_info_con"> {{ data.realAmount }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realAmount }} </span>
+          <span v-else class="task_info_con">
+            <el-input-number v-model="baseData.realAmount" controls-position="right" :min="1" />
+          </span>
         </el-col>
       </el-row>
 
@@ -56,7 +102,7 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span class="task_info_con"> {{ data.service.serviceName }} </span>
+          <!-- <span class="task_info_con"> {{ data.service.serviceName }} </span> -->
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 处理人 </span>
@@ -70,7 +116,9 @@
 
       <div class="task_label"> 需求信息 </div>
 
-      <div class="task_demand_detail">
+      <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :data="baseData" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
+
+      <!-- <div class="task_demand_detail">
         <div class="task_demand_item"> <span>本次测试版本</span> {{ data.taskDetail.version }} </div>
         <div class="task_demand_item"> <span>安装包内网地址</span> {{ data.taskDetail.pkgAddress }} </div>
         <div class="task_demand_item"> <span>测试环境类型</span> {{ data.taskDetail.testType }} </div>
@@ -84,7 +132,7 @@
         <div class="task_demand_item"> <span>其他需求</span> {{ data.taskDetail.extReq }} </div>
         <div class="task_demand_item"> <span>文字用例内网地址</span> {{ data.taskDetail.instanceTxt }} </div>
         <div class="task_demand_item"> <span>视频用例内网地址</span> {{ data.taskDetail.instanceMv }} </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="task_right">
@@ -139,10 +187,14 @@
 
 <script>
 import permission from '@/directive/permission/index.js'
-import { executeTask, tagsTask, finishTask } from '@/api/task'
+import Task2From from '../From/task2-from'
+import { executeTask, tagsTask, finishTask, stopTask, saveTaskInfo } from '@/api/task'
 export default {
   name: 'Task4',
   directives: { permission },
+  components: {
+    Task2From
+  },
   props: {
     data: {
       type: Object,
@@ -164,6 +216,17 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      baseData: {
+        client: {},
+        service: {},
+        taskDetail: {},
+        exeUser: {},
+        realService: {}
+      },
+      datacopy: {},
+      isEdit: true,
+      taskFrom: 3,
+      changeOver: false,
       options: [{
         value: '项目计划变更',
         label: '项目计划变更'
@@ -187,6 +250,12 @@ export default {
       tagsList: []
     }
   },
+  watch: {
+    data(newData, prevData) {
+      this.baseData = JSON.parse(JSON.stringify(newData))
+      this.datacopy = JSON.parse(JSON.stringify(newData))
+    }
+  },
   mounted() {
     this.tagsTask()
   },
@@ -199,8 +268,13 @@ export default {
         this.executeTask()
       }).catch(() => {})
     },
-    cacelTask() {
-      this.$emit('cacelTask')
+    startTaskAgain() {
+      this.$confirm('已了解此次变更内容，打算重启执行任务？?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.executeTask()
+      }).catch(() => {})
     },
     async executeTask() {
       const res = await executeTask({ id: this.data.ID })
@@ -223,12 +297,76 @@ export default {
         this.$emit('complete')
       }
     },
+    async stopTask() {
+      const res = await stopTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.$message.success('任务暂停成功')
+        this.$emit('stopTask')
+      }
+    },
+    cacelTaskFun(ise) {
+      this.baseData = this.datacopy
+      if (ise) {
+        this.taskFrom = 3
+      } else {
+        this.taskFrom = 1
+      }
+    },
+    async saveTask(ruleFormInfo) {
+      ruleFormInfo.realServiceId = this.baseData.realServiceId
+      ruleFormInfo.realAmount = this.baseData.realAmount
+      ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
+      ruleFormInfo.expEndTime = this.baseData.expEndTime
+      ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
+      const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
+      if (res.ret === 0) {
+        this.$message.success('保存成功')
+        setTimeout(() => {
+          this.taskFrom = 3
+          this.changeOver = true
+        }, 1000)
+      }
+    },
+    handleCommand(command) {
+      switch (command) {
+        case 'stop':
+          this.$confirm('确定任务暂时无法继续执行，需要暂停任务吗？?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            this.stopTask()
+          }).catch(() => {})
+          break
+        case 'change':
+          console.log('change')
+          break
+        case 'cancel':
+          this.$emit('cacelTask')
+          break
+        default:
+          break
+      }
+    },
+    handleCommandPa(command) {
+      switch (command) {
+        case 'change':
+          this.dialogVisible = true
+          break
+        case 'cancel':
+          this.$emit('cacelTask')
+          break
+        default:
+          break
+      }
+    },
+    changeInfo() {
+      this.taskFrom = 2
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
           this.finishTask(form)
-          // this.dialogVisible = false
         } else {
           console.log('error submit!!')
           return false
@@ -265,10 +403,27 @@ export default {
   }
 }
 .el-dropdown-link {
-    cursor: pointer;
-    color: #409EFF;
+  cursor: pointer;
+  color: #409EFF;
 }
 .el-icon-arrow-down {
-    font-size: 12px;
+  font-size: 12px;
+}
+.stop-info {
+  height:40px;
+  background:rgba(230,247,255,1);
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 0 10px;
+  font-size: 12px;
+  span {
+    color: #3293FF;
+    cursor: pointer;
+  }
+  i {
+    color: #3293FF;
+    margin-right: 10px;
+  }
 }
 </style>

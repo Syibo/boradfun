@@ -42,6 +42,9 @@ export default {
   },
   methods: {
     goTask(id, status) {
+      if (status === 'cancel') {
+        return
+      }
       if (status === 'pause') {
         this.$router.push({
           path: 'task',

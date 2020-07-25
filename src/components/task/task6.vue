@@ -172,7 +172,7 @@
 
     <el-dialog title="实施评价" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
       <el-form ref="ruleFormEva" label-width="120px" label-position="top" :model="ruleFormEva" :rules="rulesEva">
-        <el-form-item label="实际交付时间">
+        <el-form-item label="实际交付时间" prop="realTime">
           <el-date-picker
             v-model="ruleFormEva.realTime"
             style="width: 100%"
@@ -181,13 +181,17 @@
             value-format="yyyy-MM-dd HH:mm:ss"
           />
         </el-form-item>
-        <el-form-item label="结单反工次数">
+        <el-form-item label="结单反工次数" prop="reExeTimes">
           <el-input-number v-model="ruleFormEva.reExeTimes" :min="1" controls-position="right" />
         </el-form-item>
-        <el-form-item label="客户服务评分">
-          <el-input-number v-model="ruleFormEva.score" :min="1" controls-position="right" />
+        <el-form-item label="客户服务评分" prop="score">
+          <!-- <el-input-number v-model="ruleFormEva.score" :min="1" controls-position="right" /> -->
+          <el-rate
+            v-model="ruleFormEva.score"
+            :max="10"
+          />
         </el-form-item>
-        <el-form-item label="其他补充信息">
+        <el-form-item label="其他补充信息" prop="other">
           <el-input v-model="ruleFormEva.other" type="textarea" rows="5" maxlength="100" show-word-limit placeholder="请输入补充信息" />
         </el-form-item>
       </el-form>
@@ -250,9 +254,19 @@ export default {
         score: 0,
         type: 0
       },
+      iconClasses: ['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3'],
       rulesEva: {
-        name: [
-          { required: true, message: '请确认信息', trigger: 'blur' }
+        realTime: [
+          { required: true, message: '请输入实际交付时间', trigger: 'blur' }
+        ],
+        reExeTimes: [
+          { required: true, message: '请输入结单反工次数', trigger: 'blur' }
+        ],
+        score: [
+          { required: true, message: '请输入客户服务评分', trigger: 'blur' }
+        ],
+        other: [
+          { required: true, message: '请输入其他补充信息', trigger: 'blur' }
         ]
       },
       rules: {
@@ -336,7 +350,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleFormEva
-          console.log(form)
           this.commentTask(form)
         } else {
           console.log('error submit!!')

@@ -162,6 +162,14 @@ export default {
       }
     },
     async saveTask(ruleFormInfo) {
+      console.log(this.baseData.expEndTime)
+      if (this.baseData.realServiceId === '' ||
+        this.baseData.realAmount === '' ||
+        this.baseData.expDeliverTime === null ||
+        this.baseData.expEndTime === null) {
+        this.$message.error('基本信息不完整')
+        return
+      }
       ruleFormInfo.realServiceId = this.baseData.realServiceId
       ruleFormInfo.realAmount = this.baseData.realAmount
       ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
@@ -169,7 +177,6 @@ export default {
       ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
-        // this.data.taskDetail = ruleFormInfo
         this.$message.success('保存成功')
         this.$emit('saveTask')
         setTimeout(() => {

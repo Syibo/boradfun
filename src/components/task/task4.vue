@@ -221,8 +221,20 @@ export default {
         tags: []
       },
       rules: {
-        serviceId: [
-          { required: true, message: '请选择服务', trigger: 'blur' }
+        usedTime: [
+          { required: true, message: '请输入任务执行时长', trigger: 'blur' }
+        ],
+        executeBatch: [
+          { required: true, message: '请输入执行批次', trigger: 'blur' }
+        ],
+        executeTai: [
+          { required: true, message: '请输入执行台次', trigger: 'blur' }
+        ],
+        delayTime: [
+          { required: true, message: '请输入外部延误时长', trigger: 'blur' }
+        ],
+        desc: [
+          { required: true, message: '请输入整体任务说明', trigger: 'blur' }
         ]
       },
       tagsList: []
@@ -291,6 +303,13 @@ export default {
       }
     },
     async saveTask(ruleFormInfo) {
+      if (this.baseData.realServiceId === '' ||
+        this.baseData.realAmount === '' ||
+        this.baseData.expDeliverTime === null ||
+        this.baseData.expEndTime === null) {
+        this.$message.error('基本信息不完整')
+        return
+      }
       ruleFormInfo.realServiceId = this.baseData.realServiceId
       ruleFormInfo.realAmount = this.baseData.realAmount
       ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
@@ -356,11 +375,11 @@ export default {
     },
     close() {
       this.ruleForm = {
-        delayTime: '',
+        delayTime: 1,
         desc: '',
-        executeBatch: '',
-        executeTai: '',
-        usedTime: '',
+        executeBatch: 1,
+        executeTai: 1,
+        usedTime: 1,
         tags: []
       }
       if (this.$refs['ruleForm']) {

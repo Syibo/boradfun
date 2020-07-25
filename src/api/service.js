@@ -102,3 +102,14 @@ export function handAmountSwitch({ clientId, sOutId, sOutNum, sInId, sInNum, rem
     }
   })
 }
+
+/**
+ * 客户额度转换
+ * @parms clientId 客户id
+ */
+export function handAmountLog({ clientId, serviceId }) {
+  return request({
+    url: `/v1/amount/log?clientId=${clientId}&serviceId=${serviceId}`,
+    method: 'get'
+  })
+}

@@ -122,10 +122,10 @@
               <el-form-item label="转入服务名称" prop="sOutId">
                 <el-select v-model="ruleFormChange.sInId" style="width: 100%" placeholder="请选择">
                   <el-option
-                    v-for="item in serviceInfo"
-                    :key="item.service_id"
-                    :label="item.service_name"
-                    :value="item.service_id"
+                    v-for="item in serviceList"
+                    :key="item.ID"
+                    :label="item.serviceName"
+                    :value="item.ID"
                   />
                 </el-select>
               </el-form-item>

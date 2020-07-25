@@ -12,8 +12,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="13">
-            <el-form-item label="" prop="checkSame">
-              <el-checkbox v-model="ruleFormInfo.checkSame">已验证版本包体一致性</el-checkbox>
+            <el-form-item label="">
+              <el-checkbox v-model="checkSame">已验证版本包体一致性</el-checkbox>
             </el-form-item>
           </el-col>
         </el-row>
@@ -25,9 +25,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="13">
-            <el-form-item label="" prop="checkDes">
-              <el-checkbox v-model="ruleFormInfo.checkDes">已告知客户生产环境风险</el-checkbox>
+          <el-col v-if="ruleFormInfo.testType === '生产环境'" :span="13">
+            <el-form-item label="">
+              <el-checkbox v-model="checkDes">已告知客户生产环境风险</el-checkbox>
             </el-form-item>
           </el-col>
         </el-row>
@@ -62,15 +62,15 @@
         </el-form-item>
 
         <el-form-item label="测试账号数量">
-          <el-input-number v-model="ruleFormInfo.accountNum" :min="1" controls-position="right" />
+          <el-input-number v-model="ruleFormInfo.accountNum" :min="0" controls-position="right" />
         </el-form-item>
 
         <el-form-item label="手机号码/微信数量">
-          <el-input-number v-model="ruleFormInfo.phoneNum" :min="1" controls-position="right" />
+          <el-input-number v-model="ruleFormInfo.phoneNum" :min="0" controls-position="right" />
         </el-form-item>
 
         <el-form-item label="系统并发限制">
-          <el-input-number v-model="ruleFormInfo.concurrentNum" controls-position="right" />
+          <el-input-number v-model="ruleFormInfo.concurrentNum" :min="0" controls-position="right" />
           <span style="margin-left: 10px">无限制 则填0</span>
         </el-form-item>
 
@@ -91,7 +91,7 @@
         </el-form-item>
 
         <div>
-          <el-button type="primary" @click="checkTask">保存</el-button>
+          <el-button type="primary" @click="submitFormInfo">保存</el-button>
           <el-button @click="cacelTask">取消</el-button>
         </div>
 
@@ -137,6 +137,8 @@ export default {
     return {
       detail: false,
       labelPosition: 'left',
+      checkSame: false,
+      checkDes: false,
       ruleFormInfo: {
         'accountAddress': '',
         'accountNum': 0,
@@ -154,8 +156,6 @@ export default {
         'testType': '',
         'version': '',
         'whiteList': '',
-        'checkSame': false,
-        'checkDes': false,
         'realServiceId': 0,
         'realAmount': 0,
         'expDeliverTime': '',
@@ -164,6 +164,27 @@ export default {
       rulesInfo: {
         version: [
           { required: true, message: '请输入版本', trigger: 'blur' }
+        ],
+        pkgAddress: [
+          { required: true, message: '请输入安装包内网地址', trigger: 'blur' }
+        ],
+        testType: [
+          { required: true, message: '请选择测试环境类型', trigger: 'change' }
+        ],
+        whiteList: [
+          { required: true, message: '请选择白名单', trigger: 'change' }
+        ],
+        testAccountType: [
+          { required: true, message: '请选择测试账号', trigger: 'change' }
+        ],
+        accountAddress: [
+          { required: true, message: '请输入账号内网地址', trigger: 'blur' }
+        ],
+        instanceTxt: [
+          { required: true, message: '请输入文字用例内网地址', trigger: 'blur' }
+        ],
+        instanceMv: [
+          { required: true, message: '请输入视频用例内网地址', trigger: 'blur' }
         ]
       },
       options: [{
@@ -186,6 +207,7 @@ export default {
   watch: {
     data(newData, prevData) {
       this.ruleFormInfo = newData.taskDetail
+      this.ruleFormInfo.checkSame = []
       this.ruleFormInfoCopy = JSON.parse(JSON.stringify(newData.taskDetail))
       if (this.ruleFormInfo.reUse === '') {
         this.ruleFormInfo.reUse = []
@@ -198,6 +220,7 @@ export default {
   },
   mounted() {
     this.ruleFormInfo = this.data.taskDetail
+    this.ruleFormInfo.checkSame = []
     this.ruleFormInfoCopy = JSON.parse(JSON.stringify(this.data.taskDetail))
     if (this.ruleFormInfo.reUse === '' || this.ruleFormInfo.reUse === undefined) {
       this.ruleFormInfo.reUse = []
@@ -211,6 +234,26 @@ export default {
     cacelTask() {
       this.ruleFormInfo = this.ruleFormInfoCopy
       this.$emit('cacelTask', this.isEdit)
+    },
+    submitFormInfo() {
+      this.$refs['ruleFormInfo'].validate((valid) => {
+        if (valid) {
+          if (!this.checkSame) {
+            this.$message.closeAll()
+            this.$message.error('请确定版本包体一致性')
+            return
+          }
+          if (!this.checkDes && this.ruleFormInfo.testType === '生产环境') {
+            this.$message.closeAll()
+            this.$message.error('请确定已告知客户生产环境风险')
+            return
+          }
+          this.checkTask()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     checkTask() {
       this.ruleFormInfoCopy = JSON.parse(JSON.stringify(this.ruleFormInfo))

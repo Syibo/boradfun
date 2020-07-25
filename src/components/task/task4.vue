@@ -105,11 +105,11 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 处理人 </span>
-          <span class="task_info_con"> {{ data.exeUser.name }} </span>
+          <span class="task_info_con"> {{ baseData.exeUser.name }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span class="task_info_con"> {{ data.deliverAmount }} </span>
+          <span class="task_info_con"> {{ baseData.deliverAmount }} </span>
         </el-col>
       </el-row>
 
@@ -117,21 +117,6 @@
 
       <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :data="baseData" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
 
-      <!-- <div class="task_demand_detail">
-        <div class="task_demand_item"> <span>本次测试版本</span> {{ data.taskDetail.version }} </div>
-        <div class="task_demand_item"> <span>安装包内网地址</span> {{ data.taskDetail.pkgAddress }} </div>
-        <div class="task_demand_item"> <span>测试环境类型</span> {{ data.taskDetail.testType }} </div>
-        <div class="task_demand_item"> <span /> {{ data.taskDetail.testExtInfo }} </div>
-        <div class="task_demand_item"> <span>白名单</span> {{ data.taskDetail.whiteList }} </div>
-        <div class="task_demand_item"> <span>测试账号</span> {{ data.taskDetail.testAccountType }} </div>
-        <div class="task_demand_item"> <span>测试账号数量</span> {{ data.taskDetail.accountNum }} </div>
-        <div class="task_demand_item"> <span>手机号码/微信数量</span> {{ data.taskDetail.phoneNum }} </div>
-        <div class="task_demand_item"> <span>系统并发限制</span> {{ data.taskDetail.concurrentNum }} </div>
-        <div class="task_demand_item"> <span>机型需求</span> {{ data.taskDetail.reqPhone }} </div>
-        <div class="task_demand_item"> <span>其他需求</span> {{ data.taskDetail.extReq }} </div>
-        <div class="task_demand_item"> <span>文字用例内网地址</span> {{ data.taskDetail.instanceTxt }} </div>
-        <div class="task_demand_item"> <span>视频用例内网地址</span> {{ data.taskDetail.instanceMv }} </div>
-      </div> -->
     </div>
 
     <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
@@ -166,7 +151,7 @@
 <script>
 import permission from '@/directive/permission/index.js'
 import Task2From from '../From/task2-from'
-import { executeTask, tagsTask, finishTask, stopTask, saveTaskInfo } from '@/api/task'
+import { executeTask, tagsTask, finishTask, stopTask, saveTaskInfo, getOneTask } from '@/api/task'
 export default {
   name: 'Task4',
   directives: { permission },
@@ -174,10 +159,6 @@ export default {
     Task2From
   },
   props: {
-    data: {
-      type: Object,
-      default: () => {}
-    },
     taskId: {
       type: Number,
       default: 0
@@ -240,16 +221,18 @@ export default {
       tagsList: []
     }
   },
-  watch: {
-    data(newData, prevData) {
-      this.baseData = JSON.parse(JSON.stringify(newData))
-      this.datacopy = JSON.parse(JSON.stringify(newData))
-    }
-  },
   mounted() {
+    this.getOneTask()
     this.tagsTask()
   },
   methods: {
+    async getOneTask() {
+      const res = await getOneTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.baseData = JSON.parse(JSON.stringify(res.data))
+        this.datacopy = JSON.parse(JSON.stringify(res.data))
+      }
+    },
     startTask() {
       this.$confirm('确认启动此任务?', '提示', {
         confirmButtonText: '确定',
@@ -267,7 +250,7 @@ export default {
       }).catch(() => {})
     },
     async executeTask() {
-      const res = await executeTask({ id: this.data.ID })
+      const res = await executeTask({ id: this.taskId })
       if (res.ret === 0) {
         this.$message.success('任务启动成功')
         this.$emit('startTask')
@@ -281,7 +264,7 @@ export default {
       this.dialogVisible = true
     },
     async finishTask(form) {
-      const res = await finishTask({ id: this.data.ID, data: form })
+      const res = await finishTask({ id: this.taskId, data: form })
       if (res.ret === 0) {
         this.$message.success('任务执行成功')
         this.$emit('complete')
@@ -318,10 +301,11 @@ export default {
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
         this.$message.success('保存成功')
-        setTimeout(() => {
-          this.taskFrom = 3
-          this.changeOver = true
-        }, 1000)
+        this.getOneTask()
+        // setTimeout(() => {
+        this.taskFrom = 3
+        this.changeOver = true
+        // }, 1000)
       }
     },
     handleCommand(command) {

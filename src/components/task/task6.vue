@@ -340,7 +340,8 @@ export default {
       const res = await commentTask({ id: this.taskId, data: form })
       if (res.ret === 0) {
         this.$message.success('评价成功')
-        this.evaData = form
+        console.log(form)
+        this.evaData = JSON.parse(JSON.stringify(form))
         this.eva = true
         this.show = false
         this.dialogVisibleEva = false
@@ -372,7 +373,11 @@ export default {
     },
     closeEva() {
       this.ruleFormEva = {
-        name: ''
+        other: '',
+        reExeTimes: 0,
+        realTime: '',
+        score: 0,
+        type: 0
       }
       if (this.$refs['ruleFormEva']) {
         this.$refs['ruleFormEva'].resetFields()

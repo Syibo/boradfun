@@ -2,7 +2,7 @@
   <div class="broadfun_task">
     <div class="task_left">
       <div class="task_name">
-        <div class="task_name_left"> {{ data.client.name }} </div>
+        <div class="task_name_left"> {{ baseData.client.name }} </div>
         <div class="task_name_btn">
           <el-button v-permission="[1, 2, 3, 4, 5]" type="primary" @click="freezeTask"> 需求冻结 </el-button>
           <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
@@ -34,7 +34,7 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realService.serviceName }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realService !== null ? baseData.realService.serviceName : '' }} </span>
           <span v-else class="task_info_con">
             <el-select v-model="baseData.realServiceId" style="width: 100%" placeholder="请选择任务类型">
               <el-option
@@ -82,7 +82,7 @@
 <script>
 import permission from '@/directive/permission/index.js'
 import Task2From from '../From/task2-from'
-import { saveTaskInfo, frozenTask } from '@/api/task'
+import { saveTaskInfo, frozenTask, getOneTask } from '@/api/task'
 export default {
   name: 'Task2',
   directives: { permission },
@@ -105,29 +105,53 @@ export default {
   },
   data() {
     return {
-      baseData: {},
+      baseData: {
+        client: {},
+        service: {},
+        taskDetail: {},
+        exeUser: {},
+        realService: {}
+      },
       datacopy: {},
       taskFrom: 1,
       isEdit: false
     }
   },
-  watch: {
-    data(newData, prevData) {
-      this.data = newData
-      this.baseData = JSON.parse(JSON.stringify(newData))
-      this.datacopy = JSON.parse(JSON.stringify(newData))
-      if (this.data.expDeliverTime === '0001-01-01 00:00:00') {
-        this.baseData.expDeliverTime = this.baseData.preDate
-        this.baseData.expEndTime = this.baseData.expEndDate
-        this.baseData.realServiceId = this.baseData.serviceId
-        this.baseData.realAmount = this.baseData.preAmount
-      }
-      if (newData.taskDetail.version !== '' && newData.taskDetail.version !== undefined) {
-        this.taskFrom = 3
-      }
-    }
+  // watch: {
+  //   data(newData, prevData) {
+  //     this.baseData = JSON.parse(JSON.stringify(newData))
+  //     this.datacopy = JSON.parse(JSON.stringify(newData))
+  //     if (this.data.expDeliverTime === '0001-01-01 00:00:00') {
+  //       this.baseData.expDeliverTime = this.baseData.preDate
+  //       this.baseData.expEndTime = this.baseData.expEndDate
+  //       this.baseData.realServiceId = this.baseData.serviceId
+  //       this.baseData.realAmount = this.baseData.preAmount
+  //     }
+  //     if (newData.taskDetail.version !== '' && newData.taskDetail.version !== undefined) {
+  //       this.taskFrom = 3
+  //     }
+  //   }
+  // },
+  mounted() {
+    this.getOneTask()
   },
   methods: {
+    async getOneTask() {
+      const res = await getOneTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.baseData = JSON.parse(JSON.stringify(res.data))
+        this.datacopy = JSON.parse(JSON.stringify(res.data))
+        if (res.data.expDeliverTime === '0001-01-01 00:00:00') {
+          this.baseData.expDeliverTime = this.baseData.preDate
+          this.baseData.expEndTime = this.baseData.expEndDate
+          this.baseData.realServiceId = this.baseData.serviceId
+          this.baseData.realAmount = this.baseData.preAmount
+        }
+        if (res.data.taskDetail.version !== '' && res.data.taskDetail.version !== undefined) {
+          this.taskFrom = 3
+        }
+      }
+    },
     cacelTask() {
       this.$emit('cacelTask')
     },
@@ -140,13 +164,13 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.$message.success('任务冻结成功')
         this.frozenTask()
       }).catch(() => {})
     },
     async frozenTask() {
       const res = await frozenTask({ id: this.taskId })
       if (res.ret === 0) {
+        this.$message.success('任务冻结成功')
         this.$emit('freeze')
       }
     },
@@ -162,7 +186,6 @@ export default {
       }
     },
     async saveTask(ruleFormInfo) {
-      console.log(this.baseData.expEndTime)
       if (this.baseData.realServiceId === '' ||
         this.baseData.realAmount === '' ||
         this.baseData.expDeliverTime === null ||
@@ -178,10 +201,10 @@ export default {
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
         this.$message.success('保存成功')
-        this.$emit('saveTask')
-        setTimeout(() => {
-          this.taskFrom = 3
-        }, 1000)
+        this.getOneTask()
+        // setTimeout(() => {
+        this.taskFrom = 3
+        // }, 1000)
       }
     },
     editTask() {

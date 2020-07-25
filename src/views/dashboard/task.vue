@@ -10,7 +10,6 @@
     <Task2
       v-else-if="type === 'frozen'"
       :task-id="taskId"
-      :data="taskData"
       :service="serviceData"
       @saveTask="saveTask"
       @freeze="freezeTask"
@@ -28,7 +27,6 @@
       v-else-if="type === 'allot' || type === 'execute' || type === 'pause'"
       :type="type"
       :task-id="taskId"
-      :data="taskData"
       :service="serviceData"
       @startTask="startTask"
       @stopTask="stopTask"
@@ -176,7 +174,7 @@ export default {
       }
     },
     async accept() {
-      await this.getOneTask()
+      // await this.getOneTask()
       this.type = 'frozen'
       this.$router.replace({
         path: 'task',
@@ -189,7 +187,7 @@ export default {
     async saveTask() {
       await this.getOneTask()
     },
-    freezeTask() {
+    async freezeTask() {
       this.type = 'assign'
       this.$router.replace({
         path: 'task',

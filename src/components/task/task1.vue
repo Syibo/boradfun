@@ -45,26 +45,6 @@
       </div>
 
     </div>
-    <!-- <div class="task_right">
-      <div class="task_label"> 基本信息 </div>
-      <el-row class="task_info">
-        <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> 王者荣耀 </span>
-        </el-col>
-        <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> 2020-02-03 </span>
-        </el-col>
-      </el-row>
-      <div class="task_label"> 变更记录 </div>
-
-      <div class="task_record">
-        <span class="task_record_ra" />
-        <div class="task_record_label">2020-06-25 20:20:20  </div>
-        <div class="task_record_con">先旭创建任务</div>
-      </div>
-    </div> -->
   </div>
 </template>
 

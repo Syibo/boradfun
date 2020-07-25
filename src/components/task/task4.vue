@@ -2,7 +2,7 @@
   <div class="broadfun_task">
     <div class="task_left">
       <div class="task_name">
-        <div class="task_name_left"> {{ data.client.name }} </div>
+        <div class="task_name_left"> {{ baseData.client.name }} </div>
         <div class="task_name_btn">
           <el-button v-if="type === 'allot'" type="primary" @click="startTask"> 启动执行 </el-button>
           <div v-else-if="type === 'execute'">
@@ -13,7 +13,6 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="stop">任务暂停</el-dropdown-item>
-                <el-dropdown-item command="change">需求变更</el-dropdown-item>
                 <el-dropdown-item command="cancel">任务取消</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -39,7 +38,7 @@
         <div v-else>
           <el-button style="color: #FF5C5C; border-color: #FF5C5C" disabled>任务暂停</el-button>
           <div class="stop-info">
-            <i class="el-icon-warning" /> 你好！现在任务处于暂停中，您可以选择进行 <span @click="changeInfo">需求变更</span> 或是 <span>无需变更</span> ，通知实施人员重新执行！
+            <i class="el-icon-warning" /> 你好！现在任务处于暂停中，您可以选择进行 <span @click="changeInfo">需求变更</span> 或是 <span @click="noChange">无需变更</span> ，通知实施人员重新执行！
           </div>
         </div>
       </div>
@@ -102,7 +101,7 @@
       <el-row class="task_info">
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <!-- <span class="task_info_con"> {{ data.service.serviceName }} </span> -->
+          <span class="task_info_con"> {{ baseData.realService.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 处理人 </span>
@@ -133,27 +132,6 @@
         <div class="task_demand_item"> <span>文字用例内网地址</span> {{ data.taskDetail.instanceTxt }} </div>
         <div class="task_demand_item"> <span>视频用例内网地址</span> {{ data.taskDetail.instanceMv }} </div>
       </div> -->
-    </div>
-
-    <div class="task_right">
-      <div class="task_label"> 基本信息 </div>
-      <el-row class="task_info">
-        <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> 王者荣耀 </span>
-        </el-col>
-        <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> 2020-02-03 </span>
-        </el-col>
-      </el-row>
-      <div class="task_label"> 变更记录 </div>
-
-      <div class="task_record">
-        <span class="task_record_ra" />
-        <div class="task_record_label">2020-06-25 20:20:20  </div>
-        <div class="task_record_con">先旭创建任务</div>
-      </div>
     </div>
 
     <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
@@ -358,6 +336,9 @@ export default {
         default:
           break
       }
+    },
+    noChange() {
+      this.dialogVisible = true
     },
     changeInfo() {
       this.taskFrom = 2

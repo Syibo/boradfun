@@ -57,26 +57,6 @@
       </div>
 
     </div>
-    <div class="task_right">
-      <div class="task_label"> 基本信息 </div>
-      <el-row class="task_info">
-        <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 应用/游戏名称 </span>
-          <span class="task_info_con"> 王者荣耀 </span>
-        </el-col>
-        <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 期望测试日期 </span>
-          <span class="task_info_con"> 2020-02-03 </span>
-        </el-col>
-      </el-row>
-      <div class="task_label"> 变更记录 </div>
-
-      <div class="task_record">
-        <span class="task_record_ra" />
-        <div class="task_record_label">2020-06-25 20:20:20  </div>
-        <div class="task_record_con">先旭创建任务</div>
-      </div>
-    </div>
 
     <el-dialog title="交付侧额度评估" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
@@ -91,18 +71,14 @@
           </el-select> -->
           <!-- {{ data.realService.serviceName }}
            -->
+          <div> {{ data.realService.serviceName }} </div>
         </el-form-item>
 
-        <el-form-item label="任务额度">
+        <el-form-item label="任务额度" prop="amount">
           <el-input-number v-model="ruleForm.amount" :min="1" controls-position="right" />
         </el-form-item>
 
-        <el-form-item label="处理人">
-          <!-- <el-radio-group v-model="ruleForm.preAmount">
-            <el-radio :label="3">TE1(0/1)</el-radio>
-            <el-radio :label="6">TE2(1/1)</el-radio>
-            <el-radio :label="9">TE3(1/1)</el-radio>
-          </el-radio-group> -->
+        <el-form-item label="处理人" prop="exeUserId">
           <el-select v-model="ruleForm.exeUserId" style="width: 100%" placeholder="请选择处理人">
             <el-option
               v-for="item in userImpls"
@@ -157,11 +133,14 @@ export default {
       }],
       ruleForm: {
         exeUserId: '',
-        amount: ''
+        amount: 1
       },
       rules: {
-        serviceId: [
-          { required: true, message: '请选择服务', trigger: 'blur' }
+        amount: [
+          { required: true, message: '请输入额度', trigger: 'blur' }
+        ],
+        exeUserId: [
+          { required: true, message: '请选择处理人', trigger: 'change' }
         ]
       },
       userImpls: []
@@ -190,8 +169,9 @@ export default {
       this.dialogVisible = true
     },
     async resourcesTask(form) {
-      const res = await assignTask({ id: this.data.ID, data: form })
+      const res = await assignTask({ id: this.taskId, data: form })
       if (res.ret === 0) {
+        this.dialogVisible = false
         this.$emit('resourcesTask')
       }
     },
@@ -200,7 +180,6 @@ export default {
         if (valid) {
           const form = this.ruleForm
           this.resourcesTask(form)
-          this.dialogVisible = false
         } else {
           console.log('error submit!!')
           return false
@@ -209,7 +188,8 @@ export default {
     },
     close() {
       this.ruleForm = {
-        result: ''
+        exeUserId: '',
+        amount: 1
       }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()

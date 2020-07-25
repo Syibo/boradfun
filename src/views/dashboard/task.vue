@@ -58,11 +58,11 @@
       </el-row>
       <div class="task_label"> 变更记录 </div>
 
-      <div class="task_record">
+      <!-- <div class="task_record">
         <span class="task_record_ra" />
         <div class="task_record_label"> 2020-06-25 20:20:20  </div>
         <div class="task_record_con">先旭创建任务</div>
-      </div>
+      </div> -->
     </div>
     <el-dialog title="任务取消" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">

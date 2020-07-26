@@ -101,15 +101,11 @@
 import permission from '@/directive/permission/index.js'
 import { mapGetters } from 'vuex'
 import { getUserImpls } from '@/api/user'
-import { assignTask } from '@/api/task'
+import { assignTask, getOneTask } from '@/api/task'
 export default {
   name: 'Task3',
   directives: { permission },
   props: {
-    data: {
-      type: Object,
-      default: () => {}
-    },
     taskId: {
       type: Number,
       default: 0
@@ -124,6 +120,13 @@ export default {
       taskFrom: 1,
       isEdit: false,
       dialogVisible: false,
+      data: {
+        client: {},
+        service: {},
+        taskDetail: {},
+        exeUser: {},
+        realService: {}
+      },
       options: [{
         value: '项目计划变更',
         label: '项目计划变更'
@@ -154,12 +157,19 @@ export default {
   },
   mounted() {
     this.getUserImpls()
+    this.getOneTask()
   },
   methods: {
     async getUserImpls() {
       const res = await getUserImpls({ leaderId: this.userId })
       if (res.ret === 0) {
         this.userImpls = res.data
+      }
+    },
+    async getOneTask() {
+      const res = await getOneTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.data = JSON.parse(JSON.stringify(res.data))
       }
     },
     cacelTask() {

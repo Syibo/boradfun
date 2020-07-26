@@ -18,7 +18,6 @@
     <Task3
       v-else-if="type === 'assign'"
       :task-id="taskId"
-      :data="taskData"
       :service="serviceData"
       @resourcesTask="resourcesTask"
       @cacelTask="cacelTask"

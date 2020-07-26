@@ -168,7 +168,7 @@ export const asyncRoutes = [
     path: '/lines',
     component: Layout,
     redirect: '/lines',
-    meta: { roles: [1, 2, 3, 4, 5] },
+    meta: { roles: [1] },
     children: [
       {
         path: '',

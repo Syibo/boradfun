@@ -18,7 +18,8 @@
             </el-dropdown>
           </div>
           <div v-else>
-            <el-button v-if="taskFrom === 3 && changeOver" v-permission="[5]" type="primary" style="margin-right: 10px" @click="startTaskAgain"> 重新启动 </el-button>
+            <el-button v-if="taskFrom === 3" v-permission="[5]" type="primary" style="margin-right: 10px" @click="startTaskAgain"> 重新启动 </el-button>
+            <el-button v-if="changeOver" v-permission="[3]" type="primary" style="margin-right: 10px" @click="changeOverFun"> 变更完成 </el-button>
             <el-dropdown @command="handleCommandPa">
               <span class="el-dropdown-link">
                 更多操作<i class="el-icon-arrow-down el-icon--right" />
@@ -185,7 +186,7 @@ export default {
       datacopy: {},
       isEdit: true,
       taskFrom: 3,
-      changeOver: false,
+      changeOver: true,
       options: [{
         value: '项目计划变更',
         label: '项目计划变更'
@@ -302,10 +303,8 @@ export default {
       if (res.ret === 0) {
         this.$message.success('保存成功')
         this.getOneTask()
-        // setTimeout(() => {
         this.taskFrom = 3
         this.changeOver = true
-        // }, 1000)
       }
     },
     handleCommand(command) {
@@ -340,11 +339,17 @@ export default {
           break
       }
     },
+    // eslint-disable-next-line vue/no-dupe-keys
+    changeOverFun() {
+      this.changeOver = false
+    },
     noChange() {
-      this.dialogVisible = true
+      // this.dialogVisible = true
+      this.taskFrom = 3
     },
     changeInfo() {
       this.taskFrom = 2
+      this.changeOver = true
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

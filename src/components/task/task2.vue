@@ -177,6 +177,12 @@ export default {
     },
     cacelTaskFun(ise) {
       this.baseData = this.datacopy
+      if (this.baseData.expDeliverTime === '0001-01-01 00:00:00') {
+        this.baseData.expDeliverTime = this.baseData.preDate
+        this.baseData.expEndTime = this.baseData.expEndDate
+        this.baseData.realServiceId = this.baseData.serviceId
+        this.baseData.realAmount = this.baseData.preAmount
+      }
       if (ise) {
         this.taskFrom = 3
       } else {
@@ -200,9 +206,7 @@ export default {
       if (res.ret === 0) {
         this.$message.success('保存成功')
         this.getOneTask()
-        // setTimeout(() => {
         this.taskFrom = 3
-        // }, 1000)
       }
     },
     editTask() {

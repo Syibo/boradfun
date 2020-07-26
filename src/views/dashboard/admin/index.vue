@@ -131,6 +131,7 @@
               :key="item.ID"
               :label="item.name"
               :value="item.ID"
+              :disabled="roles[0] === 3"
             />
           </el-select>
         </el-form-item>
@@ -146,6 +147,7 @@
 <script>
 import permission from '@/directive/permission/index.js'
 import { getClientList } from '@/api/customer'
+import { mapGetters } from 'vuex'
 // eslint-disable-next-line no-unused-vars
 import { getList, getCusAmountList } from '@/api/service'
 import { getUserList } from '@/api/user'
@@ -237,6 +239,12 @@ export default {
         }
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'userId',
+      'roles'
+    ])
   },
   mounted() {
     this.clientList()
@@ -379,6 +387,9 @@ export default {
       }
     },
     measure() {
+      if (this.roles[0] === 3) {
+        this.ruleForm.manageId = this.userId
+      }
       this.dialogVisible = true
     }
   }

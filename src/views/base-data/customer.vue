@@ -26,7 +26,7 @@
       <el-dialog title="新增客户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @open="open">
         <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="客户编号" prop="number">
-            <el-input v-model="ruleForm.number" placeholder="请输入客户编号" />
+            <el-input v-model="ruleForm.number" maxlength="10" show-word-limit placeholder="请输入客户编号" />
           </el-form-item>
           <el-form-item label="客户名称" prop="name">
             <el-input v-model="ruleForm.name" placeholder="请输入客户名称" />

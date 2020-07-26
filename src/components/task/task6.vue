@@ -134,7 +134,7 @@
         </el-form-item>
 
         <el-form-item label="机型需求" prop="checkedPhone">
-          <el-row> <el-col :span="8">机型需求</el-col> <el-col :span="10"> {{ data.taskDetail.reqPhone }} </el-col>
+          <el-row> <el-col :span="8">机型需求</el-col> <el-col :span="10"> {{ data.taskDetail.reqPhone ? data.taskDetail.reqPhone : '-' }} </el-col>
             <el-col :span="6">
               <el-checkbox-group v-model="ruleForm.checkedPhone">
                 <el-checkbox label="确认无误" />
@@ -144,7 +144,7 @@
         </el-form-item>
 
         <el-form-item label="其他需求" prop="checkedOther">
-          <el-row> <el-col :span="8">其他需求</el-col> <el-col :span="10"> {{ data.taskDetail.extReq }} </el-col>
+          <el-row> <el-col :span="8">其他需求</el-col> <el-col :span="10"> {{ data.taskDetail.extReq ? data.taskDetail.extReq : '-' }} </el-col>
             <el-col :span="6">
               <el-checkbox-group v-model="ruleForm.checkedOther">
                 <el-checkbox label="确认无误" />

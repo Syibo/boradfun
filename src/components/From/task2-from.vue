@@ -33,7 +33,7 @@
         </el-row>
 
         <el-form-item label="">
-          <el-input v-model="ruleFormInfo.testExtInfo" type="textarea" style="width: 420px" placeholder="测试环境补充信息" />
+          <el-input v-model="ruleFormInfo.testExtInfo" type="textarea" rows="3" style="width: 420px" maxlength="250" show-word-limit placeholder="测试环境补充信息" />
         </el-form-item>
 
         <el-form-item label="白名单" prop="whiteList">

@@ -29,7 +29,6 @@
     <Task6
       v-else-if="type === 'finish' || type === 'end'"
       :type="type"
-      :data="taskData"
       :service="serviceData"
       @statement="statement"
     />
@@ -38,11 +37,11 @@
       <div class="task_label"> 基本信息 </div>
       <el-row class="task_info">
         <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 应用/游戏名称 </span>
+          <span class="task_info_label"> 负责人 </span>
           <span class="task_info_con"> {{ taskData.appName }} </span>
         </el-col>
         <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 期望测试日期 </span>
+          <span class="task_info_label"> 客户服务经理 </span>
           <span class="task_info_con"> {{ taskData.expEndTime !== '0001-01-01 00:00:00' ? taskData.expEndTime : taskData.expEndDate }} </span>
         </el-col>
       </el-row>

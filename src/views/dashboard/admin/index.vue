@@ -107,6 +107,7 @@
                 format="yyyy 年 MM 月 dd 日"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="optiondate"
+                @change="dateChange"
               />
             </el-form-item>
           </el-col>
@@ -150,6 +151,7 @@ import { getList, getCusAmountList } from '@/api/service'
 import { getUserList } from '@/api/user'
 import { addTask, taskList, getFocusList } from '@/api/task'
 import table1 from '@/components/dashboard/table1.vue'
+import Moment from 'moment'
 export default {
   name: 'DashboardAdmin',
   components: {
@@ -358,6 +360,9 @@ export default {
       } else {
         console.log('error')
       }
+    },
+    dateChange(value) {
+      this.ruleForm.expEndDate = Moment(value).add(3, 'days').format('YYYY-MM-DD HH:mm:ss')
     },
     close() {
       this.ruleForm = {

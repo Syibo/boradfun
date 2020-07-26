@@ -49,31 +49,36 @@
 </template>
 
 <script>
-// import { parseTime } from './../../utils/index'
 import permission from '@/directive/permission/index.js'
-import { confirmTask } from '@/api/task'
+import { confirmTask, getOneTask } from '@/api/task'
 export default {
   name: 'Task1',
   directives: { permission },
-  props: {
-    data: {
-      type: Object,
-      default: () => {}
-    },
-    taskId: {
-      type: Number,
-      default: 0
+  data() {
+    return {
+      taskId: 0,
+      data: {
+        client: {},
+        service: {},
+        taskDetail: {},
+        exeUser: {},
+        realService: {}
+      }
     }
   },
-  data() {
-    return {}
-  },
   mounted() {
-    // console.log(
+    this.taskId = Number(this.$route.query.id)
+    this.getOneTask()
   },
   methods: {
     cacelTask() {
       this.$emit('cacelTask')
+    },
+    async getOneTask() {
+      const res = await getOneTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.data = JSON.parse(JSON.stringify(res.data))
+      }
     },
     accept() {
       this.$confirm('确认接受此任务?', '提示', {

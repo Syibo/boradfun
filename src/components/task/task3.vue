@@ -106,10 +106,6 @@ export default {
   name: 'Task3',
   directives: { permission },
   props: {
-    taskId: {
-      type: Number,
-      default: 0
-    },
     service: {
       type: Array,
       default: () => []
@@ -118,6 +114,7 @@ export default {
   data() {
     return {
       taskFrom: 1,
+      taskId: 0,
       isEdit: false,
       dialogVisible: false,
       data: {
@@ -156,6 +153,7 @@ export default {
     ])
   },
   mounted() {
+    this.taskId = Number(this.$route.query.id)
     this.getUserImpls()
     this.getOneTask()
   },

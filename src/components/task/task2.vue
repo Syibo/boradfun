@@ -94,10 +94,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    taskId: {
-      type: Number,
-      default: 0
-    },
     service: {
       type: Array,
       default: () => []
@@ -105,6 +101,7 @@ export default {
   },
   data() {
     return {
+      taskId: 0,
       baseData: {
         client: {},
         service: {},
@@ -133,6 +130,7 @@ export default {
   //   }
   // },
   mounted() {
+    this.taskId = Number(this.$route.query.id)
     this.getOneTask()
   },
   methods: {

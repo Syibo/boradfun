@@ -2,22 +2,17 @@
   <div class="container">
     <Task1
       v-if="type === 'create'"
-      :task-id="taskId"
-      :data="taskData"
       @accept="accept"
       @cacelTask="cacelTask"
     />
     <Task2
       v-else-if="type === 'frozen'"
-      :task-id="taskId"
       :service="serviceData"
-      @saveTask="saveTask"
       @freeze="freezeTask"
       @cacelTask="cacelTask"
     />
     <Task3
       v-else-if="type === 'assign'"
-      :task-id="taskId"
       :service="serviceData"
       @resourcesTask="resourcesTask"
       @cacelTask="cacelTask"
@@ -25,7 +20,6 @@
     <Task4
       v-else-if="type === 'allot' || type === 'execute' || type === 'pause'"
       :type="type"
-      :task-id="taskId"
       :service="serviceData"
       @startTask="startTask"
       @stopTask="stopTask"
@@ -35,7 +29,6 @@
     <Task6
       v-else-if="type === 'finish' || type === 'end'"
       :type="type"
-      :task-id="taskId"
       :data="taskData"
       :service="serviceData"
       @statement="statement"
@@ -128,8 +121,9 @@ export default {
   mounted() {
     this.type = this.$route.query.type
     this.taskId = Number(this.$route.query.id)
+    // console.log(this.taskId)
     this.getServiceList()
-    this.getOneTask()
+    // this.getOneTask()
   },
   methods: {
     async getServiceList() {
@@ -173,7 +167,6 @@ export default {
       }
     },
     async accept() {
-      // await this.getOneTask()
       this.type = 'frozen'
       this.$router.replace({
         path: 'task',
@@ -182,9 +175,6 @@ export default {
           id: this.taskId
         }
       })
-    },
-    async saveTask() {
-      await this.getOneTask()
     },
     async freezeTask() {
       this.type = 'assign'
@@ -197,7 +187,6 @@ export default {
       })
     },
     async resourcesTask() {
-      await this.getOneTask()
       this.type = 'allot'
       this.$router.replace({
         path: 'task',

@@ -39,7 +39,7 @@
 
     <el-row class="tabs_table">
       <el-tabs>
-        <el-tab-pane :label="`急需解决 · ${focusData.length}`" class="tabs_item">
+        <el-tab-pane :label="`亟需关注 · ${focusData.length}`" class="tabs_item">
           <!-- <table1 :date="focusData" /> -->
         </el-tab-pane>
         <el-tab-pane :label="`对接待确认 · ${createData.length}`" class="tabs_item">

@@ -205,19 +205,11 @@
 
 <script>
 import permission from '@/directive/permission/index.js'
-import { endTask, commentTask, getCommentTask } from '@/api/task'
+import { endTask, commentTask, getCommentTask, getOneTask } from '@/api/task'
 export default {
   name: 'Task6',
   directives: { permission },
   props: {
-    data: {
-      type: Object,
-      default: () => {}
-    },
-    taskId: {
-      type: Number,
-      default: 0
-    },
     service: {
       type: Array,
       default: () => []
@@ -231,6 +223,14 @@ export default {
     return {
       eva: false,
       show: true,
+      taskId: 0,
+      data: {
+        client: {},
+        service: {},
+        taskDetail: {},
+        exeUser: {},
+        realService: {}
+      },
       dialogVisible: false,
       dialogVisibleEva: false,
       evaData: {},
@@ -294,11 +294,19 @@ export default {
     }
   },
   mounted() {
+    this.taskId = Number(this.$route.query.id)
     this.getCommentTask()
+    this.getOneTask()
   },
   methods: {
     statement() {
       this.dialogVisible = true
+    },
+    async getOneTask() {
+      const res = await getOneTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.data = JSON.parse(JSON.stringify(res.data))
+      }
     },
     evaluation() {
       this.dialogVisibleEva = true

@@ -4,13 +4,14 @@
       <el-table-column prop="ID" label="任务ID" width="180" />
       <el-table-column label="客户名称" width="180">
         <template slot-scope="scope">
-          <span class="name" @click="goTask(scope.row.ID, scope.row.status)">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
+          <span class="name">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
         </template>
       </el-table-column>
       <el-table-column prop="appName" label="应用/游戏名称" />
       <el-table-column prop="service.serviceName" label="任务类型" />
       <el-table-column prop="manageId" label="客户服务经理" />
       <el-table-column prop="expEndDate" label="期望结单日期/时间" />
+      <el-table-column prop="reason" label="取消原因" />
     </el-table>
   </div>
 </template>
@@ -18,7 +19,7 @@
 <script>
 import Level from '@/components/common/level.vue'
 export default {
-  name: 'Table1',
+  name: 'TableCancel',
   components: {
     Level
   },
@@ -41,28 +42,6 @@ export default {
 
   },
   methods: {
-    goTask(id, status) {
-      if (status === 'cancel') {
-        return
-      }
-      if (status === 'pause') {
-        this.$router.push({
-          path: 'task',
-          query: {
-            type: 'pause',
-            id
-          }
-        })
-      } else {
-        this.$router.push({
-          path: 'task',
-          query: {
-            type: this.type,
-            id
-          }
-        })
-      }
-    }
   }
 }
 </script>

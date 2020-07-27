@@ -4,7 +4,7 @@
       <div class="task_name">
         <div class="task_name_left"> {{ baseData.client.name }} </div>
         <div class="task_name_btn">
-          <el-button v-if="type === 'allot'" v-permission="[5]" type="primary" @click="startTask"> 启动执行 </el-button>
+          <el-button v-if="type === 'assign'" v-permission="[5]" type="primary" @click="startTask"> 启动执行 </el-button>
           <div v-else-if="type === 'execute'">
             <el-button v-permission="[5]" type="primary" style="margin-right: 10px" @click="completeTask"> 执行完成 </el-button>
             <el-dropdown @command="handleCommand">
@@ -34,7 +34,7 @@
       </div>
 
       <div class="task_type">
-        <el-button v-if="type === 'allot'" disabled>待执行</el-button>
+        <el-button v-if="type === 'assign'" disabled>待执行</el-button>
         <el-button v-else-if="type === 'execute'" style="color: #FFB959; border-color: #FFC069" disabled>执行中</el-button>
         <div v-else>
           <el-button style="color: #FF5C5C; border-color: #FF5C5C" disabled>任务暂停</el-button>
@@ -170,7 +170,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'allot'
+      default: 'assign'
     }
   },
   data() {

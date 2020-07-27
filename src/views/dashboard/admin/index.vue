@@ -23,10 +23,10 @@
         width="420"
         trigger="click"
       >
-        <el-table :data="tableData" header-cell-class-name="table-header-style" style="width: 100%">
-          <el-table-column width="200" property="date" label="类型" />
-          <el-table-column property="name" label="需求" />
-          <el-table-column property="address" label="实施" />
+        <el-table :data="dashboardData" header-cell-class-name="table-header-style" height="400" style="width: 100%">
+          <el-table-column width="200" property="name" label="类型" />
+          <el-table-column property="reqNum" label="需求" />
+          <el-table-column property="impNum" label="实施" />
         </el-table>
         <el-button slot="reference" class="bor_btn" circle>总览</el-button>
       </el-popover>
@@ -39,32 +39,32 @@
 
     <el-row class="tabs_table">
       <el-tabs>
-        <el-tab-pane :label="`亟需关注 · ${focusData.length}`" class="tabs_item">
-          <!-- <table1 :date="focusData" /> -->
+        <el-tab-pane :label="`亟需关注 · ${hightData.length}`" class="tabs_item">
+          <!-- <TableBase :date="hightData" /> -->
         </el-tab-pane>
         <el-tab-pane :label="`对接待确认 · ${createData.length}`" class="tabs_item">
-          <table1 :date="createData" :type="'create'" />
+          <TableBase :date="createData" :type="'create'" />
         </el-tab-pane>
         <el-tab-pane :label="`需求对接中 · ${confirmData.length}`" class="tabs_item">
-          <table1 :date="confirmData" :type="'frozen'" />
+          <TableBase :date="confirmData" :type="'confirm'" />
         </el-tab-pane>
         <el-tab-pane :label="`待分配 · ${frozenData.length}`" class="tabs_item">
-          <table1 :date="frozenData" :type="'assign'" />
+          <TableBase :date="frozenData" :type="'frozen'" />
         </el-tab-pane>
         <el-tab-pane :label="`待执行 · ${assignData.length}`" class="tabs_item">
-          <table1 :date="assignData" :type="'allot'" />
+          <TableBase :date="assignData" :type="'assign'" />
         </el-tab-pane>
         <el-tab-pane :label="`执行中 · ${executeData.length}`" class="tabs_item">
-          <table1 :date="executeData" :type="'execute'" />
+          <TableBase :date="executeData" :type="'execute'" />
         </el-tab-pane>
         <el-tab-pane :label="`待审核 · ${finishData.length}`" class="tabs_item">
-          <table1 :date="finishData" :type="'finish'" />
+          <TableBase :date="finishData" :type="'finish'" />
         </el-tab-pane>
         <el-tab-pane :label="`已结单 · ${endData.length}`" class="tabs_item">
-          <table1 :date="endData" :type="'end'" />
+          <TableBase :date="endData" :type="'end'" />
         </el-tab-pane>
         <el-tab-pane :label="`任务取消 · ${cancelData.length}`" class="tabs_item">
-          <table1 :date="cancelData" :type="'cancel'" />
+          <TableCancel :date="cancelData" :type="'cancel'" />
         </el-tab-pane>
       </el-tabs>
     </el-row>
@@ -151,13 +151,15 @@ import { mapGetters } from 'vuex'
 // eslint-disable-next-line no-unused-vars
 import { getList, getCusAmountList } from '@/api/service'
 import { getUserList } from '@/api/user'
-import { addTask, taskList, getFocusList } from '@/api/task'
-import table1 from '@/components/dashboard/table1.vue'
+import { addTask, taskList, getFocusList, getDashboardData, getHightData } from '@/api/task'
+import TableBase from '@/components/dashboard/TableBase.vue'
+import TableCancel from '@/components/dashboard/TableCancel.vue'
 import Moment from 'moment'
 export default {
   name: 'DashboardAdmin',
   components: {
-    table1
+    TableBase,
+    TableCancel
   },
   directives: { permission },
   data() {
@@ -172,6 +174,8 @@ export default {
       endData: [], // 已结单
       focusData: [], // 已结单
       temData: [], // 明日结单
+      dashboardData: [], // 纵览
+      hightData: [], // 急需解决
       dialogVisible: false,
       ruleForm: {
         clientId: '',
@@ -205,31 +209,6 @@ export default {
           { required: true, message: '请选择客户服务经理', trigger: 'blur' }
         ]
       },
-      tableData: [{
-        date: '专家兼容精华-Android 100',
-        name: '10',
-        address: '20'
-      }, {
-        date: '专家兼容精华-Android 100',
-        name: '10',
-        address: '20'
-      }, {
-        date: '专家兼容精华-Android 100',
-        name: '10',
-        address: '20'
-      }, {
-        date: '专家兼容精华-Android 100',
-        name: '10',
-        address: '20'
-      }, {
-        date: '专家兼容精华-Android 100',
-        name: '10',
-        address: '20'
-      }, {
-        date: '专家兼容精华-Android 100',
-        name: '10',
-        address: '20'
-      }],
       clientData: [],
       serviceData: [],
       manData: [],
@@ -248,6 +227,8 @@ export default {
   },
   mounted() {
     this.clientList()
+    this.getDashboardData()
+    this.getHightData()
     // this.getServiceList()
     this.getFocusList()
     this.getTemList()
@@ -273,6 +254,18 @@ export default {
     //   const res = await getList()
     //   this.serviceData = res.data
     // },
+    async getHightData() {
+      const res = await getHightData()
+      if (res.ret === 0) {
+        this.hightData = res.data
+      }
+    },
+    async getDashboardData() {
+      const res = await getDashboardData()
+      if (res.ret === 0) {
+        this.dashboardData = res.data
+      }
+    },
     async getFocusList() {
       const res = await getFocusList({ type: '' })
       if (res.ret === 0) {

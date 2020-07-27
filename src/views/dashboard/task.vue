@@ -6,19 +6,19 @@
       @cacelTask="cacelTask"
     />
     <Task2
-      v-else-if="type === 'frozen'"
+      v-else-if="type === 'confirm'"
       :service="serviceData"
       @freeze="freezeTask"
       @cacelTask="cacelTask"
     />
     <Task3
-      v-else-if="type === 'assign'"
+      v-else-if="type === 'frozen'"
       :service="serviceData"
       @resourcesTask="resourcesTask"
       @cacelTask="cacelTask"
     />
     <Task4
-      v-else-if="type === 'allot' || type === 'execute' || type === 'pause'"
+      v-else-if="type === 'assign' || type === 'execute' || type === 'pause'"
       :type="type"
       :service="serviceData"
       @startTask="startTask"

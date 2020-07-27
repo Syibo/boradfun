@@ -5,7 +5,7 @@
         <div class="today_task">
           <div class="title"> 今日结单任务 {{ focusData.length }} </div>
           <div v-for="item in focusData" :key="item.ID" class="item">
-            {{ item.appName }} <span>深度兼容-Android 300</span>
+            <span @click="goTask(item)">{{ item.appName }}</span> <span>**</span>
           </div>
         </div>
       </el-col>
@@ -13,7 +13,7 @@
         <div class="today_task">
           <div class="title"> 明日结单任务{{ temData.length }} </div>
           <div v-for="item in temData" :key="item.ID" class="item">
-            {{ item.appName }} <span>深度兼容-Android 300</span>
+            <span @click="goTask(item)">{{ item.appName }}</span> <span>**</span>
           </div>
         </div>
       </el-col>
@@ -40,7 +40,7 @@
     <el-row class="tabs_table">
       <el-tabs>
         <el-tab-pane :label="`亟需关注 · ${hightData.length}`" class="tabs_item">
-          <!-- <TableBase :date="hightData" /> -->
+          <TableHigh :date="hightData" />
         </el-tab-pane>
         <el-tab-pane :label="`对接待确认 · ${createData.length}`" class="tabs_item">
           <TableBase :date="createData" :type="'create'" />
@@ -154,12 +154,14 @@ import { getUserList } from '@/api/user'
 import { addTask, taskList, getFocusList, getDashboardData, getHightData } from '@/api/task'
 import TableBase from '@/components/dashboard/TableBase.vue'
 import TableCancel from '@/components/dashboard/TableCancel.vue'
+import TableHigh from '@/components/dashboard/TableHigh.vue'
 import Moment from 'moment'
 export default {
   name: 'DashboardAdmin',
   components: {
     TableBase,
-    TableCancel
+    TableCancel,
+    TableHigh
   },
   directives: { permission },
   data() {
@@ -362,6 +364,15 @@ export default {
         console.log('error')
       }
     },
+    goTask(item) {
+      this.$router.push({
+        path: 'task',
+        query: {
+          type: item.status,
+          id: item.ID
+        }
+      })
+    },
     dateChange(value) {
       this.ruleForm.expEndDate = Moment(value).add(3, 'days').format('YYYY-MM-DD HH:mm:ss')
     },
@@ -441,6 +452,7 @@ export default {
           line-height: 22px;
           padding: 0 5px;
           border-radius:3px;
+          cursor: pointer;
         }
       }
     }

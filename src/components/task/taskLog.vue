@@ -4,11 +4,11 @@
     <el-row class="task_info">
       <el-col :span="24" class="task_info_item">
         <span class="task_info_label"> 销售 </span>
-        <span class="task_info_con"> 王思聪 </span>
+        <span class="task_info_con"> {{ saleUser }} </span>
       </el-col>
       <el-col :span="24" class="task_info_item">
         <span class="task_info_label"> 客户服务经理 </span>
-        <span class="task_info_con"> 方大同 </span>
+        <span class="task_info_con"> {{ manage }} </span>
       </el-col>
     </el-row>
     <div class="task_label"> 变更记录 </div>
@@ -22,13 +22,20 @@
 </template>
 
 <script>
-
 export default {
   name: 'TaskLog',
   props: {
     log: {
       type: Array,
       default: () => []
+    },
+    manage: {
+      type: String,
+      default: ''
+    },
+    saleUser: {
+      type: String,
+      default: ''
     }
   },
   data() {

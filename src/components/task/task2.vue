@@ -76,7 +76,7 @@
       <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :data="baseData" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
 
     </div>
-    <TaskLog :log="baseData.logs" />
+    <TaskLog :log="baseData.logs" :manage="baseData.manage.name" :sale-user="baseData.client.saleUser.name" />
   </div>
 </template>
 
@@ -106,11 +106,15 @@ export default {
     return {
       taskId: 0,
       baseData: {
-        client: {},
+        client: {
+          saleUser: {}
+        },
         service: {},
         taskDetail: {},
         exeUser: {},
-        realService: {}
+        realService: {},
+        manage: {},
+        logs: []
       },
       datacopy: {},
       taskFrom: 1,

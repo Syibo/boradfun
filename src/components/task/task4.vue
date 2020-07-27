@@ -120,7 +120,7 @@
 
     </div>
 
-    <TaskLog :log="baseData.logs" />
+    <TaskLog :log="baseData.logs" :manage="baseData.manage.name" :sale-user="baseData.client.saleUser.name" />
 
     <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
       <el-form ref="ruleForm" label-width="120px" label-position="left" :model="ruleForm" :rules="rules">
@@ -178,11 +178,15 @@ export default {
       dialogVisible: false,
       taskId: 0,
       baseData: {
-        client: {},
+        client: {
+          saleUser: {}
+        },
         service: {},
         taskDetail: {},
         exeUser: {},
-        realService: {}
+        realService: {},
+        manage: {},
+        logs: []
       },
       datacopy: {},
       isEdit: true,

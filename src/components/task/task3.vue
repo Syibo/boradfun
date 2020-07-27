@@ -58,6 +58,8 @@
 
     </div>
 
+    <TaskLog :log="data.logs" />
+
     <el-dialog title="交付侧额度评估" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
         <el-form-item label="任务类型">
@@ -101,10 +103,14 @@
 import permission from '@/directive/permission/index.js'
 import { mapGetters } from 'vuex'
 import { getUserImpls } from '@/api/user'
+import TaskLog from '@/components/task/taskLog'
 import { assignTask, getOneTask } from '@/api/task'
 export default {
   name: 'Task3',
   directives: { permission },
+  components: {
+    TaskLog
+  },
   props: {
     service: {
       type: Array,

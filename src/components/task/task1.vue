@@ -43,17 +43,21 @@
       <div class="task_demand">
         <i class="el-icon-circle-plus-outline" /> 填写需求
       </div>
-
     </div>
+    <TaskLog :log="data.logs" />
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js'
 import { confirmTask, getOneTask } from '@/api/task'
+import TaskLog from '@/components/task/taskLog'
 export default {
   name: 'Task1',
   directives: { permission },
+  components: {
+    TaskLog
+  },
   data() {
     return {
       taskId: 0,
@@ -62,7 +66,8 @@ export default {
         service: {},
         taskDetail: {},
         exeUser: {},
-        realService: {}
+        realService: {},
+        logs: []
       }
     }
   },

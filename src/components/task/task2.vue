@@ -76,6 +76,7 @@
       <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :data="baseData" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
 
     </div>
+    <TaskLog :log="baseData.logs" />
   </div>
 </template>
 
@@ -83,11 +84,13 @@
 import permission from '@/directive/permission/index.js'
 import Task2From from '../From/task2-from'
 import { saveTaskInfo, frozenTask, getOneTask } from '@/api/task'
+import TaskLog from '@/components/task/taskLog'
 export default {
   name: 'Task2',
   directives: { permission },
   components: {
-    Task2From
+    Task2From,
+    TaskLog
   },
   props: {
     data: {

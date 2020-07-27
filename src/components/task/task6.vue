@@ -200,15 +200,20 @@
         <el-button type="primary" @click="submitFormEva('ruleFormEva')">确 定</el-button>
       </span>
     </el-dialog>
+    <TaskLog :log="data.logs" />
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js'
+import TaskLog from '@/components/task/taskLog'
 import { endTask, commentTask, getCommentTask, getOneTask } from '@/api/task'
 export default {
   name: 'Task6',
   directives: { permission },
+  components: {
+    TaskLog
+  },
   props: {
     service: {
       type: Array,

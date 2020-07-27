@@ -120,6 +120,8 @@
 
     </div>
 
+    <TaskLog :log="baseData.logs" />
+
     <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
       <el-form ref="ruleForm" label-width="120px" label-position="left" :model="ruleForm" :rules="rules">
         <el-form-item label="任务执行时长" prop="usedTime">
@@ -153,11 +155,13 @@
 import permission from '@/directive/permission/index.js'
 import Task2From from '../From/task2-from'
 import { executeTask, tagsTask, finishTask, stopTask, saveTaskInfo, getOneTask } from '@/api/task'
+import TaskLog from '@/components/task/taskLog'
 export default {
   name: 'Task4',
   directives: { permission },
   components: {
-    Task2From
+    Task2From,
+    TaskLog
   },
   props: {
     service: {

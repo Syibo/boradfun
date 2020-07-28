@@ -45,7 +45,7 @@ export default {
       this.$router.push({
         path: 'task',
         query: {
-          type: this.type,
+          type: status,
           id
         }
       })

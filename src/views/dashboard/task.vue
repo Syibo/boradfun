@@ -32,27 +32,7 @@
       :service="serviceData"
       @statement="statement"
     />
-    <div v-else>以取消</div>
-    <!-- <div class="task_right">
-      <div class="task_label"> 基本信息 </div>
-      <el-row class="task_info">
-        <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 负责人 </span>
-          <span class="task_info_con"> {{ taskData.appName }} </span>
-        </el-col>
-        <el-col :span="24" class="task_info_item">
-          <span class="task_info_label"> 客户服务经理 </span>
-          <span class="task_info_con"> {{ taskData.expEndTime !== '0001-01-01 00:00:00' ? taskData.expEndTime : taskData.expEndDate }} </span>
-        </el-col>
-      </el-row>
-      <div class="task_label"> 变更记录 </div>
-
-      <div class="task_record">
-        <span class="task_record_ra" />
-        <div class="task_record_label"> 2020-06-25 20:20:20  </div>
-        <div class="task_record_con">先旭创建任务</div>
-      </div>
-    </div> -->
+    <div v-else>404</div>
     <el-dialog title="任务取消" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
         <el-form-item label="任务取消原因" prop="result">
@@ -166,6 +146,16 @@ export default {
       }
     },
     async accept() {
+      this.type = 'confirm'
+      this.$router.replace({
+        path: 'task',
+        query: {
+          type: 'confirm',
+          id: this.taskId
+        }
+      })
+    },
+    async freezeTask() {
       this.type = 'frozen'
       this.$router.replace({
         path: 'task',
@@ -175,22 +165,12 @@ export default {
         }
       })
     },
-    async freezeTask() {
+    async resourcesTask() {
       this.type = 'assign'
       this.$router.replace({
         path: 'task',
         query: {
           type: 'assign',
-          id: this.taskId
-        }
-      })
-    },
-    async resourcesTask() {
-      this.type = 'allot'
-      this.$router.replace({
-        path: 'task',
-        query: {
-          type: 'allot',
           id: this.taskId
         }
       })

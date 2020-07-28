@@ -43,28 +43,28 @@
           <TableHigh :date="hightData" />
         </el-tab-pane>
         <el-tab-pane :label="`对接待确认 · ${createData.length}`" class="tabs_item">
-          <TableBase :date="createData" :type="'create'" />
+          <TableBase :date="createData" />
         </el-tab-pane>
         <el-tab-pane :label="`需求对接中 · ${confirmData.length}`" class="tabs_item">
-          <TableBase :date="confirmData" :type="'confirm'" />
+          <TableBase :date="confirmData" />
         </el-tab-pane>
         <el-tab-pane :label="`待分配 · ${frozenData.length}`" class="tabs_item">
-          <TableBase :date="frozenData" :type="'frozen'" />
+          <TableBase :date="frozenData" />
         </el-tab-pane>
         <el-tab-pane :label="`待执行 · ${assignData.length}`" class="tabs_item">
-          <TableBase :date="assignData" :type="'assign'" />
+          <TableBase :date="assignData" />
         </el-tab-pane>
         <el-tab-pane :label="`执行中 · ${executeData.length}`" class="tabs_item">
-          <TableBase :date="executeData" :type="'execute'" />
+          <TableBase :date="executeData" />
         </el-tab-pane>
         <el-tab-pane :label="`待审核 · ${finishData.length}`" class="tabs_item">
-          <TableBase :date="finishData" :type="'finish'" />
+          <TableBase :date="finishData" />
         </el-tab-pane>
         <el-tab-pane :label="`已结单 · ${endData.length}`" class="tabs_item">
-          <TableBase :date="endData" :type="'end'" />
+          <TableBase :date="endData" />
         </el-tab-pane>
         <el-tab-pane :label="`任务取消 · ${cancelData.length}`" class="tabs_item">
-          <TableCancel :date="cancelData" :type="'cancel'" />
+          <TableCancel :date="cancelData" />
         </el-tab-pane>
       </el-tabs>
     </el-row>
@@ -359,6 +359,7 @@ export default {
       if (res.ret === 0) {
         this.$message.success('提测成功')
         this.taskListCreate()
+        this.taskListConfirm()
         this.dialogVisible = false
       } else {
         console.log('error')

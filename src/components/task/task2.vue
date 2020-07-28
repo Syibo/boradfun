@@ -21,7 +21,7 @@
           <span class="task_info_con"> {{ baseData.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
-          <span class="task_info_label"> 期望测试日期 </span>
+          <span class="task_info_label"> 期望交付时间 </span>
           <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.expDeliverTime }} </span>
           <span v-else class="task_info_con">
             <el-date-picker
@@ -47,7 +47,7 @@
           </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
-          <span class="task_info_label"> 期望结单日期 </span>
+          <span class="task_info_label"> 期望结单时间 </span>
           <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.expEndTime }} </span>
           <span v-else class="task_info_con">
             <el-date-picker

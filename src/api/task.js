@@ -229,7 +229,7 @@ export function getCommentTask({ id, data }) {
 }
 
 /**
- * 亟需关注
+ * 结单任务
  * @param type 默认今天，1明天
  */
 export function getFocusList({ type = '' }) {
@@ -238,3 +238,24 @@ export function getFocusList({ type = '' }) {
     method: 'get'
   })
 }
+
+/**
+ * 任务看板
+ */
+export function getDashboardData() {
+  return request({
+    url: `/v1/task/dashboard`,
+    method: 'get'
+  })
+}
+
+/**
+ * 亟需关注
+ */
+export function getHightData() {
+  return request({
+    url: `/v1/task/high`,
+    method: 'get'
+  })
+}
+

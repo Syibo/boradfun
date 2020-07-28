@@ -44,7 +44,7 @@
         <i class="el-icon-circle-plus-outline" /> 填写需求
       </div>
     </div>
-    <TaskLog :log="data.logs" />
+    <TaskLog :log="data.logs" :manage="data.manage.name" :sale-user="data.client.saleUser.name" />
   </div>
 </template>
 
@@ -62,11 +62,14 @@ export default {
     return {
       taskId: 0,
       data: {
-        client: {},
+        client: {
+          saleUser: {}
+        },
         service: {},
         taskDetail: {},
         exeUser: {},
         realService: {},
+        manage: {},
         logs: []
       }
     }

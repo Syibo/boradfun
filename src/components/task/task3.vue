@@ -58,7 +58,7 @@
 
     </div>
 
-    <TaskLog :log="data.logs" />
+    <TaskLog :log="data.logs" :manage="data.manage.name" :sale-user="data.client.saleUser.name" />
 
     <el-dialog title="交付侧额度评估" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
@@ -124,11 +124,15 @@ export default {
       isEdit: false,
       dialogVisible: false,
       data: {
-        client: {},
+        client: {
+          saleUser: {}
+        },
         service: {},
         taskDetail: {},
         exeUser: {},
-        realService: {}
+        realService: {},
+        manage: {},
+        logs: []
       },
       options: [{
         value: '项目计划变更',

@@ -200,7 +200,7 @@
         <el-button type="primary" @click="submitFormEva('ruleFormEva')">确 定</el-button>
       </span>
     </el-dialog>
-    <TaskLog :log="data.logs" />
+    <TaskLog :log="data.logs" :manage="data.manage.name" :sale-user="data.client.saleUser.name" />
   </div>
 </template>
 
@@ -230,11 +230,15 @@ export default {
       show: true,
       taskId: 0,
       data: {
-        client: {},
+        client: {
+          saleUser: {}
+        },
         service: {},
         taskDetail: {},
         exeUser: {},
-        realService: {}
+        realService: {},
+        manage: {},
+        logs: []
       },
       dialogVisible: false,
       dialogVisibleEva: false,

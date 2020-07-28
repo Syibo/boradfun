@@ -8,7 +8,8 @@
             <el-button v-permission="[3]" type="primary" @click="statement"> 交付结单 </el-button>
             <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
           </div>
-          <el-button v-else-if="type === 'end' && !eva" v-permission="[2, 3]" type="primary" @click="evaluation"> 评价 </el-button>
+          <el-button v-else-if="type === 'end' && !eva" v-permission="[2]" type="primary" @click="evaluation"> 评价 </el-button>
+          <el-button v-else-if="type === 'end' && !evaCus" v-permission="[3]" type="primary" @click="evaluation"> 评价 </el-button>
         </div>
       </div>
 
@@ -77,7 +78,7 @@
       </div>
 
       <div v-if="eva" class="task_eva">
-        <div class="title">实施评价</div>
+        <div class="title">客户评价</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaData.score }}</div>
@@ -210,6 +211,7 @@
 <script>
 import permission from '@/directive/permission/index.js'
 import TaskLog from '@/components/task/taskLog'
+import { mapGetters } from 'vuex'
 import { endTask, commentTask, getCommentTask, getOneTask } from '@/api/task'
 export default {
   name: 'Task6',
@@ -230,6 +232,7 @@ export default {
   data() {
     return {
       eva: false,
+      evaCus: false,
       show: true,
       taskId: 0,
       data: {
@@ -262,6 +265,7 @@ export default {
         checkedCase: ['确认无误']
       },
       ruleFormEva: {
+        commentType: 0,
         other: '',
         reExeTimes: 0,
         realTime: '',
@@ -284,6 +288,13 @@ export default {
         ]
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'userId',
+      'name',
+      'roles'
+    ])
   },
   mounted() {
     this.taskId = Number(this.$route.query.id)
@@ -310,7 +321,6 @@ export default {
       const res = await getCommentTask({ id: this.taskId })
       if (res.ret === 0) {
         if (res.data.length !== 0) {
-          console.log(111111)
           this.eva = true
           this.show = false
           this.evaData = res.data[0]
@@ -335,6 +345,12 @@ export default {
       this.statementFun()
     },
     async commentTask(form) {
+      if (this.roles[0] === 2) {
+        form.commentType = 0
+      } else if (this.roles[0] === 3) {
+        form.commentType = 1
+      // eslint-disable-next-line no-empty
+      } else {}
       const res = await commentTask({ id: this.taskId, data: form })
       if (res.ret === 0) {
         this.$message.success('评价成功')
@@ -374,7 +390,8 @@ export default {
         reExeTimes: 0,
         realTime: '',
         score: 0,
-        type: 0
+        type: 0,
+        commentType: 0
       }
       if (this.$refs['ruleFormEva']) {
         this.$refs['ruleFormEva'].resetFields()

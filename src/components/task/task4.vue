@@ -25,7 +25,6 @@
                 更多操作<i class="el-icon-arrow-down el-icon--right" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-permission="[3]" command="change">无需变更</el-dropdown-item>
                 <el-dropdown-item v-permission="[1, 2, 3]" command="cancel">任务取消</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -196,7 +195,7 @@ export default {
       datacopy: {},
       isEdit: true,
       taskFrom: 3,
-      changeOver: true,
+      changeOver: false,
       options: [{
         value: '项目计划变更',
         label: '项目计划变更'
@@ -314,12 +313,12 @@ export default {
       ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
       ruleFormInfo.expEndTime = this.baseData.expEndTime
       ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
+      this.changeOver = true
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
         this.$message.success('保存成功')
         this.getOneTask()
         this.taskFrom = 3
-        this.changeOver = true
       }
     },
     handleCommand(command) {
@@ -357,6 +356,7 @@ export default {
     // eslint-disable-next-line vue/no-dupe-keys
     changeOverFun() {
       this.changeOver = false
+      this.$message.success('变更完成，等待实施重新启动')
     },
     noChange() {
       // this.dialogVisible = true
@@ -364,7 +364,7 @@ export default {
     },
     changeInfo() {
       this.taskFrom = 2
-      this.changeOver = true
+      this.changeOver = false
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

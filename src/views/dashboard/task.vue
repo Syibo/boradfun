@@ -31,6 +31,7 @@
       :type="type"
       :service="serviceData"
       @statement="statement"
+      @cacelTask="cacelTask"
     />
     <div v-else>404</div>
     <el-dialog title="任务取消" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">

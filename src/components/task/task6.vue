@@ -4,7 +4,10 @@
       <div class="task_name">
         <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
-          <el-button v-if="type === 'finish'" v-permission="[3]" type="primary" @click="statement"> 交付结单 </el-button>
+          <div v-if="type === 'finish'">
+            <el-button v-permission="[3]" type="primary" @click="statement"> 交付结单 </el-button>
+            <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
+          </div>
           <el-button v-else-if="type === 'end' && !eva" v-permission="[1, 3]" type="primary" @click="evaluation"> 评价 </el-button>
         </div>
       </div>
@@ -91,14 +94,14 @@
     </div>
 
     <el-dialog title="结单确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
-      <el-form ref="ruleForm" label-width="120px" label-position="top" :model="ruleForm" :rules="rules">
-        <el-form-item label="包体信息" prop="checkedInfo">
+      <el-form ref="ruleForm" label-width="120px" label-position="top" :model="ruleForm">
+        <el-form-item label="包体信息">
           <el-row>
             <el-col :span="8">本次测试版本</el-col>
             <el-col :span="10">{{ data.taskDetail.version }}</el-col>
             <el-col :span="6">
               <el-checkbox-group v-model="ruleForm.checkedInfo">
-                <el-checkbox :label="'确认无误'" name="checkedInfo" />
+                <el-checkbox :label="'确认无误'" name="checkedInfo" disabled />
               </el-checkbox-group>
             </el-col>
           </el-row>
@@ -108,23 +111,23 @@
           </el-row>
         </el-form-item>
 
-        <el-form-item label="测试环境信息" prop="checkedEnv">
+        <el-form-item label="测试环境信息">
           <el-row>
             <el-col :span="8">测试环境类型</el-col>
             <el-col :span="10">{{ data.taskDetail.testType }}</el-col>
             <el-col :span="6">
               <el-checkbox-group v-model="ruleForm.checkedEnv">
-                <el-checkbox label="确认无误" />
+                <el-checkbox label="确认无误" disabled />
               </el-checkbox-group>
             </el-col>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="测试账号信息" prop="checkedNum">
+        <el-form-item label="测试账号信息">
           <el-row> <el-col :span="8">测试账号</el-col> <el-col :span="10">{{ data.taskDetail.testAccountType }}</el-col>
             <el-col :span="6">
               <el-checkbox-group v-model="ruleForm.checkedNum">
-                <el-checkbox label="确认无误" />
+                <el-checkbox label="确认无误" disabled />
               </el-checkbox-group>
             </el-col>
           </el-row>
@@ -133,31 +136,31 @@
           <el-row> <el-col :span="8">系统并发限制</el-col> <el-col :span="10">{{ data.taskDetail.concurrentNum }}</el-col> </el-row>
         </el-form-item>
 
-        <el-form-item label="机型需求" prop="checkedPhone">
+        <el-form-item label="机型需求">
           <el-row> <el-col :span="8">机型需求</el-col> <el-col :span="10"> {{ data.taskDetail.reqPhone ? data.taskDetail.reqPhone : '-' }} </el-col>
             <el-col :span="6">
               <el-checkbox-group v-model="ruleForm.checkedPhone">
-                <el-checkbox label="确认无误" />
+                <el-checkbox label="确认无误" disabled />
               </el-checkbox-group>
             </el-col>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="其他需求" prop="checkedOther">
+        <el-form-item label="其他需求">
           <el-row> <el-col :span="8">其他需求</el-col> <el-col :span="10"> {{ data.taskDetail.extReq ? data.taskDetail.extReq : '-' }} </el-col>
             <el-col :span="6">
               <el-checkbox-group v-model="ruleForm.checkedOther">
-                <el-checkbox label="确认无误" />
+                <el-checkbox label="确认无误" disabled />
               </el-checkbox-group>
             </el-col>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="用例信息" prop="checkedCase">
+        <el-form-item label="用例信息">
           <el-row> <el-col :span="8">文字用例内网地址</el-col> <el-col :span="10">{{ data.taskDetail.instanceTxt }} </el-col>
             <el-col :span="6">
               <el-checkbox-group v-model="ruleForm.checkedCase">
-                <el-checkbox label="确认无误" />
+                <el-checkbox label="确认无误" disabled />
               </el-checkbox-group>
             </el-col>
           </el-row>
@@ -182,7 +185,7 @@
           />
         </el-form-item>
         <el-form-item label="结单反工次数" prop="reExeTimes">
-          <el-input-number v-model="ruleFormEva.reExeTimes" :min="1" controls-position="right" />
+          <el-input-number v-model="ruleFormEva.reExeTimes" :min="0" controls-position="right" />
         </el-form-item>
         <el-form-item label="客户服务评分" prop="score">
           <!-- <el-input-number v-model="ruleFormEva.score" :min="1" controls-position="right" /> -->
@@ -251,12 +254,12 @@ export default {
         label: '不想做了'
       }],
       ruleForm: {
-        checkedInfo: [],
-        checkedEnv: [],
-        checkedNum: [],
-        checkedPhone: [],
-        checkedOther: [],
-        checkedCase: []
+        checkedInfo: ['确认无误'],
+        checkedEnv: ['确认无误'],
+        checkedNum: ['确认无误'],
+        checkedPhone: ['确认无误'],
+        checkedOther: ['确认无误'],
+        checkedCase: ['确认无误']
       },
       ruleFormEva: {
         other: '',
@@ -279,26 +282,6 @@ export default {
         other: [
           { required: true, message: '请输入其他补充信息', trigger: 'blur' }
         ]
-      },
-      rules: {
-        checkedInfo: [
-          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
-        ],
-        checkedEnv: [
-          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
-        ],
-        checkedNum: [
-          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
-        ],
-        checkedPhone: [
-          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
-        ],
-        checkedOther: [
-          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
-        ],
-        checkedCase: [
-          { type: 'array', required: true, message: '请确认信息', trigger: 'change' }
-        ]
       }
     }
   },
@@ -310,6 +293,9 @@ export default {
   methods: {
     statement() {
       this.dialogVisible = true
+    },
+    cacelTask() {
+      this.$emit('cacelTask')
     },
     async getOneTask() {
       const res = await getOneTask({ id: this.taskId })
@@ -330,7 +316,7 @@ export default {
         }
       }
     },
-    async statementFun(form) {
+    async statementFun() {
       const data = {
         'other': 'string',
         'reExeTimes': 1,
@@ -340,20 +326,12 @@ export default {
       const res = await endTask({ id: this.data.ID, data: data })
       if (res.ret === 0) {
         this.$message.success('结单成功')
+        this.dialogVisible = false
         this.$emit('statement')
       }
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const form = this.ruleForm
-          this.statementFun(form)
-          this.dialogVisible = false
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      this.statementFun()
     },
     async commentTask(form) {
       const res = await commentTask({ id: this.taskId, data: form })

@@ -122,6 +122,8 @@
 
     <TaskLog :log="baseData.logs" :manage="baseData.manage" :sale-user="baseData.client.saleUser" />
 
+    <CheckDialog :dialog-visible="dialogVisibleCheck" :base-data="baseData" @check="checkFun" />
+
     <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
       <el-form ref="ruleForm" label-width="120px" label-position="left" :model="ruleForm" :rules="rules">
         <el-form-item label="任务执行时长" prop="usedTime">
@@ -156,12 +158,14 @@ import permission from '@/directive/permission/index.js'
 import Task2From from '../From/task2-from'
 import { executeTask, tagsTask, finishTask, stopTask, saveTaskInfo, getOneTask } from '@/api/task'
 import TaskLog from '@/components/task/taskLog'
+import CheckDialog from '@/components/common/CheckDialog.vue'
 export default {
   name: 'Task4',
   directives: { permission },
   components: {
     Task2From,
-    TaskLog
+    TaskLog,
+    CheckDialog
   },
   props: {
     service: {
@@ -176,6 +180,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      dialogVisibleCheck: false,
       taskId: 0,
       baseData: {
         client: {
@@ -267,8 +272,12 @@ export default {
       const res = await tagsTask()
       this.tagsList = res.data
     },
-    completeTask() {
+    checkFun() {
+      this.dialogVisibleCheck = false
       this.dialogVisible = true
+    },
+    completeTask() {
+      this.dialogVisibleCheck = true
     },
     async finishTask(form) {
       const res = await finishTask({ id: this.taskId, data: form })

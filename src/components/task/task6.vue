@@ -8,7 +8,7 @@
             <el-button v-permission="[3]" type="primary" @click="statement"> 交付结单 </el-button>
             <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
           </div>
-          <el-button v-else-if="type === 'end' && !eva" v-permission="[1, 3]" type="primary" @click="evaluation"> 评价 </el-button>
+          <el-button v-else-if="type === 'end' && !eva" v-permission="[2, 3]" type="primary" @click="evaluation"> 评价 </el-button>
         </div>
       </div>
 
@@ -310,6 +310,7 @@ export default {
       const res = await getCommentTask({ id: this.taskId })
       if (res.ret === 0) {
         if (res.data.length !== 0) {
+          console.log(111111)
           this.eva = true
           this.show = false
           this.evaData = res.data[0]

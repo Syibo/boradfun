@@ -81,7 +81,7 @@
         </el-form-item>
 
         <el-form-item label="处理人" prop="exeUserId">
-          <el-select v-model="ruleForm.exeUserId" style="width: 100%" placeholder="请选择处理人">
+          <el-select v-model="ruleForm.exeUserId" style="width: 100%" placeholder="请选择处理人" @change="change">
             <el-option
               v-for="item in userImpls"
               :key="item.Id"
@@ -90,6 +90,10 @@
             />
           </el-select>
         </el-form-item>
+        <div v-for="item in list" :key="item.Id" class="list-clas">
+          <div>{{ item.exp_deliver_time }}</div>
+          <div>{{ item.app_name }} {{ item.service_name }} {{ item.name }} {{ item.real_amount }}额度</div>
+        </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -153,7 +157,8 @@ export default {
           { required: true, message: '请选择处理人', trigger: 'change' }
         ]
       },
-      userImpls: []
+      userImpls: [],
+      list: []
     }
   },
   computed: {
@@ -173,6 +178,12 @@ export default {
       if (res.ret === 0) {
         this.userImpls = res.data
       }
+    },
+    change(value) {
+      const obj = this.userImpls.find((item) => {
+        return item.Id === value
+      })
+      this.list = obj.List
     },
     async getOneTask() {
       const res = await getOneTask({ id: this.taskId })
@@ -228,5 +239,9 @@ export default {
     width: 140px;
     color: #808387;
   }
+}
+.list-clas {
+  color: #999999;
+  font-size:14px;
 }
 </style>

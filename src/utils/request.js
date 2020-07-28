@@ -2,6 +2,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import router from '@/router'
 
 // create an axios instance
 const service = axios.create({
@@ -65,6 +66,9 @@ service.interceptors.response.use(
             location.reload()
           })
         })
+      }
+      if (res.msg === '无权限查看') {
+        router.push({ path: '404' })
       }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {

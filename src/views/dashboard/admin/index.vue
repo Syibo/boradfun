@@ -5,7 +5,7 @@
         <div class="today_task">
           <div class="title"> 今日结单任务 {{ focusData.length }} </div>
           <div v-for="item in focusData" :key="item.ID" class="item">
-            <span @click="goTask(item)">{{ item.appName }}</span> <span>**</span>
+            <span @click="goTask(item)">{{ item.client.name }}</span> <span>{{ item.realService.serviceName }}</span>
           </div>
         </div>
       </el-col>
@@ -13,7 +13,7 @@
         <div class="today_task">
           <div class="title"> 明日结单任务{{ temData.length }} </div>
           <div v-for="item in temData" :key="item.ID" class="item">
-            <span @click="goTask(item)">{{ item.appName }}</span> <span>**</span>
+            <span @click="goTask(item)">{{ item.client.name }}</span> <span>{{ item.realService.serviceName }}</span>
           </div>
         </div>
       </el-col>
@@ -55,7 +55,7 @@
           <TableBase :date="assignData" />
         </el-tab-pane>
         <el-tab-pane :label="`执行中 · ${executeData.length}`" class="tabs_item">
-          <TableBase :date="executeData" />
+          <TableStop :date="executeData" />
         </el-tab-pane>
         <el-tab-pane :label="`待审核 · ${finishData.length}`" class="tabs_item">
           <TableBase :date="finishData" />
@@ -155,13 +155,15 @@ import { addTask, taskList, getFocusList, getDashboardData, getHightData } from 
 import TableBase from '@/components/dashboard/TableBase.vue'
 import TableCancel from '@/components/dashboard/TableCancel.vue'
 import TableHigh from '@/components/dashboard/TableHigh.vue'
+import TableStop from '@/components/dashboard/TableStop.vue'
 import Moment from 'moment'
 export default {
   name: 'DashboardAdmin',
   components: {
     TableBase,
     TableCancel,
-    TableHigh
+    TableHigh,
+    TableStop
   },
   directives: { permission },
   data() {

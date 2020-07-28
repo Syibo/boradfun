@@ -4,28 +4,27 @@
       <el-table-column prop="ID" label="任务ID" width="180" />
       <el-table-column label="客户名称" width="180">
         <template slot-scope="scope">
-          <span class="name" @click="goTask(scope.row.ID, scope.row.status)"> {{ scope.row.client.name }} </span> <level />
+          <span class="name" @click="goTask(scope.row.ID, scope.row.status)">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
         </template>
       </el-table-column>
       <el-table-column prop="appName" label="应用/游戏名称" />
       <el-table-column prop="service.serviceName" label="任务类型" />
-      <el-table-column label="状态">
-        <template slot-scope="scope">
-          <Status :status="scope.row.status" />
+      <el-table-column prop="manageId" label="客户服务经理" />
+      <el-table-column prop="expEndDate" label="期望结单日期/时间" />
+      <el-table-column prop="expEndDate" label="">
+        <template v-if="scope.row.status === 'pause'" slot-scope="scope">
+          <span class="stop">执行暂停</span>
         </template>
       </el-table-column>
-      <el-table-column prop="expEndDate" label="期望结单日期/时间" />
     </el-table>
   </div>
 </template>
 
 <script>
 import Level from '@/components/common/level.vue'
-import Status from '@/components/common/Status.vue'
 export default {
-  name: 'TableHigh',
+  name: 'TableStop',
   components: {
-    Status,
     Level
   },
   props: {
@@ -60,5 +59,15 @@ export default {
 .name {
     color: #3293FF;
     cursor: pointer;
+}
+.stop {
+  display: inline-block;
+  width:78px;
+  height:28px;
+  background:rgba(255,92,92, 0.15);
+  line-height: 28px;
+  text-align: center;
+  border-radius:2px;
+  color: #FF5C5C;
 }
 </style>

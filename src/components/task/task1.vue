@@ -44,7 +44,7 @@
         <i class="el-icon-circle-plus-outline" /> 填写需求
       </div>
     </div>
-    <TaskLog :log="data.logs" :manage="data.manage.name" :sale-user="data.client.saleUser.name" />
+    <TaskLog :log="data.logs" :manage="data.manage" :sale-user="data.client.saleUser" />
   </div>
 </template>
 

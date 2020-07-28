@@ -21,7 +21,7 @@
           <span class="task_info_con"> {{ data.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
-          <span class="task_info_label"> 期望测试日期 </span>
+          <span class="task_info_label"> 期望交付时间 </span>
           <span class="task_info_con"> {{ data.expDeliverTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
@@ -29,7 +29,7 @@
           <span class="task_info_con"> {{ data.realService.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
-          <span class="task_info_label"> 期望结单日期 </span>
+          <span class="task_info_label"> 期望结单时间 </span>
           <span class="task_info_con"> {{ data.expEndTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
@@ -58,7 +58,7 @@
 
     </div>
 
-    <TaskLog :log="data.logs" :manage="data.manage.name" :sale-user="data.client.saleUser.name" />
+    <TaskLog :log="data.logs" :manage="data.manage" :sale-user="data.client.saleUser" />
 
     <el-dialog title="交付侧额度评估" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">

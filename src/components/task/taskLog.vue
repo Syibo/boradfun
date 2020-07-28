@@ -4,11 +4,31 @@
     <el-row class="task_info">
       <el-col :span="24" class="task_info_item">
         <span class="task_info_label"> 销售 </span>
-        <span class="task_info_con"> {{ saleUser }} </span>
+        <el-popover
+          placement="top-end"
+          trigger="hover"
+        >
+          <div>
+            <div>企业微信：{{ saleUser.wx }}</div>
+            <div>电话号码：{{ saleUser.phone }}</div>
+            <div>邮箱：{{ saleUser.email }}</div>
+          </div>
+          <span slot="reference" class="task_info_con"> {{ saleUser.name }} </span>
+        </el-popover>
       </el-col>
       <el-col :span="24" class="task_info_item">
         <span class="task_info_label"> 客户服务经理 </span>
-        <span class="task_info_con"> {{ manage }} </span>
+        <el-popover
+          placement="bottom-end"
+          trigger="hover"
+        >
+          <div>
+            <div>企业微信：{{ manage.wx }}</div>
+            <div>电话号码：{{ manage.phone }}</div>
+            <div>邮箱：{{ manage.email }}</div>
+          </div>
+          <span slot="reference" class="task_info_con"> {{ manage.name }} </span>
+        </el-popover>
       </el-col>
     </el-row>
     <div class="task_label"> 变更记录 </div>
@@ -30,12 +50,12 @@ export default {
       default: () => []
     },
     manage: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => {}
     },
     saleUser: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => {}
     }
   },
   data() {

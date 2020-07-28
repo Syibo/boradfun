@@ -52,7 +52,7 @@
           <span class="task_info_con"> {{ baseData.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
-          <span class="task_info_label"> 期望测试日期 </span>
+          <span class="task_info_label"> 期望交付时间 </span>
           <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.expDeliverTime }} </span>
           <span v-else class="task_info_con">
             <el-date-picker
@@ -78,7 +78,7 @@
           </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
-          <span class="task_info_label"> 期望结单日期 </span>
+          <span class="task_info_label"> 期望结单时间 </span>
           <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.expEndTime }} </span>
           <span v-else class="task_info_con">
             <el-date-picker
@@ -120,7 +120,7 @@
 
     </div>
 
-    <TaskLog :log="baseData.logs" :manage="baseData.manage.name" :sale-user="baseData.client.saleUser.name" />
+    <TaskLog :log="baseData.logs" :manage="baseData.manage" :sale-user="baseData.client.saleUser" />
 
     <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
       <el-form ref="ruleForm" label-width="120px" label-position="left" :model="ruleForm" :rules="rules">

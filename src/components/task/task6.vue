@@ -22,7 +22,7 @@
           <span class="task_info_con"> {{ data.appName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
-          <span class="task_info_label"> 期望测试日期 </span>
+          <span class="task_info_label"> 期望交付时间 </span>
           <span class="task_info_con"> {{ data.expDeliverTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
@@ -30,7 +30,7 @@
           <span class="task_info_con"> {{ data.service.serviceName }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
-          <span class="task_info_label"> 期望结单日期 </span>
+          <span class="task_info_label"> 期望结单时间 </span>
           <span class="task_info_con"> {{ data.expEndTime }} </span>
         </el-col>
         <el-col :span="12" class="task_info_item">
@@ -200,7 +200,7 @@
         <el-button type="primary" @click="submitFormEva('ruleFormEva')">确 定</el-button>
       </span>
     </el-dialog>
-    <TaskLog :log="data.logs" :manage="data.manage.name" :sale-user="data.client.saleUser.name" />
+    <TaskLog :log="data.logs" :manage="data.manage" :sale-user="data.client.saleUser" />
   </div>
 </template>
 

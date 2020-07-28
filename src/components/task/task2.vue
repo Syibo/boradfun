@@ -76,7 +76,7 @@
       <Task2From v-if="taskFrom === 2 || taskFrom === 3" :task-from="taskFrom" :data="baseData" :is-edit="isEdit" @cacelTask="cacelTaskFun" @saveTask="saveTask" />
 
     </div>
-    <TaskLog :log="baseData.logs" :manage="baseData.manage.name" :sale-user="baseData.client.saleUser.name" />
+    <TaskLog :log="baseData.logs" :manage="baseData.manage" :sale-user="baseData.client.saleUser" />
   </div>
 </template>
 

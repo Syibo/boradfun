@@ -43,25 +43,25 @@
           <TableHigh :date="hightData" />
         </el-tab-pane>
         <el-tab-pane :label="`对接待确认 · ${createData.length}`" name="create" class="tabs_item">
-          <TableBase :date="createData" />
+          <TableBase :date="createData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`需求对接中 · ${confirmData.length}`" name="confirm" class="tabs_item">
-          <TableBase :date="confirmData" />
+          <TableBase :date="confirmData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`待分配 · ${frozenData.length}`" name="frozen" class="tabs_item">
-          <TableBase :date="frozenData" />
+          <TableBase :date="frozenData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`待执行 · ${assignData.length}`" name="assign" class="tabs_item">
-          <TableBase :date="assignData" />
+          <TableBase :date="assignData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`执行中 · ${executeData.length}`" name="execute" class="tabs_item">
-          <TableStop :date="executeData" />
+          <TableStop :date="executeData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`待审核 · ${finishData.length}`" name="finish" class="tabs_item">
-          <TableExecute :date="finishData" />
+          <TableExecute :date="finishData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`已结单 · ${endData.length}`" name="end" class="tabs_item">
-          <TableExecute :date="endData" />
+          <TableExecute :date="endData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`任务取消 · ${cancelData.length}`" name="cancel" class="tabs_item">
           <TableCancel :date="cancelData" />
@@ -219,6 +219,7 @@ export default {
       clientData: [],
       serviceData: [],
       manData: [],
+      hightArr: [],
       optiondate: {
         disabledDate(date) {
           return date.getTime() <= Date.now()
@@ -298,6 +299,7 @@ export default {
       const res = await getHightData()
       if (res.ret === 0) {
         this.hightData = res.data
+        this.hightArr = res.data.map((item) => item.ID)
       }
     },
     async getDashboardData() {

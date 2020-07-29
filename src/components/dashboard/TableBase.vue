@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="date" header-cell-class-name="table-header-style" style="width: 100%">
+    <el-table :data="date" header-cell-class-name="table-header-style" style="width: 100%" :row-class-name="tableRowClassName">
       <el-table-column prop="ID" label="任务ID" width="180" />
       <el-table-column label="客户名称" width="180">
         <template slot-scope="scope">
@@ -27,9 +27,9 @@ export default {
       type: Array,
       default: () => []
     },
-    type: {
-      type: String,
-      default: 'create'
+    hight: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -49,10 +49,22 @@ export default {
           id
         }
       })
+    },
+    tableRowClassName({ row, rowIndex }) {
+      if (this.hight.indexOf(row.ID) !== -1) {
+        return 'warning-row'
+      }
+      return ''
     }
   }
 }
 </script>
+
+<style>
+  .el-table .warning-row {
+    background: rgba(255,92,92,0.09);
+  }
+</style>
 
 <style lang="scss" scoped>
 .name {

@@ -9,7 +9,8 @@
       </el-table-column>
       <el-table-column prop="appName" label="应用/游戏名称" />
       <el-table-column prop="service.serviceName" label="任务类型" />
-      <el-table-column prop="manageId" label="客户服务经理" />
+      <el-table-column prop="realAmount" label="任务额度" />
+      <el-table-column prop="exeUser.name" label="实施人员" />
       <el-table-column prop="expEndDate" label="期望结单日期/时间" />
       <el-table-column prop="expEndDate" label="">
         <template v-if="scope.row.status === 'pause'" slot-scope="scope">

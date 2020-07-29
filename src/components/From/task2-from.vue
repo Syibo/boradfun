@@ -198,8 +198,11 @@ export default {
         value: '客户提供',
         label: '客户提供'
       }, {
-        value: '自己mock',
-        label: '自己mock'
+        value: '微信注册',
+        label: '微信注册'
+      }, {
+        value: '手机号码注册',
+        label: '手机号码注册'
       }],
       ruleFormInfoCopy: {}
     }

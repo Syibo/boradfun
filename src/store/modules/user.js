@@ -53,8 +53,6 @@ const actions = {
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       const { username, password } = userInfo
-      console.log(username)
-      console.log(password)
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         console.log(data)

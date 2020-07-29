@@ -38,32 +38,32 @@
     </div>
 
     <el-row class="tabs_table">
-      <el-tabs>
-        <el-tab-pane :label="`亟需关注 · ${hightData.length}`" class="tabs_item">
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane :label="`亟需关注 · ${hightData.length}`" name="hight" class="tabs_item">
           <TableHigh :date="hightData" />
         </el-tab-pane>
-        <el-tab-pane :label="`对接待确认 · ${createData.length}`" class="tabs_item">
+        <el-tab-pane :label="`对接待确认 · ${createData.length}`" name="create" class="tabs_item">
           <TableBase :date="createData" />
         </el-tab-pane>
-        <el-tab-pane :label="`需求对接中 · ${confirmData.length}`" class="tabs_item">
+        <el-tab-pane :label="`需求对接中 · ${confirmData.length}`" name="confirm" class="tabs_item">
           <TableBase :date="confirmData" />
         </el-tab-pane>
-        <el-tab-pane :label="`待分配 · ${frozenData.length}`" class="tabs_item">
+        <el-tab-pane :label="`待分配 · ${frozenData.length}`" name="frozen" class="tabs_item">
           <TableBase :date="frozenData" />
         </el-tab-pane>
-        <el-tab-pane :label="`待执行 · ${assignData.length}`" class="tabs_item">
+        <el-tab-pane :label="`待执行 · ${assignData.length}`" name="assign" class="tabs_item">
           <TableBase :date="assignData" />
         </el-tab-pane>
-        <el-tab-pane :label="`执行中 · ${executeData.length}`" class="tabs_item">
+        <el-tab-pane :label="`执行中 · ${executeData.length}`" name="execute" class="tabs_item">
           <TableStop :date="executeData" />
         </el-tab-pane>
-        <el-tab-pane :label="`待审核 · ${finishData.length}`" class="tabs_item">
+        <el-tab-pane :label="`待审核 · ${finishData.length}`" name="finish" class="tabs_item">
           <TableBase :date="finishData" />
         </el-tab-pane>
-        <el-tab-pane :label="`已结单 · ${endData.length}`" class="tabs_item">
+        <el-tab-pane :label="`已结单 · ${endData.length}`" name="end" class="tabs_item">
           <TableBase :date="endData" />
         </el-tab-pane>
-        <el-tab-pane :label="`任务取消 · ${cancelData.length}`" class="tabs_item">
+        <el-tab-pane :label="`任务取消 · ${cancelData.length}`" name="cancel" class="tabs_item">
           <TableCancel :date="cancelData" />
         </el-tab-pane>
       </el-tabs>
@@ -190,6 +190,7 @@ export default {
         expEndDate: '',
         manageId: ''
       },
+      activeName: 'hight',
       rules: {
         clientId: [
           { required: true, message: '请选择客户', trigger: 'blur' }
@@ -253,6 +254,39 @@ export default {
     async clientList() {
       const res = await getClientList()
       this.clientData = res.data
+    },
+    handleClick(tab, event) {
+      switch (this.activeName) {
+        case 'hight':
+          this.getHightData()
+          break
+        case 'create':
+          this.taskListCreate()
+          break
+        case 'confirm':
+          this.taskListConfirm()
+          break
+        case 'frozen':
+          this.taskListFrozen()
+          break
+        case 'assign':
+          this.taskListAssign()
+          break
+        case 'execute':
+          this.taskListExecute()
+          break
+        case 'finish':
+          this.taskListFinish()
+          break
+        case 'end':
+          this.taskListEnd()
+          break
+        case 'cancel':
+          this.taskListCancel()
+          break
+        default:
+          break
+      }
     },
     // async getServiceList() {
     //   const res = await getList()
@@ -362,6 +396,7 @@ export default {
         this.$message.success('提测成功')
         this.taskListCreate()
         this.taskListConfirm()
+        this.getHightData()
         this.dialogVisible = false
       } else {
         console.log('error')

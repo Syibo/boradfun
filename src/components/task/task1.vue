@@ -99,8 +99,18 @@ export default {
     async confirmTask() {
       const res = await confirmTask({ id: this.taskId })
       if (res.ret === 0) {
-        this.$message.success('任务已经接受')
-        this.$emit('accept')
+        const template = `<div>
+          <div>预计测试日期：${this.data.preDate}</div>
+          <div>期望结单日期：${this.data.expEndDate}</div>
+        </div>`
+        this.$alert(template, '任务接受成功，请尽快与客户取得联系，开始对接', {
+          dangerouslyUseHTMLString: true,
+          showClose: false,
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$emit('accept')
+          }
+        })
       }
     }
   }

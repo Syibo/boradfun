@@ -5,11 +5,11 @@
         <div class="task_name_left"> {{ data.client.name }} </div>
         <div class="task_name_btn">
           <div v-if="type === 'finish'">
-            <el-button v-permission="[3]" type="primary" @click="statement"> 交付结单 </el-button>
             <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
+            <el-button v-permission="[3]" type="primary" @click="statement"> 交付结单 </el-button>
           </div>
-          <el-button v-else-if="type === 'end' && !eva" v-permission="[2]" type="primary" @click="evaluation"> 评价 </el-button>
-          <el-button v-else-if="type === 'end' && !evaCus" v-permission="[3]" type="primary" @click="evaluation"> 评价 </el-button>
+          <el-button v-if="type === 'end' && !eva" v-permission="[2]" type="primary" @click="evaluation"> 销售评价 </el-button>
+          <el-button v-if="type === 'end' && !evaCus" v-permission="[3]" type="primary" @click="evaluation"> 经理评价 </el-button>
         </div>
       </div>
 
@@ -77,8 +77,8 @@
         <div class="task_demand_item"> <span>视频用例内网地址</span> {{ data.taskDetail.instanceMv }} </div>
       </div>
 
-      <div v-if="eva" class="task_eva">
-        <div class="title">客户评价</div>
+      <div v-if="eva" v-permission="[1, 2, 4, 5]" class="task_eva">
+        <div class="title">销售评价</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaData.score }}</div>
@@ -89,6 +89,22 @@
             <div> <span>实际交付时间</span> {{ evaData.realTime }} </div>
             <div> <span>实施反工次数</span> {{ evaData.reExeTimes }}</div>
             <div> <span>其他补充信息</span> {{ evaData.other }} </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="evaCus" v-permission="[1, 2, 3, 4]" class="task_eva">
+        <div class="title">客户评价</div>
+        <div class="task_eva_con">
+          <div class="left">
+            <div class="task_eva_num">{{ evaCusData.score }}</div>
+            <div>工作评分</div>
+          </div>
+          <div class="mid" />
+          <div class="right">
+            <div> <span>实际交付时间</span> {{ evaCusData.realTime }} </div>
+            <div> <span>实施反工次数</span> {{ evaCusData.reExeTimes }}</div>
+            <div> <span>其他补充信息</span> {{ evaCusData.other }} </div>
           </div>
         </div>
       </div>
@@ -249,6 +265,7 @@ export default {
       dialogVisible: false,
       dialogVisibleEva: false,
       evaData: {},
+      evaCusData: {},
       options: [{
         value: '项目计划变更',
         label: '项目计划变更'
@@ -321,9 +338,18 @@ export default {
       const res = await getCommentTask({ id: this.taskId })
       if (res.ret === 0) {
         if (res.data.length !== 0) {
-          this.eva = true
-          this.show = false
-          this.evaData = res.data[0]
+          for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].commentType === 0) {
+              this.evaCus = true
+              this.show = false
+              this.evaCusData = res.data[i]
+            }
+            if (res.data[i].commentType === 1) {
+              this.eva = true
+              this.show = false
+              this.evaData = res.data[i]
+            }
+          }
         }
       }
     },
@@ -346,16 +372,21 @@ export default {
     },
     async commentTask(form) {
       if (this.roles[0] === 2) {
-        form.commentType = 0
-      } else if (this.roles[0] === 3) {
         form.commentType = 1
+      } else if (this.roles[0] === 3) {
+        form.commentType = 0
       // eslint-disable-next-line no-empty
       } else {}
       const res = await commentTask({ id: this.taskId, data: form })
       if (res.ret === 0) {
         this.$message.success('评价成功')
-        this.evaData = JSON.parse(JSON.stringify(form))
-        this.eva = true
+        if (form.commentType === 0) {
+          this.evaCusData = JSON.parse(JSON.stringify(form))
+          this.evaCus = true
+        } else {
+          this.evaData = JSON.parse(JSON.stringify(form))
+          this.eva = true
+        }
         this.show = false
         this.dialogVisibleEva = false
       }
@@ -425,6 +456,7 @@ export default {
   height: 150px;
   border-radius:4px;
   padding: 10px;
+  margin-bottom: 10px;
   .title {
     color: #2B2B2B;
     font-size: 14px;

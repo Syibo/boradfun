@@ -4,8 +4,8 @@
       <div class="task_name">
         <div class="task_name_left"> {{ baseData.client.name }} </div>
         <div class="task_name_btn">
-          <el-button v-permission="[3]" type="primary" @click="freezeTask"> 需求冻结 </el-button>
           <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
+          <el-button v-permission="[3]" type="primary" @click="freezeTask"> 需求冻结 </el-button>
         </div>
       </div>
 

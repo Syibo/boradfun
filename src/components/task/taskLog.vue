@@ -2,18 +2,18 @@
   <div class="task_right">
     <div class="task_label"> 基本信息 </div>
     <el-row class="task_info">
-      <el-col :span="24" class="task_info_item">
+      <el-col v-if="saleUser" :span="24" class="task_info_item">
         <span class="task_info_label"> 销售 </span>
         <el-popover
           placement="top-end"
           trigger="hover"
         >
           <div>
-            <div>企业微信：{{ saleUser.wx }}</div>
-            <div>电话号码：{{ saleUser.phone }}</div>
-            <div>邮箱：{{ saleUser.email }}</div>
+            <div>企业微信：{{ saleUser.wx || '' }}</div>
+            <div>电话号码：{{ saleUser.phone || '' }}</div>
+            <div>邮箱：{{ saleUser.email || '' }}</div>
           </div>
-          <span slot="reference" class="task_info_con"> {{ saleUser.name }} </span>
+          <span slot="reference" class="task_info_con"> {{ saleUser.name || '' }} </span>
         </el-popover>
       </el-col>
       <el-col :span="24" class="task_info_item">

@@ -3,29 +3,29 @@
     <div v-if="taskFrom === 2" class="task_demand_info">
       <el-form ref="ruleFormInfo" :label-position="labelPosition" label-width="140px" :model="ruleFormInfo" :rules="rulesInfo">
         <el-form-item label="本次测试版本" prop="version">
-          <el-input v-model="ruleFormInfo.version" style="width: 420px" placeholder="请输入本次测试版本" />
+          <el-input v-model="ruleFormInfo.version" style="max-width: 420px" placeholder="请输入本次测试版本" />
         </el-form-item>
         <el-row>
-          <el-col :span="11">
+          <el-col :span="10">
             <el-form-item label="安装包内网地址" prop="pkgAddress">
-              <el-input v-model="ruleFormInfo.pkgAddress" style="width: 420px" placeholder="请输入安装包内网地址" />
+              <el-input v-model="ruleFormInfo.pkgAddress" style="max-width: 420px" placeholder="请输入安装包内网地址" />
             </el-form-item>
           </el-col>
-          <el-col :span="13">
+          <el-col :span="14">
             <el-form-item label="">
               <el-checkbox v-model="checkSame">已验证版本包体一致性</el-checkbox>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="11">
+          <el-col :span="10">
             <el-form-item label="测试环境类型" prop="testType">
-              <el-select v-model="ruleFormInfo.testType" style="width: 420px" placeholder="测试环境类型">
+              <el-select v-model="ruleFormInfo.testType" style="max-width: 420px" placeholder="测试环境类型">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col v-if="ruleFormInfo.testType === '生产环境'" :span="13">
+          <el-col v-if="ruleFormInfo.testType === '生产环境'" :span="14">
             <el-form-item label="">
               <el-checkbox v-model="checkDes">已告知客户生产环境风险</el-checkbox>
             </el-form-item>

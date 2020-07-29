@@ -29,11 +29,19 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="额度订单" name="first">
         <el-table :data="logData" header-cell-class-name="table-header-style" style="width: 100%">
-          <el-table-column prop="order_number" label="订单编号" />
-          <el-table-column prop="real_time" label="发生日期" />
-          <el-table-column prop="change" label="额度变化" />
-          <el-table-column prop="desc" width="500" label="事项说明" />
-          <el-table-column prop="real_time" label="过期时间" />
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-table :data="props.row.logs" style="width: 100%;padding: 0">
+                <el-table-column prop="real_time" label="发生日期" />
+                <el-table-column prop="change" label="" />
+                <el-table-column prop="desc" width="500" label="" />
+                <el-table-column prop="remark" label="" />
+              </el-table>
+            </template>
+          </el-table-column>
+          <el-table-column prop="orderNumber" label="订单编号" />
+          <el-table-column prop="amount" label="剩余额度" />
+          <el-table-column prop="deadline" label="过期时间" />
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="额度消耗记录" name="second">额度消耗记录</el-tab-pane>
@@ -70,9 +78,10 @@ export default {
       })
     },
     async handAmountLog() {
-      const res = await handAmountLog({ clientId: this.cusId, serviceId: this.serviceId })
+      const res = await handAmountLog({ clientId: 1, serviceId: 1 })
       if (res.ret === 0) {
         this.logData = res.data
+        console.log(res.data)
       }
     }
   }

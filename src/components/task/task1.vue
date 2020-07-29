@@ -100,10 +100,11 @@ export default {
       const res = await confirmTask({ id: this.taskId })
       if (res.ret === 0) {
         const template = `<div>
+          <div style="font-size: 16px;margin-bottom: 10px">任务接受成功，请尽快与客户取得联系，开始对接。</div>
           <div>预计测试日期：${this.data.preDate}</div>
           <div>期望结单日期：${this.data.expEndDate}</div>
         </div>`
-        this.$alert(template, '任务接受成功，请尽快与客户取得联系，开始对接', {
+        this.$alert(template, '', {
           dangerouslyUseHTMLString: true,
           showClose: false,
           confirmButtonText: '确定',

@@ -143,7 +143,7 @@
           <el-input v-model="ruleForm.desc" type="textarea" rows="5" maxlength="250" show-word-limit placeholder="整体任务说明" />
         </el-form-item>
         <el-checkbox-group v-model="ruleForm.tags">
-          <el-checkbox v-for="item in tagsList" :key="item.id" style="width: 110px" :label="item.id"> {{ item.name }} </el-checkbox>
+          <el-checkbox v-for="item in tagsList" :key="item.id" :disabled="item.disabled" style="width: 110px" :label="item.id" @change="changeBox"> {{ item.name }} </el-checkbox>
         </el-checkbox-group>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -284,6 +284,9 @@ export default {
     async tagsTask() {
       const res = await tagsTask()
       this.tagsList = res.data
+      for (let index = 0; index < this.tagsList.length; index++) {
+        this.tagsList[index].disabled = false
+      }
     },
     checkFun() {
       this.dialogVisibleCheck = false
@@ -369,8 +372,6 @@ export default {
     },
     // eslint-disable-next-line vue/no-dupe-keys
     changeOverFun() {
-      console.log(this.baseData)
-      console.log(this.baseSerMon)
       if (this.baseSerMon.realAmount !== this.baseData.realAmount || this.baseSerMon.realServiceId !== this.baseData.realServiceId) {
         this.$confirm('本次变更设计服务，额度变化，需重新提测', '提示', {
           confirmButtonText: '确定',
@@ -385,8 +386,27 @@ export default {
       }
     },
     noChange() {
-      // this.dialogVisible = true
       this.taskFrom = 3
+    },
+    changeBox() {
+      console.log(this.ruleForm.tags)
+      if (this.ruleForm.tags[0] === 1 && this.ruleForm.tags.length === 1) {
+        const arr = this.tagsList
+        for (let index = 0; index < arr.length; index++) {
+          arr[index].disabled = true
+        }
+        arr[0].disabled = false
+        this.tagsList = arr
+      } else if (this.ruleForm.tags.length === 0) {
+        for (let index = 0; index < this.tagsList.length; index++) {
+          this.tagsList[index].disabled = false
+        }
+      } else {
+        for (let index = 0; index < this.tagsList.length; index++) {
+          this.tagsList[index].disabled = false
+        }
+        this.tagsList[0].disabled = true
+      }
     },
     changeInfo() {
       this.taskFrom = 2

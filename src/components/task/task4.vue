@@ -5,7 +5,7 @@
         <div class="task_name_left"> {{ baseData.client.name }} </div>
         <div class="task_name_btn">
           <el-button v-if="type === 'assign'" v-permission="[5]" type="primary" @click="startTask"> 启动执行 </el-button>
-          <div v-else-if="type === 'execute'">
+          <div v-if="type === 'execute'">
             <el-button v-permission="[5]" type="primary" style="margin-right: 10px" @click="completeTask"> 执行完成 </el-button>
             <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
@@ -17,9 +17,9 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <div v-else>
+          <div v-if="type === 'pause'">
             <el-button v-if="taskFrom === 3" v-permission="[5]" type="primary" style="margin-right: 10px" @click="startTaskAgain"> 重新启动 </el-button>
-            <el-button v-if="changeOver" v-permission="[3]" type="primary" style="margin-right: 10px" @click="changeOverFun"> 变更完成 </el-button>
+            <el-button v-show="changeOver" v-permission="[3]" type="primary" style="margin-right: 10px" @click="changeOverFun"> 变更完成 </el-button>
             <el-dropdown @command="handleCommandPa">
               <span class="el-dropdown-link">
                 更多操作<i class="el-icon-arrow-down el-icon--right" />
@@ -59,6 +59,7 @@
               type="datetime"
               placeholder="选择日期时间"
               value-format="yyyy-MM-dd HH:mm:ss"
+              :picker-options="optiondate"
             />
           </span>
         </el-col>
@@ -85,6 +86,7 @@
               type="datetime"
               placeholder="选择日期时间"
               value-format="yyyy-MM-dd HH:mm:ss"
+              :picker-options="optiondate"
             />
           </span>
         </el-col>
@@ -196,13 +198,6 @@ export default {
       isEdit: true,
       taskFrom: 3,
       changeOver: false,
-      options: [{
-        value: '项目计划变更',
-        label: '项目计划变更'
-      }, {
-        value: '不想做了',
-        label: '不想做了'
-      }],
       ruleForm: {
         delayTime: '',
         desc: '',
@@ -228,7 +223,17 @@ export default {
           { required: true, message: '请输入整体任务说明', trigger: 'blur' }
         ]
       },
-      tagsList: []
+      tagsList: [],
+      baseSerMon: {
+        realAmount: 0,
+        realServiceId: 0
+      },
+      optiondate: {
+        disabledDate(date) {
+          return date.getTime() <= Date.now()
+        },
+        selectableRange: ['09:30:00 - 18:30:00']
+      }
     }
   },
   mounted() {
@@ -238,6 +243,15 @@ export default {
   },
   methods: {
     async getOneTask() {
+      const res = await getOneTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.baseData = JSON.parse(JSON.stringify(res.data))
+        this.datacopy = JSON.parse(JSON.stringify(res.data))
+        this.baseSerMon.realAmount = res.data.realAmount
+        this.baseSerMon.realServiceId = res.data.realService.ID
+      }
+    },
+    async getNewTask() {
       const res = await getOneTask({ id: this.taskId })
       if (res.ret === 0) {
         this.baseData = JSON.parse(JSON.stringify(res.data))
@@ -253,7 +267,7 @@ export default {
       }).catch(() => {})
     },
     startTaskAgain() {
-      this.$confirm('已了解此次变更内容，打算重启执行任务？?', '提示', {
+      this.$confirm('已了解此次变更内容，打算重启执行任务?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
@@ -313,12 +327,12 @@ export default {
       ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
       ruleFormInfo.expEndTime = this.baseData.expEndTime
       ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
-      this.changeOver = true
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
-        this.$message.success('保存成功')
-        this.getOneTask()
+        this.changeOver = true
+        this.getNewTask()
         this.taskFrom = 3
+        this.$message.success('保存成功')
       }
     },
     handleCommand(command) {
@@ -355,8 +369,20 @@ export default {
     },
     // eslint-disable-next-line vue/no-dupe-keys
     changeOverFun() {
-      this.changeOver = false
-      this.$message.success('变更完成，等待实施重新启动')
+      console.log(this.baseData)
+      console.log(this.baseSerMon)
+      if (this.baseSerMon.realAmount !== this.baseData.realAmount || this.baseSerMon.realServiceId !== this.baseData.realServiceId) {
+        this.$confirm('本次变更设计服务，额度变化，需重新提测', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          // this.executeTask()
+          this.$emit('changAmount', this.baseData)
+        }).catch(() => {})
+      } else {
+        this.changeOver = false
+        this.$message.success('变更完成，等待实施重新启动')
+      }
     },
     noChange() {
       // this.dialogVisible = true

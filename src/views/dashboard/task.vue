@@ -25,6 +25,7 @@
       @stopTask="stopTask"
       @complete="complete"
       @cacelTask="cacelTask"
+      @changAmount="changAmount"
     />
     <Task6
       v-else-if="type === 'finish' || type === 'end'"
@@ -52,6 +53,7 @@
 
 <script>
 import { cancelTask } from '@/api/task'
+import { mapGetters } from 'vuex'
 import Task1 from '@/components/task/task1'
 import Task2 from '@/components/task/task2'
 import Task3 from '@/components/task/task3'
@@ -98,6 +100,11 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters([
+      'userId'
+    ])
+  },
   mounted() {
     this.type = this.$route.query.type
     this.taskId = Number(this.$route.query.id)
@@ -126,7 +133,7 @@ export default {
       })
     },
     async cancelTask(from) {
-      const res = await cancelTask({ id: this.taskId, userId: 1, reason: from.result })
+      const res = await cancelTask({ id: this.taskId, userId: this.userId, reason: from.result })
       if (res.ret === 0) {
         this.$message.success('任务取消成功')
         this.$router.go(-1)
@@ -215,6 +222,14 @@ export default {
           id: this.taskId
         }
       })
+    },
+    async changAmount(base) {
+      const res = await cancelTask({ id: base.ID, userId: this.userId, reason: '需求变更' })
+      if (res.ret === 0) {
+        this.$router.replace({
+          path: 'dashboard'
+        })
+      }
     }
   }
 }

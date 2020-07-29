@@ -94,7 +94,7 @@
       </div>
 
       <div v-if="evaCus" v-permission="[1, 2, 3, 4]" class="task_eva">
-        <div class="title">客户评价</div>
+        <div class="title">经理评价</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaCusData.score }}</div>
@@ -190,7 +190,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="实施评价" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
+    <el-dialog title="评价" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
       <el-form ref="ruleFormEva" label-width="120px" label-position="top" :model="ruleFormEva" :rules="rulesEva">
         <el-form-item label="实际交付时间" prop="realTime">
           <el-date-picker
@@ -404,12 +404,12 @@ export default {
     },
     close() {
       this.ruleForm = {
-        checkedInfo: [],
-        checkedEnv: [],
-        checkedNum: [],
-        checkedPhone: [],
-        checkedOther: [],
-        checkedCase: []
+        checkedInfo: ['确认无误'],
+        checkedEnv: ['确认无误'],
+        checkedNum: ['确认无误'],
+        checkedPhone: ['确认无误'],
+        checkedOther: ['确认无误'],
+        checkedCase: ['确认无误']
       }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()

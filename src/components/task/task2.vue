@@ -29,6 +29,7 @@
               type="datetime"
               placeholder="选择日期时间"
               value-format="yyyy-MM-dd HH:mm:ss"
+              :picker-options="optiondate"
             />
           </span>
         </el-col>
@@ -55,6 +56,7 @@
               type="datetime"
               placeholder="选择日期时间"
               value-format="yyyy-MM-dd HH:mm:ss"
+              :picker-options="optiondate"
             />
           </span>
         </el-col>
@@ -69,7 +71,7 @@
 
       <div class="task_label"> 需求信息 <el-button v-if="taskFrom === 3" v-permission="[3]" style="float: right" type="text" @click="editTask">编辑需求</el-button> </div>
 
-      <div v-if="taskFrom === 1" class="task_demand task_bule" @click="taskFromFun">
+      <div v-show="taskFrom === 1" v-permission="[3]" class="task_demand task_bule" @click="taskFromFun">
         <i class="el-icon-circle-plus-outline" /> 填写需求
       </div>
 
@@ -118,7 +120,13 @@ export default {
       },
       datacopy: {},
       taskFrom: 1,
-      isEdit: false
+      isEdit: false,
+      optiondate: {
+        disabledDate(date) {
+          return date.getTime() <= Date.now()
+        },
+        selectableRange: ['09:30:00 - 18:30:00']
+      }
     }
   },
   // watch: {

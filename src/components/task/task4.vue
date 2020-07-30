@@ -66,16 +66,6 @@
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
           <span class="task_info_con"> {{ baseData.realService.serviceName }} </span>
-          <!-- <span v-else class="task_info_con">
-            <el-select v-model="baseData.realServiceId" style="width: 100%" placeholder="请选择任务类型">
-              <el-option
-                v-for="item in service"
-                :key="item.ID"
-                :label="item.serviceName"
-                :value="item.ID"
-              />
-            </el-select>
-          </span> -->
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单时间 </span>
@@ -93,9 +83,6 @@
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
           <span class="task_info_con"> {{ baseData.realAmount }} </span>
-          <!-- <span v-else class="task_info_con">
-            <el-input-number v-model="baseData.realAmount" controls-position="right" :min="1" />
-          </span> -->
         </el-col>
       </el-row>
 
@@ -166,6 +153,25 @@
         <el-button type="primary" @click="submitFormChange('ruleFormChange')">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog title="变更说明" :visible.sync="dialogVisibleInfo" :close-on-click-modal="false" width="600px" @close="closeInfo">
+      <el-form ref="ruleFormInfo" label-width="420px" label-position="top" :model="ruleFormInfo" :rules="rulesInfo">
+        <!-- <el-form-item label="本次需求变更是否涉及任务类型或额度变化？（如果涉及到额度和任务类型的变化 此任务将取消）" prop="isChange">
+          <el-radio-group v-model="ruleFormInfo.isChange">
+            <el-radio :label="'是'" />
+            <el-radio :label="'否'" />
+          </el-radio-group>
+        </el-form-item> -->
+        <el-form-item label="变更说明" prop="changeLog">
+          <el-input v-model="ruleFormInfo.changeLog" type="textarea" rows="5" maxlength="250" show-word-limit placeholder="变更说明" />
+        </el-form-item>
+        <div>是否已和客户就此次需求变更结单时间，用例内容达成一致，准备需求冻结进入执行</div>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleInfo = false">取 消</el-button>
+        <el-button type="primary" @click="submitFormInfo('ruleFormInfo')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -198,6 +204,7 @@ export default {
       dialogVisible: false,
       dialogVisibleCheck: false,
       dialogVisibleChange: false,
+      dialogVisibleInfo: false,
       taskId: 0,
       baseData: {
         client: {
@@ -220,6 +227,14 @@ export default {
       rulesChange: {
         isChange: [
           { required: true, message: '请选择', trigger: 'change' }
+        ]
+      },
+      ruleFormInfo: {
+        changeLog: ''
+      },
+      rulesInfo: {
+        changeLog: [
+          { required: true, message: '请输入变更说明', trigger: 'blur' }
         ]
       },
       ruleForm: {
@@ -247,6 +262,7 @@ export default {
           { required: true, message: '请输入整体任务说明', trigger: 'blur' }
         ]
       },
+      formInfo: {},
       tagsList: [],
       baseSerMon: {
         realAmount: 0,
@@ -354,6 +370,7 @@ export default {
       }
     },
     async saveTask(ruleFormInfo) {
+      this.formInfo = ruleFormInfo
       if (this.baseData.realServiceId === '' ||
         this.baseData.realAmount === '' ||
         this.baseData.expDeliverTime === null ||
@@ -408,11 +425,12 @@ export default {
     },
     // eslint-disable-next-line vue/no-dupe-keys
     async changeOverFun() {
-      const res = await changeTask({ id: this.taskId })
-      if (res.ret === 0) {
-        this.changeOver = false
-        this.$message.success('变更完成，等待实施重新启动')
-      }
+      this.dialogVisibleInfo = true
+      // const res = await changeTask({ id: this.taskId })
+      // if (res.ret === 0) {
+      //   this.changeOver = false
+      //   this.$message.success('变更完成，等待实施重新启动')
+      // }
       // if (this.baseSerMon.realAmount !== this.baseData.realAmount || this.baseSerMon.realServiceId !== this.baseData.realServiceId) {
       //   this.$confirm('本次变更设计服务，额度变化，需重新提测', '提示', {
       //     confirmButtonText: '确定',
@@ -456,6 +474,37 @@ export default {
       this.dialogVisibleChange = true
       // this.taskFrom = 2
       // this.changeOver = false
+    },
+    async changeInfoDia(form) {
+      const ruleFormInfo = this.formInfo
+      ruleFormInfo.realServiceId = this.baseData.realServiceId
+      ruleFormInfo.realAmount = this.baseData.realAmount
+      ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
+      ruleFormInfo.expEndTime = this.baseData.expEndTime
+      ruleFormInfo.changeLog = form.changeLog
+      const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
+      if (res.ret === 0) {
+        const res2 = await changeTask({ id: this.taskId })
+        if (res2.ret === 0) {
+          this.changeOver = false
+          this.dialogVisibleInfo = false
+          this.$message.success('变更完成，等待实施重新启动')
+        }
+      }
+    },
+    submitFormInfo(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const form = this.ruleFormInfo
+          console.log(form)
+          console.log(this.formInfo)
+          this.changeInfoDia(form)
+          // this.dialogVisibleChange = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     submitFormChange(formName) {
       this.$refs[formName].validate((valid) => {
@@ -505,6 +554,9 @@ export default {
       if (this.$refs['ruleFormChange']) {
         this.$refs['ruleFormChange'].resetFields()
       }
+    },
+    closeInfo() {
+
     }
   }
 }

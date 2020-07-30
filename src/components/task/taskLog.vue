@@ -34,9 +34,14 @@
     <div class="task_label"> 变更记录 </div>
 
     <div v-for="item in log" :key="item.id" class="task_record">
-      <span class="task_record_ra" />
-      <div class="task_record_label"> {{ item.createTime }}  </div>
-      <div class="task_record_con"> {{ item.title }} </div>
+      <div class="top">
+        <span class="task_record_ra" />
+        <div class="task_record_label"> {{ item.createTime }}  </div>
+        <div class="task_record_con"> {{ item.title }} </div>
+      </div>
+      <div v-if="item.desc !== ''" class="bot">
+        {{ item.desc }}
+      </div>
     </div>
   </div>
 </template>
@@ -104,25 +109,36 @@ export default {
     }
     .task_record {
         display: flex;
-        align-items: center;
-        margin-bottom: 5px;
-        .task_record_ra {
-            width:8px;
-            height:8px;
-            background:rgba(216,216,216,1);
-            border-radius: 8px;
-            margin-right: 5px;
+        flex-direction: column;
+        .top {
+          display: flex;
+          align-items: center;
+          margin-bottom: 5px;
+          .task_record_ra {
+              width:8px;
+              height:8px;
+              background:rgba(216,216,216,1);
+              border-radius: 8px;
+              margin-right: 5px;
+          }
+          .task_record_label {
+              font-size:14px;
+              color:rgba(188,192,195,1);
+              line-height:20px;
+              width: 150px;
+          }
+          .task_record_con {
+              font-size:14px;
+              color: #202D40;
+          }
         }
-        .task_record_label {
-            font-size:14px;
-            color:rgba(188,192,195,1);
-            line-height:20px;
-            width: 150px;
-        }
-        .task_record_con {
-            font-size:14px;
-            color: #202D40;
-        }
+      .bot {
+        color: #55595f;
+        background-color: #F7F9FA;
+        padding: 10px;
+        font-size: 12px;
+        margin-left: 20px;
+      }
     }
 }
 </style>

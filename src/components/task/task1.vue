@@ -122,10 +122,10 @@ export default {
 .broadfun_task {
     display: flex;
     min-height: calc(100vh - 100px);
-    flex: 1;
     .task_left {
-        width: 100%;
-        padding: 15px;
+		flex: 1;
+		padding: 15px;
+		overflow: hidden;
         .task_name {
             display: flex;
             .task_name_left {

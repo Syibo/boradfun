@@ -277,8 +277,19 @@ export default {
     async executeTask() {
       const res = await executeTask({ id: this.taskId })
       if (res.ret === 0) {
-        this.$message.success('任务启动成功')
-        this.$emit('startTask')
+        const template = `<div>
+          <div style="font-size: 16px;margin-bottom: 10px">任务启动成功，请根据本次任务需求，按时完成</div>
+          <div>任务类型：${this.baseData.realService.serviceName}</div>
+          <div>期望交付时间：${this.baseData.expDeliverTime}</div>
+        </div>`
+        this.$alert(template, '启动执行', {
+          dangerouslyUseHTMLString: true,
+          showClose: false,
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$emit('startTask')
+          }
+        })
       }
     },
     async tagsTask() {
@@ -389,7 +400,6 @@ export default {
       this.taskFrom = 3
     },
     changeBox() {
-      console.log(this.ruleForm.tags)
       if (this.ruleForm.tags[0] === 1 && this.ruleForm.tags.length === 1) {
         const arr = this.tagsList
         for (let index = 0; index < arr.length; index++) {
@@ -445,11 +455,19 @@ export default {
   display: flex;
   color: #2B2B2B;
   font-size: 14px;
-  height: 30px;
+  min-height: 30px;
   align-items: center;
   span {
     width: 140px;
     color: #808387;
+  }
+  p {
+    flex: 1;
+    height: auto;
+    word-wrap:break-word;
+    word-break:break-all;
+    overflow: hidden;
+    margin: 10px 0;
   }
 }
 .el-dropdown-link {

@@ -102,7 +102,7 @@
       <div class="task_demand_item"> <span>本次测试版本</span> {{ data.taskDetail.version }} </div>
       <div class="task_demand_item"> <span>安装包内网地址</span> {{ data.taskDetail.pkgAddress }} </div>
       <div class="task_demand_item"> <span>测试环境类型</span> {{ data.taskDetail.testType }} </div>
-      <div class="task_demand_item"> <span /> {{ data.taskDetail.testExtInfo }} </div>
+      <div class="task_demand_item"> <span /> <p> {{ data.taskDetail.testExtInfo }} </p> </div>
       <div class="task_demand_item"> <span>白名单</span> {{ data.taskDetail.whiteList }} </div>
       <div class="task_demand_item"> <span>测试账号</span> {{ data.taskDetail.testAccountType }} </div>
       <div class="task_demand_item"> <span>测试账号数量</span> {{ data.taskDetail.accountNum }} </div>
@@ -275,11 +275,19 @@ export default {
   display: flex;
   color: #2B2B2B;
   font-size: 14px;
-  height: 30px;
+  min-height: 30px;
   align-items: center;
   span {
+    display: inline-block;
     width: 140px;
     color: #808387;
+  }
+  p {
+    flex: 1;
+    height: auto;
+    word-wrap:break-word;
+    word-break:break-all;
+    overflow: hidden;
   }
 }
 </style>

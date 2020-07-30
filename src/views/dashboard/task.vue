@@ -238,6 +238,5 @@ export default {
 <style lang="scss" scoped>
 .container {
     padding-bottom: 10px;
-    display: flex;
 }
 </style>

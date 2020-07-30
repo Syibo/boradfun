@@ -137,8 +137,8 @@ export default {
         ]
       },
       rules: {
-        deadline: [
-          { required: true, message: '请选择日期', trigger: 'change' }
+        amount: [
+          { required: true, message: '请输入额度', trigger: 'blur' }
         ]
       },
       ruleForm: {

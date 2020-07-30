@@ -4,8 +4,8 @@
       <div class="task_name">
         <div class="task_name_left"> {{ baseData.client.name }} </div>
         <div class="task_name_btn">
-          <el-button v-if="type === 'assign'" v-permission="[5]" type="primary" @click="startTask"> 启动执行 </el-button>
-          <div v-if="type === 'execute'">
+          <el-button v-show="type === 'assign'" v-permission="[5]" type="primary" @click="startTask"> 启动执行 </el-button>
+          <div v-show="type === 'execute'">
             <el-button v-permission="[5]" type="primary" style="margin-right: 10px" @click="completeTask"> 执行完成 </el-button>
             <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
@@ -17,8 +17,8 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <div v-if="type === 'pause'">
-            <el-button v-if="taskFrom === 3" v-permission="[5]" type="primary" style="margin-right: 10px" @click="startTaskAgain"> 重新启动 </el-button>
+          <div v-show="type === 'pause'">
+            <el-button v-if="taskFrom === 3 && baseData.isPause === 0" v-permission="[5]" type="primary" style="margin-right: 10px" @click="startTaskAgain"> 重新启动 </el-button>
             <el-button v-show="changeOver" v-permission="[3]" type="primary" style="margin-right: 10px" @click="changeOverFun"> 变更完成 </el-button>
             <el-dropdown @command="handleCommandPa">
               <span class="el-dropdown-link">
@@ -65,8 +65,8 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realService.serviceName }} </span>
-          <span v-else class="task_info_con">
+          <span class="task_info_con"> {{ baseData.realService.serviceName }} </span>
+          <!-- <span v-else class="task_info_con">
             <el-select v-model="baseData.realServiceId" style="width: 100%" placeholder="请选择任务类型">
               <el-option
                 v-for="item in service"
@@ -75,7 +75,7 @@
                 :value="item.ID"
               />
             </el-select>
-          </span>
+          </span> -->
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 期望结单时间 </span>
@@ -92,10 +92,10 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务额度 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realAmount }} </span>
-          <span v-else class="task_info_con">
+          <span class="task_info_con"> {{ baseData.realAmount }} </span>
+          <!-- <span v-else class="task_info_con">
             <el-input-number v-model="baseData.realAmount" controls-position="right" :min="1" />
-          </span>
+          </span> -->
         </el-col>
       </el-row>
 
@@ -123,7 +123,7 @@
 
     <TaskLog :log="baseData.logs" :manage="baseData.manage" :sale-user="baseData.client.saleUser" />
 
-    <CheckDialog :dialog-visible="dialogVisibleCheck" :base-data="baseData" @check="checkFun" />
+    <CheckDialog :dialog-visible="dialogVisibleCheck" :base-data="baseData" @check="checkFun" @update:dialogVisible="dialogVisibleCheck = false" />
 
     <el-dialog title="执行信息确认" :visible.sync="dialogVisible" :close-on-click-modal="false" width="600px" @close="close">
       <el-form ref="ruleForm" label-width="120px" label-position="left" :model="ruleForm" :rules="rules">
@@ -151,13 +151,28 @@
         <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog title="需求变更" :visible.sync="dialogVisibleChange" :close-on-click-modal="false" width="600px" @close="closeChange">
+      <el-form ref="ruleFormChange" label-width="420px" label-position="top" :model="ruleFormChange" :rules="rulesChange">
+        <el-form-item label="本次需求变更是否涉及任务类型或额度变化？（如果涉及到额度和任务类型的变化 此任务将取消）" prop="isChange">
+          <el-radio-group v-model="ruleFormChange.isChange">
+            <el-radio :label="'是'" />
+            <el-radio :label="'否'" />
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleChange = false">取 消</el-button>
+        <el-button type="primary" @click="submitFormChange('ruleFormChange')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js'
 import Task2From from '../From/task2-from'
-import { executeTask, tagsTask, finishTask, stopTask, saveTaskInfo, getOneTask } from '@/api/task'
+import { executeTask, tagsTask, finishTask, stopTask, saveTaskInfo, getOneTask, changeTask } from '@/api/task'
 import TaskLog from '@/components/task/taskLog'
 import CheckDialog from '@/components/common/CheckDialog.vue'
 export default {
@@ -182,6 +197,7 @@ export default {
     return {
       dialogVisible: false,
       dialogVisibleCheck: false,
+      dialogVisibleChange: false,
       taskId: 0,
       baseData: {
         client: {
@@ -198,6 +214,14 @@ export default {
       isEdit: true,
       taskFrom: 3,
       changeOver: false,
+      ruleFormChange: {
+        isChange: ''
+      },
+      rulesChange: {
+        isChange: [
+          { required: true, message: '请选择', trigger: 'change' }
+        ]
+      },
       ruleForm: {
         delayTime: '',
         desc: '',
@@ -316,6 +340,7 @@ export default {
     async stopTask() {
       const res = await stopTask({ id: this.taskId })
       if (res.ret === 0) {
+        this.getOneTask()
         this.$message.success('任务暂停成功')
         this.$emit('stopTask')
       }
@@ -382,22 +407,31 @@ export default {
       }
     },
     // eslint-disable-next-line vue/no-dupe-keys
-    changeOverFun() {
-      if (this.baseSerMon.realAmount !== this.baseData.realAmount || this.baseSerMon.realServiceId !== this.baseData.realServiceId) {
-        this.$confirm('本次变更设计服务，额度变化，需重新提测', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(() => {
-          // this.executeTask()
-          this.$emit('changAmount', this.baseData)
-        }).catch(() => {})
-      } else {
+    async changeOverFun() {
+      const res = await changeTask({ id: this.taskId })
+      if (res.ret === 0) {
         this.changeOver = false
         this.$message.success('变更完成，等待实施重新启动')
       }
+      // if (this.baseSerMon.realAmount !== this.baseData.realAmount || this.baseSerMon.realServiceId !== this.baseData.realServiceId) {
+      //   this.$confirm('本次变更设计服务，额度变化，需重新提测', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消'
+      //   }).then(() => {
+      //     // this.executeTask()
+      //     this.$emit('changAmount', this.baseData)
+      //   }).catch(() => {})
+      // } else {
+      //   this.changeOver = false
+      //   this.$message.success('变更完成，等待实施重新启动')
+      // }
     },
-    noChange() {
-      this.taskFrom = 3
+    async noChange() {
+      const res = await changeTask({ id: this.taskId })
+      if (res.ret === 0) {
+        this.taskFrom = 3
+        this.$message.success('本次没有变更，等待实施重新启动')
+      }
     },
     changeBox() {
       if (this.ruleForm.tags[0] === 1 && this.ruleForm.tags.length === 1) {
@@ -419,8 +453,26 @@ export default {
       }
     },
     changeInfo() {
-      this.taskFrom = 2
-      this.changeOver = false
+      this.dialogVisibleChange = true
+      // this.taskFrom = 2
+      // this.changeOver = false
+    },
+    submitFormChange(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const form = this.ruleFormChange
+          if (form.isChange === '是') {
+            this.$emit('changAmount', this.baseData)
+          } else {
+            this.taskFrom = 2
+            this.changeOver = false
+          }
+          this.dialogVisibleChange = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -444,6 +496,14 @@ export default {
       }
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
+      }
+    },
+    closeChange() {
+      this.ruleFormChange = {
+        isChange: ''
+      }
+      if (this.$refs['ruleFormChange']) {
+        this.$refs['ruleFormChange'].resetFields()
       }
     }
   }

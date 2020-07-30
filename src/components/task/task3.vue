@@ -80,7 +80,7 @@
           <el-input-number v-model="ruleForm.amount" :min="1" controls-position="right" />
         </el-form-item>
 
-        <el-form-item label="处理人" prop="exeUserId">
+        <!-- <el-form-item label="处理人" prop="exeUserId">
           <el-select v-model="ruleForm.exeUserId" style="width: 100%" placeholder="请选择处理人" @change="change">
             <el-option
               v-for="item in userImpls"
@@ -89,10 +89,15 @@
               :value="item.Id"
             />
           </el-select>
+        </el-form-item> -->
+        <el-form-item label="处理人" prop="exeUserId">
+          <el-radio-group v-model="ruleForm.exeUserId" @change="change">
+            <el-radio v-for="item in userImpls" :key="item.Id" :label="item.Id">{{ item.Name + '(' + item.ExeNum + '/' + item.AssignNum + ')' }}</el-radio>
+          </el-radio-group>
         </el-form-item>
         <div v-for="item in list" :key="item.Id" class="list-clas">
           <div>{{ item.exp_deliver_time }}</div>
-          <div>{{ item.app_name }} {{ item.service_name }} {{ item.name }} {{ item.real_amount }}额度</div>
+          <div>{{ item.app_name }} &nbsp; {{ item.service_name }} &nbsp; {{ item.name }} &nbsp; {{ item.real_amount }}额度</div>
         </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -221,6 +226,7 @@ export default {
         exeUserId: '',
         amount: 1
       }
+      this.list = []
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }
@@ -252,5 +258,6 @@ export default {
 .list-clas {
   color: #999999;
   font-size:14px;
+  margin-bottom: 10px;
 }
 </style>

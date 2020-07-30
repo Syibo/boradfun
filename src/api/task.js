@@ -162,6 +162,17 @@ export function stopTask({ id }) {
 }
 
 /**
+ * 变更完成
+ * @param id 任务id
+ */
+export function changeTask({ id }) {
+  return request({
+    url: `/v1/task/change/${id}`,
+    method: 'put'
+  })
+}
+
+/**
  * 标签列表
  * @param id 任务id
  */

@@ -34,7 +34,7 @@
       @statement="statement"
       @cacelTask="cacelTask"
     />
-    <div v-else>404</div>
+    <div v-else>该任务已取消</div>
     <el-dialog title="任务取消" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
         <el-form-item label="任务取消原因" prop="result">

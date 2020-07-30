@@ -5,7 +5,7 @@
         <div class="today_task">
           <div class="title"> 今日结单任务 {{ focusData.length }} </div>
           <div v-for="item in focusData" :key="item.ID" class="item">
-            <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span>
+            <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span> <Status :status="item.status" />
           </div>
         </div>
       </el-col>
@@ -13,7 +13,7 @@
         <div class="today_task">
           <div class="title"> 明日结单任务{{ temData.length }} </div>
           <div v-for="item in temData" :key="item.ID" class="item">
-            <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span>
+            <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span> <Status :status="item.status" />
           </div>
         </div>
       </el-col>
@@ -192,6 +192,7 @@ import TableBase from '@/components/dashboard/TableBase.vue'
 import TableCancel from '@/components/dashboard/TableCancel.vue'
 import TableHigh from '@/components/dashboard/TableHigh.vue'
 import TableStop from '@/components/dashboard/TableStop.vue'
+import Status from '@/components/common/Status.vue'
 // import TableExecute from '@/components/dashboard/TableExecute.vue'
 import TableEnd from '@/components/dashboard/TableEnd.vue'
 import Moment from 'moment'
@@ -204,7 +205,8 @@ export default {
     TableHigh,
     TableStop,
     TableEnd,
-    Level
+    Level,
+    Status
   },
   directives: { permission },
   data() {
@@ -547,7 +549,7 @@ export default {
           line-height: 22px;
           padding: 0 5px;
           border-radius:3px;
-          margin-left: 20px;
+          margin: 0 20px;
           cursor: pointer;
         }
       }

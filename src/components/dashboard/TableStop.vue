@@ -7,11 +7,10 @@
           <span class="name" @click="goTask(scope.row.ID, scope.row.status)">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
         </template>
       </el-table-column>
-      <el-table-column prop="appName" label="应用/游戏名称" />
       <el-table-column prop="service.serviceName" label="任务类型" />
       <el-table-column prop="realAmount" label="任务额度" />
       <el-table-column prop="exeUser.name" label="实施人员" />
-      <el-table-column prop="expEndDate" label="期望结单日期/时间" />
+      <el-table-column prop="expEndDate" label="期望交付时间" />
       <el-table-column prop="expEndDate" label="">
         <template v-if="scope.row.status === 'pause'" slot-scope="scope">
           <span class="stop">执行暂停</span>

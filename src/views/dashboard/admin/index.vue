@@ -5,7 +5,7 @@
         <div class="today_task">
           <div class="title"> 今日结单任务 {{ focusData.length }} </div>
           <div v-for="item in focusData" :key="item.ID" class="item">
-            <span @click="goTask(item)">{{ item.client.name }}</span> <span>{{ item.realService.serviceName }}</span>
+            <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span>
           </div>
         </div>
       </el-col>
@@ -13,7 +13,7 @@
         <div class="today_task">
           <div class="title"> 明日结单任务{{ temData.length }} </div>
           <div v-for="item in temData" :key="item.ID" class="item">
-            <span @click="goTask(item)">{{ item.client.name }}</span> <span>{{ item.realService.serviceName }}</span>
+            <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span>
           </div>
         </div>
       </el-col>
@@ -49,16 +49,52 @@
           <TableBase :date="confirmData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`待分配 · ${frozenData.length}`" name="frozen" class="tabs_item">
-          <TableBase :date="frozenData" :hight="hightArr" />
+          <!-- <TableBase :date="frozenData" :hight="hightArr" /> -->
+          <el-table :data="frozenData" header-cell-class-name="table-header-style" style="width: 100%" :row-class-name="tableRowClassName">
+            <el-table-column prop="ID" label="任务ID" width="180" />
+            <el-table-column label="客户名称" width="180">
+              <template slot-scope="scope">
+                <span class="name" @click="goTask(scope.row.ID, scope.row.status)">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="appName" label="应用/游戏名称" />
+            <el-table-column prop="service.serviceName" label="任务类型" />
+            <el-table-column prop="realAmount" label="任务额度" />
+            <el-table-column prop="expEndTime" label="期望结单时间" />
+          </el-table>
         </el-tab-pane>
         <el-tab-pane :label="`待执行 · ${assignData.length}`" name="assign" class="tabs_item">
-          <TableExecute :date="assignData" :hight="hightArr" />
+          <!-- <TableExecute :date="assignData" :hight="hightArr" /> -->
+          <el-table :data="assignData" header-cell-class-name="table-header-style" style="width: 100%" :row-class-name="tableRowClassName">
+            <el-table-column prop="ID" label="任务ID" width="180" />
+            <el-table-column label="客户名称" width="180">
+              <template slot-scope="scope">
+                <span class="name" @click="goTask(scope.row.ID, scope.row.status)">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="service.serviceName" label="任务类型" />
+            <el-table-column prop="realAmount" label="任务额度" />
+            <el-table-column prop="exeUser.name" label="实施人员" />
+            <el-table-column prop="expEndTime" label="期望交付时间" />
+          </el-table>
         </el-tab-pane>
         <el-tab-pane :label="`执行中 · ${executeData.length}`" name="execute" class="tabs_item">
           <TableStop :date="executeData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`待审核 · ${finishData.length}`" name="finish" class="tabs_item">
-          <TableExecute :date="finishData" :hight="hightArr" />
+          <!-- <TableExecute :date="finishData" :hight="hightArr" /> -->
+          <el-table :data="finishData" header-cell-class-name="table-header-style" style="width: 100%" :row-class-name="tableRowClassName">
+            <el-table-column prop="ID" label="任务ID" width="180" />
+            <el-table-column label="客户名称" width="180">
+              <template slot-scope="scope">
+                <span class="name" @click="goTask(scope.row.ID, scope.row.status)">{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="service.serviceName" label="任务类型" />
+            <el-table-column prop="realAmount" label="任务额度" />
+            <el-table-column prop="manage.name" label="客户服务经理" />
+            <el-table-column prop="expEndTime" label="期望结单时间" />
+          </el-table>
         </el-tab-pane>
         <el-tab-pane :label="`已结单 · ${endData.length}`" name="end" class="tabs_item">
           <TableEnd :date="endData" :hight="hightArr" />
@@ -156,9 +192,10 @@ import TableBase from '@/components/dashboard/TableBase.vue'
 import TableCancel from '@/components/dashboard/TableCancel.vue'
 import TableHigh from '@/components/dashboard/TableHigh.vue'
 import TableStop from '@/components/dashboard/TableStop.vue'
-import TableExecute from '@/components/dashboard/TableExecute.vue'
+// import TableExecute from '@/components/dashboard/TableExecute.vue'
 import TableEnd from '@/components/dashboard/TableEnd.vue'
 import Moment from 'moment'
+import Level from '@/components/common/level.vue'
 export default {
   name: 'DashboardAdmin',
   components: {
@@ -166,8 +203,8 @@ export default {
     TableCancel,
     TableHigh,
     TableStop,
-    TableExecute,
-    TableEnd
+    TableEnd,
+    Level
   },
   directives: { permission },
   data() {
@@ -408,14 +445,20 @@ export default {
         console.log('error')
       }
     },
-    goTask(item) {
+    goTask(id, status) {
       this.$router.push({
         path: 'task',
         query: {
-          type: item.status,
-          id: item.ID
+          type: status,
+          id
         }
       })
+    },
+    tableRowClassName({ row, rowIndex }) {
+      if (this.hightArr.indexOf(row.ID) !== -1) {
+        return 'warning-row'
+      }
+      return ''
     },
     dateChange(value) {
       this.ruleForm.expEndDate = Moment(value).add(3, 'days').format('YYYY-MM-DD HH:mm:ss')
@@ -443,6 +486,12 @@ export default {
   }
 }
 </script>
+
+<style>
+  .el-table .warning-row {
+    background: rgba(255,92,92,0.09);
+  }
+</style>
 
 <style lang="scss">
 .dashboard-editor-container {
@@ -486,16 +535,19 @@ export default {
         color: #202D40;
         font-size:14px;
         padding: 0 15px;
-        span {
+        i {
+          color: #3293FF;
+          cursor: pointer;
+          font-style: normal;
+        }
+        .ser-name {
           display: inline-block;
-          background:rgba(38,69,212,0.1);
-          color: #2645D4;
           font-size:12px;
-          margin-left: 15px;
           height: 22px;
           line-height: 22px;
           padding: 0 5px;
           border-radius:3px;
+          margin-left: 20px;
           cursor: pointer;
         }
       }
@@ -542,6 +594,10 @@ export default {
     padding: 0 5px;
     .tabs_item {
       min-height: 420px;
+    }
+    .name {
+      color: #3293FF;
+      cursor: pointer;
     }
   }
 }

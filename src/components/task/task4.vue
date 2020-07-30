@@ -556,7 +556,12 @@ export default {
       }
     },
     closeInfo() {
-
+      this.ruleFormInfo = {
+        changeLog: ''
+      }
+      if (this.$refs['ruleFormInfo']) {
+        this.$refs['ruleFormInfo'].resetFields()
+      }
     }
   }
 }

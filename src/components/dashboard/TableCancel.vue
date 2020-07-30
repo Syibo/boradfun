@@ -7,10 +7,9 @@
           <span>{{ scope.row.client.name }}</span> <level :level="scope.row.client.level" />
         </template>
       </el-table-column>
-      <el-table-column prop="appName" label="应用/游戏名称" />
       <el-table-column prop="service.serviceName" label="任务类型" />
+      <el-table-column prop="client.saleUser.name" label="销售" />
       <el-table-column prop="manage.name" label="客户服务经理" />
-      <el-table-column prop="expEndDate" label="期望结单时间" />
       <el-table-column prop="reason" label="取消原因" />
     </el-table>
   </div>

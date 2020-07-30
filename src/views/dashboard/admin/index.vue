@@ -52,7 +52,7 @@
           <TableBase :date="frozenData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`待执行 · ${assignData.length}`" name="assign" class="tabs_item">
-          <TableBase :date="assignData" :hight="hightArr" />
+          <TableExecute :date="assignData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`执行中 · ${executeData.length}`" name="execute" class="tabs_item">
           <TableStop :date="executeData" :hight="hightArr" />
@@ -61,7 +61,7 @@
           <TableExecute :date="finishData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`已结单 · ${endData.length}`" name="end" class="tabs_item">
-          <TableExecute :date="endData" :hight="hightArr" />
+          <TableEnd :date="endData" :hight="hightArr" />
         </el-tab-pane>
         <el-tab-pane :label="`任务取消 · ${cancelData.length}`" name="cancel" class="tabs_item">
           <TableCancel :date="cancelData" />
@@ -157,6 +157,7 @@ import TableCancel from '@/components/dashboard/TableCancel.vue'
 import TableHigh from '@/components/dashboard/TableHigh.vue'
 import TableStop from '@/components/dashboard/TableStop.vue'
 import TableExecute from '@/components/dashboard/TableExecute.vue'
+import TableEnd from '@/components/dashboard/TableEnd.vue'
 import Moment from 'moment'
 export default {
   name: 'DashboardAdmin',
@@ -165,7 +166,8 @@ export default {
     TableCancel,
     TableHigh,
     TableStop,
-    TableExecute
+    TableExecute,
+    TableEnd
   },
   directives: { permission },
   data() {

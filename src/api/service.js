@@ -104,12 +104,42 @@ export function handAmountSwitch({ clientId, sOutId, sOutNum, sInId, sInNum, rem
 }
 
 /**
- * 客户额度转换
- * @parms clientId 客户id
+ * 查询客户的额度历史,订单维度
+ * @parms clientId   客户id
+ * @parms serviceId  服务id
  */
 export function handAmountLog({ clientId, serviceId }) {
   return request({
     url: `/v1/amount/log?clientId=${clientId}&serviceId=${serviceId}`,
     method: 'get'
+  })
+}
+
+/**
+ * 查询客户的额度历史
+ * @parms clientId   客户id
+ * @parms serviceId  服务id
+ */
+export function handTaskLog({ clientId, serviceId }) {
+  return request({
+    url: `/v1/amount/tasklog?clientId=${clientId}&serviceId=${serviceId}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 额度延期
+ * @parms id        额度id
+ * @parms deadline  重新设置的过期时间
+ * @parms remark    备注
+ */
+export function delayAmount({ id, deadline, remark }) {
+  return request({
+    url: `/v1/amount/delay/${id}`,
+    method: 'put',
+    data: {
+      deadline,
+      remark
+    }
   })
 }

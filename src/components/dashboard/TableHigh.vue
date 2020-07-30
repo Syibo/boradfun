@@ -14,7 +14,7 @@
           <Status :status="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column prop="expEndDate" label="期望结单日期/时间" />
+      <el-table-column prop="expEndTime" label="期望结单日期/时间" />
     </el-table>
   </div>
 </template>

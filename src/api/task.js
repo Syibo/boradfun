@@ -259,3 +259,17 @@ export function getHightData() {
   })
 }
 
+/**
+ * 任务退次,退次额度小于实际额度 realAmount
+ */
+export function backamount({ id, amount, remark }) {
+  return request({
+    url: `/v1/task/backamount/${id}`,
+    method: 'put',
+    data: {
+      amount,
+      remark
+    }
+  })
+}
+

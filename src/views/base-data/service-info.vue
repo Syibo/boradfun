@@ -70,18 +70,18 @@
           <el-table-column prop="amount" label="额度变化" />
           <el-table-column align="center" label="操作" width="120">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="handleClick(scope.row)">退次</el-button>
+              <el-button type="text" size="small" @click="handbackamount(scope.row)">退次</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
     </el-tabs>
 
-    <!-- 额度转换 -->
+    <!-- 额度延期 -->
     <el-dialog title="额度延期" :visible.sync="dialogVisibleChange" :close-on-click-modal="false" width="500px" @close="closeChange">
       <el-form ref="ruleFormChange" label-position="top" :model="ruleFormChange" :rules="rulesChange" class="demo-ruleForm">
-        <!-- <div class="dialog_item">客户编号 {{ cusInfo.number }}</div>
-        <div class="dialog_item">客户名称 {{ cusInfo.name }}</div> -->
+        <div class="dialog_item">订单编号 {{ delayObj.orderNumber }}</div>
+        <div class="dialog_item">过期日期 {{ delayObj.deadline }}</div>
         <el-form-item label="额度到期日期" prop="deadline">
           <el-date-picker
             v-model="ruleFormChange.deadline"
@@ -100,21 +100,51 @@
         <el-button type="primary" @click="submitFormChange('ruleFormChange')">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 额度退次 -->
+    <el-dialog title="额度退次" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
+      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" class="demo-ruleForm">
+        <!-- <div class="dialog_item">订单编号 {{ cusInfo.number }}</div>
+        <div class="dialog_item">过期日期 {{ cusInfo.name }}</div> -->
+        <el-form-item label="退次额度" prop="amount">
+          <el-input-number v-model="ruleForm.amount" :min="1" controls-position="right" />
+        </el-form-item>
+        <el-form-item label="退次说明">
+          <el-input v-model="ruleForm.remark" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getCusAmountList, handAmountLog, handTaskLog, delayAmount } from '@/api/service'
+import { backamount } from '@/api/task'
 import Moment from 'moment'
 export default {
   name: 'ServiceInfo',
   data() {
     return {
       dialogVisibleChange: false,
+      dialogVisible: false,
       rulesChange: {
         deadline: [
           { required: true, message: '请选择日期', trigger: 'change' }
         ]
+      },
+      rules: {
+        deadline: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ]
+      },
+      ruleForm: {
+        id: '',
+        amount: '',
+        remark: ''
       },
       ruleFormChange: {
         id: '',
@@ -126,7 +156,8 @@ export default {
       serviceInfo: {},
       activeName: 'first',
       logData: [],
-      taskLogData: []
+      taskLogData: [],
+      delayObj: {}
     }
   },
   mounted() {
@@ -163,9 +194,33 @@ export default {
       return isOverTime
     },
     handleClick(row) {
-      console.log(row)
+      this.delayObj = row
       this.ruleFormChange.id = row.id
       this.dialogVisibleChange = true
+    },
+    handbackamount(row) {
+      this.ruleForm.id = row.taskSerial
+      this.dialogVisible = true
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const form = this.ruleForm
+          this.backamount(form)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async backamount(form) {
+      const res = await backamount(form)
+      if (res.ret === 0) {
+        this.$message.success('退次成功')
+        this.handAmountLog()
+        this.handTaskLog()
+        this.dialogVisible = false
+      }
     },
     submitFormChange(formName) {
       this.$refs[formName].validate((valid) => {
@@ -191,6 +246,19 @@ export default {
         id: '',
         deadline: '',
         remark: ''
+      }
+      if (this.$refs['ruleFormChange']) {
+        this.$refs['ruleFormChange'].resetFields()
+      }
+    },
+    close() {
+      this.ruleForm = {
+        id: '',
+        amount: '',
+        remark: ''
+      }
+      if (this.$refs['ruleForm']) {
+        this.$refs['ruleForm'].resetFields()
       }
     }
   }

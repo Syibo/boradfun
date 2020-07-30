@@ -89,29 +89,31 @@ export default {
       }
     },
     accept() {
-      this.$confirm('确认接受此任务?', '提示', {
+      // this.$confirm('确认接受此任务?', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消'
+      // }).then(() => {
+      //   this.confirmTask()
+      // }).catch(() => {})
+      const template = `<div>
+          <div>预计测试日期：${this.data.preDate}</div>
+          <div>预计结单日期：${this.data.expEndDate}</div>
+        </div>`
+      this.$alert(template, '确认接受', {
+        dangerouslyUseHTMLString: true,
+        showClose: false,
         confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        this.confirmTask()
-      }).catch(() => {})
+        cancelButtonText: '取消',
+        callback: action => {
+          this.confirmTask()
+        }
+      })
     },
     async confirmTask() {
       const res = await confirmTask({ id: this.taskId })
       if (res.ret === 0) {
-        const template = `<div>
-          <div style="font-size: 16px;margin-bottom: 10px">任务接受成功，请尽快与客户取得联系，开始对接。</div>
-          <div>预计测试日期：${this.data.preDate}</div>
-          <div>期望结单日期：${this.data.expEndDate}</div>
-        </div>`
-        this.$alert(template, '', {
-          dangerouslyUseHTMLString: true,
-          showClose: false,
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$emit('accept')
-          }
-        })
+        this.$message.success('任务接受成功！请尽快与客户取得联系，开始对接。')
+        this.$emit('accept')
       }
     }
   }

@@ -129,9 +129,11 @@
         <el-form-item label="整体任务说明" prop="desc">
           <el-input v-model="ruleForm.desc" type="textarea" rows="5" maxlength="250" show-word-limit placeholder="整体任务说明" />
         </el-form-item>
-        <el-checkbox-group v-model="ruleForm.tags">
-          <el-checkbox v-for="item in tagsList" :key="item.id" :disabled="item.disabled" style="width: 110px" :label="item.id" @change="changeBox"> {{ item.name }} </el-checkbox>
-        </el-checkbox-group>
+        <el-form-item label="" prop="tags">
+          <el-checkbox-group v-model="ruleForm.tags">
+            <el-checkbox v-for="item in tagsList" :key="item.id" :disabled="item.disabled" style="width: 110px" :label="item.id" @change="changeBox"> {{ item.name }} </el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -260,6 +262,9 @@ export default {
         ],
         desc: [
           { required: true, message: '请输入整体任务说明', trigger: 'blur' }
+        ],
+        tags: [
+          { type: 'array', required: true, message: '请选择', trigger: 'change' }
         ]
       },
       formInfo: {},

@@ -3,7 +3,7 @@
     <el-row :gutter="20" class="today_container">
       <el-col :span="12">
         <div class="today_task">
-          <div class="title"> 今日结单任务 {{ focusData.length }} </div>
+          <div class="title"> 今日{{ roles[0] === 4 || roles[0] === 5 ? '交付' : '结单' }}任务 {{ focusData.length }} </div>
           <div v-for="item in focusData" :key="item.ID" class="item">
             <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span> <Status :status="item.status" />
           </div>
@@ -11,7 +11,7 @@
       </el-col>
       <el-col :span="12">
         <div class="today_task">
-          <div class="title"> 明日结单任务{{ temData.length }} </div>
+          <div class="title"> 明日{{ roles[0] === 4 || roles[0] === 5 ? '交付' : '结单' }}任务{{ temData.length }} </div>
           <div v-for="item in temData" :key="item.ID" class="item">
             <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span> <Status :status="item.status" />
           </div>
@@ -275,7 +275,6 @@ export default {
     ])
   },
   mounted() {
-    this.clientList()
     this.getDashboardData()
     this.getHightData()
     this.getFocusList()
@@ -493,6 +492,7 @@ export default {
       }
     },
     measure() {
+      this.clientList()
       if (this.roles[0] === 3) {
         this.ruleForm.manageId = this.userId
       }

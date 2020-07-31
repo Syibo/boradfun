@@ -76,13 +76,10 @@ export default {
       taskId: 0,
       serviceData: [],
       dialogVisible: false,
-      options: [{
-        value: '项目计划变更',
-        label: '项目计划变更'
-      }, {
-        value: '不想做了',
-        label: '不想做了'
-      }],
+      options: [{ value: '项目计划变更', label: '项目计划变更' },
+        { value: '测试环境不稳定', label: '测试环境不稳定' },
+        { value: '测试资源无法满足客户', label: '测试资源无法满足客户' },
+        { value: '测试周期过长无法满足客户需要', label: '测试周期过长无法满足客户需要' }],
       ruleForm: {
         result: ''
       },

@@ -61,15 +61,15 @@
           <el-input v-model="ruleFormInfo.accountAddress" style="width: 420px" placeholder="请输入账号内网地址" />
         </el-form-item>
 
-        <el-form-item label="测试账号数量">
+        <el-form-item label="测试账号数量" prop="accountNum">
           <el-input-number v-model="ruleFormInfo.accountNum" :min="0" controls-position="right" />
         </el-form-item>
 
-        <el-form-item label="手机号码/微信数量">
+        <el-form-item label="手机号码/微信数量" prop="phoneNum">
           <el-input-number v-model="ruleFormInfo.phoneNum" :min="0" controls-position="right" />
         </el-form-item>
 
-        <el-form-item label="系统并发限制">
+        <el-form-item label="系统并发限制" prop="concurrentNum">
           <el-input-number v-model="ruleFormInfo.concurrentNum" :min="0" controls-position="right" />
           <span style="margin-left: 10px">无限制 则填0</span>
         </el-form-item>
@@ -182,6 +182,15 @@ export default {
         ],
         instanceTxt: [
           { required: true, message: '请输入文字用例内网地址', trigger: 'blur' }
+        ],
+        accountNum: [
+          { required: true, message: '请输入测试账号数量', trigger: 'blur' }
+        ],
+        phoneNum: [
+          { required: true, message: '请输入手机号码/微信数量', trigger: 'blur' }
+        ],
+        concurrentNum: [
+          { required: true, message: '请输入系统并发限制', trigger: 'blur' }
         ],
         instanceMv: [
           { required: true, message: '请输入视频用例内网地址', trigger: 'blur' }

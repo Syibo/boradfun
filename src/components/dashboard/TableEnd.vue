@@ -10,7 +10,7 @@
       <el-table-column prop="service.serviceName" label="任务类型" />
       <el-table-column prop="manage.name" label="客户服务经理" />
       <el-table-column prop="exeUser.name" label="执行资源" />
-      <el-table-column prop="expEndTime" label="结单时间" />
+      <el-table-column prop="endTime" label="结单时间" />
     </el-table>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-row class="top">
-      <el-button>导出</el-button>
+      <el-button @click="Down">导出</el-button>
     </el-row>
 
     <el-table :data="tableData" border style="width: 100%">
@@ -22,94 +22,12 @@
         :total="400"
       />
     </div>
-    <!-- 额度调整 -->
-    <el-dialog title="额度调整" :visible.sync="dialogVisible" :close-on-click-modal="false" width="30%" @close="close">
-      <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="客户编号" prop="email">
-          <el-input v-model="ruleForm.email" />
-        </el-form-item>
-        <el-form-item label="客户名称" prop="name">
-          <el-select v-model="ruleForm.name" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="服务名称" prop="wechat">
-          <el-select v-model="ruleForm.group" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="采购额度" prop="phone">
-          <el-input-number v-model="ruleForm.phone" :min="1" :max="10" label="描述文字" />
-        </el-form-item>
-        <el-form-item label="额度到期日" prop="phone">
-          <el-date-picker v-model="ruleForm.date" type="date" placeholder="选择日期" />
-        </el-form-item>
-        <el-form-item label="订单编号" prop="phone">
-          <el-input v-model="ruleForm.phone" />
-        </el-form-item>
-        <el-form-item label="备注说明" prop="phone">
-          <el-input v-model="ruleForm.phone" type="textarea" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- 额度转换 -->
-    <el-dialog title="额度转换" :visible.sync="dialogVisible1" :close-on-click-modal="false" width="40%" @close="close1">
-      <el-form ref="ruleForm1" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="客户编号" prop="email">
-          <el-input v-model="ruleForm.email" />
-        </el-form-item>
-        <el-form-item label="客户名称" prop="name">
-          <el-select v-model="ruleForm.name" placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="转出服务名称" prop="wechat">
-              <el-select v-model="ruleForm.group" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="转入服务名称" prop="wechat">
-              <el-select v-model="ruleForm.group" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="转出服务额度" prop="phone">
-              <el-input-number v-model="ruleForm.phone" :min="1" :max="10" label="描述文字" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="转入服务额度" prop="phone">
-              <el-input-number v-model="ruleForm.phone" :min="1" :max="10" label="描述文字" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="备注说明" prop="phone">
-          <el-input v-model="ruleForm.phone" type="textarea" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible1 = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm1('ruleForm1')">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
+import { parseTime } from '@/utils'
 export default {
   name: 'LinesList',
   directives: { permission },
@@ -192,6 +110,31 @@ export default {
           return false
         }
       })
+    },
+    Down() {
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['date', 'name', 'address', 'change', 'info']
+        const filterVal = ['date', 'name', 'address', 'change', 'info']
+        const list = this.tableData
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename,
+          autoWidth: this.autoWidth,
+          bookType: this.bookType
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
     },
     close1() {
       this.$refs['ruleForm1'].resetFields()

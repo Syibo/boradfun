@@ -80,8 +80,9 @@
     <!-- 额度延期 -->
     <el-dialog title="额度延期" :visible.sync="dialogVisibleChange" :close-on-click-modal="false" width="500px" @close="closeChange">
       <el-form ref="ruleFormChange" label-position="top" :model="ruleFormChange" :rules="rulesChange" class="demo-ruleForm">
-        <div class="dialog_item">订单编号 {{ delayObj.orderNumber }}</div>
-        <div class="dialog_item">过期日期 {{ delayObj.deadline }}</div>
+        <div class="dialog_item">订单编号: <span> {{ delayObj.orderNumber }} </span></div>
+        <div class="dialog_item">过期日期: <span> {{ delayObj.deadline }} </span></div>
+        <div class="dialog_item">服务名称: <span> {{ serviceInfo.service_name }} </span></div>
         <el-form-item label="额度到期日期" prop="deadline">
           <el-date-picker
             v-model="ruleFormChange.deadline"
@@ -104,8 +105,8 @@
     <!-- 额度退次 -->
     <el-dialog title="额度退次" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" class="demo-ruleForm">
-        <!-- <div class="dialog_item">订单编号 {{ cusInfo.number }}</div>
-        <div class="dialog_item">过期日期 {{ cusInfo.name }}</div> -->
+        <div class="dialog_item">任务编号: <span> {{ serialObj.taskSerial }} </span></div>
+        <div class="dialog_item">服务名称: <span> {{ serviceInfo.service_name }} </span></div>
         <el-form-item label="退次额度" prop="amount">
           <el-input-number v-model="ruleForm.amount" :min="1" controls-position="right" />
         </el-form-item>
@@ -157,7 +158,8 @@ export default {
       activeName: 'first',
       logData: [],
       taskLogData: [],
-      delayObj: {}
+      delayObj: {},
+      serialObj: {}
     }
   },
   mounted() {
@@ -199,6 +201,7 @@ export default {
       this.dialogVisibleChange = true
     },
     handbackamount(row) {
+      this.serialObj = row
       this.ruleForm.id = row.taskSerial
       this.dialogVisible = true
     },
@@ -226,7 +229,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleFormChange
-          console.log(form)
           this.delayAmount(form)
         } else {
           console.log('error submit!!')
@@ -290,6 +292,15 @@ export default {
       padding: 20px;
       display: flex;
       flex-direction: column;
+    }
+  }
+  .dialog_item {
+    font-size: 14px;
+    color: #808387;
+    margin-bottom: 5px;
+    span {
+      color: #000000;
+      margin-left: 5px;
     }
   }
 }

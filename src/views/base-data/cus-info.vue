@@ -103,8 +103,8 @@
       <!-- 额度转换 -->
       <el-dialog title="额度转换" :visible.sync="dialogVisibleChange" :close-on-click-modal="false" width="500px" @close="closeChange">
         <el-form ref="ruleFormChange" label-position="top" :model="ruleFormChange" :rules="rulesChange" class="demo-ruleForm">
-          <div class="dialog_item">客户编号 {{ cusInfo.number }}</div>
-          <div class="dialog_item">客户名称 {{ cusInfo.name }}</div>
+          <div class="dialog_item">客户编号: <span>{{ cusInfo.number }}</span></div>
+          <div class="dialog_item">客户名称: <span>{{ cusInfo.name }}</span> </div>
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="转出服务名称" prop="sOutId">
@@ -444,8 +444,13 @@ export default {
     }
   }
   .dialog_item {
-    height: 30px;
-    line-height: 30px;
+    font-size: 14px;
+    color: #808387;
+    margin-bottom: 5px;
+    span {
+      color: #000000;
+      margin-left: 5px;
+    }
   }
 }
 </style>

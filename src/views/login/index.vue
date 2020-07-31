@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="logo">
-        LOGO
+        <img src="../../assets/logo.png">
       </div>
       <div class="title-container">
         <h3 class="title">用户登陆</h3>
@@ -264,14 +264,16 @@ $light_gray:#eee;
 
   .logo {
     width: 100%;
-    height: 59px;
-    background:rgba(233,234,236,1);
+    height: 135px;
     font-size:20px;
     font-weight:bold;
     color:rgba(51,51,51,1);
     line-height:59px;
     text-align: center;
     margin-bottom: 25px;
+    img {
+      width: 100%;
+    }
   }
 
   .title-container {

@@ -264,10 +264,6 @@ export default {
       },
       formInfo: {},
       tagsList: [],
-      baseSerMon: {
-        realAmount: 0,
-        realServiceId: 0
-      },
       optiondate: {
         disabledDate(date) {
           return date.getTime() <= Date.now()
@@ -287,8 +283,6 @@ export default {
       if (res.ret === 0) {
         this.baseData = JSON.parse(JSON.stringify(res.data))
         this.datacopy = JSON.parse(JSON.stringify(res.data))
-        this.baseSerMon.realAmount = res.data.realAmount
-        this.baseSerMon.realServiceId = res.data.realService.ID
       }
     },
     async getNewTask() {
@@ -327,6 +321,7 @@ export default {
           showClose: false,
           confirmButtonText: '确定',
           callback: action => {
+            this.getOneTask()
             this.$emit('startTask')
           }
         })
@@ -489,6 +484,7 @@ export default {
           this.changeOver = false
           this.dialogVisibleInfo = false
           this.$message.success('变更完成，等待实施重新启动')
+          this.getOneTask()
         }
       }
     },

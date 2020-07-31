@@ -364,6 +364,7 @@ export default {
       if (res.ret === 0) {
         this.$message.success('结单成功')
         this.dialogVisible = false
+        this.getOneTask()
         this.$emit('statement')
       }
     },

@@ -278,7 +278,6 @@ export default {
     this.clientList()
     this.getDashboardData()
     this.getHightData()
-    // this.getServiceList()
     this.getFocusList()
     this.getTemList()
     this.getManList()
@@ -290,6 +289,20 @@ export default {
     this.taskListExecute()
     this.taskListFinish()
     this.taskListEnd()
+    setInterval(() => {
+      this.getHightData()
+      this.getFocusList()
+      this.getTemList()
+      this.getManList()
+      this.taskListCreate()
+      this.taskListCancel()
+      this.taskListConfirm()
+      this.taskListFrozen()
+      this.taskListAssign()
+      this.taskListExecute()
+      this.taskListFinish()
+      this.taskListEnd()
+    }, 600000)
   },
   methods: {
     /**

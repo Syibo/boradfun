@@ -239,6 +239,7 @@ export default {
     async delayAmount(form) {
       const res = await delayAmount(form)
       if (res.ret === 0) {
+        this.dialogVisibleChange = false
         this.handAmountLog()
         this.handTaskLog()
       }

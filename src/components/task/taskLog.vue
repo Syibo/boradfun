@@ -40,7 +40,7 @@
         <div class="task_record_con"> {{ item.title }} </div>
       </div>
       <div v-if="item.desc !== ''" class="bot">
-        {{ item.desc }}
+        变更原因：{{ item.desc }}
       </div>
     </div>
   </div>

@@ -78,9 +78,18 @@ export const asyncRoutes = [
       {
         path: 'task',
         component: () => import('@/views/dashboard/task'),
-        name: '任务',
+        name: '任务详情',
         hidden: true,
-        meta: { title: '任务', icon: 'dashboard' }
+        meta: { title: '任务详情', icon: 'dashboard' }
+      },
+      {
+        path: 'history',
+        component: () => import('@/views/dashboard/history'),
+        name: '历史版本',
+        hidden: true,
+        meta: {
+          title: '历史版本'
+        }
       }
     ]
   },

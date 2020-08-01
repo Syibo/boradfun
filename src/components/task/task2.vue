@@ -87,6 +87,7 @@ import permission from '@/directive/permission/index.js'
 import Task2From from '../From/task2-from'
 import { saveTaskInfo, frozenTask, getOneTask } from '@/api/task'
 import TaskLog from '@/components/task/taskLog'
+import Moment from 'moment'
 export default {
   name: 'Task2',
   directives: { permission },
@@ -125,7 +126,7 @@ export default {
         disabledDate(date) {
           return date.getTime() <= Date.now()
         },
-        selectableRange: ['09:30:00 - 18:30:00']
+        selectableRange: ['09:00:00 - 18:00:00']
       }
     }
   },
@@ -155,8 +156,9 @@ export default {
         this.baseData = JSON.parse(JSON.stringify(res.data))
         this.datacopy = JSON.parse(JSON.stringify(res.data))
         if (res.data.expDeliverTime === '0001-01-01 00:00:00') {
-          this.baseData.expDeliverTime = this.baseData.preDate
+          // this.baseData.expDeliverTime = this.baseData.preDate
           this.baseData.expEndTime = this.baseData.expEndDate
+          this.baseData.expDeliverTime = Moment(this.baseData.expEndTime).subtract(3, 'hours').format('YYYY-MM-DD HH:mm:ss')
           this.baseData.realServiceId = this.baseData.serviceId
           this.baseData.realAmount = this.baseData.preAmount
         }
@@ -205,6 +207,12 @@ export default {
       }
     },
     async saveTask(ruleFormInfo) {
+      const isBefore = this.isOverTime(this.baseData.expDeliverTime, this.baseData.expEndTime)
+      console.log(isBefore)
+      if (!isBefore) {
+        this.$message.error('交付时间和结单时间不能间隔3小时')
+        return
+      }
       if (this.baseData.realServiceId === '' ||
         this.baseData.realAmount === '' ||
         this.baseData.expDeliverTime === null ||
@@ -227,6 +235,11 @@ export default {
     editTask() {
       this.isEdit = true
       this.taskFrom = 2
+    },
+    isOverTime(before, end) {
+      var now = Moment(before).add(3, 'hours').format('YYYY-MM-DD HH:mm:ss')
+      const isOverTime = Moment(end).isSameOrBefore(now)
+      return isOverTime
     },
     close() {
       this.ruleForm = {

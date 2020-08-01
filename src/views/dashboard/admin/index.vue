@@ -448,6 +448,8 @@ export default {
       })
     },
     async addTask(form) {
+      form.expEndDate = form.expEndDate.replace(/00:00:00/ig, '18:00:00')
+      form.preDate = form.preDate.replace(/00:00:00/ig, '18:00:00')
       const res = await addTask(form)
       if (res.ret === 0) {
         this.$message.success('提测成功')

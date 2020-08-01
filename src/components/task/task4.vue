@@ -2,7 +2,12 @@
   <div class="broadfun_task">
     <div class="task_left">
       <div class="task_name">
-        <div class="task_name_left"> {{ baseData.client.name }} </div>
+        <div class="task_name_left">
+          {{ baseData.client.name }}
+          <el-tooltip class="item" effect="dark" content="查看历史版本" placement="right">
+            <i class="el-icon-time" @click="goHistory" />
+          </el-tooltip>
+        </div>
         <div class="task_name_btn">
           <el-button v-show="type === 'assign'" v-permission="[5]" type="primary" @click="startTask"> 启动执行 </el-button>
           <div v-show="type === 'execute'">
@@ -297,6 +302,14 @@ export default {
         this.datacopy = JSON.parse(JSON.stringify(res.data))
       }
     },
+    goHistory() {
+      this.$router.push({
+        path: 'history',
+        query: {
+          id: this.taskId
+        }
+      })
+    },
     startTask() {
       this.$confirm('确认启动此任务?', '提示', {
         confirmButtonText: '确定',
@@ -569,6 +582,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.task_name_left {
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 16px;
+    color: royalblue;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+}
 .task_demand_item {
   display: flex;
   color: #2B2B2B;

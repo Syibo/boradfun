@@ -284,3 +284,13 @@ export function backamount({ id, amount, remark }) {
   })
 }
 
+/**
+ * history
+ */
+export function gethistoryData({ id }) {
+  return request({
+    url: `/v1/task/history/${id}`,
+    method: 'get'
+  })
+}
+

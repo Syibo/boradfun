@@ -215,6 +215,7 @@ export default {
   margin-top: 5px;
 }
 .container {
+  padding-bottom: 50px;
   .block {
     position: absolute;
     bottom: 10px;

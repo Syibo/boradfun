@@ -28,7 +28,7 @@ export default {
   background: white;
   padding: 10px;
   position: relative;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
 .baradfun-top {
   display: flex;

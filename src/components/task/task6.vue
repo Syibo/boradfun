@@ -8,8 +8,8 @@
             <el-button v-permission="[1, 2, 3]" @click="cacelTask"> 取消任务 </el-button>
             <el-button v-permission="[3]" type="primary" @click="statement"> 交付结单 </el-button>
           </div>
-          <el-button v-if="type === 'end' && !eva" v-permission="[2]" type="primary" @click="evaluation"> 销售评价 </el-button>
-          <el-button v-if="type === 'end' && !evaCus" v-permission="[3]" type="primary" @click="evaluation"> 经理评价 </el-button>
+          <el-button v-if="type === 'end' && !eva" v-permission="[2]" type="primary" @click="evaluation"> 评价 </el-button>
+          <el-button v-if="type === 'end' && !evaCus" v-permission="[3]" type="primary" @click="evaluation"> 评价 </el-button>
         </div>
       </div>
 
@@ -78,7 +78,7 @@
       </div>
 
       <div v-if="eva" v-permission="[1, 2, 4, 5]" class="task_eva">
-        <div class="title">销售评价</div>
+        <div class="title">实施评价</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaData.score }}</div>
@@ -94,7 +94,7 @@
       </div>
 
       <div v-if="evaCus" v-permission="[1, 2, 3, 4]" class="task_eva">
-        <div class="title">经理评价</div>
+        <div class="title">客户服务经理评价</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaCusData.score }}</div>
@@ -102,7 +102,7 @@
           </div>
           <div class="mid" />
           <div class="right">
-            <div> <span>实际交付时间</span> {{ evaCusData.realTime }} </div>
+            <div> <span>实际结单时间</span> {{ evaCusData.realTime }} </div>
             <div> <span>实施反工次数</span> {{ evaCusData.reExeTimes }}</div>
             <div> <span>其他补充信息</span> {{ evaCusData.other }} </div>
           </div>

@@ -174,6 +174,7 @@ export default {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }
+      this.$emit('update:dialogVisible', false)
     }
   }
 }

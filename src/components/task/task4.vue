@@ -391,18 +391,23 @@ export default {
         this.$message.error('基本信息不完整')
         return
       }
-      ruleFormInfo.realServiceId = this.baseData.realServiceId
-      ruleFormInfo.realAmount = this.baseData.realAmount
-      ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
-      ruleFormInfo.expEndTime = this.baseData.expEndTime
-      ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
-      const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
-      if (res.ret === 0) {
-        this.changeOver = true
-        this.getNewTask()
-        this.taskFrom = 3
-        this.$message.success('保存成功')
-      }
+      console.log(ruleFormInfo)
+      this.baseData.taskDetail = ruleFormInfo
+      this.changeOver = true
+      this.taskFrom = 3
+      this.$message.success('保存成功')
+      // ruleFormInfo.realServiceId = this.baseData.realServiceId
+      // ruleFormInfo.realAmount = this.baseData.realAmount
+      // ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
+      // ruleFormInfo.expEndTime = this.baseData.expEndTime
+      // ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
+      // const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
+      // if (res.ret === 0) {
+      //   this.changeOver = true
+      //   this.getNewTask()
+      //   this.taskFrom = 3
+      //   this.$message.success('保存成功')
+      // }
     },
     handleCommand(command) {
       switch (command) {
@@ -494,6 +499,7 @@ export default {
       ruleFormInfo.realAmount = this.baseData.realAmount
       ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
       ruleFormInfo.expEndTime = this.baseData.expEndTime
+      ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
       ruleFormInfo.changeLog = form.changeLog
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {

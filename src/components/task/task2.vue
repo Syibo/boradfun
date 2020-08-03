@@ -88,6 +88,7 @@ import Task2From from '../From/task2-from'
 import { saveTaskInfo, frozenTask, getOneTask } from '@/api/task'
 import TaskLog from '@/components/task/taskLog'
 import Moment from 'moment'
+import _ from 'lodash'
 export default {
   name: 'Task2',
   directives: { permission },
@@ -156,8 +157,7 @@ export default {
         this.baseData = JSON.parse(JSON.stringify(res.data))
         this.datacopy = JSON.parse(JSON.stringify(res.data))
         if (res.data.expDeliverTime === '0001-01-01 00:00:00') {
-          // this.baseData.expDeliverTime = this.baseData.preDate
-          this.baseData.expEndTime = this.baseData.expEndDate
+          this.baseData.expEndTime = _.replace(this.baseData.expEndDate, '00:00:00', '18:00:00')
           this.baseData.expDeliverTime = Moment(this.baseData.expEndTime).subtract(3, 'hours').format('YYYY-MM-DD HH:mm:ss')
           this.baseData.realServiceId = this.baseData.serviceId
           this.baseData.realAmount = this.baseData.preAmount

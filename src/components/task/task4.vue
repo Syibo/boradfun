@@ -391,7 +391,6 @@ export default {
         this.$message.error('基本信息不完整')
         return
       }
-      console.log(ruleFormInfo)
       this.baseData.taskDetail = ruleFormInfo
       this.changeOver = true
       this.taskFrom = 3

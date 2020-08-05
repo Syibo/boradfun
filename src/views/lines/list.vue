@@ -44,56 +44,7 @@ export default {
         name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         resource: [{ required: true, message: '请选择活动资源', trigger: 'change' }]
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300',
-        change: '-2',
-        info: '实施消耗，实施任务编号：12345678',
-        note: ''
-      }, {
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300',
-        change: '-2',
-        info: '实施消耗，实施任务编号：12345678',
-        note: ''
-      }, {
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300',
-        change: '-2',
-        info: '实施消耗，实施任务编号：12345678',
-        note: ''
-      }, {
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300',
-        change: '-2',
-        info: '实施消耗，实施任务编号：12345678',
-        note: ''
-      }, {
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300',
-        change: '-2',
-        info: '实施消耗，实施任务编号：12345678',
-        note: ''
-      }, {
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300',
-        change: '-2',
-        info: '实施消耗，实施任务编号：12345678',
-        note: ''
-      }, {
-        date: '2016-05-02',
-        name: '超级厉害娱乐信息公司',
-        address: '深度兼容--Android 300',
-        change: '-2',
-        info: '实施消耗，实施任务编号：12345678',
-        note: ''
-      }]
+      tableData: []
     }
   },
   methods: {

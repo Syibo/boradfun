@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-row class="top">
-      <el-button @click="Down">导出</el-button>
+      <el-button @click="Down">导出本页</el-button>
     </el-row>
 
     <el-table :data="tableData" border style="width: 100%">
@@ -51,7 +51,6 @@ export default {
     },
     async init() {
       const res = await amountHistory({ pageNum: this.pageNum, pageSize: this.pageSize })
-      console.log(res)
       if (res.ret === 0) {
         this.tableData = res.data.list
         this.total = res.data.total

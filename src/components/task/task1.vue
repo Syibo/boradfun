@@ -125,9 +125,10 @@ export default {
     display: flex;
     min-height: calc(100vh - 100px);
     .task_left {
-		flex: 1;
-		padding: 15px;
-		overflow: hidden;
+      flex: 1;
+      padding: 15px;
+      overflow: hidden;
+      min-width: 700px;
         .task_name {
             display: flex;
             .task_name_left {

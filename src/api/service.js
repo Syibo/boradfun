@@ -143,3 +143,14 @@ export function delayAmount({ id, deadline, remark }) {
     }
   })
 }
+
+/**
+ * 额度历史
+ */
+export function amountHistory({ pageSize, pageNum }) {
+  return request({
+    url: `/v1/amount/history?pageSize=${pageSize}&pageNum=${pageNum}`,
+    method: 'get'
+  })
+}
+

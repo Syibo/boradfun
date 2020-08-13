@@ -47,15 +47,15 @@
         <div class="task_demand_item"> <span /> <p>{{ data.taskDetail.testExtInfo }}</p> </div>
         <div class="task_demand_item"> <span>白名单</span> {{ data.taskDetail.whiteList }} </div>
         <div class="task_demand_item"> <span>测试账号</span> {{ data.taskDetail.testAccountType }} </div>
-        <div class="task_demand_item"> <span>测试账号数量</span> {{ data.taskDetail.accountNum }} </div>
-        <div class="task_demand_item"> <span>手机号码/微信数量</span> {{ data.taskDetail.phoneNum }} </div>
+        <div v-if="data.taskDetail.testAccountType === '客户提供'" class="task_demand_item"> <span>账号文件内网地址</span> {{ data.taskDetail.accountAddress }} </div>
+        <div v-if="data.taskDetail.testAccountType === '客户提供'" class="task_demand_item"> <span>测试账号数量</span> {{ data.taskDetail.accountNum }} </div>
+        <div v-if="data.taskDetail.testAccountType === '微信注册' || data.taskDetail.testAccountType === '手机号码注册'" class="task_demand_item"> <span> {{ data.taskDetail.testAccountType === '微信注册' ? '微信数量' : '手机号码数量' }}</span> {{ data.taskDetail.phoneNum }} </div>
         <div class="task_demand_item"> <span>系统并发限制</span> {{ data.taskDetail.concurrentNum }} </div>
         <div class="task_demand_item"> <span>机型需求</span> {{ data.taskDetail.reqPhone }} </div>
         <div class="task_demand_item"> <span>其他需求</span> {{ data.taskDetail.extReq }} </div>
-        <div class="task_demand_item"> <span>文字用例内网地址</span> {{ data.taskDetail.instanceTxt }} </div>
-        <div class="task_demand_item"> <span>视频用例内网地址</span> {{ data.taskDetail.instanceMv }} </div>
+        <div class="task_demand_item"> <span>文字用例内网地址</span> <el-link href="#" type="primary">{{ data.taskDetail.instanceTxt }}</el-link> </div>
+        <div class="task_demand_item"> <span>视频用例内网地址</span> <el-link href="#" type="primary">{{ data.taskDetail.instanceMv }}</el-link> </div>
       </div>
-
     </div>
 
     <TaskLog :log="data.logs" :manage="data.manage" :sale-user="data.client.saleUser" />
@@ -63,17 +63,14 @@
     <el-dialog title="交付侧额度评估" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="close">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules">
         <el-form-item label="任务类型">
-          <!-- <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择任务类型">
+          <el-select v-model="ruleForm.serviceId" style="width: 100%" placeholder="请选择任务类型">
             <el-option
               v-for="item in service"
               :key="item.ID"
               :label="item.serviceName"
               :value="item.ID"
             />
-          </el-select> -->
-          <!-- {{ data.realService.serviceName }}
-           -->
-          <div> {{ data.realService.serviceName }} </div>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="任务额度" prop="amount">
@@ -151,6 +148,7 @@ export default {
         label: '不想做了'
       }],
       ruleForm: {
+        serviceId: '',
         exeUserId: '',
         amount: 1
       },
@@ -194,6 +192,7 @@ export default {
       const res = await getOneTask({ id: this.taskId })
       if (res.ret === 0) {
         this.data = JSON.parse(JSON.stringify(res.data))
+        this.ruleForm.serviceId = this.data.realService.ID
       }
     },
     cacelTask() {
@@ -203,6 +202,7 @@ export default {
       this.dialogVisible = true
     },
     async resourcesTask(form) {
+      console.log(form)
       const res = await assignTask({ id: this.taskId, data: form })
       if (res.ret === 0) {
         this.dialogVisible = false

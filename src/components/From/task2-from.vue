@@ -57,15 +57,19 @@
           </el-checkbox-group>
         </el-form-item>
 
-        <el-form-item label="账号内网地址" prop="accountAddress">
+        <el-form-item v-if="ruleFormInfo.testAccountType === '客户提供'" label="账号文件内网地址" prop="accountAddress">
           <el-input v-model="ruleFormInfo.accountAddress" style="width: 420px" placeholder="请输入账号内网地址" />
         </el-form-item>
 
-        <el-form-item label="测试账号数量" prop="accountNum">
+        <el-form-item v-if="ruleFormInfo.testAccountType === '客户提供'" label="测试账号数量" prop="accountNum">
           <el-input-number v-model="ruleFormInfo.accountNum" :min="0" controls-position="right" />
         </el-form-item>
 
-        <el-form-item label="手机号码/微信数量" prop="phoneNum">
+        <el-form-item
+          v-if="ruleFormInfo.testAccountType === '微信注册' || ruleFormInfo.testAccountType === '手机号码注册'"
+          :label="ruleFormInfo.testAccountType === '手机号码注册' ? '手机号码数量' : '微信数量'"
+          prop="phoneNum"
+        >
           <el-input-number v-model="ruleFormInfo.phoneNum" :min="0" controls-position="right" />
         </el-form-item>
 
@@ -82,11 +86,13 @@
           <el-input v-model="ruleFormInfo.extReq" type="textarea" rows="5" style="width: 420px" maxlength="250" show-word-limit placeholder="所有其他要求" />
         </el-form-item>
 
-        <el-form-item label="文字用例内网地址" prop="instanceTxt">
+        <!-- <el-form-item label="文字用例内网地址" prop="instanceTxt"> -->
+        <el-form-item label="文字用例内网地址">
           <el-input v-model="ruleFormInfo.instanceTxt" style="width: 420px" placeholder="请输入文字用例内网地址" />
         </el-form-item>
 
-        <el-form-item label="视频用例内网地址" prop="instanceMv">
+        <!-- <el-form-item label="视频用例内网地址" prop="instanceMv"> -->
+        <el-form-item label="视频用例内网地址">
           <el-input v-model="ruleFormInfo.instanceMv" style="width: 420px" placeholder="请输入视频用例内网地址" />
         </el-form-item>
 
@@ -105,13 +111,14 @@
       <div class="task_demand_item"> <span /> <p> {{ data.taskDetail.testExtInfo }} </p> </div>
       <div class="task_demand_item"> <span>白名单</span> {{ data.taskDetail.whiteList }} </div>
       <div class="task_demand_item"> <span>测试账号</span> {{ data.taskDetail.testAccountType }} </div>
-      <div class="task_demand_item"> <span>测试账号数量</span> {{ data.taskDetail.accountNum }} </div>
-      <div class="task_demand_item"> <span>手机号码/微信数量</span> {{ data.taskDetail.phoneNum }} </div>
+      <div v-if="data.taskDetail.testAccountType === '客户提供'" class="task_demand_item"> <span>账号文件内网地址</span> {{ data.taskDetail.accountAddress }} </div>
+      <div v-if="data.taskDetail.testAccountType === '客户提供'" class="task_demand_item"> <span>测试账号数量</span> {{ data.taskDetail.accountNum }} </div>
+      <div v-if="data.taskDetail.testAccountType === '微信注册' || data.taskDetail.testAccountType === '手机号码注册'" class="task_demand_item"> <span> {{ data.taskDetail.testAccountType === '微信注册' ? '微信数量' : '手机号码数量' }}</span> {{ data.taskDetail.phoneNum }} </div>
       <div class="task_demand_item"> <span>系统并发限制</span> {{ data.taskDetail.concurrentNum }} </div>
       <div class="task_demand_item"> <span>机型需求</span> {{ data.taskDetail.reqPhone }} </div>
       <div class="task_demand_item"> <span>其他需求</span> {{ data.taskDetail.extReq }} </div>
-      <div class="task_demand_item"> <span>文字用例内网地址</span> {{ data.taskDetail.instanceTxt }} </div>
-      <div class="task_demand_item"> <span>视频用例内网地址</span> {{ data.taskDetail.instanceMv }} </div>
+      <div class="task_demand_item"> <span>文字用例内网地址</span> <el-link href="#" type="primary">{{ data.taskDetail.instanceTxt }}</el-link> </div>
+      <div class="task_demand_item"> <span>视频用例内网地址</span> <el-link href="#" type="primary">{{ data.taskDetail.instanceMv }}</el-link> </div>
     </div>
   </div>
 </template>
@@ -297,6 +304,9 @@ export default {
     word-wrap:break-word;
     word-break:break-all;
     overflow: hidden;
+  }
+  a {
+    text-decoration: underline;
   }
 }
 </style>

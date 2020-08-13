@@ -615,6 +615,9 @@ export default {
     overflow: hidden;
     margin: 10px 0;
   }
+  a {
+    text-decoration: underline;
+  }
 }
 .el-dropdown-link {
   cursor: pointer;

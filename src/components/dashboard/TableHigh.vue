@@ -14,7 +14,10 @@
           <Status :status="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column prop="expEndTime" label="期望结单日期/时间" />
+      <el-table-column prop="expEndTime" label="期望结单日期/时间">
+        <template slot-scope="scope">
+          <span> {{ scope.row.expEndTime === '0001-01-01 00:00:00' ? scope.row.expEndDate : scope.row.expEndTime }} </span>
+        </template></el-table-column>
     </el-table>
   </div>
 </template>

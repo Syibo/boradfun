@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message, Notification } from 'element-ui'
+import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import router from '@/router'
@@ -8,7 +8,7 @@ import router from '@/router'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 10000 // request timeout
 })
 
 // request interceptor
@@ -57,7 +57,7 @@ service.interceptors.response.use(
 
       if (res.ret === 401) {
         // to re-login
-        MessageBox.confirm('登出过期，您可以取消停留在此页面，或再次登录', 'Confirm logout', {
+        MessageBox.confirm('登录过期，您可以取消停留在此页面，或再次登录', 'Confirm logout', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
@@ -76,17 +76,17 @@ service.interceptors.response.use(
     }
   },
   error => {
-    Notification.closeAll()
-    Notification.error({
-      title: '错误',
-      message: '请求超时，请检查网络！'
-    })
-    // Message.closeAll()
-    // Message({
-    //   message: '请求超时，请检查网络！',
-    //   type: 'error',
-    //   duration: 5 * 1000
+    // Notification.closeAll()
+    // Notification.error({
+    //   title: '错误',
+    //   message: '请求超时，请检查网络！'
     // })
+    // Message.closeAll()
+    Message({
+      message: '请求超时，请检查网络！',
+      type: 'error',
+      duration: 5 * 1000
+    })
     return Promise.reject(error)
   }
 )

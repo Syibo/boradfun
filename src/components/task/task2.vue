@@ -172,7 +172,11 @@ export default {
     },
     freezeTask() {
       if (this.taskFrom !== 3) {
-        this.$message.error('请先填写需求')
+        this.$message.error('请保存当前需求')
+        return
+      }
+      if (this.baseData.taskDetail.instanceTxt === '' || this.baseData.taskDetail.instanceMv === '') {
+        this.$message.error('内网地址不完整')
         return
       }
       this.$confirm('确认冻结此任务?', '提示', {
@@ -208,7 +212,6 @@ export default {
     },
     async saveTask(ruleFormInfo) {
       const isBefore = this.isOverTime(this.baseData.expDeliverTime, this.baseData.expEndTime)
-      console.log(isBefore)
       if (!isBefore) {
         this.$message.error('交付时间和结单时间不能间隔3小时')
         return

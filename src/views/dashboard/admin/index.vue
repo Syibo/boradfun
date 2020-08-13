@@ -263,7 +263,7 @@ export default {
       hightArr: [],
       optiondate: {
         disabledDate(date) {
-          return date.getTime() <= Date.now()
+          return date.getTime() <= Moment(Date.now()).subtract(1, 'days')
         }
       }
     }
@@ -494,6 +494,8 @@ export default {
       }
     },
     measure() {
+      this.ruleForm.preDate = Moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+      this.ruleForm.expEndDate = Moment(Date.now()).add(3, 'days').format('YYYY-MM-DD HH:mm:ss')
       this.clientList()
       if (this.roles[0] === 3) {
         this.ruleForm.manageId = this.userId

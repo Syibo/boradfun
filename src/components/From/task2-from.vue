@@ -117,8 +117,8 @@
       <div class="task_demand_item"> <span>系统并发限制</span> {{ data.taskDetail.concurrentNum }} </div>
       <div class="task_demand_item"> <span>机型需求</span> {{ data.taskDetail.reqPhone }} </div>
       <div class="task_demand_item"> <span>其他需求</span> {{ data.taskDetail.extReq }} </div>
-      <div class="task_demand_item"> <span>文字用例内网地址</span> <el-link href="#" type="primary">{{ data.taskDetail.instanceTxt }}</el-link> </div>
-      <div class="task_demand_item"> <span>视频用例内网地址</span> <el-link href="#" type="primary">{{ data.taskDetail.instanceMv }}</el-link> </div>
+      <div class="task_demand_item"> <span>文字用例内网地址</span> <el-link :href="data.taskDetail.instanceTxt" target="_blank" type="primary">{{ data.taskDetail.instanceTxt }}</el-link> </div>
+      <div class="task_demand_item"> <span>视频用例内网地址</span> <el-link :href="data.taskDetail.instanceMv" target="_blank" type="primary">{{ data.taskDetail.instanceMv }}</el-link> </div>
     </div>
   </div>
 </template>

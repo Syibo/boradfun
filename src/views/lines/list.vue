@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-row class="top">
-      <el-button @click="Down">导出本页</el-button>
+      <el-button @click="Down">导出</el-button>
     </el-row>
 
     <el-table :data="tableData" border style="width: 100%">

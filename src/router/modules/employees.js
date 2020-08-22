@@ -9,7 +9,7 @@ const employeesRouter = {
   name: 'Employees',
   meta: {
     title: '人事流程',
-    icon: 'nested'
+    icon: 'el-icon-s-custom'
   },
   children: [
     {

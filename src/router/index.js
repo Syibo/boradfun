@@ -6,6 +6,8 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import employeesRouter from './modules/employees'
+import archivesRouter from './modules/archives'
+import attendanceRouter from './modules/attendance'
 
 /* Router Modules */
 // import nestedRouter from './modules/nested'
@@ -67,49 +69,52 @@ export const asyncRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/workbench',
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: '任务看板',
-        meta: { title: '任务看板', icon: 'dashboard' }
-      },
-      {
-        path: 'task',
-        component: () => import('@/views/dashboard/task'),
-        name: '任务详情',
-        hidden: true,
-        meta: { title: '任务详情', icon: 'dashboard' }
-      },
-      {
-        path: 'history',
-        component: () => import('@/views/dashboard/history'),
-        name: '历史版本',
-        hidden: true,
-        meta: {
-          title: '历史版本'
-        }
+        path: 'workbench',
+        component: () => import('@/views/workbench/index'),
+        name: '工作台',
+        meta: { title: '工作台', icon: 'el-icon-s-grid' }
       }
     ]
   },
 
-  { path: '*', redirect: '/404', hidden: true },
-
+  archivesRouter,
   // {
-  //   path: '/measure',
+  //   path: '/',
   //   component: Layout,
-  //   redirect: '/measure',
-  //   meta: { roles: [1] },
+  //   redirect: '/dashboard',
   //   children: [
   //     {
-  //       path: 'measure',
-  //       component: () => import('@/views/measure/list'),
-  //       name: '提测',
-  //       meta: { title: '提测', icon: 'guide' }
+  //       path: 'dashboard',
+  //       component: () => import('@/views/dashboard/index'),
+  //       name: '任务看板',
+  //       meta: { title: '任务看板', icon: 'dashboard' }
+  //     },
+  //     {
+  //       path: 'task',
+  //       component: () => import('@/views/dashboard/task'),
+  //       name: '任务详情',
+  //       hidden: true,
+  //       meta: { title: '任务详情', icon: 'dashboard' }
+  //     },
+  //     {
+  //       path: 'history',
+  //       component: () => import('@/views/dashboard/history'),
+  //       name: '历史版本',
+  //       hidden: true,
+  //       meta: {
+  //         title: '历史版本'
+  //       }
   //     }
   //   ]
   // },
+
+  { path: '*', redirect: '/404', hidden: true },
+
+  employeesRouter,
+  attendanceRouter,
 
   {
     path: '/base',
@@ -174,20 +179,46 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/lines',
+    path: '/task',
     component: Layout,
-    redirect: '/lines',
-    meta: { roles: [1] },
+    redirect: '/task/dashboard',
+    alwaysShow: true,
+    name: 'Task',
+    meta: {
+      title: '任务管理',
+      icon: 'lock'
+    },
     children: [
       {
-        path: '',
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: '任务看板',
+        meta: { title: '任务看板', icon: 'dashboard' }
+      },
+      {
+        path: 'task',
+        component: () => import('@/views/dashboard/task'),
+        name: '任务详情',
+        hidden: true,
+        meta: { title: '任务详情', icon: 'dashboard' }
+      },
+      {
+        path: 'history',
+        component: () => import('@/views/dashboard/history'),
+        name: '历史版本',
+        hidden: true,
+        meta: {
+          title: '历史版本'
+        }
+      },
+      {
+        path: 'lines',
         component: () => import('@/views/lines/list'),
         name: '额度',
         meta: { title: '额度', icon: 'guide' }
       }
     ]
-  },
-  employeesRouter
+  }
 ]
 
 const createRouter = () => new Router({

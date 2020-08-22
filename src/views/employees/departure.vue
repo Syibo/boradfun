@@ -4,18 +4,16 @@
       <el-button type="primary" @click="departure">新建离职</el-button>
     </el-row>
     <el-table :data="tableData" border style="width: 100%">
-      <el-table-column prop="name" align="center" label="员工编号/姓名" />
+      <el-table-column prop="name" align="center" label="离职员工编号" />
+      <el-table-column prop="name" align="center" label="员工姓名" />
       <el-table-column prop="DepartmentID" align="center" label="所属部门" />
       <el-table-column prop="ServiceLine" align="center" label="岗位" />
-      <el-table-column prop="EntryDate" align="center" label="计划入职时间" />
-      <el-table-column align="center" label="手机号码">
+      <el-table-column prop="ServiceLine" align="center" label="部门领导" />
+      <el-table-column prop="ServiceLine" align="center" label="创建人" />
+      <el-table-column prop="EntryDate" align="center" label="创建时间" />
+      <el-table-column align="center" label="离职原因">
         <template slot-scope="scope">
           {{ scope.row.Mobile }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="状态">
-        <template slot-scope="scope">
-          {{ scope.row.Status }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">

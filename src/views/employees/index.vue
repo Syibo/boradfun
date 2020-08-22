@@ -1,7 +1,19 @@
 <template>
   <div class="container">
-    <el-row class="baradfun-top">
-      <el-button type="primary" @click="induction">新建入职</el-button>
+    <el-row class="table-top">
+      <div class="left">
+        <el-date-picker
+          v-model="ruleForm.deadline"
+          type="date"
+          placeholder="开始日期"
+          format="yyyy 年 MM 月 dd 日"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          style="margin-right: 20px"
+        />
+      </div>
+      <div class="right">
+        <el-button type="primary" @click="induction">新建入职</el-button>
+      </div>
     </el-row>
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="name" align="center" label="员工编号/姓名" />

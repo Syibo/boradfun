@@ -30,6 +30,18 @@ export default {
   position: relative;
   padding-bottom: 20px;
 }
+.table-top {
+  display: flex;
+  margin-bottom: 10px;
+}
+.table-top .left {
+  display: flex;
+}
+.table-top .right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
 .baradfun-top {
   display: flex;
   justify-content: flex-end;

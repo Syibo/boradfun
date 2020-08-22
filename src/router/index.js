@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import employeesRouter from './modules/employees'
 
 /* Router Modules */
 // import nestedRouter from './modules/nested'
@@ -58,7 +59,6 @@ export const constantRoutes = [
     hidden: true
   }
 ]
-
 /**
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
@@ -186,7 +186,8 @@ export const asyncRoutes = [
         meta: { title: '额度', icon: 'guide' }
       }
     ]
-  }
+  },
+  employeesRouter
 ]
 
 const createRouter = () => new Router({

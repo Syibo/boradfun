@@ -60,7 +60,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态" prop="name">
+            <el-form-item label="状态">
               <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
@@ -77,7 +77,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="身份证号" prop="name">
+            <el-form-item label="身份证号">
               <el-input v-model="ruleForm.name" placeholder="" />
             </el-form-item>
           </el-col>
@@ -356,6 +356,7 @@ export default {
 		width: 100%;
 		.el-upload-dragger {
 			width: 100%;
+			height: 150px;
 		}
 	}
 }

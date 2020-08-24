@@ -51,7 +51,7 @@
     </div>
 
     <el-dialog title="新建入职" :visible.sync="dialogVisible" :close-on-click-modal="false" width="800px" @close="open">
-      <el-form ref="ruleForm" label-position="right" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
+      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
         <el-alert style="margin-bottom: 10px;padding-left: 0" title="基本信息" :closable="false" type="info" />
         <el-row :gutter="20">
           <el-col :span="12">

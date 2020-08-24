@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import router from '@/router'
@@ -57,15 +57,15 @@ service.interceptors.response.use(
 
       if (res.ret === 401) {
         // to re-login
-        MessageBox.confirm('登录过期，您可以取消停留在此页面，或再次登录', 'Confirm logout', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
+        // MessageBox.confirm('登录过期，您可以取消停留在此页面，或再次登录', 'Confirm logout', {
+        //   confirmButtonText: '重新登录',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        //   store.dispatch('user/resetToken').then(() => {
+        //     location.reload()
+        //   })
+        // })
       }
       if (res.msg === '无权限查看') {
         router.push({ path: '404' })

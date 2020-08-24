@@ -2,32 +2,44 @@
   <div class="container">
     <el-row class="table-top">
       <div class="left">
-        <el-date-picker
-          v-model="ruleForm.deadline"
-          type="date"
-          placeholder="开始日期"
-          format="yyyy 年 MM 月 dd 日"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          style="margin-right: 20px"
-        />
+        <el-input placeholder="请输入员工姓名" />
+        <el-select v-model="ruleForm.name" placeholder="所属部门" style="width: 100%;margin-left: 10px">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+        <el-select v-model="ruleForm.name" placeholder="状态" style="width: 100%;margin-left: 10px">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </div>
       <div class="right">
         <el-button type="primary" @click="induction">新建入职</el-button>
       </div>
     </el-row>
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="name" align="center" label="员工编号/姓名" />
       <el-table-column prop="DepartmentID" align="center" label="所属部门" />
       <el-table-column prop="ServiceLine" align="center" label="岗位" />
-      <el-table-column prop="EntryDate" align="center" label="计划入职时间" />
-      <el-table-column align="center" label="手机号码">
-        <template slot-scope="scope">
-          {{ scope.row.Mobile }}
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
           {{ scope.row.Status }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="EntryDate" align="center" label="计划入职时间" />
+      <el-table-column align="center" label="流程信息">
+        <template slot-scope="scope">
+          <el-popover
+            placement="top-start"
+            width="200"
+            trigger="hover"
+          >
+            <div v-if="scope" style="height: 150px;">
+              <el-steps direction="vertical" :active="2" finish-status="success">
+                <el-step title="shiwen" icon="el-icon-timer" description="提交" />
+                <el-step title="qianqianniu" icon="el-icon-timer" description="提交" />
+                <el-step title="louyikai" icon="el-icon-timer" description="未提交" />
+              </el-steps>
+            </div>
+            <el-button slot="reference" type="text">查看详情</el-button>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
@@ -50,7 +62,16 @@
       />
     </div>
 
-    <el-dialog title="新建入职" :visible.sync="dialogVisible" :close-on-click-modal="false" width="800px" @close="open">
+    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="800px" :show-close="false" @close="open">
+      <span slot="title" class="dialog-title">
+        <div class="dialog-title-left">
+          新建入职
+        </div>
+        <div class="dialog-title-right">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button size="small" type="primary" @click="submitForm('ruleForm')">提 交</el-button>
+        </div>
+      </span>
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
         <el-alert style="margin-bottom: 10px;padding-left: 0" title="基本信息" :closable="false" type="info" />
         <el-row :gutter="20">
@@ -60,20 +81,38 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态">
-              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
+            <el-form-item label="性别" prop="Gender">
+              <el-radio-group v-model="ruleForm.name">
+                <el-radio label="男" />
+                <el-radio label="女" />
+              </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="性别" prop="Gender">
-              <el-select v-model="ruleForm.Gender" placeholder="" style="width: 100%">
-                <el-option key="男" label="男" value="男" />
-                <el-option key="女" label="女" value="女" />
+            <el-form-item label="入职状态">
+              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="计划入职时间" prop="name">
+              <el-date-picker
+                v-model="ruleForm.deadline"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd HH:mm:ss"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="手机号码" prop="phone">
+              <el-input v-model="ruleForm.phone" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -84,23 +123,30 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="ruleForm.phone" placeholder="" />
+            <el-form-item label="签约主体">
+              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-alert style="margin-bottom: 10px;padding-left: 0" title="履历" :closable="false" type="info" />
-        <el-row :gutter="20" class="empolyees-upload">
+        <el-alert style="margin-bottom: 10px;padding-left: 0" title="面试" :closable="false" type="info" />
+        <el-row :gutter="20">
           <el-col :span="24">
+            <el-form-item label="面试评价">
+              <el-input v-model="ruleForm.name" type="textarea" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" class="empolyees-upload">
+          <el-col :span="2">
             <el-upload
-              style="width: 100%"
+              style="margin-top: -20px"
               class="upload-demo"
-              drag
               action="https://jsonplaceholder.typicode.com/posts/"
               multiple
             >
-              <i class="el-icon-upload" />
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <el-button icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
             </el-upload>
           </el-col>
         </el-row>
@@ -146,21 +192,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="计划入职时间" prop="name">
-              <el-date-picker
-                v-model="ruleForm.deadline"
-                type="date"
-                placeholder="选择日期"
-                format="yyyy 年 MM 月 dd 日"
-                value-format="yyyy-MM-dd HH:mm:ss"
-              />
+            <el-form-item label="座位号" prop="name">
+              <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
             </el-form-item>
           </el-col>
         </el-row>
+        <el-alert style="margin: 0 0 10px 0;padding-left: 0" title="设备需求" :closable="false" type="info" />
         <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="基本薪资" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="" />
+          <el-col :span="24">
+            <el-form-item label="设备需求" prop="name">
+              <el-input v-model="ruleForm.name" type="textarea" placeholder="请输入设备需求" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -184,73 +225,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-alert style="margin: 0 0 10px 0;padding-left: 0" title="其他" :closable="false" type="info" />
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="座位号" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入座位号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="设备需求" prop="name">
-              <el-input v-model="ruleForm.name" type="textarea" placeholder="请输入设备需求" />
-            </el-form-item>
-          </el-col>
-        </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="circulation('ruleForm')">流 转</el-button>
-        <el-button @click="checkInduction('ruleForm')">确认入职</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm')">提 交</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-      </span>
-      <el-dialog
-        width="400px"
-        title="流转"
-        :close-on-click-modal="false"
-        :visible.sync="innerVisible"
-        append-to-body
-      >
-        <el-form ref="ruleForm" label-position="right" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-form-item label="IT部门负责人" prop="name">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-form-item label="部门负责人" prop="name">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
-          <el-button @click="innerVisible = false">取 消</el-button>
-        </span>
-      </el-dialog>
-      <el-dialog
-        width="400px"
-        title="确认入职"
-        :close-on-click-modal="false"
-        :visible.sync="innerVisibleCheck"
-        append-to-body
-      >
-        <P>确认入职后，入职流程结束，请到全部员工信息页面录入详细信息以及合同信息</P>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
-          <el-button @click="innerVisibleCheck = false">取 消</el-button>
-        </span>
-      </el-dialog>
     </el-dialog>
   </div>
 </template>

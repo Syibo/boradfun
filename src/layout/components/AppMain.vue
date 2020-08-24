@@ -54,6 +54,9 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+.header-class {
+  background-color: #F7F8FA;
+}
 </style>
 
 <style lang="scss" scoped>
@@ -88,6 +91,18 @@ export default {
 .el-popup-parent--hidden {
   .fixed-header {
     padding-right: 15px;
+  }
+}
+.dialog-title {
+  display: flex;
+  align-items: center;
+  .dialog-title-left {
+    color: #333333;
+  }
+  .dialog-title-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 </style>

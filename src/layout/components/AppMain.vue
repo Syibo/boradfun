@@ -96,6 +96,9 @@ export default {
 .dialog-title {
   display: flex;
   align-items: center;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #D8D8D8;
   .dialog-title-left {
     color: #333333;
   }

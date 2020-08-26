@@ -1,4 +1,4 @@
-// import { login } from '@/api/user'
+import { login } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -38,36 +38,36 @@ const mutations = {
 
 const actions = {
   // 去掉登录
-  login({ commit }) {
-    return new Promise((resolve, reject) => {
-      const data = {
-        'avatar': 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-        'introductio': 'I am a super administrator',
-        'name': 'test',
-        'id': 1,
-        'roles': [1]
-      }
-      commit('SET_TOKEN', data)
-      setToken(data)
-      commit('SET_USERINFO', data)
-      resolve()
-    })
-  },
-
-  // login({ commit }, userInfo) {
+  // login({ commit }) {
   //   return new Promise((resolve, reject) => {
-  //     const { username, password } = userInfo
-  //     login({ username: username.trim(), password: password }).then(response => {
-  //       const { data } = response
-  //       commit('SET_TOKEN', data)
-  //       setToken(data)
-  //       commit('SET_USERINFO', data)
-  //       resolve()
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
+  //     const data = {
+  //       'avatar': 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+  //       'introductio': 'I am a super administrator',
+  //       'name': 'test',
+  //       'id': 1,
+  //       'roles': [1]
+  //     }
+  //     commit('SET_TOKEN', data)
+  //     setToken(data)
+  //     commit('SET_USERINFO', data)
+  //     resolve()
   //   })
   // },
+
+  login({ commit }, userInfo) {
+    return new Promise((resolve, reject) => {
+      const { username, password } = userInfo
+      login({ username: username.trim(), password: password }).then(response => {
+        const { data } = response
+        commit('SET_TOKEN', data)
+        setToken(data)
+        commit('SET_USERINFO', data)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 
   // get user info
   getInfo({ commit, state }) {

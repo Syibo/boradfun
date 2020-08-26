@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container employees-container">
     <el-row class="table-top">
       <div class="left">
         <el-input placeholder="请输入员工姓名" />
@@ -73,7 +73,7 @@
         </div>
       </span>
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
-        <el-alert style="margin-bottom: 10px;padding-left: 0" title="基本信息" :closable="false" type="info" />
+        <Label :title="'基本信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="姓名" prop="name">
@@ -130,7 +130,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-alert style="margin-bottom: 10px;padding-left: 0" title="面试" :closable="false" type="info" />
+        <Label :title="'面试'" />
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="面试评价">
@@ -150,7 +150,7 @@
             </el-upload>
           </el-col>
         </el-row>
-        <el-alert style="margin: 10px 0 10px 0;padding-left: 0" title="岗位信息" :closable="false" type="info" />
+        <Label :title="'岗位信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="所属部门" prop="name">
@@ -197,7 +197,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-alert style="margin: 0 0 10px 0;padding-left: 0" title="设备需求" :closable="false" type="info" />
+        <Label :title="'设备需求'" />
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="设备需求" prop="name">
@@ -205,7 +205,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-alert style="margin: 10px 0 10px 0;padding-left: 0" title="账号信息" :closable="false" type="info" />
+        <Label :title="'账号信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="企业邮箱" prop="name">
@@ -231,7 +231,11 @@
 </template>
 
 <script>
+import Label from '@/components/common/Label.vue'
 export default {
+  components: {
+    Label
+  },
   data() {
     return {
       tableData: [
@@ -334,6 +338,11 @@ export default {
 			height: 150px;
 		}
 	}
+}
+.employees-container {
+  .el-dialog__header {
+    padding: 0;
+  }
 }
 </style>
 <style lang="scss" scoped>

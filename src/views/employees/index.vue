@@ -42,10 +42,12 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" width="280">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
           <el-button type="text" size="small">删除</el-button>
+          <el-button type="text" size="small">录入设备需求</el-button>
+          <el-button type="text" size="small">录入账号信息</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,61 +76,77 @@
       </span>
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
         <Label :title="'基本信息'" />
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
-            </el-form-item>
+        <el-row style="color: #2B2B2B">
+          <el-col :span="4">
+            姓名：沈奕博
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="性别" prop="Gender">
-              <el-radio-group v-model="ruleForm.name">
-                <el-radio label="男" />
-                <el-radio label="女" />
-              </el-radio-group>
-            </el-form-item>
+          <el-col :span="4">
+            性别：男
           </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="入职状态">
-              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
+          <el-col :span="8">
+            身份证号码：362330199512263656
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="计划入职时间" prop="name">
-              <el-date-picker
-                v-model="ruleForm.deadline"
-                type="date"
-                placeholder="选择日期"
-                format="yyyy 年 MM 月 dd 日"
-                value-format="yyyy-MM-dd HH:mm:ss"
-              />
-            </el-form-item>
+          <el-col :span="6">
+            手机号码：18720573255
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="ruleForm.phone" placeholder="" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="身份证号">
-              <el-input v-model="ruleForm.name" placeholder="" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="签约主体">
-              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
+        <el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="姓名" prop="name">
+                <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="性别" prop="Gender">
+                <el-radio-group v-model="ruleForm.name">
+                  <el-radio label="男" />
+                  <el-radio label="女" />
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="入职状态">
+                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="计划入职时间" prop="name">
+                <el-date-picker
+                  v-model="ruleForm.deadline"
+                  type="date"
+                  placeholder="选择日期"
+                  format="yyyy 年 MM 月 dd 日"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="手机号码" prop="phone">
+                <el-input v-model="ruleForm.phone" placeholder="" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="身份证号">
+                <el-input v-model="ruleForm.IDcard" placeholder="" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="签约主体">
+                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-row>
         <Label :title="'面试'" />
         <el-row :gutter="20">

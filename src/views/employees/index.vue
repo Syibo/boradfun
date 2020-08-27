@@ -64,7 +64,7 @@
       />
     </div>
 
-    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="800px" :show-close="false" @close="open">
+    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="80%" :show-close="false" @close="open">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
           新建入职

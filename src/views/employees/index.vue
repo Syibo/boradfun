@@ -64,7 +64,7 @@
       />
     </div>
 
-    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="80%" :show-close="false" @close="open">
+    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="60%" :show-close="false" @close="open">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
           新建入职
@@ -76,20 +76,12 @@
       </span>
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
         <Label :title="'基本信息'" />
-        <el-row style="color: #2B2B2B">
-          <el-col :span="4">
-            姓名：沈奕博
-          </el-col>
-          <el-col :span="4">
-            性别：男
-          </el-col>
-          <el-col :span="8">
-            身份证号码：362330199512263656
-          </el-col>
-          <el-col :span="6">
-            手机号码：18720573255
-          </el-col>
-        </el-row>
+        <!-- <el-row style="color: #2B2B2B">
+          <el-col :span="4"> 姓名：沈奕博 </el-col>
+          <el-col :span="4"> 性别：男 </el-col>
+          <el-col :span="8"> 身份证号码：362330199512263656 </el-col>
+          <el-col :span="6"> 手机号码：18720573255 </el-col>
+        </el-row> -->
         <el-row>
           <el-row :gutter="20">
             <el-col :span="12">
@@ -115,35 +107,15 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="计划入职时间" prop="name">
-                <el-date-picker
-                  v-model="ruleForm.deadline"
-                  type="date"
-                  placeholder="选择日期"
-                  format="yyyy 年 MM 月 dd 日"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
               <el-form-item label="手机号码" prop="phone">
                 <el-input v-model="ruleForm.phone" placeholder="" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="身份证号">
-                <el-input v-model="ruleForm.IDcard" placeholder="" />
-              </el-form-item>
-            </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="签约主体">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
+              <el-form-item label="身份证号">
+                <el-input v-model="ruleForm.IDcard" placeholder="" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -194,7 +166,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="所属项目" prop="name">
+            <el-form-item label="服务线" prop="name">
               <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
@@ -209,37 +181,57 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="座位号" prop="name">
-              <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <Label :title="'设备需求'" />
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item label="设备需求" prop="name">
-              <el-input v-model="ruleForm.name" type="textarea" placeholder="请输入设备需求" />
-            </el-form-item>
-          </el-col>
         </el-row>
         <Label :title="'账号信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="企业邮箱" prop="name">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">企业邮箱<span>（IT填写）</span></span></template>
               <el-input v-model="ruleForm.name" placeholder="请输入企业邮箱" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="企业微信" prop="name">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">企业微信<span>（IT填写）</span></span></template>
               <el-input v-model="ruleForm.name" placeholder="请输入企业微信" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="TAPD" prop="name">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">TAPD<span>（IT填写）</span></span></template>
               <el-input v-model="ruleForm.name" placeholder="请输入TAPD" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <Label :title="'流程信息'" />
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">计划入职时间<span>（HR填写）</span></span></template>
+              <el-date-picker
+                v-model="ruleForm.deadline"
+                style="width: 100%"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd HH:mm:ss"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">座位号<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">设备需求<span>（部门负责人填写）</span></span></template>
+              <el-input v-model="ruleForm.name" type="textarea" placeholder="请输入设备需求" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -366,5 +358,12 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding-bottom: 50px;
+  .form-label-slot {
+    display: inline-block;
+    span {
+      color: #999999;
+      font-weight: 400;
+    }
+  }
 }
 </style>

@@ -52,7 +52,7 @@
       />
     </div>
 
-    <el-dialog title="新建离职" :visible.sync="dialogVisible" :close-on-click-modal="false" :show-close="false" width="80%" class="dialog-container" @close="close">
+    <el-dialog title="新建离职" :visible.sync="dialogVisible" top="50px" :close-on-click-modal="false" :show-close="false" width="80%" class="dialog-container" @close="close">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
           员工详情
@@ -79,24 +79,326 @@
         <div class="right">
           <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
             <Label id="baseInfo" title="基本信息" />
+            <el-row>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="姓名" prop="name">
+                    <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="性别" prop="Gender">
+                    <el-radio-group v-model="ruleForm.name">
+                      <el-radio label="男" />
+                      <el-radio label="女" />
+                    </el-radio-group>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="入职状态">
+                    <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item prop="name" label="实际入职时间">
+                    <el-date-picker
+                      v-model="ruleForm.deadline"
+                      style="width: 100%"
+                      type="date"
+                      placeholder="选择日期"
+                      format="yyyy 年 MM 月 dd 日"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                    />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="手机号码" prop="phone">
+                    <el-input v-model="ruleForm.phone" placeholder="" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="身份证号">
+                    <el-input v-model="ruleForm.IDcard" placeholder="" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="员工编号" prop="phone">
+                    <el-input v-model="ruleForm.phone" placeholder="" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="民族">
+                    <el-input v-model="ruleForm.IDcard" placeholder="" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="出生年月" prop="phone">
+                    <el-input v-model="ruleForm.phone" placeholder="" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="年龄">
+                    <el-input v-model="ruleForm.IDcard" placeholder="" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="私人邮箱" prop="phone">
+                    <el-input v-model="ruleForm.phone" placeholder="" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="政治面貌">
+                    <el-input v-model="ruleForm.IDcard" placeholder="" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-row>
+            <Label id="interviewiInfo" title="面试信息" />
             <el-row :gutter="20">
-              <el-col :span="12">
-                <el-form-item label="姓名" prop="name">
-                  <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="员工编号" prop="phone">
-                  <el-input v-model="ruleForm.name" placeholder="" />
+              <el-col :span="24">
+                <el-form-item label="面试评价">
+                  <el-input v-model="ruleForm.name" type="textarea" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
-            <Label id="interviewiInfo" title="面试信息" />
-            <div class="test-hei">面试信息</div>
+            <el-row :gutter="20" class="empolyees-upload">
+              <el-col :span="2">
+                <el-upload
+                  style="margin-top: -20px"
+                  class="upload-demo"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  multiple
+                >
+                  <el-button icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
+                </el-upload>
+              </el-col>
+            </el-row>
             <Label id="jobsInfo" title="岗位信息" />
-            <div class="test-hei">岗位信息</div>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="所属部门">
+                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="部门负责人" prop="phone">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="岗位" prop="phone">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="服务线">
+                  <el-input v-model="ruleForm.IDcard" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="级别">
+                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
             <Label id="schoolInfo" title="学历信息" />
-            <div class="test-hei">学历信息</div>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="毕业院校">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="专业">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="学历">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="性质">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="学历验证" prop="Gender">
+                  <el-radio-group v-model="ruleForm.name">
+                    <el-radio label="未验证" />
+                    <el-radio label="已验证" />
+                    <el-radio label="无法验证" />
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <Label id="certificate" title="资格证书" />
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="英语技能">
+                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="其他技能">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <Label id="familyInfo" title="家庭信息" />
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="籍贯">
+                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="居住城市">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="居住城市所在区">
+                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="居住地址">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="婚姻状态" prop="Gender">
+                  <el-radio-group v-model="ruleForm.name">
+                    <el-radio label="未婚" />
+                    <el-radio label="已婚" />
+                    <el-radio label="已婚以育" />
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <Label id="cardInfo" title="卡号信息" />
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="工商银行卡卡号">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="招商银行卡卡号">
+                  <el-input v-model="ruleForm.phone" placeholder="" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <Label id="accountInfo" title="账号信息" />
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item prop="name">
+                  <template slot="label"><span class="form-label-slot">企业邮箱<span>（IT填写）</span></span></template>
+                  <el-input v-model="ruleForm.name" placeholder="请输入企业邮箱" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item prop="name">
+                  <template slot="label"><span class="form-label-slot">企业微信<span>（IT填写）</span></span></template>
+                  <el-input v-model="ruleForm.name" placeholder="请输入企业微信" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item prop="name">
+                  <template slot="label"><span class="form-label-slot">TAPD<span>（IT填写）</span></span></template>
+                  <el-input v-model="ruleForm.name" placeholder="请输入TAPD" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <Label id="contractInfo" title="合同信息" />
+            <el-table :data="tableData" style="width: 100%;margin: 20px 0" :header-cell-style="{background:'#F7F8FA'}">
+              <el-table-column prop="name" align="center" label="合同编号/名称" />
+              <el-table-column prop="name" align="center" label="合同开始时间" />
+              <el-table-column prop="DepartmentID" align="center" label="合同到期时间" />
+              <el-table-column prop="ServiceLine" align="center" label="员工一" />
+              <el-table-column prop="ServiceLine" align="center" label="比孚" />
+              <el-table-column prop="ServiceLine" align="center" label="已签署" />
+              <el-table-column align="center" label="操作" width="120">
+                <template>
+                  <el-button type="text" size="small">编辑</el-button>
+                  <el-button type="text" size="small">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <Label id="documentInfo" title="文档信息" />
+            <el-row :gutter="20">
+              <el-form-item label="身份证复印件">
+                <el-col :span="12">
+                  <el-upload
+                    class="avatar-uploader"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :show-file-list="false"
+                  >
+                    <i class="el-icon-plus avatar-uploader-icon" />
+                  </el-upload>
+                </el-col>
+                <el-col :span="12">
+                  <el-upload
+                    class="avatar-uploader"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :show-file-list="false"
+                  >
+                    <i class="el-icon-plus avatar-uploader-icon" />
+                  </el-upload>
+                </el-col>
+              </el-form-item>
+            </el-row>
+            <el-row :gutter="20">
+              <el-form-item label="学历证书复印件">
+                <el-col :span="24">
+                  <el-upload
+                    class="avatar-uploader"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :show-file-list="false"
+                  >
+                    <i class="el-icon-plus avatar-uploader-icon" />
+                  </el-upload>
+                </el-col>
+              </el-form-item>
+            </el-row>
           </el-form>
         </div>
       </div>
@@ -116,7 +418,13 @@ export default {
         { label: '基本信息', href: 'baseInfo' },
         { label: '面试信息', href: 'interviewiInfo' },
         { label: '岗位信息', href: 'jobsInfo' },
-        { label: '学历信息', href: 'schoolInfo' }
+        { label: '学历信息', href: 'schoolInfo' },
+        { label: '资格证书', href: 'certificate' },
+        { label: '家庭信息', href: 'familyInfo' },
+        { label: '卡号信息', href: 'cardInfo' },
+        { label: '账号信息', href: 'accountInfo' },
+        { label: '合同信息', href: 'contractInfo' },
+        { label: '文档信息', href: 'documentInfo' }
       ],
       active: 'baseInfo',
       tableData: [
@@ -168,13 +476,12 @@ export default {
       this.init()
     },
     submitForm() {
-      console.log(444)
+      this.dialogVisible = false
     },
     changeAct(href) {
       this.active = href
       const anchor = this.$el.querySelector(`#${href}`)
       const total = anchor.offsetTop
-      console.log(total)
       const right = document.getElementsByClassName('archives-detail')[0].getElementsByClassName('right')[0]
       let documentTotal = right.scrollTop
       let timer = null
@@ -207,11 +514,38 @@ export default {
 }
 </script>
 
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 300px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 300px;
+    height: 178px;
+    display: block;
+  }
+</style>
+
 <style lang="scss" scoped>
 .container {
   padding-bottom: 50px;
   .archives-detail {
-    max-height: 500px;
+    max-height: 700px;
     display: flex;
     .left {
       width: 80px;
@@ -244,10 +578,10 @@ export default {
     }
     .right {
       flex: 1;
-      padding-left: 20px;
+      padding: 0 20px;
       overflow-y: auto;
       overflow-x: hidden;
-      max-height: 500px;
+      max-height: 700px;
       .test-hei {
         height: 400px;
         width: 100%;

@@ -57,6 +57,20 @@ export default {
 .header-class {
   background-color: #F7F8FA;
 }
+.form-label-slot {
+  display: inline-block;
+}
+.form-label-slot span {
+  color: #999999;
+  font-weight: 400;
+}
+.bule-hover {
+  color: #1F8DFB;
+  cursor: pointer;
+}
+.dialog-container .el-dialog__header {
+    padding: 0;
+  }
 </style>
 
 <style lang="scss" scoped>

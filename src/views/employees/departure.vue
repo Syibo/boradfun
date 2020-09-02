@@ -3,7 +3,7 @@
     <el-row class="baradfun-top">
       <el-button type="primary" @click="departure">新建离职</el-button>
     </el-row>
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="name" align="center" label="离职员工编号" />
       <el-table-column prop="name" align="center" label="员工姓名" />
       <el-table-column prop="DepartmentID" align="center" label="所属部门" />
@@ -104,6 +104,106 @@
           </el-row>
         </el-row>
         <Label :title="'流程信息'" />
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">账号<span>（IT填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">电脑<span>（IT填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">手机<span>（财务填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">报销<span>（财务填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">物品领用归还<span>（前台）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">实际出勤天数<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">旷工<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">病假<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">剩余调休<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">其他结算<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">迟到/早退<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">事假<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">带薪假<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="name">
+              <template slot="label"><span class="form-label-slot">剩余年假<span>（HR填写）</span></span></template>
+              <el-input v-model="ruleForm.name" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </el-dialog>
   </div>

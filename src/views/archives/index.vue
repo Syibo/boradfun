@@ -276,27 +276,30 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="籍贯">
-                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                  </el-select>
+                  <!-- <el-input v-model="ruleForm.phone" placeholder="" /> -->
+                  <el-cascader
+                    v-model="ruleForm.phone"
+                    style="width: 100%"
+                    size="small"
+                    :options="provinceAndCityData"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="居住城市">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-cascader
+                    v-model="selectedOptions"
+                    style="width: 100%"
+                    size="small"
+                    :options="regionData"
+                    @change="handleChange"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="居住城市所在区">
-                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="居住地址">
+                <el-form-item label="居住详细地址">
                   <el-input v-model="ruleForm.phone" placeholder="" />
                 </el-form-item>
               </el-col>
@@ -408,12 +411,16 @@
 
 <script>
 import Label from '@/components/common/Label.vue'
+import { regionData, provinceAndCityData } from 'element-china-area-data'
 export default {
   components: {
     Label
   },
   data() {
     return {
+      regionData,
+      provinceAndCityData,
+      selectedOptions: [],
       label: [
         { label: '基本信息', href: 'baseInfo' },
         { label: '面试信息', href: 'interviewiInfo' },
@@ -504,6 +511,9 @@ export default {
       function setScrollTop(total) {
         right.scrollTop = total - 68
       }
+    },
+    handleChange(value) {
+      console.log(value)
     },
     close() {
       if (this.$refs['ruleForm']) {

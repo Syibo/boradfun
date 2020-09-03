@@ -10,7 +10,7 @@
         <el-select v-model="ruleForm.name" placeholder="员工状态" style="width: 100%;margin: 0 10px">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-button type="primary">帅选</el-button>
+        <el-button type="primary">筛选</el-button>
       </div>
       <div class="right">
         <el-button type="primary" @click="induction">新建入职</el-button>
@@ -195,21 +195,15 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="部门负责人" prop="phone">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
-                </el-form-item>
+                <el-form-item label="部门负责人" prop="phone"> <el-input v-model="ruleForm.phone" placeholder="" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="岗位" prop="phone">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
-                </el-form-item>
+                <el-form-item label="岗位" prop="phone"> <el-input v-model="ruleForm.phone" placeholder="" /> </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="服务线">
-                  <el-input v-model="ruleForm.IDcard" placeholder="" />
-                </el-form-item>
+                <el-form-item label="服务线"> <el-input v-model="ruleForm.IDcard" placeholder="" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
@@ -312,6 +306,62 @@
                     <el-radio label="已婚" />
                     <el-radio label="已婚以育" />
                   </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="24">
+                <el-form-item label="家庭及其亲属情况">
+                  <el-table :data="ruleForm.familyData" style="width: 100%;margin: 10px 0" :header-cell-style="{background:'#F7F8FA'}">
+                    <el-table-column align="center" label="姓名">
+                      <template slot-scope="scope">
+                        <el-input v-model="scope.row.name" placeholder="请输入姓名" />
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="与您的关系">
+                      <template slot-scope="scope">
+                        <el-input v-model="scope.row.Relation" placeholder="请输入与您的关系" />
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="任职企业">
+                      <template slot-scope="scope">
+                        <el-input v-model="scope.row.name" placeholder="请输入任职企业" />
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="职位">
+                      <template slot-scope="scope">
+                        <el-input v-model="scope.row.name" placeholder="请输入职位" />
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="联系方式">
+                      <template slot-scope="scope">
+                        <el-input v-model="scope.row.name" placeholder="请输入联系方式" />
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="24">
+                <el-form-item label="紧急联系人">
+                  <el-table :data="ruleForm.familyData" style="width: 100%;margin-top: 10px" :header-cell-style="{background:'#F7F8FA'}">
+                    <el-table-column align="center" label="姓名">
+                      <template slot-scope="scope">
+                        <el-input v-model="scope.row.name" placeholder="请输入姓名" />
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="与您的关系">
+                      <template slot-scope="scope">
+                        <el-input v-model="scope.row.Relation" placeholder="请输入与您的关系" />
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="联系方式">
+                      <template slot-scope="scope">
+                        <el-input v-model="scope.row.name" placeholder="请输入联系方式" />
+                      </template>
+                    </el-table-column>
+                  </el-table>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -449,7 +499,12 @@ export default {
       pageSize: 10,
       total: 0,
       ruleForm: {
-        name: ''
+        name: '',
+        familyData: [
+          { name: '', Relation: '父亲' },
+          { name: '', Relation: '母亲' },
+          { name: '', Relation: '配偶' }
+        ]
       },
       options: [
         { value: '拟入职', label: '拟入职' },

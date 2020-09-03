@@ -15,7 +15,11 @@
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="name" align="center" label="员工编号/姓名" />
+      <el-table-column align="center" label="员工编号/姓名">
+        <template slot-scope="scope">
+          <span class="bule-hover" @click="openDra"> {{ scope.row.name }} </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="DepartmentID" align="center" label="所属部门" />
       <el-table-column prop="ServiceLine" align="center" label="岗位" />
       <el-table-column align="center" label="状态">
@@ -237,14 +241,17 @@
         </el-row>
       </el-form>
     </el-dialog>
+    <EmployDrawer ref="employDrawer" />
   </div>
 </template>
 
 <script>
 import Label from '@/components/common/Label.vue'
+import EmployDrawer from '@/components/Oa/EmployDrawer'
 export default {
   components: {
-    Label
+    Label,
+    EmployDrawer
   },
   data() {
     return {
@@ -329,6 +336,9 @@ export default {
       //     return false
       //   }
       // })
+    },
+    openDra() {
+      this.$refs.employDrawer.openDrawer()
     },
     open() {
       if (this.$refs['ruleForm']) {

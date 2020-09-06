@@ -4,16 +4,16 @@
       <el-button type="primary" @click="departure">新建离职</el-button>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="name" align="center" label="离职员工编号" />
+      <el-table-column prop="ID" align="center" label="离职员工编号" />
       <el-table-column prop="name" align="center" label="员工姓名" />
-      <el-table-column prop="DepartmentID" align="center" label="所属部门" />
-      <el-table-column prop="ServiceLine" align="center" label="岗位" />
-      <el-table-column prop="ServiceLine" align="center" label="部门领导" />
-      <el-table-column prop="ServiceLine" align="center" label="创建人" />
-      <el-table-column prop="EntryDate" align="center" label="创建时间" />
+      <el-table-column prop="department.department_name" align="center" label="所属部门" />
+      <el-table-column prop="position" align="center" label="岗位" />
+      <el-table-column prop="" align="center" label="部门领导" />
+      <el-table-column prop="" align="center" label="创建人" />
+      <el-table-column prop="create_time" align="center" label="创建时间" />
       <el-table-column align="center" label="离职原因">
         <template slot-scope="scope">
-          {{ scope.row.Mobile }}
+          {{ scope.row.reason }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
@@ -26,9 +26,9 @@
 
     <div class="broadfun_block">
       <el-pagination
-        :current-page="pageNum"
+        :current-page="seachValue.pagenum"
         :page-sizes="[10, 20, 50]"
-        :page-size="pageSize"
+        :page-size="seachValue.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
@@ -58,26 +58,24 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="姓名" prop="name">
-                <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
+                <el-input v-model="ruleForm.name" placeholder="请输入姓名" @change="input" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="员工编号" prop="phone">
-                <el-input v-model="ruleForm.name" placeholder="" />
+                <el-input v-model="ruleForm.ID" placeholder="" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="所属部门">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
+                <el-input v-model="ruleForm.department_id" placeholder="" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="岗位" prop="phone">
-                <el-input v-model="ruleForm.phone" placeholder="" />
+                <el-input v-model="ruleForm.position" placeholder="" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -85,7 +83,7 @@
             <el-col :span="12">
               <el-form-item label="离职日期">
                 <el-date-picker
-                  v-model="ruleForm.deadline"
+                  v-model="ruleForm.resignation_date"
                   style="width: 100%"
                   type="date"
                   placeholder="选择日期"
@@ -98,7 +96,7 @@
           <el-row :gutter="20">
             <el-col :span="24">
               <el-form-item label="离职原因">
-                <el-input v-model="ruleForm.name" type="textarea" placeholder="离职原因" />
+                <el-input v-model="ruleForm.reason" type="textarea" placeholder="离职原因" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -106,101 +104,101 @@
         <Label :title="'流程信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="account">
               <template slot="label"><span class="form-label-slot">账号<span>（IT填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.account" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="computer">
               <template slot="label"><span class="form-label-slot">电脑<span>（IT填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.computer" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="phone">
               <template slot="label"><span class="form-label-slot">手机<span>（财务填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.phone" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="expense">
               <template slot="label"><span class="form-label-slot">报销<span>（财务填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.expense" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="device_req">
               <template slot="label"><span class="form-label-slot">物品领用归还<span>（前台）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.device_req" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="work_day">
               <template slot="label"><span class="form-label-slot">实际出勤天数<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.work_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="off_day">
               <template slot="label"><span class="form-label-slot">旷工<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.off_day" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="half_day">
               <template slot="label"><span class="form-label-slot">病假<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.half_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="change_day">
               <template slot="label"><span class="form-label-slot">剩余调休<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.change_day" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="others">
               <template slot="label"><span class="form-label-slot">其他结算<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.others" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="late_day">
               <template slot="label"><span class="form-label-slot">迟到/早退<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.late_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="things_day">
               <template slot="label"><span class="form-label-slot">事假<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.things_day" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="salary_day">
               <template slot="label"><span class="form-label-slot">带薪假<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.salary_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="annual_day">
               <template slot="label"><span class="form-label-slot">剩余年假<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="" />
+              <el-input v-model="ruleForm.annual_day" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -210,6 +208,8 @@
 </template>
 
 <script>
+import { getEmployeeList,
+  leaveEmployee } from '@/api/employee'
 import Label from '@/components/common/Label.vue'
 export default {
   components: {
@@ -217,27 +217,25 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          name: '沈意波',
-          DepartmentID: '合研',
-          ServiceLine: '前端开发',
-          EntryDate: '2020-02-03',
-          Mobile: 18720573255,
-          Status: '未入职'
-        }
-      ],
+      tableData: [],
+      seachValue: {
+        pagenum: 1,
+        pagesize: 10,
+        name: '',
+        departmentid: '',
+        status: 3
+      },
       dialogVisible: false,
       pageNum: 1,
       pageSize: 10,
       total: 0,
       ruleForm: {
         name: '',
-        email: '',
-        wx: '',
-        phone: '',
-        userType: '',
-        leaderId: ''
+        department_id: '',
+        ID: '',
+        position: '',
+        account: '', computer: '', phone: '', expense: '', device_req: '', work_day: '', off_day: '', half_day: '',
+        change_day: '', others: '', late_day: '', things_day: '', salary_day: '', annual_day: '', resignation_date: '', reason: ''
       },
       options: [
         { value: '拟入职', label: '拟入职' },
@@ -249,59 +247,86 @@ export default {
           { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
         ],
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' }
-        ],
-        wx: [
-          { required: true, message: '请输入企业微信', trigger: 'blur' }
-        ],
         phone: [
           { required: true, message: '请输入手机号码', trigger: 'blur' }
-        ],
-        userType: [
-          { required: true, message: '请选择用户类型', trigger: 'change' }
-        ],
-        leaderId: [
-          { required: true, message: '请选择资源组长', trigger: 'blur' }
         ]
       }
     }
   },
+  mounted() {
+    this.init()
+  },
   methods: {
-    next() {
-      this.active = 2
-    },
-    prev() {
-      this.active = 1
+    async init() {
+      const res = await getEmployeeList(this.seachValue)
+      if (res.ret === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      } else {
+        this.tableData = []
+        this.total = 0
+      }
     },
     departure() {
-      this.active = 1
       this.dialogVisible = true
     },
+    async input(val) {
+      console.log(val)
+      const seach = {
+        pagenum: 1,
+        pagesize: 10,
+        name: val,
+        departmentid: '',
+        status: ''
+      }
+      const res = await getEmployeeList(seach)
+      if (res.ret === 0 && res.data.list.length !== 0) {
+        this.ruleForm.ID = res.data.list[0].ID
+        this.ruleForm.department_id = res.data.list[0].department.department_name
+        this.ruleForm.position = res.data.list[0].position
+      } else {
+        this.$message.error('没有该员工的信息')
+      }
+    },
     handleSizeChange(val) {
-      this.pageNum = 1
-      this.pageSize = val
+      this.seachValue.pagenum = 1
+      this.seachValue.pagesize = val
       this.init()
     },
     handleCurrentChange(val) {
-      this.pageNum = val
+      this.seachValue.pagenum = val
       this.init()
     },
     submitForm(formName) {
       this.innerVisibleCheck = true
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     const form = this.ruleForm
-      //     this.addUser(form)
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.leaveEmployee()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async handleClick(row) {
+      this.ruleForm = row
+      this.dialogVisible = true
+    },
+    async leaveEmployee() {
+      const res = await leaveEmployee(this.ruleForm.ID, this.ruleForm)
+      if (res.ret === 0) {
+        this.$message.success('新建离职成功！')
+        this.init()
+      }
     },
     open() {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
+      }
+      this.ruleForm = {
+        name: '', department_id: '', ID: '', position: '',
+        account: '', computer: '', phone: '', expense: '', device_req: '', work_day: '', off_day: '', half_day: '',
+        change_day: '', others: '', late_day: '', things_day: '', salary_day: '', annual_day: '', resignation_date: '', reason: ''
       }
     }
   }

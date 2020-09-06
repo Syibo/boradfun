@@ -2,13 +2,14 @@
   <div class="container employees-container">
     <el-row class="table-top">
       <div class="left">
-        <el-input placeholder="请输入员工姓名" />
-        <el-select v-model="ruleForm.name" placeholder="所属部门" style="width: 100%;margin-left: 10px">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-input v-model="seachValue.name" placeholder="请输入员工姓名" />
+        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin-left: 10px" clearable>
+          <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
         </el-select>
-        <el-select v-model="ruleForm.name" placeholder="状态" style="width: 100%;margin-left: 10px">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="seachValue.status" placeholder="状态" style="width: 100%;margin-left: 10px" clearable>
+          <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
+        <el-button style="margin-left: 10px" type="primary" @click="seachFun">搜索</el-button>
       </div>
       <div class="right">
         <el-button type="primary" @click="induction">新建入职</el-button>
@@ -17,29 +18,28 @@
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column align="center" label="员工编号/姓名">
         <template slot-scope="scope">
-          <span class="bule-hover" @click="openDra"> {{ scope.row.name }} </span>
+          <span class="bule-hover" @click="openDra(scope.row)"> {{ scope.row.name }} </span>
         </template>
       </el-table-column>
-      <el-table-column prop="DepartmentID" align="center" label="所属部门" />
-      <el-table-column prop="ServiceLine" align="center" label="岗位" />
+      <el-table-column prop="department.department_name" align="center" label="所属部门" />
+      <el-table-column prop="position" align="center" label="岗位" />
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
-          {{ scope.row.Status }}
+          {{ scope.row.status }}
         </template>
       </el-table-column>
-      <el-table-column prop="EntryDate" align="center" label="计划入职时间" />
+      <el-table-column prop="entry_date" align="center" label="计划入职时间" />
       <el-table-column align="center" label="流程信息">
         <template slot-scope="scope">
           <el-popover
             placement="top-start"
             width="200"
-            trigger="hover"
+            trigger="click"
+            @show="show(scope.row)"
           >
             <div v-if="scope" style="height: 150px;">
               <el-steps direction="vertical" :active="2" finish-status="success">
-                <el-step title="shiwen" icon="el-icon-timer" description="提交" />
-                <el-step title="qianqianniu" icon="el-icon-timer" description="提交" />
-                <el-step title="louyikai" icon="el-icon-timer" description="未提交" />
+                <el-step v-for="item in workflow" :key="item.ID" :title="item.user.name" icon="el-icon-timer" :description="item.status" />
               </el-steps>
             </div>
             <el-button slot="reference" type="text">查看详情</el-button>
@@ -58,9 +58,9 @@
 
     <div class="broadfun_block">
       <el-pagination
-        :current-page="pageNum"
+        :current-page="seachValue.pagenum"
         :page-sizes="[10, 20, 50]"
-        :page-size="pageSize"
+        :page-size="seachValue.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
@@ -94,8 +94,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="性别" prop="Gender">
-                <el-radio-group v-model="ruleForm.name">
+              <el-form-item label="性别" prop="gender">
+                <el-radio-group v-model="ruleForm.gender">
                   <el-radio label="男" />
                   <el-radio label="女" />
                 </el-radio-group>
@@ -105,21 +105,21 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="入职状态">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                <el-select v-model="ruleForm.status" placeholder="" style="width: 100%">
+                  <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="手机号码" prop="phone">
-                <el-input v-model="ruleForm.phone" placeholder="" />
+              <el-form-item label="手机号码" prop="mobile">
+                <el-input v-model="ruleForm.mobile" placeholder="请输入手机号码" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="身份证号">
-                <el-input v-model="ruleForm.IDcard" placeholder="" />
+              <el-form-item label="身份证号" prop="id_card">
+                <el-input v-model="ruleForm.id_card" placeholder="请输入身份证号" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -128,7 +128,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="面试评价">
-              <el-input v-model="ruleForm.name" type="textarea" placeholder="" />
+              <el-input v-model="ruleForm.interview_comment" type="textarea" placeholder="" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -136,26 +136,46 @@
           <el-col :span="2">
             <el-upload
               style="margin-top: -20px"
-              class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              multiple
+              :headers="myHeaders"
+              name="file"
+              :action="`${api}/v1/file/upload`"
+              :on-success="oneUpload"
+              :show-file-list="false"
             >
-              <el-button icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
+              <el-button v-if="ruleForm.resume === ''" icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
+              <el-button v-else icon="el-icon-upload" size="small" type="text">{{ ruleForm.resume }}</el-button>
             </el-upload>
           </el-col>
         </el-row>
         <Label :title="'岗位信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="所属部门" prop="name">
-              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+            <el-form-item label="所属部门" prop="department_id">
+              <el-select v-model="ruleForm.department_id" placeholder="" style="width: 100%" @change="departmentChange">
+                <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="部门负责人" prop="leader_id">
+              <!-- <el-select v-model="ruleForm.leader_id" placeholder="" style="width: 100%" disabled>
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select> -->
+              <el-input v-model="ruleForm.leader_id" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="岗位" prop="position">
+              <el-select v-model="ruleForm.position" placeholder="" style="width: 100%">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="部门负责人" prop="name">
-              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+            <el-form-item label="服务线" prop="service_line">
+              <el-select v-model="ruleForm.service_line" placeholder="" style="width: 100%">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -163,25 +183,9 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="岗位" prop="name">
-              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="服务线" prop="name">
-              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="级别" prop="name">
-              <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            <el-form-item label="级别" prop="level_id">
+              <el-select v-model="ruleForm.level_id" placeholder="" style="width: 100%">
+                <el-option v-for="item in levelList" :key="item.ID" :label="item.level_name" :value="item.ID" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -189,33 +193,33 @@
         <Label :title="'账号信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="email">
               <template slot="label"><span class="form-label-slot">企业邮箱<span>（IT填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="请输入企业邮箱" />
+              <el-input v-model="ruleForm.email" placeholder="请输入企业邮箱" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="wx_work">
               <template slot="label"><span class="form-label-slot">企业微信<span>（IT填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="请输入企业微信" />
+              <el-input v-model="ruleForm.wx_work" placeholder="请输入企业微信" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="tapd">
               <template slot="label"><span class="form-label-slot">TAPD<span>（IT填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="请输入TAPD" />
+              <el-input v-model="ruleForm.tapd" placeholder="请输入TAPD" />
             </el-form-item>
           </el-col>
         </el-row>
         <Label :title="'流程信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="entry_date">
               <template slot="label"><span class="form-label-slot">计划入职时间<span>（HR填写）</span></span></template>
               <el-date-picker
-                v-model="ruleForm.deadline"
+                v-model="ruleForm.entry_date"
                 style="width: 100%"
                 type="date"
                 placeholder="选择日期"
@@ -225,29 +229,38 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="name">
+            <el-form-item prop="seat_number">
               <template slot="label"><span class="form-label-slot">座位号<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
+              <el-input v-model="ruleForm.seat_number" placeholder="请输入姓名" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item prop="name">
+            <el-form-item prop="device_req">
               <template slot="label"><span class="form-label-slot">设备需求<span>（部门负责人填写）</span></span></template>
-              <el-input v-model="ruleForm.name" type="textarea" placeholder="请输入设备需求" />
+              <el-input v-model="ruleForm.device_req" type="textarea" placeholder="请输入设备需求" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
     </el-dialog>
-    <EmployDrawer ref="employDrawer" />
+    <EmployDrawer ref="employDrawer" :base-data="detailData" />
   </div>
 </template>
 
 <script>
 import Label from '@/components/common/Label.vue'
 import EmployDrawer from '@/components/Oa/EmployDrawer'
+import { getDepartmentList,
+  getEmployeeList,
+  getDepartmentLevelList,
+  addEmployee,
+  getEmployeeWorkflow,
+  getEmployeeDetail } from '@/api/employee'
+import { STATUSVALUE } from '@/utils/const'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 export default {
   components: {
     Label,
@@ -255,35 +268,37 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          name: '沈意波',
-          DepartmentID: '合研',
-          ServiceLine: '前端开发',
-          EntryDate: '2020-02-03',
-          Mobile: 18720573255,
-          Status: '未入职'
-        }
-      ],
+      tableData: [],
       dialogVisible: false,
-      innerVisible: false,
-      innerVisibleCheck: false,
-      pageNum: 1,
-      pageSize: 10,
+      seachValue: {
+        pagenum: 1,
+        pagesize: 10,
+        name: '',
+        departmentid: '',
+        status: ''
+      },
       total: 0,
       ruleForm: {
         name: '',
-        email: '',
-        wx: '',
-        phone: '',
-        userType: '',
-        leaderId: ''
+        gender: '',
+        status: '',
+        mobile: '',
+        id_card: '',
+        interview_comment: '',
+        resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
+        level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
+      },
+      detailData: {
+        department: {
+          leader: {}
+        },
+        level: {}
       },
       options: [
-        { value: '拟入职', label: '拟入职' },
-        { value: '未入职', label: '未入职' },
-        { value: '已入职', label: '已入职' }
+        { value: '测试数据1', label: '测试数据1' },
+        { value: '测试数据2', label: '测试数据2' }
       ],
+      STATUSVALUE,
       rules: {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -304,45 +319,110 @@ export default {
         leaderId: [
           { required: true, message: '请选择资源组长', trigger: 'blur' }
         ]
+      },
+      departmentList: [],
+      levelList: [],
+      workflow: [],
+      api: '',
+      myHeaders: {}
+    }
+  },
+  mounted() {
+    this.api = process.env.VUE_APP_BASE_API
+    this.getEmployeeList()
+    this.getDepartmentList()
+    if (store.getters.token) {
+      this.myHeaders = {
+        'Authorization': JSON.parse(getToken()).session
       }
     }
   },
   methods: {
+    async getDepartmentList() {
+      const res = await getDepartmentList()
+      this.departmentList = res.data
+    },
+    async getEmployeeList() {
+      const res = await getEmployeeList(this.seachValue)
+      if (res.ret === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      } else {
+        this.tableData = []
+        this.total = 0
+      }
+    },
+    async departmentChange(value) {
+      this.ruleForm.leader_id = this.departmentList.find((item) => { return item.ID === value }).department_leader_id
+      const res = await getDepartmentLevelList(value)
+      if (res.ret === 0 && res.data) {
+        this.levelList = res.data
+      } else {
+        this.levelList = []
+      }
+    },
+    handleClick(row) {
+      this.ruleForm = row
+      this.dialogVisible = true
+    },
+    seachFun() {
+      this.getEmployeeList()
+    },
     induction() {
       this.dialogVisible = true
     },
     handleSizeChange(val) {
-      this.pageNum = 1
-      this.pageSize = val
-      this.init()
+      this.seachValue.pagenum = 1
+      this.seachValue.pagesize = val
+      this.getEmployeeList()
     },
     handleCurrentChange(val) {
-      this.pageNum = val
-      this.init()
+      this.seachValue.pagenum = val
+      this.getEmployeeList()
     },
-    circulation(formName) {
-      this.innerVisible = true
-    },
-    checkInduction() {
-      this.innerVisibleCheck = true
+    oneUpload(response, file, fileList) {
+      this.ruleForm.resume = response.data
     },
     submitForm(formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     const form = this.ruleForm
-      //     this.addUser(form)
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.addEmployee()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
-    openDra() {
+    async addEmployee() {
+      const res = await addEmployee(this.ruleForm)
+      if (res.ret === 0) {
+        this.$message.success('新建入职成功')
+        this.getEmployeeList()
+        this.dialogVisible = false
+      }
+    },
+    async show(row) {
+      const res = await getEmployeeWorkflow(row.ID)
+      this.workflow = res.data.nodes
+    },
+    async openDra(row) {
+      const res = await getEmployeeDetail(row.ID)
+      this.detailData = res.data
       this.$refs.employDrawer.openDrawer()
     },
     open() {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
+      }
+      this.ruleForm = {
+        name: '',
+        gender: '',
+        status: '',
+        mobile: '',
+        id_card: '',
+        interview_comment: '',
+        resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
+        level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
       }
     }
   }

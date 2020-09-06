@@ -14,8 +14,8 @@
       </div>
     </template>
     <div class="content">
-      <div class="name">员工1 <i class="el-icon-male" /> </div>
-      <div class="status"> 拟入职 </div>
+      <div class="name"> {{ baseData.name }} <i class="el-icon-male" /> </div>
+      <div class="status"> {{ baseData.status }} </div>
       <div class="steps">
         <div class="top">
           入职流程
@@ -28,37 +28,38 @@
       </div>
       <Label title="基本信息" />
       <el-row class="item" style="margin-bottom: 40px">
-        <el-col :span="12"> 身份证号码：362330199512263656 </el-col>
-        <el-col :span="12"> 手机号码：18720573255 </el-col>
+        <el-col :span="12"> 身份证号码：{{ baseData.id_card }} </el-col>
+        <el-col :span="12"> 手机号码：{{ baseData.mobile }} </el-col>
       </el-row>
       <Label title="面试" />
       <el-row class="item" style="margin-bottom: 40px">
-        这是一条面试评价
+        {{ baseData.interview_comment }}
       </el-row>
       <Label title="岗位信息" />
       <el-row class="item">
-        <el-col :span="8"> 所属部门：云测合研 </el-col>
-        <el-col :span="8"> 部门负责人：qianqian </el-col>
-        <el-col :span="8"> 服务线：wetest </el-col>
+        <el-col :span="8"> 所属部门：{{ baseData.department.department_name }} </el-col>
+        <el-col :span="8"> 部门负责人：{{ baseData.department.leader.name }} </el-col>
+        <el-col :span="8"> 服务线：{{ baseData.service_line }} </el-col>
       </el-row>
       <el-row class="item" style="margin-bottom: 40px">
-        <el-col :span="8"> 岗位：前端开发工程师 </el-col>
-        <el-col :span="8"> 级别：中级 </el-col>
-        <el-col :span="8"> 座位号：13 </el-col>
+        <el-col :span="8"> 岗位：{{ baseData.position }} </el-col>
+        <el-col :span="8"> 级别：{{ baseData.level.level_name }} </el-col>
+        <el-col :span="8"> 座位号：{{ baseData.seat_number }} </el-col>
       </el-row>
       <Label title="账号信息" />
+      <el-row class="item">
+        <el-col :span="12"> 企业邮箱：{{ baseData.email }} </el-col>
+        <el-col :span="12"> 企业微信：{{ baseData.wx_work }} </el-col>
+      </el-row>
       <el-row class="item" style="margin-bottom: 40px">
-        <el-col :span="8"> 企业邮箱：- </el-col>
-        <el-col :span="8"> 企业微信：- </el-col>
-        <el-col :span="8"> TAPD：- </el-col>
+        <el-col :span="12"> 座位号：{{ baseData.seat_number }} </el-col>
       </el-row>
       <Label title="流程信息" />
       <el-row class="item">
-        <el-col :span="12"> 计划入职日期：2020-05-06 </el-col>
-        <el-col :span="12"> 座位号：2020-05-06 </el-col>
+        <el-col :span="12"> 计划入职日期：{{ baseData.entry_date }} </el-col>
       </el-row>
       <el-row class="item">
-        <el-col :span="12"> 设备需求：2020-05-06 </el-col>
+        <el-col :span="12"> 设备需求：{{ baseData.device_req }} </el-col>
       </el-row>
     </div>
   </el-drawer>

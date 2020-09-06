@@ -93,3 +93,27 @@ export function leaveEmployee(id, { account, computer, phone, expense, device_re
     }
   })
 }
+/**
+ * 编辑离职
+ * @param 'http://172.16.9.198:3000/project/87/interface/api/1774'
+ */
+export function editLeaveEmployee(id, { account, computer, phone, expense, device_req, work_day, off_day, half_day,
+  change_day, others, late_day, things_day, salary_day, annual_day, resignation_date, reason }) {
+  return request({
+    url: `/v1/employee/leave/${id}`,
+    method: 'put',
+    data: {
+      account, computer, phone, expense, device_req, work_day, off_day, half_day,
+      change_day, others, late_day, things_day, salary_day, annual_day, resignation_date, reason
+    }
+  })
+}
+/**
+ * 离职详情
+ */
+export function leaveEmployeeDetail(id) {
+  return request({
+    url: `/v1/employee/leave/${id}`,
+    method: 'get'
+  })
+}

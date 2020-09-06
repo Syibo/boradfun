@@ -36,10 +36,10 @@
       />
     </div>
 
-    <el-dialog title="新建离职" :visible.sync="dialogVisible" :close-on-click-modal="false" :show-close="false" width="60%" class="dialog-container" @close="open">
+    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" :show-close="false" width="60%" class="dialog-container" @close="open">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
-          新建离职
+          {{ title }}
         </div>
         <div class="dialog-title-right">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -63,7 +63,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="员工编号" prop="phone">
-                <el-input v-model="ruleForm.ID" placeholder="" />
+                <el-input v-model="ruleForm.employeeID" placeholder="" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -104,7 +104,7 @@
         <Label :title="'流程信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="account">
+            <el-form-item>
               <template slot="label"><span class="form-label-slot">账号<span>（IT填写）</span></span></template>
               <el-input v-model="ruleForm.account" placeholder="" />
             </el-form-item>
@@ -209,7 +209,9 @@
 
 <script>
 import { getEmployeeList,
-  leaveEmployee } from '@/api/employee'
+  leaveEmployee,
+  editLeaveEmployee,
+  leaveEmployeeDetail } from '@/api/employee'
 import Label from '@/components/common/Label.vue'
 export default {
   components: {
@@ -217,6 +219,7 @@ export default {
   },
   data() {
     return {
+      title: '新建离职',
       tableData: [],
       seachValue: {
         pagenum: 1,
@@ -232,6 +235,7 @@ export default {
       ruleForm: {
         name: '',
         department_id: '',
+        employeeID: '',
         ID: '',
         position: '',
         account: '', computer: '', phone: '', expense: '', device_req: '', work_day: '', off_day: '', half_day: '',
@@ -268,10 +272,10 @@ export default {
       }
     },
     departure() {
+      this.title = '新建离职'
       this.dialogVisible = true
     },
     async input(val) {
-      console.log(val)
       const seach = {
         pagenum: 1,
         pagesize: 10,
@@ -281,7 +285,7 @@ export default {
       }
       const res = await getEmployeeList(seach)
       if (res.ret === 0 && res.data.list.length !== 0) {
-        this.ruleForm.ID = res.data.list[0].ID
+        this.ruleForm.employeeID = res.data.list[0].ID
         this.ruleForm.department_id = res.data.list[0].department.department_name
         this.ruleForm.position = res.data.list[0].position
       } else {
@@ -309,14 +313,45 @@ export default {
       })
     },
     async handleClick(row) {
-      this.ruleForm = row
+      this.title = '编辑'
+
+      const res = await leaveEmployeeDetail(row.ID)
+      this.ruleForm = res.data
+      this.ruleForm.name = row.name
+      this.ruleForm.employeeID = row.ID
+      // this.ruleForm.account = res.data.account
+      // this.ruleForm.computer = res.data.computer
+      // this.ruleForm.phone = res.data.phone
+      // this.ruleForm.expense = res.data.expense
+      // this.ruleForm.device_req = res.data.device_req
+      // this.ruleForm.work_day = res.data.work_day
+      // this.ruleForm.off_day = res.data.off_day
+      // this.ruleForm.half_day = res.data.half_day
+      // this.ruleForm.change_day = res.data.change_day
+      // this.ruleForm.others = res.data.others
+      // this.ruleForm.late_day = res.data.late_day
+      // this.ruleForm.things_day = res.data.things_day
+      // this.ruleForm.salary_day = res.data.salary_day
+      // this.ruleForm.annual_day = res.data.annual_day
+      // this.ruleForm.resignation_date = res.data.resignation_date
+      // this.ruleForm.ID = res.data.ID
+      // this.ruleForm.reason = res.data.reason
       this.dialogVisible = true
+      console.log(this.ruleForm)
     },
     async leaveEmployee() {
-      const res = await leaveEmployee(this.ruleForm.ID, this.ruleForm)
-      if (res.ret === 0) {
-        this.$message.success('新建离职成功！')
-        this.init()
+      if (this.title === '新建离职') {
+        const res = await leaveEmployee(this.ruleForm.employeeID, this.ruleForm)
+        if (res.ret === 0) {
+          this.$message.success('新建离职成功！')
+          this.init()
+        }
+      } else {
+        const res = await editLeaveEmployee(this.ruleForm.employeeID, this.ruleForm)
+        if (res.ret === 0) {
+          this.$message.success('编辑成功！')
+          this.init()
+        }
       }
     },
     open() {

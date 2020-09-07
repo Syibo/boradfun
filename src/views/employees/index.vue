@@ -25,10 +25,10 @@
       <el-table-column prop="position" align="center" label="岗位" />
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
-          {{ scope.row.status }}
+          <EmStatus :status="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column prop="plan_date" align="center" label="计划入职时间" />
+      <el-table-column prop="plan_date" align="center" label="计划入职时间" sortable />
       <el-table-column align="center" label="流程信息">
         <template slot-scope="scope">
           <el-popover
@@ -38,14 +38,15 @@
             @show="show(scope.row)"
           >
             <div v-if="scope" style="height: 150px;">
-              <el-steps direction="vertical" :active="2" finish-status="success">
-                <el-step v-for="item in workflow" :key="item.ID" :title="item.user ? item.user.name : ''" icon="el-icon-timer" :description="item.status" />
+              <el-steps direction="vertical" :active="active" finish-status="success">
+                <el-step v-for="item in workflow" :key="item.ID" :title="item.user ? item.user.name : ''" icon="el-icon-time" :description="item.status" />
               </el-steps>
             </div>
             <el-button slot="reference" type="text">查看详情</el-button>
           </el-popover>
         </template>
       </el-table-column>
+      <el-table-column prop="create_time" align="center" label="创建时间" sortable />
       <el-table-column align="center" label="操作" width="280">
         <template slot-scope="scope">
           <el-button v-permission="[6]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
@@ -80,13 +81,13 @@
       </span>
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
         <Label :title="'基本信息'" />
-        <!-- <el-row style="color: #2B2B2B">
-          <el-col :span="4"> 姓名：沈奕博 </el-col>
-          <el-col :span="4"> 性别：男 </el-col>
-          <el-col :span="8"> 身份证号码：362330199512263656 </el-col>
-          <el-col :span="6"> 手机号码：18720573255 </el-col>
-        </el-row> -->
-        <el-row>
+        <el-row v-if="ruleForm.name !== ''" style="color: #2B2B2B;margin: 15px 0">
+          <el-col :span="4"> 姓名：{{ ruleForm.name }}</el-col>
+          <el-col :span="4"> 性别：{{ ruleForm.gender }} </el-col>
+          <el-col :span="8"> 身份证号码：{{ ruleForm.id_card }} </el-col>
+          <el-col :span="6"> 手机号码：{{ ruleForm.mobile }} </el-col>
+        </el-row>
+        <el-row v-else>
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="姓名" prop="name">
@@ -193,7 +194,7 @@
         <Label :title="'账号信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="email">
+            <el-form-item>
               <template slot="label"><span class="form-label-slot">企业邮箱<span>（IT填写）</span></span></template>
               <el-input v-model="ruleForm.email" placeholder="请输入企业邮箱" />
             </el-form-item>
@@ -216,10 +217,10 @@
         <Label :title="'流程信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="plan_date">
+            <el-form-item prop="entry_date">
               <template slot="label"><span class="form-label-slot">计划入职时间<span>（HR填写）</span></span></template>
               <el-date-picker
-                v-model="ruleForm.plan_date"
+                v-model="ruleForm.entry_date"
                 style="width: 100%"
                 type="date"
                 placeholder="选择日期"
@@ -245,7 +246,7 @@
         </el-row>
       </el-form>
     </el-dialog>
-    <EmployDrawer ref="employDrawer" :base-data="detailData" />
+    <EmployDrawer ref="employDrawer" :base-data="detailData" :notes="workflow" :active="active" />
   </div>
 </template>
 
@@ -253,6 +254,8 @@
 import Label from '@/components/common/Label.vue'
 import EmployDrawer from '@/components/Oa/EmployDrawer'
 import permission from '@/directive/permission/index.js'
+import EmStatus from '@/components/common/EmStatus.vue'
+import _ from 'lodash'
 import { getDepartmentList,
   getEmployeeList,
   getDepartmentLevelList,
@@ -266,11 +269,13 @@ import { getToken } from '@/utils/auth'
 export default {
   components: {
     Label,
-    EmployDrawer
+    EmployDrawer,
+    EmStatus
   },
   directives: { permission },
   data() {
     return {
+      active: 0,
       tableData: [],
       dialogVisible: false,
       seachValue: {
@@ -370,6 +375,7 @@ export default {
     async handleClick(row) {
       this.title = '编辑'
       const res = await getEmployeeDetail(row.ID)
+      this.ruleForm.ID = row.ID
       this.ruleForm.name = res.data.name
       this.ruleForm.gender = res.data.gender
       this.ruleForm.status = res.data.status
@@ -446,11 +452,17 @@ export default {
     },
     async show(row) {
       const res = await getEmployeeWorkflow(row.ID)
+      this.active = this.getaActive(res.data.nodes)
       this.workflow = res.data.nodes
     },
     async openDra(row) {
       const res = await getEmployeeDetail(row.ID)
       this.detailData = res.data
+      const resEle = await getEmployeeWorkflow(row.ID)
+      this.detailData.plan_date = resEle.data.elements[0].value
+      this.detailData.seat_number = resEle.data.elements[1].value
+      this.detailData.device_req = resEle.data.elements[2].value
+      this.show(row)
       this.$refs.employDrawer.openDrawer()
     },
     open() {
@@ -467,6 +479,25 @@ export default {
         resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
         level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
       }
+    },
+    getaActive(notes) {
+      let active = 0
+      var na = _.uniq(notes.map((item) => item.status))
+      switch (na.length) {
+        case 3:
+          active = 1
+          break
+        case 2:
+          active = 2
+          break
+        case 1:
+          active = 3
+          break
+        default:
+          active = 0
+          break
+      }
+      return active
     }
   }
 }

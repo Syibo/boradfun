@@ -14,16 +14,14 @@
       </div>
     </template>
     <div class="content">
-      <div class="name"> {{ baseData.name }} <i class="el-icon-male" /> </div>
-      <div class="status"> {{ baseData.status }} </div>
+      <div class="name"> {{ baseData.name }} <i v-if="baseData.gender === '男'" class="el-icon-male" /> <i v-else class="el-icon-female" /> </div>
+      <div class="status"> <EmStatus :status="baseData.status" /> </div>
       <div class="steps">
         <div class="top">
           入职流程
         </div>
-        <el-steps :active="2" finish-status="success">
-          <el-step title="shiwen 提交" icon="el-icon-time" description="" />
-          <el-step title="qianqianniu 提交" icon="el-icon-time" description="" />
-          <el-step title="louyikai 待提交" icon="el-icon-time" description="" />
+        <el-steps :active="active" finish-status="success">
+          <el-step v-for="item in notes" :key="item.ID" :title="item.user ? item.user.name : ''" icon="el-icon-time" :description="item.status" />
         </el-steps>
       </div>
       <Label title="基本信息" />
@@ -56,7 +54,7 @@
       </el-row>
       <Label title="流程信息" />
       <el-row class="item">
-        <el-col :span="12"> 计划入职日期：{{ baseData.entry_date }} </el-col>
+        <el-col :span="12"> 计划入职日期：{{ baseData.plan_date }} </el-col>
       </el-row>
       <el-row class="item">
         <el-col :span="12"> 设备需求：{{ baseData.device_req }} </el-col>
@@ -67,15 +65,25 @@
 
 <script>
 import Label from '@/components/common/Label.vue'
+import EmStatus from '@/components/common/EmStatus.vue'
 export default {
   name: 'EmployDrawer',
   components: {
-    Label
+    Label,
+    EmStatus
   },
   props: {
     baseData: {
       type: Object,
       default: () => {}
+    },
+    notes: {
+      type: Array,
+      default: () => []
+    },
+    active: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -144,19 +152,20 @@ export default {
         color: #5A5D5F;
         font-weight: 500;
         font-size: 18px;
-        .el-icon-male {
+        display: flex;
+        align-items: center;
+        .el-icon-female {
           color: #F58989;
+          font-weight: bold;
+          margin-left: 5px;
+        }
+        .el-icon-male {
+          color: #409EFF;
+          font-weight: bold;
+          margin-left: 5px;
         }
       }
       .status {
-        width: 57px;
-        height: 22px;
-        background: rgba(147, 164, 173, 0.15);
-        border-radius: 3px;
-        line-height: 22px;
-        font-size: 12px;
-        text-align: center;
-        color: #808387;
         margin: 15px 0;
       }
       .steps {

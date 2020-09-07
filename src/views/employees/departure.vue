@@ -314,11 +314,14 @@ export default {
     },
     async handleClick(row) {
       this.title = '编辑'
-
       const res = await leaveEmployeeDetail(row.ID)
       this.ruleForm = res.data
       this.ruleForm.name = row.name
       this.ruleForm.employeeID = row.ID
+      this.ruleForm.department_id = row.department_id
+      this.ruleForm.position = row.position
+      this.ruleForm.reason = row.reason
+      this.ruleForm.resignation_date = row.resignation_date
       // this.ruleForm.account = res.data.account
       // this.ruleForm.computer = res.data.computer
       // this.ruleForm.phone = res.data.phone

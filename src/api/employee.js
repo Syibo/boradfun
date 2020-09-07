@@ -61,6 +61,16 @@ export function addEmployee({ name, gender, status, mobile, id_card, interview_c
   })
 }
 /**
+ * 提交入职流程信息
+ */
+export function putEmployee(id, { email, wx_work, tapd, plan_time, seat_number, device_req }) {
+  return request({
+    url: `/v1/employee/workflow/${id}`,
+    method: 'put',
+    data: { email, wx_work, tapd, plan_time, seat_number, device_req }
+  })
+}
+/**
  * employee详情
  */
 export function getEmployeeDetail(id) {

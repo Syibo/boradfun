@@ -12,7 +12,7 @@
         <el-button style="margin-left: 10px" type="primary" @click="seachFun">搜索</el-button>
       </div>
       <div class="right">
-        <el-button type="primary" @click="induction">新建入职</el-button>
+        <el-button v-permission="[6]" type="primary" @click="induction">新建入职</el-button>
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
@@ -28,7 +28,7 @@
           {{ scope.row.status }}
         </template>
       </el-table-column>
-      <el-table-column prop="entry_date" align="center" label="计划入职时间" />
+      <el-table-column prop="plan_date" align="center" label="计划入职时间" />
       <el-table-column align="center" label="流程信息">
         <template slot-scope="scope">
           <el-popover
@@ -39,7 +39,7 @@
           >
             <div v-if="scope" style="height: 150px;">
               <el-steps direction="vertical" :active="2" finish-status="success">
-                <el-step v-for="item in workflow" :key="item.ID" :title="item.user.name" icon="el-icon-timer" :description="item.status" />
+                <el-step v-for="item in workflow" :key="item.ID" :title="item.user ? item.user.name : ''" icon="el-icon-timer" :description="item.status" />
               </el-steps>
             </div>
             <el-button slot="reference" type="text">查看详情</el-button>
@@ -48,10 +48,10 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="280">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-          <el-button type="text" size="small">删除</el-button>
-          <el-button type="text" size="small">录入设备需求</el-button>
-          <el-button type="text" size="small">录入账号信息</el-button>
+          <el-button v-permission="[6]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <el-button v-permission="[6]" type="text" size="small">删除</el-button>
+          <el-button v-permission="[7]" type="text" size="small" @click="handleClick(scope.row)">录入设备需求</el-button>
+          <el-button v-permission="[10]" type="text" size="small" @click="handleClick(scope.row)">录入账号信息</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,7 +71,7 @@
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="60%" :show-close="false" @close="open">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
-          新建入职
+          {{ title }}
         </div>
         <div class="dialog-title-right">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -158,10 +158,10 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="部门负责人" prop="leader_id">
-              <!-- <el-select v-model="ruleForm.leader_id" placeholder="" style="width: 100%" disabled>
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select> -->
-              <el-input v-model="ruleForm.leader_id" placeholder="" />
+              <el-select v-model="ruleForm.leader_id" placeholder="" style="width: 100%" disabled>
+                <el-option v-for="item in leaderList" :key="item.ID" :label="item.name" :value="item.ID" />
+              </el-select>
+              <!-- <el-input v-model="ruleForm.leader_id" placeholder="" /> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -216,10 +216,10 @@
         <Label :title="'流程信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="entry_date">
+            <el-form-item prop="plan_date">
               <template slot="label"><span class="form-label-slot">计划入职时间<span>（HR填写）</span></span></template>
               <el-date-picker
-                v-model="ruleForm.entry_date"
+                v-model="ruleForm.plan_date"
                 style="width: 100%"
                 type="date"
                 placeholder="选择日期"
@@ -252,10 +252,12 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import EmployDrawer from '@/components/Oa/EmployDrawer'
+import permission from '@/directive/permission/index.js'
 import { getDepartmentList,
   getEmployeeList,
   getDepartmentLevelList,
   addEmployee,
+  putEmployee,
   getEmployeeWorkflow,
   getEmployeeDetail } from '@/api/employee'
 import { STATUSVALUE } from '@/utils/const'
@@ -266,6 +268,7 @@ export default {
     Label,
     EmployDrawer
   },
+  directives: { permission },
   data() {
     return {
       tableData: [],
@@ -283,7 +286,7 @@ export default {
         gender: '',
         status: '',
         mobile: '',
-        id_card: '',
+        id_card: '', plan_date: '',
         interview_comment: '',
         resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
         level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
@@ -324,7 +327,9 @@ export default {
       levelList: [],
       workflow: [],
       api: '',
-      myHeaders: {}
+      myHeaders: {},
+      title: '新建入职',
+      leaderList: []
     }
   },
   mounted() {
@@ -354,6 +359,7 @@ export default {
     },
     async departmentChange(value) {
       this.ruleForm.leader_id = this.departmentList.find((item) => { return item.ID === value }).department_leader_id
+      this.leaderList = [this.departmentList.find((item) => { return item.ID === value }).leader]
       const res = await getDepartmentLevelList(value)
       if (res.ret === 0 && res.data) {
         this.levelList = res.data
@@ -361,14 +367,42 @@ export default {
         this.levelList = []
       }
     },
-    handleClick(row) {
-      this.ruleForm = row
+    async handleClick(row) {
+      this.title = '编辑'
+      const res = await getEmployeeDetail(row.ID)
+      this.ruleForm.name = res.data.name
+      this.ruleForm.gender = res.data.gender
+      this.ruleForm.status = res.data.status
+      this.ruleForm.mobile = res.data.mobile
+      this.ruleForm.id_card = res.data.id_card
+      this.ruleForm.interview_comment = res.data.interview_comment
+      this.ruleForm.department_id = res.data.department_id
+      this.ruleForm.position = res.data.position
+      this.ruleForm.service_line = res.data.service_line
+      this.ruleForm.position = res.data.position
+      this.ruleForm.level_id = res.data.level_id
+      this.ruleForm.email = res.data.email
+      this.ruleForm.wx_work = res.data.wx_work
+      this.ruleForm.leader_id = res.data.department.department_leader_id
+      this.ruleForm.tapd = res.data.tapd
+      this.leaderList = [res.data.department.leader]
+      const resL = await getDepartmentLevelList(res.data.department_id)
+      if (res.ret === 0 && res.data) {
+        this.levelList = resL.data
+      } else {
+        this.levelList = []
+      }
+      const resEle = await getEmployeeWorkflow(row.ID)
+      this.ruleForm.plan_date = resEle.data.elements[0].value
+      this.ruleForm.seat_number = resEle.data.elements[1].value
+      this.ruleForm.device_req = resEle.data.elements[2].value
       this.dialogVisible = true
     },
     seachFun() {
       this.getEmployeeList()
     },
     induction() {
+      this.title = '新建入职'
       this.dialogVisible = true
     },
     handleSizeChange(val) {
@@ -394,11 +428,20 @@ export default {
       })
     },
     async addEmployee() {
-      const res = await addEmployee(this.ruleForm)
-      if (res.ret === 0) {
-        this.$message.success('新建入职成功')
-        this.getEmployeeList()
-        this.dialogVisible = false
+      if (this.title === '新建入职') {
+        const res = await addEmployee(this.ruleForm)
+        if (res.ret === 0) {
+          this.$message.success('新建入职成功')
+          this.getEmployeeList()
+          this.dialogVisible = false
+        }
+      } else {
+        const res = await putEmployee(this.ruleForm.ID, this.ruleForm)
+        if (res.ret === 0) {
+          this.$message.success('录入成功')
+          this.getEmployeeList()
+          this.dialogVisible = false
+        }
       }
     },
     async show(row) {
@@ -420,7 +463,7 @@ export default {
         status: '',
         mobile: '',
         id_card: '',
-        interview_comment: '',
+        interview_comment: '', plan_date: '',
         resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
         level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
       }

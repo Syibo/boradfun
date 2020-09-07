@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message, MessageBox, Notification } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import router from '@/router'
@@ -76,17 +76,17 @@ service.interceptors.response.use(
     }
   },
   error => {
-    // Notification.closeAll()
-    // Notification.error({
-    //   title: '错误',
-    //   message: '请求超时，请检查网络！'
-    // })
-    // Message.closeAll()
-    Message({
-      message: '请求超时，请检查网络！',
-      type: 'error',
-      duration: 5 * 1000
+    Notification.closeAll()
+    Notification.error({
+      title: '错误',
+      message: '请求超时，请检查网络！'
     })
+    // Message.closeAll()
+    // Message({
+    //   message: '请求超时，请检查网络！',
+    //   type: 'error',
+    //   duration: 5 * 1000
+    // })
     return Promise.reject(error)
   }
 )

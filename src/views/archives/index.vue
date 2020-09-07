@@ -42,9 +42,9 @@
 
     <div class="broadfun_block">
       <el-pagination
-        :current-page="pageNum"
+        :current-page="seachValue.pagenum"
         :page-sizes="[10, 20, 50]"
-        :page-size="pageSize"
+        :page-size="seachValue.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
@@ -462,12 +462,20 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
+import { getEmployeeList } from '@/api/employee'
 export default {
   components: {
     Label
   },
   data() {
     return {
+      seachValue: {
+        pagenum: 1,
+        pagesize: 10,
+        name: '',
+        departmentid: '',
+        status: 2
+      },
       regionData,
       provinceAndCityData,
       selectedOptions: [],
@@ -484,19 +492,8 @@ export default {
         { label: '文档信息', href: 'documentInfo' }
       ],
       active: 'baseInfo',
-      tableData: [
-        {
-          name: '沈意波',
-          DepartmentID: '合研',
-          ServiceLine: '前端开发',
-          EntryDate: '2020-02-03',
-          Mobile: 18720573255,
-          Status: '未入职'
-        }
-      ],
+      tableData: [],
       dialogVisible: false,
-      pageNum: 1,
-      pageSize: 10,
       total: 0,
       ruleForm: {
         name: '',
@@ -519,7 +516,20 @@ export default {
       }
     }
   },
+  mounted() {
+    this.init()
+  },
   methods: {
+    async init() {
+      const res = await getEmployeeList(this.seachValue)
+      if (res.ret === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      } else {
+        this.tableData = []
+        this.total = 0
+      }
+    },
     induction() {
       this.$router.push({
         path: '/employees/induction'
@@ -529,12 +539,12 @@ export default {
       this.dialogVisible = true
     },
     handleSizeChange(val) {
-      this.pageNum = 1
-      this.pageSize = val
+      this.seachValue.pagenum = 1
+      this.seachValue.pagesize = val
       this.init()
     },
     handleCurrentChange(val) {
-      this.pageNum = val
+      this.seachValue.pagenum = val
       this.init()
     },
     submitForm() {

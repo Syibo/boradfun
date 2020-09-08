@@ -139,7 +139,7 @@
               style="margin-top: -20px"
               :headers="myHeaders"
               name="file"
-              :action="`${api}/v1/file/upload`"
+              :action="`${api}/v1/file/upload?bucket=resume`"
               :on-success="oneUpload"
               :show-file-list="false"
             >

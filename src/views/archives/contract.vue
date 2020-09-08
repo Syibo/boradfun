@@ -43,9 +43,9 @@
 
     <div class="broadfun_block">
       <el-pagination
-        :current-page="pageNum"
+        :current-page="seachValue.pagenum"
         :page-sizes="[10, 20, 50]"
-        :page-size="pageSize"
+        :page-size="seachValue.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
@@ -73,72 +73,74 @@
         <el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="合同类型" prop="name">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              <el-form-item label="合同类型" prop="contract_type">
+                <el-select v-model="ruleForm.contract_type" placeholder="请选择合同类型" style="width: 100%">
+                  <el-option key="劳动合同" label="劳动合同" value="劳动合同" />
+                  <el-option key="劳务合同" label="劳务合同" value="劳务合同" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="签约方" prop="Gender">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              <el-form-item label="签约方" prop="contract_party">
+                <el-input v-model="ruleForm.contract_party" placeholder="请输入签约方" @change="input" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="签约主体" prop="contract_main">
+                <el-select v-model="ruleForm.contract_main" placeholder="请选择签约主体" style="width: 100%">
+                  <el-option key="宁波比浮" label="宁波比浮" value="宁波比浮" />
+                  <el-option key="上海游因" label="上海游因" value="上海游因" />
+                  <el-option key="上海比程" label="上海比程" value="上海比程" />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="签约主体" prop="name">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="合同开始日期" prop="name">
+              <el-form-item label="合同开始日期" prop="contract_start_date">
                 <el-date-picker
-                  v-model="ruleForm.deadline"
+                  v-model="ruleForm.contract_start_date"
                   style="width: 100%"
                   type="date"
                   placeholder="选择日期"
                   format="yyyy 年 MM 月 dd 日"
-                  value-format="yyyy-MM-dd HH:mm:ss"
+                  value-format="yyyy-MM-dd"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="合同结束日期" prop="Gender">
+              <el-form-item label="合同结束日期" prop="contract_end_date">
                 <el-date-picker
-                  v-model="ruleForm.deadline"
+                  v-model="ruleForm.contract_end_date"
                   style="width: 100%"
                   type="date"
                   placeholder="选择日期"
                   format="yyyy 年 MM 月 dd 日"
-                  value-format="yyyy-MM-dd HH:mm:ss"
+                  value-format="yyyy-MM-dd"
                 />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="试用期" prop="name">
-                <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
+              <el-form-item label="试用期（月）" prop="trial_period">
+                <el-input-number v-model="ruleForm.trial_period" :min="0" controls-position="right" style="width: 100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="年假" prop="Gender">
-                <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
+              <el-form-item label="年假" prop="annual_leave">
+                <el-input v-model="ruleForm.annual_leave" placeholder="请输入年假" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="合同状态" prop="name">
-                <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              <el-form-item label="合同状态" prop="status">
+                <el-select v-model="ruleForm.status" placeholder="请输入合同状态" style="width: 100%">
+                  <el-option key="已签" label="已签" value="已签" />
+                  <el-option key="未签" label="未签" value="未签" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -148,9 +150,14 @@
               <el-form-item label="电子版合同">
                 <el-upload
                   class="upload-demo"
-                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :headers="myHeaders"
+                  name="file"
+                  :action="`${api}/v1/file/upload?bucket=contract`"
+                  :on-success="oneUpload"
+                  :show-file-list="false"
                 >
-                  <el-button icon="el-icon-upload" size="small" type="text">上传文件</el-button>
+                  <el-button v-if="ruleForm.soft_copy === ''" icon="el-icon-upload" size="small" type="text">上传文件</el-button>
+                  <el-button v-else icon="el-icon-upload" size="small" type="text">{{ ruleForm.soft_copy }}</el-button>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -160,9 +167,14 @@
               <el-form-item label="合同扫描件">
                 <el-upload
                   class="upload-demo"
-                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :headers="myHeaders"
+                  name="file"
+                  :action="`${api}/v1/file/upload?bucket=contract`"
+                  :on-success="oneUploadScanned"
+                  :show-file-list="false"
                 >
-                  <el-button icon="el-icon-upload" size="small" type="text">上传文件</el-button>
+                  <el-button v-if="ruleForm.scanned_copy === ''" icon="el-icon-upload" size="small" type="text">上传文件</el-button>
+                  <el-button v-else icon="el-icon-upload" size="small" type="text">{{ ruleForm.scanned_copy }}</el-button>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -174,19 +186,23 @@
 </template>
 
 <script>
+import { getContractsList,
+  addContracts,
+  getEmployeeList } from '@/api/employee'
+import { STATUSVALUE } from '@/utils/const'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 export default {
   data() {
     return {
-      tableData: [
-        {
-          name: '沈意波',
-          DepartmentID: '合研',
-          ServiceLine: '前端开发',
-          EntryDate: '2020-02-03',
-          Mobile: 18720573255,
-          Status: '未入职'
-        }
-      ],
+      tableData: [],
+      seachValue: {
+        pagenum: 1,
+        pagesize: 10,
+        name: '',
+        number: '',
+        status: ''
+      },
       dialogVisible: false,
       innerVisible: false,
       innerVisibleCheck: false,
@@ -194,18 +210,10 @@ export default {
       pageSize: 10,
       total: 0,
       ruleForm: {
-        name: '',
-        email: '',
-        wx: '',
-        phone: '',
-        userType: '',
-        leaderId: ''
+        contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
+        trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
       },
-      options: [
-        { value: '拟入职', label: '拟入职' },
-        { value: '未入职', label: '未入职' },
-        { value: '已入职', label: '已入职' }
-      ],
+      options: STATUSVALUE,
       rules: {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -226,20 +234,59 @@ export default {
         leaderId: [
           { required: true, message: '请选择资源组长', trigger: 'blur' }
         ]
+      },
+      myHeaders: {},
+      api: ''
+    }
+  },
+  mounted() {
+    this.init()
+    this.api = process.env.VUE_APP_BASE_API
+    if (store.getters.token) {
+      this.myHeaders = {
+        'Authorization': JSON.parse(getToken()).session
       }
     }
   },
   methods: {
+    async init() {
+      const res = await getContractsList(this.seachValue)
+      if (res.ret === 0 && res.data.list) {
+        this.tableData = res.data.list
+        this.total - res.data.total
+      }
+    },
+    async input(val) {
+      const seach = {
+        pagenum: 1,
+        pagesize: 10,
+        name: val,
+        departmentid: '',
+        status: 2
+      }
+      const res = await getEmployeeList(seach)
+      if (res.ret === 0 && res.data.list.length !== 0) {
+        this.ruleForm.ID = res.data.list[0].ID
+      } else {
+        this.$message.error('没有该员工的信息')
+      }
+    },
+    oneUpload(response, file, fileList) {
+      this.ruleForm.soft_copy = file.name
+    },
+    oneUploadScanned(response, file, fileList) {
+      this.ruleForm.scanned_copy = file.name
+    },
     induction() {
       this.dialogVisible = true
     },
     handleSizeChange(val) {
-      this.pageNum = 1
-      this.pageSize = val
+      this.seachValue.pagenum = 1
+      this.seachValue.pagesize = val
       this.init()
     },
     handleCurrentChange(val) {
-      this.pageNum = val
+      this.seachValue.pagenum = val
       this.init()
     },
     circulation(formName) {
@@ -249,15 +296,23 @@ export default {
       this.innerVisibleCheck = true
     },
     submitForm(formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     const form = this.ruleForm
-      //     this.addUser(form)
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.addContracts()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async addContracts() {
+      const res = await addContracts(this.ruleForm.ID, this.ruleForm)
+      if (res.ret === 0) {
+        console.log(res)
+        this.$message.success('新建合同成功')
+        this.dialogVisible = false
+        this.init()
+      }
     },
     openDra() {
       this.$refs.employDrawer.openDrawer()
@@ -265,6 +320,10 @@ export default {
     open() {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
+      }
+      this.ruleForm = {
+        contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
+        trial_period: '', annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
       }
     }
   }

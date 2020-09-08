@@ -23,7 +23,7 @@
       <el-table-column prop="service_line" align="center" label="服务线" />
       <el-table-column prop="email" align="center" label="企业邮箱" show-overflow-tooltip />
       <el-table-column prop="mobile" align="center" label="手机号码" />
-      <el-table-column prop="create_time" align="center" label="实际入职时间" sortable />
+      <el-table-column prop="create_time" align="center" label="实际入职时间" show-overflow-tooltip sortable />
       <el-table-column align="center" label="合同信息">
         <template>
           <span class="bule-hover"> 查看详情 </span>
@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column prop="" align="center" label="转正时间" />
       <el-table-column prop="status" align="center" label="员工状态" />
-      <el-table-column prop="create_time" align="center" label="创建时间" sortable />
+      <el-table-column prop="create_time" align="center" label="创建时间" show-overflow-tooltip sortable />
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>

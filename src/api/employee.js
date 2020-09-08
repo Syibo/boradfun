@@ -127,3 +127,28 @@ export function leaveEmployeeDetail(id) {
     method: 'get'
   })
 }
+/**
+ * 合同列表
+ */
+export function getContractsList({ pagesize = 10, pagenum = 1, name = '', number = '', status = '' }) {
+  return request({
+    url: `/v1/employee/contracts?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&number=${number}&status=${status}`,
+    method: 'get'
+  })
+}
+/**
+ * 新建合同
+ */
+export function addContracts(id, { contract_type, contract_party, contract_main, contract_start_date, contract_end_date,
+  trial_period, annual_leave, status, soft_copy, scanned_copy }) {
+  return request({
+    url: `/v1/employee/contract/${id}`,
+    method: 'post',
+    data: {
+      contract_type, contract_party, contract_main, contract_start_date, contract_end_date,
+      trial_period: Number(trial_period),
+      annual_leave: Number(annual_leave),
+      status, soft_copy, scanned_copy
+    }
+  })
+}

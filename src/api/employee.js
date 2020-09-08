@@ -44,7 +44,7 @@ export function getEmployeeList({ pagesize = 10, pagenum = 1, name = '', departm
  * @param 'http://172.16.9.198:3000/project/87/interface/api/1774'
  */
 export function addEmployee({ name, gender, status, mobile, id_card, interview_comment, resume, email, wx_work, tapd, service_line, department_id, leader_id,
-  level_id, position, entry_date, seat_number, device_req }) {
+  level_id, position, entry_date = '', seat_number, device_req, plan_date }) {
   return request({
     url: `/v1/employee/new`,
     method: 'post',
@@ -56,7 +56,7 @@ export function addEmployee({ name, gender, status, mobile, id_card, interview_c
       id_card,
       interview_comment,
       resume, email, wx_work, tapd, service_line, department_id, leader_id,
-      level_id, position, entry_date, seat_number, device_req
+      level_id, position, entry_date, seat_number, device_req, plan_date
     }
   })
 }
@@ -107,14 +107,14 @@ export function leaveEmployee(id, { account, computer, phone, expense, device_re
  * 编辑离职
  * @param 'http://172.16.9.198:3000/project/87/interface/api/1774'
  */
-export function editLeaveEmployee(id, { account, computer, phone, expense, device_req, work_day, off_day, half_day,
-  change_day, others, late_day, things_day, salary_day, annual_day, resignation_date, reason }) {
+export function editLeaveEmployee(id, { account, computer, phone, expense, device_req, work_day, off_day, half_day, ID,
+  change_day, others, late_day, things_day, salary_day, annual_day }) {
   return request({
     url: `/v1/employee/leave/${id}`,
     method: 'put',
     data: {
-      account, computer, phone, expense, device_req, work_day, off_day, half_day,
-      change_day, others, late_day, things_day, salary_day, annual_day, resignation_date, reason
+      account, computer, phone, expense, device_req, work_day, off_day, half_day, ID,
+      change_day, others, late_day, things_day, salary_day, annual_day
     }
   })
 }

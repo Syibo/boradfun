@@ -62,7 +62,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="员工编号" prop="phone">
+              <el-form-item label="员工编号" prop="">
                 <el-input v-model="ruleForm.employeeID" placeholder="" />
               </el-form-item>
             </el-col>
@@ -74,7 +74,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="岗位" prop="phone">
+              <el-form-item label="岗位" prop="">
                 <el-input v-model="ruleForm.position" placeholder="" />
               </el-form-item>
             </el-col>
@@ -118,7 +118,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="phone">
+            <el-form-item prop="">
               <template slot="label"><span class="form-label-slot">手机<span>（财务填写）</span></span></template>
               <el-input v-model="ruleForm.phone" placeholder="" />
             </el-form-item>
@@ -315,44 +315,43 @@ export default {
     async handleClick(row) {
       this.title = '编辑'
       const res = await leaveEmployeeDetail(row.ID)
-      this.ruleForm = res.data
+      console.log(res.data)
+      this.ruleForm.ID = res.data.ID
       this.ruleForm.name = row.name
       this.ruleForm.employeeID = row.ID
       this.ruleForm.department_id = row.department_id
       this.ruleForm.position = row.position
       this.ruleForm.reason = row.reason
       this.ruleForm.resignation_date = row.resignation_date
-      // this.ruleForm.account = res.data.account
-      // this.ruleForm.computer = res.data.computer
-      // this.ruleForm.phone = res.data.phone
-      // this.ruleForm.expense = res.data.expense
-      // this.ruleForm.device_req = res.data.device_req
-      // this.ruleForm.work_day = res.data.work_day
-      // this.ruleForm.off_day = res.data.off_day
-      // this.ruleForm.half_day = res.data.half_day
-      // this.ruleForm.change_day = res.data.change_day
-      // this.ruleForm.others = res.data.others
-      // this.ruleForm.late_day = res.data.late_day
-      // this.ruleForm.things_day = res.data.things_day
-      // this.ruleForm.salary_day = res.data.salary_day
-      // this.ruleForm.annual_day = res.data.annual_day
-      // this.ruleForm.resignation_date = res.data.resignation_date
-      // this.ruleForm.ID = res.data.ID
-      // this.ruleForm.reason = res.data.reason
+      this.ruleForm.account = res.data.account
+      this.ruleForm.computer = res.data.computer
+      this.ruleForm.phone = res.data.phone
+      this.ruleForm.expense = res.data.expense
+      this.ruleForm.device_req = res.data.device_req
+      this.ruleForm.work_day = res.data.work_day
+      this.ruleForm.off_day = res.data.off_day
+      this.ruleForm.half_day = res.data.half_day
+      this.ruleForm.change_day = res.data.change_day
+      this.ruleForm.others = res.data.others
+      this.ruleForm.late_day = res.data.late_day
+      this.ruleForm.things_day = res.data.things_day
+      this.ruleForm.salary_day = res.data.salary_day
+      this.ruleForm.annual_day = res.data.annual_day
       this.dialogVisible = true
-      console.log(this.ruleForm)
     },
     async leaveEmployee() {
       if (this.title === '新建离职') {
         const res = await leaveEmployee(this.ruleForm.employeeID, this.ruleForm)
         if (res.ret === 0) {
           this.$message.success('新建离职成功！')
+          this.dialogVisible = false
           this.init()
         }
       } else {
         const res = await editLeaveEmployee(this.ruleForm.employeeID, this.ruleForm)
         if (res.ret === 0) {
           this.$message.success('编辑成功！')
+          this.dialogVisible = false
           this.init()
         }
       }
@@ -362,7 +361,7 @@ export default {
         this.$refs['ruleForm'].resetFields()
       }
       this.ruleForm = {
-        name: '', department_id: '', ID: '', position: '',
+        name: '', department_id: '', employeeID: '', ID: '', position: '',
         account: '', computer: '', phone: '', expense: '', device_req: '', work_day: '', off_day: '', half_day: '',
         change_day: '', others: '', late_day: '', things_day: '', salary_day: '', annual_day: '', resignation_date: '', reason: ''
       }

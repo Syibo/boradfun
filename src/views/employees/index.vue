@@ -81,7 +81,7 @@
       </span>
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
         <Label :title="'基本信息'" />
-        <el-row v-if="ruleForm.name !== ''" style="color: #2B2B2B;margin: 15px 0">
+        <el-row v-if="title === '编辑'" style="color: #2B2B2B;margin: 15px 0">
           <el-col :span="4"> 姓名：{{ ruleForm.name }}</el-col>
           <el-col :span="4"> 性别：{{ ruleForm.gender }} </el-col>
           <el-col :span="8"> 身份证号码：{{ ruleForm.id_card }} </el-col>
@@ -169,9 +169,10 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="岗位" prop="position">
-              <el-select v-model="ruleForm.position" placeholder="" style="width: 100%">
+              <!-- <el-select v-model="ruleForm.position" placeholder="" style="width: 100%">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
+              </el-select> -->
+              <el-input v-model="ruleForm.position" placeholder="请输入岗位" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -217,10 +218,10 @@
         <Label :title="'流程信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="entry_date">
+            <el-form-item prop="plan_date">
               <template slot="label"><span class="form-label-slot">计划入职时间<span>（HR填写）</span></span></template>
               <el-date-picker
-                v-model="ruleForm.entry_date"
+                v-model="ruleForm.plan_date"
                 style="width: 100%"
                 type="date"
                 placeholder="选择日期"
@@ -388,8 +389,10 @@ export default {
       this.ruleForm.position = res.data.position
       this.ruleForm.level_id = res.data.level_id
       this.ruleForm.email = res.data.email
+      this.ruleForm.resume = res.data.resume
       this.ruleForm.wx_work = res.data.wx_work
       this.ruleForm.leader_id = res.data.department.department_leader_id
+      this.ruleForm.plan_date = res.data.plan_date
       this.ruleForm.tapd = res.data.tapd
       this.leaderList = [res.data.department.leader]
       const resL = await getDepartmentLevelList(res.data.department_id)
@@ -399,7 +402,6 @@ export default {
         this.levelList = []
       }
       const resEle = await getEmployeeWorkflow(row.ID)
-      this.ruleForm.plan_date = resEle.data.elements[0].value
       this.ruleForm.seat_number = resEle.data.elements[1].value
       this.ruleForm.device_req = resEle.data.elements[2].value
       this.dialogVisible = true

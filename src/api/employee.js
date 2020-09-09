@@ -137,6 +137,24 @@ export function getContractsList({ pagesize = 10, pagenum = 1, name = '', number
   })
 }
 /**
+ * 单个合同删除
+ */
+export function delContracts(id) {
+  return request({
+    url: `/v1/employee/contract/${id}`,
+    method: 'delete'
+  })
+}
+/**
+ * 单个合同信息
+ */
+export function getContractsDetail(id) {
+  return request({
+    url: `/v1/employee/contract/${id}`,
+    method: 'get'
+  })
+}
+/**
  * 新建合同
  */
 export function addContracts(id, { contract_type, contract_party, contract_main, contract_start_date, contract_end_date,

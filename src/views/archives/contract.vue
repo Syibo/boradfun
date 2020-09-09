@@ -36,7 +36,7 @@
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button type="text" size="small" @click="handleDeleta(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -126,7 +126,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="试用期（月）" prop="trial_period">
-                <el-input-number v-model="ruleForm.trial_period" :min="0" controls-position="right" style="width: 100%" />
+                <el-input-number v-model="ruleForm.trial_period" :min="0" controls-position="right" style="width: 100%;text-align: left;" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -188,6 +188,8 @@
 <script>
 import { getContractsList,
   addContracts,
+  delContracts,
+  getContractsDetail,
   getEmployeeList } from '@/api/employee'
 import { STATUSVALUE } from '@/utils/const'
 import store from '@/store'
@@ -295,6 +297,25 @@ export default {
     checkInduction() {
       this.innerVisibleCheck = true
     },
+    async handleClick(row) {
+      const res = await getContractsDetail(row.ID)
+      if (res.ret === 0) {
+        console.log(res)
+        this.dialogVisible = true
+        this.ruleForm = res.data
+      }
+    },
+    async handleDeleta(row) {
+      const isDelete = await this.$confirm(`确定删除`, '提示', { type: 'warning' })
+      if (!isDelete) {
+        return
+      }
+      const res = await delContracts(row.ID)
+      if (res.ret === 0) {
+        this.$message.success('删除成功')
+        this.init()
+      }
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -340,5 +361,8 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding-bottom: 50px;
+  input {
+    text-align: left;
+  }
 }
 </style>

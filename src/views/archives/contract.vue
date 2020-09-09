@@ -55,7 +55,7 @@
     <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="60%" :show-close="false" @close="open">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
-          新建合同
+          {{ title }}
         </div>
         <div class="dialog-title-right">
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -82,7 +82,14 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="签约方" prop="contract_party">
-                <el-input v-model="ruleForm.contract_party" placeholder="请输入签约方" @change="input" />
+                <!-- <el-input v-model=""  @change="input" /> -->
+                <el-autocomplete
+                  v-model="ruleForm.contract_party"
+                  style="width: 100%"
+                  :fetch-suggestions="querySearchAsync"
+                  placeholder="请输入签约方"
+                  @select="handleSelect"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -126,7 +133,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="试用期（月）" prop="trial_period">
-                <el-input-number v-model="ruleForm.trial_period" :min="0" controls-position="right" style="width: 100%;text-align: left;" />
+                <el-input-number v-model="ruleForm.trial_period" :min="0" controls-position="right" class="num-inp" style="width: 100%;" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -190,6 +197,7 @@ import { getContractsList,
   addContracts,
   delContracts,
   getContractsDetail,
+  editContracts,
   getEmployeeList } from '@/api/employee'
 import { STATUSVALUE } from '@/utils/const'
 import store from '@/store'
@@ -205,6 +213,7 @@ export default {
         number: '',
         status: ''
       },
+      state2: '',
       dialogVisible: false,
       innerVisible: false,
       innerVisibleCheck: false,
@@ -238,7 +247,8 @@ export default {
         ]
       },
       myHeaders: {},
-      api: ''
+      api: '',
+      title: '新建合同'
     }
   },
   mounted() {
@@ -273,6 +283,42 @@ export default {
         this.$message.error('没有该员工的信息')
       }
     },
+    async querySearchAsync(queryString, cb) {
+      // if (this.ruleForm.contract_party === '') {
+      //   return
+      // }
+      let restaurants = []
+      const seach = {
+        pagenum: 1,
+        pagesize: 10,
+        name: this.ruleForm.contract_party,
+        departmentid: '',
+        status: 2
+      }
+      const res = await getEmployeeList(seach)
+      if (res.ret === 0 && res.data.list.length !== 0) {
+        for (let i = 0, len = res.data.list.length; i < len; i++) {
+          res.data.list[i].value = res.data.list[i].name
+        }
+        restaurants = res.data.list
+      } else {
+        restaurants = []
+      }
+      var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        cb(results)
+      }, 3000 * Math.random())
+    },
+    createStateFilter(queryString) {
+      return (state) => {
+        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect(item) {
+      console.log(item)
+      this.ruleForm.ID = item.ID
+    },
     oneUpload(response, file, fileList) {
       this.ruleForm.soft_copy = file.name
     },
@@ -280,6 +326,7 @@ export default {
       this.ruleForm.scanned_copy = file.name
     },
     induction() {
+      this.title = '新建合同'
       this.dialogVisible = true
     },
     handleSizeChange(val) {
@@ -291,16 +338,10 @@ export default {
       this.seachValue.pagenum = val
       this.init()
     },
-    circulation(formName) {
-      this.innerVisible = true
-    },
-    checkInduction() {
-      this.innerVisibleCheck = true
-    },
     async handleClick(row) {
+      this.title = '编辑'
       const res = await getContractsDetail(row.ID)
       if (res.ret === 0) {
-        console.log(res)
         this.dialogVisible = true
         this.ruleForm = res.data
       }
@@ -327,12 +368,25 @@ export default {
       })
     },
     async addContracts() {
-      const res = await addContracts(this.ruleForm.ID, this.ruleForm)
-      if (res.ret === 0) {
-        console.log(res)
-        this.$message.success('新建合同成功')
-        this.dialogVisible = false
-        this.init()
+      console.log(this.ruleForm)
+      if (!this.ruleForm.ID) {
+        this.$message.error('信息错误')
+        return
+      }
+      if (this.title === '新建合同') {
+        const res = await addContracts(this.ruleForm.ID, this.ruleForm)
+        if (res.ret === 0) {
+          this.$message.success('新建合同成功')
+          this.dialogVisible = false
+          this.init()
+        }
+      } else {
+        const res = await editContracts(this.ruleForm.ID, this.ruleForm)
+        if (res.ret === 0) {
+          this.$message.success('编辑合同成功')
+          this.dialogVisible = false
+          this.init()
+        }
       }
     },
     openDra() {
@@ -356,13 +410,13 @@ export default {
   .el-dialog__header {
     padding: 0;
   }
+  .el-input-number {
+    text-align: left!important;
+  }
 }
 </style>
 <style lang="scss" scoped>
 .container {
   padding-bottom: 50px;
-  input {
-    text-align: left;
-  }
 }
 </style>

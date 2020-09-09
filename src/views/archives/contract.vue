@@ -17,20 +17,20 @@
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column align="center" label="合同编号/名称">
         <template slot-scope="scope">
-          <span class="bule-hover" @click="openDra"> {{ scope.row.name }} </span>
+          <span class="bule-hover" @click="openDra"> {{ scope.row.contract_type }} </span>
         </template>
       </el-table-column>
-      <el-table-column prop="DepartmentID" align="center" label="合同开始时间" />
-      <el-table-column prop="ServiceLine" align="center" label="合同到期时间" />
+      <el-table-column prop="contract_start_date" align="center" label="合同开始时间" />
+      <el-table-column prop="contract_end_date" align="center" label="合同到期时间" />
       <el-table-column align="center" label="签约方">
         <template slot-scope="scope">
-          {{ scope.row.Status }}
+          {{ scope.row.contract_party }}
         </template>
       </el-table-column>
-      <el-table-column prop="EntryDate" align="center" label="签订主体" />
+      <el-table-column prop="contract_main" align="center" label="签订主体" />
       <el-table-column align="center" label="签订状态">
         <template slot-scope="scope">
-          {{ scope.row.Status }}
+          {{ scope.row.status }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
@@ -106,7 +106,7 @@
                   type="date"
                   placeholder="选择日期"
                   format="yyyy 年 MM 月 dd 日"
-                  value-format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd HH:mm:ss"
                 />
               </el-form-item>
             </el-col>
@@ -118,7 +118,7 @@
                   type="date"
                   placeholder="选择日期"
                   format="yyyy 年 MM 月 dd 日"
-                  value-format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd HH:mm:ss"
                 />
               </el-form-item>
             </el-col>

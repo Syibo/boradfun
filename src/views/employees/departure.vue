@@ -57,8 +57,17 @@
         <el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="姓名" prop="name">
+              <!-- <el-form-item label="姓名" prop="name">
                 <el-input v-model="ruleForm.name" placeholder="请输入姓名" @change="input" />
+              </el-form-item> -->
+              <el-form-item label="姓名" prop="name">
+                <el-autocomplete
+                  v-model="ruleForm.name"
+                  style="width: 100%"
+                  :fetch-suggestions="querySearchAsync"
+                  placeholder="请输入姓名"
+                  @select="handleSelect"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -248,11 +257,7 @@ export default {
       ],
       rules: {
         name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
-        ],
-        phone: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' }
+          { required: true, message: '请输入姓名', trigger: 'change' }
         ]
       }
     }
@@ -270,6 +275,44 @@ export default {
         this.tableData = []
         this.total = 0
       }
+    },
+    async querySearchAsync(queryString, cb) {
+      let restaurants = []
+      const seach = {
+        pagenum: 1,
+        pagesize: 10,
+        name: this.ruleForm.name,
+        departmentid: '',
+        status: 2
+      }
+      const res = await getEmployeeList(seach)
+      if (res.ret === 0 && res.data.list.length !== 0) {
+        for (let i = 0, len = res.data.list.length; i < len; i++) {
+          res.data.list[i].value = res.data.list[i].name
+        }
+        restaurants = res.data.list
+      } else {
+        restaurants = []
+      }
+      var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        cb(results)
+      }, 3000 * Math.random())
+    },
+    createStateFilter(queryString) {
+      return (state) => {
+        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect(item) {
+      console.log(item)
+      this.ruleForm.ID = item.ID
+      this.ruleForm.name = item.name
+      this.ruleForm.employeeID = item.ID
+      this.ruleForm.department_id = item.department.department_name
+      this.ruleForm.position = item.position
+      console.log(this.ruleForm)
     },
     departure() {
       this.title = '新建离职'

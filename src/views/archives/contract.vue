@@ -284,9 +284,6 @@ export default {
       }
     },
     async querySearchAsync(queryString, cb) {
-      // if (this.ruleForm.contract_party === '') {
-      //   return
-      // }
       let restaurants = []
       const seach = {
         pagenum: 1,

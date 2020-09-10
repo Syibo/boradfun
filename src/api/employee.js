@@ -173,12 +173,13 @@ export function addContracts(id, { contract_type, contract_party, contract_main,
 /**
  * 编辑合同
  */
-export function editContracts(id, { contract_type, contract_party, contract_main, contract_start_date, contract_end_date,
+export function editContracts({ ID, contract_type, contract_party, contract_main, contract_start_date, contract_end_date,
   trial_period, annual_leave, status, soft_copy, scanned_copy }) {
   return request({
-    url: `/v1/employee/contract/${id}`,
+    url: `/v1/employee/contract`,
     method: 'put',
     data: {
+      ID,
       contract_type, contract_party, contract_main, contract_start_date, contract_end_date,
       trial_period: Number(trial_period),
       annual_leave: Number(annual_leave),

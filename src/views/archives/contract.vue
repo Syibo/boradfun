@@ -381,7 +381,7 @@ export default {
           this.init()
         }
       } else {
-        const res = await editContracts(this.ruleForm.ID, this.ruleForm)
+        const res = await editContracts(this.ruleForm)
         if (res.ret === 0) {
           this.$message.success('编辑合同成功')
           this.dialogVisible = false

@@ -39,7 +39,13 @@
           >
             <div v-if="scope" style="height: 150px;">
               <el-steps direction="vertical" :active="active" finish-status="success">
-                <el-step v-for="item in workflow" :key="item.ID" :title="item.user ? item.user.name : ''" icon="el-icon-time" :description="item.status" />
+                <el-step
+                  v-for="item in workflow"
+                  :key="item.ID"
+                  :title="item.user ? item.user.name : ''"
+                  icon="el-icon-time"
+                  :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
+                />
               </el-steps>
             </div>
             <el-button slot="reference" type="text">查看详情</el-button>

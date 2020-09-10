@@ -402,13 +402,13 @@
               </el-col>
             </el-row>
             <Label id="contractInfo" title="合同信息" />
-            <el-table :data="tableData" style="width: 100%;margin: 20px 0" :header-cell-style="{background:'#F7F8FA'}">
-              <el-table-column prop="name" align="center" label="合同编号/名称" />
-              <el-table-column prop="name" align="center" label="合同开始时间" />
-              <el-table-column prop="DepartmentID" align="center" label="合同到期时间" />
-              <el-table-column prop="ServiceLine" align="center" label="员工一" />
-              <el-table-column prop="ServiceLine" align="center" label="比孚" />
-              <el-table-column prop="ServiceLine" align="center" label="已签署" />
+            <el-table :data="conData" style="width: 100%;margin: 20px 0" :header-cell-style="{background:'#F7F8FA'}">
+              <el-table-column prop="contract_type" align="center" label="合同编号/名称" />
+              <el-table-column prop="contract_start_date" align="center" label="合同开始时间" />
+              <el-table-column prop="contract_end_date" align="center" label="合同到期时间" />
+              <el-table-column prop="contract_party" align="center" label="签约方" />
+              <el-table-column prop="contract_main" align="center" label="签订主体" />
+              <el-table-column prop="status" align="center" label="签订状态" />
               <el-table-column align="center" label="操作" width="120">
                 <template>
                   <el-button type="text" size="small">编辑</el-button>
@@ -462,7 +462,7 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
-import { getEmployeeList, getEmployeeAllDetail, putEmployeeDetail } from '@/api/employee'
+import { getEmployeeList, getEmployeeAllDetail, putEmployeeDetail, getContractsAllDetail } from '@/api/employee'
 import { ruleForm } from './config'
 export default {
   components: {
@@ -494,6 +494,7 @@ export default {
       ],
       active: 'baseInfo',
       tableData: [],
+      conData: [],
       dialogVisible: false,
       total: 0,
       ruleForm,
@@ -530,6 +531,11 @@ export default {
       })
     },
     async handleClick(item) {
+      const con = await getContractsAllDetail(item.ID)
+      console.log(con)
+      if (con.ret === 0 && con.data) {
+        this.conData = con.data
+      }
       const res = await getEmployeeAllDetail(item.ID)
       if (res.ret === 0) {
         this.ruleForm = res.data
@@ -549,7 +555,11 @@ export default {
       this.init()
     },
     async submitForm() {
-      const res = await putEmployeeDetail(this.ruleForm)
+      const parms = JSON.parse(JSON.stringify(this.ruleForm))
+      parms.employee_basic.relations = JSON.stringify(parms.employee_basic.relations)
+      parms.employee_basic.contacts = JSON.stringify(parms.employee_basic.contacts)
+      // console.log()
+      const res = await putEmployeeDetail(parms)
       if (res.ret === 0) {
         console.log(res)
       }

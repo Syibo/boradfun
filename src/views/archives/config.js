@@ -28,8 +28,8 @@ export const ruleForm = {
   reason: '',
   req_user: '',
   employee_basic: {
-    ID: '',
-    employee_id: '',
+    ID: 16,
+    employee_id: 16,
     id_card_front: '',
     id_card_back: '',
     debit_card1: '',

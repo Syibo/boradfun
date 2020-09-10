@@ -21,7 +21,13 @@
           入职流程
         </div>
         <el-steps :active="active" finish-status="success">
-          <el-step v-for="item in notes" :key="item.ID" :title="item.user ? item.user.name : ''" icon="el-icon-time" :description="item.status" />
+          <el-step
+            v-for="item in notes"
+            :key="item.ID"
+            :title="item.user ? item.user.name : ''"
+            icon="el-icon-time"
+            :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
+          />
         </el-steps>
       </div>
       <Label title="基本信息" />
@@ -30,8 +36,11 @@
         <el-col :span="12"> 手机号码：{{ baseData.mobile }} </el-col>
       </el-row>
       <Label title="面试" />
-      <el-row class="item" style="margin-bottom: 40px">
+      <el-row class="item">
         {{ baseData.interview_comment }}
+      </el-row>
+      <el-row class="item" style="margin-bottom: 40px">
+        <el-button type="text"> {{ baseData.resume }} </el-button>
       </el-row>
       <Label title="岗位信息" />
       <el-row class="item">

@@ -170,6 +170,16 @@ export function addContracts(id, { contract_type, contract_party, contract_main,
     }
   })
 }
+
+/**
+ * 单个员工合同列表
+ */
+export function getContractsAllDetail(id) {
+  return request({
+    url: `/v1/employee/contracts/${id}`,
+    method: 'get'
+  })
+}
 /**
  * 编辑合同
  */

@@ -88,7 +88,7 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="性别" prop="Gender">
-                    <el-radio-group v-model="ruleForm.name">
+                    <el-radio-group v-model="ruleForm.gender">
                       <el-radio label="男" />
                       <el-radio label="女" />
                     </el-radio-group>
@@ -98,15 +98,15 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="入职状态">
-                    <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                    <el-select v-model="ruleForm.status" placeholder="" style="width: 100%">
                       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item prop="name" label="实际入职时间">
+                  <el-form-item label="实际入职时间">
                     <el-date-picker
-                      v-model="ruleForm.deadline"
+                      v-model="ruleForm.entry_date"
                       style="width: 100%"
                       type="date"
                       placeholder="选择日期"
@@ -119,48 +119,48 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="手机号码" prop="phone">
-                    <el-input v-model="ruleForm.phone" placeholder="" />
+                    <el-input v-model="ruleForm.mobile" placeholder="" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="身份证号">
-                    <el-input v-model="ruleForm.IDcard" placeholder="" />
+                    <el-input v-model="ruleForm.id_card" placeholder="" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="员工编号" prop="phone">
-                    <el-input v-model="ruleForm.phone" placeholder="" />
+                    <el-input v-model="ruleForm.ID" placeholder="" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="民族">
-                    <el-input v-model="ruleForm.IDcard" placeholder="" />
+                    <el-input v-model="ruleForm.nation" placeholder="" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="出生年月" prop="phone">
-                    <el-input v-model="ruleForm.phone" placeholder="" />
+                    <el-input v-model="ruleForm.employee_basic.birthday" placeholder="" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="年龄">
-                    <el-input v-model="ruleForm.IDcard" placeholder="" />
+                    <el-input v-model="ruleForm.age" placeholder="" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="私人邮箱" prop="phone">
-                    <el-input v-model="ruleForm.phone" placeholder="" />
+                    <el-input v-model="ruleForm.personal_email" placeholder="" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="政治面貌">
-                    <el-input v-model="ruleForm.IDcard" placeholder="" />
+                    <el-input v-model="ruleForm.politic_status" placeholder="" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -169,7 +169,7 @@
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="面试评价">
-                  <el-input v-model="ruleForm.name" type="textarea" placeholder="" />
+                  <el-input v-model="ruleForm.interview_comment" type="textarea" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -189,27 +189,27 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="所属部门">
-                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                  <el-select v-model="ruleForm.department_id" placeholder="" style="width: 100%">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="部门负责人" prop="phone"> <el-input v-model="ruleForm.phone" placeholder="" /> </el-form-item>
+                <el-form-item label="部门负责人" prop="phone"> <el-input v-model="ruleForm.department.department_name" placeholder="" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="岗位" prop="phone"> <el-input v-model="ruleForm.phone" placeholder="" /> </el-form-item>
+                <el-form-item label="岗位" prop="phone"> <el-input v-model="ruleForm.position" placeholder="" /> </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="服务线"> <el-input v-model="ruleForm.IDcard" placeholder="" /> </el-form-item>
+                <el-form-item label="服务线"> <el-input v-model="ruleForm.service_line" placeholder="" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="级别">
-                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                  <el-select v-model="ruleForm.level_id" placeholder="" style="width: 100%">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
                   </el-select>
                 </el-form-item>
@@ -219,31 +219,31 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="毕业院校">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.graduation_school" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="专业">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.major" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="学历">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.degree" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="性质">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.degree_property" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="学历验证" prop="Gender">
-                  <el-radio-group v-model="ruleForm.name">
+                  <el-radio-group v-model="ruleForm.employee_basic.degree_verification">
                     <el-radio label="未验证" />
                     <el-radio label="已验证" />
                     <el-radio label="无法验证" />
@@ -255,14 +255,14 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="英语技能">
-                  <el-select v-model="ruleForm.name" placeholder="" style="width: 100%">
+                  <el-select v-model="ruleForm.employee_basic.en_skill" placeholder="" style="width: 100%">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="其他技能">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.en_skill" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -272,7 +272,7 @@
                 <el-form-item label="籍贯">
                   <!-- <el-input v-model="ruleForm.phone" placeholder="" /> -->
                   <el-cascader
-                    v-model="ruleForm.phone"
+                    v-model="ruleForm.employee_basic.birthplace"
                     style="width: 100%"
                     size="small"
                     :options="provinceAndCityData"
@@ -282,7 +282,7 @@
               <el-col :span="12">
                 <el-form-item label="居住城市">
                   <el-cascader
-                    v-model="selectedOptions"
+                    v-model="ruleForm.employee_basic.inhabited_city"
                     style="width: 100%"
                     size="small"
                     :options="regionData"
@@ -294,14 +294,14 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="居住详细地址">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.inhabited_address" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="婚姻状态" prop="Gender">
-                  <el-radio-group v-model="ruleForm.name">
+                  <el-radio-group v-model="ruleForm.employee_basic.marriage">
                     <el-radio label="未婚" />
                     <el-radio label="已婚" />
                     <el-radio label="已婚以育" />
@@ -312,7 +312,7 @@
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="家庭及其亲属情况">
-                  <el-table :data="ruleForm.familyData" style="width: 100%;margin: 10px 0" :header-cell-style="{background:'#F7F8FA'}">
+                  <el-table :data="ruleForm.employee_basic.relations" style="width: 100%;margin: 10px 0" :header-cell-style="{background:'#F7F8FA'}">
                     <el-table-column align="center" label="姓名">
                       <template slot-scope="scope">
                         <el-input v-model="scope.row.name" placeholder="请输入姓名" />
@@ -345,7 +345,7 @@
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item label="紧急联系人">
-                  <el-table :data="ruleForm.familyData" style="width: 100%;margin-top: 10px" :header-cell-style="{background:'#F7F8FA'}">
+                  <el-table :data="ruleForm.employee_basic.contacts" style="width: 100%;margin-top: 10px" :header-cell-style="{background:'#F7F8FA'}">
                     <el-table-column align="center" label="姓名">
                       <template slot-scope="scope">
                         <el-input v-model="scope.row.name" placeholder="请输入姓名" />
@@ -369,12 +369,12 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="工商银行卡卡号">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.debit_card1" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="招商银行卡卡号">
-                  <el-input v-model="ruleForm.phone" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.debit_card2" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -383,13 +383,13 @@
               <el-col :span="12">
                 <el-form-item prop="name">
                   <template slot="label"><span class="form-label-slot">企业邮箱<span>（IT填写）</span></span></template>
-                  <el-input v-model="ruleForm.name" placeholder="请输入企业邮箱" />
+                  <el-input v-model="ruleForm.email" placeholder="请输入企业邮箱" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item prop="name">
                   <template slot="label"><span class="form-label-slot">企业微信<span>（IT填写）</span></span></template>
-                  <el-input v-model="ruleForm.name" placeholder="请输入企业微信" />
+                  <el-input v-model="ruleForm.wx_work" placeholder="请输入企业微信" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -397,7 +397,7 @@
               <el-col :span="12">
                 <el-form-item prop="name">
                   <template slot="label"><span class="form-label-slot">TAPD<span>（IT填写）</span></span></template>
-                  <el-input v-model="ruleForm.name" placeholder="请输入TAPD" />
+                  <el-input v-model="ruleForm.tapd" placeholder="请输入TAPD" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -462,7 +462,8 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
-import { getEmployeeList } from '@/api/employee'
+import { getEmployeeList, getEmployeeAllDetail, putEmployeeDetail } from '@/api/employee'
+import { ruleForm } from './config'
 export default {
   components: {
     Label
@@ -495,14 +496,7 @@ export default {
       tableData: [],
       dialogVisible: false,
       total: 0,
-      ruleForm: {
-        name: '',
-        familyData: [
-          { name: '', Relation: '父亲' },
-          { name: '', Relation: '母亲' },
-          { name: '', Relation: '配偶' }
-        ]
-      },
+      ruleForm,
       options: [
         { value: '拟入职', label: '拟入职' },
         { value: '未入职', label: '未入职' },
@@ -535,7 +529,14 @@ export default {
         path: '/employees/induction'
       })
     },
-    handleClick() {
+    async handleClick(item) {
+      const res = await getEmployeeAllDetail(item.ID)
+      if (res.ret === 0) {
+        this.ruleForm = res.data
+        if (this.ruleForm.employee_basic === null) {
+          this.ruleForm.employee_basic = ruleForm.employee_basic
+        }
+      }
       this.dialogVisible = true
     },
     handleSizeChange(val) {
@@ -547,7 +548,11 @@ export default {
       this.seachValue.pagenum = val
       this.init()
     },
-    submitForm() {
+    async submitForm() {
+      const res = await putEmployeeDetail(this.ruleForm)
+      if (res.ret === 0) {
+        console.log(res)
+      }
       this.dialogVisible = false
     },
     changeAct(href) {

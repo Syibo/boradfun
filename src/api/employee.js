@@ -187,3 +187,22 @@ export function editContracts({ ID, contract_type, contract_party, contract_main
     }
   })
 }
+/**
+ * 获取emp详情
+ */
+export function getEmployeeAllDetail(id) {
+  return request({
+    url: `/v1/employee/detail/${id}`,
+    method: 'get'
+  })
+}
+/**
+ * 保存所有信息
+ */
+export function putEmployeeDetail(data) {
+  return request({
+    url: `/v1/employee/save`,
+    method: 'put',
+    data
+  })
+}

@@ -28,7 +28,7 @@ export const ruleForm = {
   reason: '',
   req_user: '',
   employee_basic: {
-    ID: 16,
+    ID: 0,
     employee_id: 16,
     id_card_front: '',
     id_card_back: '',
@@ -52,19 +52,19 @@ export const ruleForm = {
     other_language_skill: '',
     birthday: '',
     birthplace: '',
-    inhabited_city: '',
+    inhabited_city: [],
     inhabited_district: '',
     inhabited_address: '',
     marriage: '',
-    children: '',
+    children: 0,
     relations: [
-      { name: '', Relation: '父亲' },
-      { name: '', Relation: '母亲' },
-      { name: '', Relation: '配偶' }
+      { name: '', Relation: '父亲', company: '', job: '', phone: '' },
+      { name: '', Relation: '母亲', company: '', job: '', phone: '' },
+      { name: '', Relation: '配偶', company: '', job: '', phone: '' }
     ],
     contacts: [
-      { name: '', Relation: '父亲' },
-      { name: '', Relation: '母亲' }
+      { name: '', Relation: '父亲', phone: '' },
+      { name: '', Relation: '母亲', phone: '' }
     ]
   }
 }

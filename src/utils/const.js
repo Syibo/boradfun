@@ -8,3 +8,5 @@ export const STATUSVALUE = [
   { value: 3, label: '申请离职' },
   { value: 4, label: '已离职' }
 ]
+
+export const DOWNURL = 'http://172.16.9.195:9000'

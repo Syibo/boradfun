@@ -150,7 +150,10 @@
               :show-file-list="false"
             >
               <el-button v-if="ruleForm.resume === ''" icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
-              <el-button v-else icon="el-icon-upload" size="small" type="text">{{ ruleForm.resume }}</el-button>
+              <div v-else style="display: flex">
+                <el-button icon="el-icon-upload" type="text">{{ ruleForm.resume }}</el-button>
+                <el-button type="text"> 下载 </el-button>
+              </div>
             </el-upload>
           </el-col>
         </el-row>

@@ -83,7 +83,7 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="姓名" prop="name">
-                    <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
+                    <el-input v-model="ruleForm.name" disabled placeholder="请输入姓名" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -99,7 +99,7 @@
                 <el-col :span="12">
                   <el-form-item label="入职状态">
                     <el-select v-model="ruleForm.status" placeholder="" style="width: 100%">
-                      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                      <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -177,11 +177,17 @@
               <el-col :span="2">
                 <el-upload
                   style="margin-top: -20px"
-                  class="upload-demo"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  multiple
+                  :headers="myHeaders"
+                  name="file"
+                  :action="`${api}/v1/file/upload?bucket=resume`"
+                  :on-success="oneUpload"
+                  :show-file-list="false"
                 >
-                  <el-button icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
+                  <el-button v-if="ruleForm.resume === ''" icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
+                  <div v-else style="display: flex">
+                    <el-button icon="el-icon-upload" type="text">{{ ruleForm.resume }}</el-button>
+                    <el-button type="text" @click.stop="downFile(ruleForm.resume)"> 下载 </el-button>
+                  </div>
                 </el-upload>
               </el-col>
             </el-row>
@@ -255,14 +261,15 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="英语技能">
-                  <el-select v-model="ruleForm.employee_basic.en_skill" placeholder="" style="width: 100%">
+                  <!-- <el-select v-model="ruleForm.employee_basic.en_skill" placeholder="" style="width: 100%">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                  </el-select>
+                  </el-select> -->
+                  <el-input v-model="ruleForm.employee_basic.en_skill" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="其他技能">
-                  <el-input v-model="ruleForm.employee_basic.en_skill" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.other_language_skill" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -270,13 +277,13 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="籍贯">
-                  <!-- <el-input v-model="ruleForm.phone" placeholder="" /> -->
-                  <el-cascader
+                  <el-input v-model="ruleForm.employee_basic.birthplace" placeholder="" />
+                  <!-- <el-cascader
                     v-model="ruleForm.employee_basic.birthplace"
                     style="width: 100%"
                     size="small"
                     :options="provinceAndCityData"
-                  />
+                  /> -->
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -325,17 +332,17 @@
                     </el-table-column>
                     <el-table-column align="center" label="任职企业">
                       <template slot-scope="scope">
-                        <el-input v-model="scope.row.name" placeholder="请输入任职企业" />
+                        <el-input v-model="scope.row.company" placeholder="请输入任职企业" />
                       </template>
                     </el-table-column>
                     <el-table-column align="center" label="职位">
                       <template slot-scope="scope">
-                        <el-input v-model="scope.row.name" placeholder="请输入职位" />
+                        <el-input v-model="scope.row.job" placeholder="请输入职位" />
                       </template>
                     </el-table-column>
                     <el-table-column align="center" label="联系方式">
                       <template slot-scope="scope">
-                        <el-input v-model="scope.row.name" placeholder="请输入联系方式" />
+                        <el-input v-model="scope.row.phone" placeholder="请输入联系方式" />
                       </template>
                     </el-table-column>
                   </el-table>
@@ -358,7 +365,7 @@
                     </el-table-column>
                     <el-table-column align="center" label="联系方式">
                       <template slot-scope="scope">
-                        <el-input v-model="scope.row.name" placeholder="请输入联系方式" />
+                        <el-input v-model="scope.row.phone" placeholder="请输入联系方式" />
                       </template>
                     </el-table-column>
                   </el-table>
@@ -419,22 +426,30 @@
             <Label id="documentInfo" title="文档信息" />
             <el-row :gutter="20">
               <el-form-item label="身份证复印件">
-                <el-col :span="12">
+                <el-col :span="8">
                   <el-upload
                     class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :headers="myHeaders"
+                    name="file"
+                    :action="`${api}/v1/file/upload?bucket=idcard`"
+                    :on-success="oneUploadCardfront"
                     :show-file-list="false"
                   >
-                    <i class="el-icon-plus avatar-uploader-icon" />
+                    <img v-if="ruleForm.employee_basic.id_card_front" :src="ruleForm.employee_basic.id_card_front" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon" />
                   </el-upload>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="8">
                   <el-upload
                     class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :headers="myHeaders"
+                    name="file"
+                    :action="`${api}/v1/file/upload?bucket=idcard`"
+                    :on-success="oneUploadCardBack"
                     :show-file-list="false"
                   >
-                    <i class="el-icon-plus avatar-uploader-icon" />
+                    <img v-if="ruleForm.employee_basic.id_card_back" :src="ruleForm.employee_basic.id_card_back" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon" />
                   </el-upload>
                 </el-col>
               </el-form-item>
@@ -444,8 +459,9 @@
                 <el-col :span="24">
                   <el-upload
                     class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false"
+                    :headers="myHeaders"
+                    name="file"
+                    :action="`${api}/v1/file/upload?bucket=degree`"
                   >
                     <i class="el-icon-plus avatar-uploader-icon" />
                   </el-upload>
@@ -464,6 +480,9 @@ import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
 import { getEmployeeList, getEmployeeAllDetail, putEmployeeDetail, getContractsAllDetail } from '@/api/employee'
 import { ruleForm } from './config'
+import { STATUSVALUE, DOWNURL } from '@/utils/const'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 export default {
   components: {
     Label
@@ -478,6 +497,7 @@ export default {
         status: 2
       },
       regionData,
+      STATUSVALUE,
       provinceAndCityData,
       selectedOptions: [],
       label: [
@@ -508,11 +528,19 @@ export default {
           { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
         ]
-      }
+      },
+      myHeaders: {},
+      api: ''
     }
   },
   mounted() {
     this.init()
+    this.api = process.env.VUE_APP_BASE_API
+    if (store.getters.token) {
+      this.myHeaders = {
+        'Authorization': JSON.parse(getToken()).session
+      }
+    }
   },
   methods: {
     async init() {
@@ -532,7 +560,6 @@ export default {
     },
     async handleClick(item) {
       const con = await getContractsAllDetail(item.ID)
-      console.log(con)
       if (con.ret === 0 && con.data) {
         this.conData = con.data
       }
@@ -541,6 +568,10 @@ export default {
         this.ruleForm = res.data
         if (this.ruleForm.employee_basic === null) {
           this.ruleForm.employee_basic = ruleForm.employee_basic
+        } else {
+          this.ruleForm.employee_basic.relations = JSON.parse(this.ruleForm.employee_basic.relations)
+          this.ruleForm.employee_basic.contacts = JSON.parse(this.ruleForm.employee_basic.contacts)
+          this.ruleForm.employee_basic.inhabited_city = this.ruleForm.employee_basic.inhabited_city ? JSON.parse(this.ruleForm.employee_basic.inhabited_city) : []
         }
       }
       this.dialogVisible = true
@@ -554,11 +585,21 @@ export default {
       this.seachValue.pagenum = val
       this.init()
     },
+    oneUploadCardfront(response, file, fileList) {
+      this.ruleForm.employee_basic.id_card_front = `${DOWNURL}${response.data}`
+    },
+    oneUploadCardBack(response) {
+      this.ruleForm.employee_basic.id_card_back = `${DOWNURL}${response.data}`
+    },
+    oneUpload(response, file, fileList) {
+      this.ruleForm.resume = response.data
+    },
     async submitForm() {
       const parms = JSON.parse(JSON.stringify(this.ruleForm))
       parms.employee_basic.relations = JSON.stringify(parms.employee_basic.relations)
       parms.employee_basic.contacts = JSON.stringify(parms.employee_basic.contacts)
-      // console.log()
+      parms.employee_basic.inhabited_city = JSON.stringify(parms.employee_basic.inhabited_city)
+      parms.age = Number(parms.age)
       const res = await putEmployeeDetail(parms)
       if (res.ret === 0) {
         console.log(res)
@@ -594,6 +635,9 @@ export default {
     },
     handleChange(value) {
       console.log(value)
+    },
+    downFile(file) {
+      window.open(`${DOWNURL}${file}`)
     },
     close() {
       if (this.$refs['ruleForm']) {

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-row class="baradfun-top">
-      <el-button type="primary" @click="departure">新建离职</el-button>
+      <el-button v-permission="[6]" type="primary" @click="departure">新建离职</el-button>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="ID" align="center" label="离职员工编号" />
@@ -48,74 +48,79 @@
       </span>
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
         <Label :title="'基本信息'" />
-        <!-- <el-row style="color: #2B2B2B">
-          <el-col :span="4"> 姓名：沈奕博 </el-col>
-          <el-col :span="4"> 性别：男 </el-col>
-          <el-col :span="8"> 身份证号码：362330199512263656 </el-col>
-          <el-col :span="6"> 手机号码：18720573255 </el-col>
-        </el-row> -->
-        <el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <!-- <el-form-item label="姓名" prop="name">
-                <el-input v-model="ruleForm.name" placeholder="请输入姓名" @change="input" />
-              </el-form-item> -->
-              <el-form-item label="姓名" prop="name">
-                <el-autocomplete
-                  v-model="ruleForm.name"
-                  style="width: 100%"
-                  :fetch-suggestions="querySearchAsync"
-                  placeholder="请输入姓名"
-                  @select="handleSelect"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="员工编号" prop="">
-                <el-input v-model="ruleForm.employeeID" placeholder="" />
-              </el-form-item>
-            </el-col>
+        <el-row v-if="title === '编辑'" style="color: #2B2B2B;margin: 15px 0;margin-bottom: 50px">
+          <el-row style="margin-bottom: 10px">
+            <el-col :span="6"> 员工名称：{{ ruleForm.name }} </el-col>
+            <el-col :span="6"> 员工编号：{{ ruleForm.employeeID }} </el-col>
+            <el-col :span="6"> 所属部门：{{ ruleForm.department_id }} </el-col>
+            <el-col :span="6"> 岗位：{{ ruleForm.position }} </el-col>
           </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="所属部门">
-                <el-input v-model="ruleForm.department_id" placeholder="" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="岗位" prop="">
-                <el-input v-model="ruleForm.position" placeholder="" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-form-item label="离职日期">
-                <el-date-picker
-                  v-model="ruleForm.resignation_date"
-                  style="width: 100%"
-                  type="date"
-                  placeholder="选择日期"
-                  format="yyyy 年 MM 月 dd 日"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-form-item label="离职原因">
-                <el-input v-model="ruleForm.reason" type="textarea" placeholder="离职原因" />
-              </el-form-item>
-            </el-col>
+          <el-row>
+            <el-col :span="6"> 离职日期：{{ ruleForm.resignation_date }} </el-col>
+            <el-col :span="6"> 离职原因：{{ ruleForm.reason }} </el-col>
           </el-row>
         </el-row>
+        <div v-else>
+          <el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="姓名" prop="name">
+                  <el-autocomplete
+                    v-model="ruleForm.name"
+                    style="width: 100%"
+                    :fetch-suggestions="querySearchAsync"
+                    placeholder="请输入姓名"
+                    @select="handleSelect"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="员工编号" prop="">
+                  <el-input v-model="ruleForm.employeeID" placeholder="" disabled />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="所属部门">
+                  <el-input v-model="ruleForm.department_id" placeholder="" disabled />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="岗位" prop="">
+                  <el-input v-model="ruleForm.position" placeholder="" disabled />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="离职日期" prop="resignation_date">
+                  <el-date-picker
+                    v-model="ruleForm.resignation_date"
+                    style="width: 100%"
+                    type="date"
+                    placeholder="选择离职日期"
+                    format="yyyy 年 MM 月 dd 日"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="24">
+                <el-form-item label="离职原因" prop="reason">
+                  <el-input v-model="ruleForm.reason" type="textarea" placeholder="离职原因" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-row>
+        </div>
         <Label :title="'流程信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item>
+            <el-form-item prop="account">
               <template slot="label"><span class="form-label-slot">账号<span>（IT填写）</span></span></template>
-              <el-input v-model="ruleForm.account" placeholder="" />
+              <el-input v-model="ruleForm.account" placeholder="请输入账号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -222,10 +227,13 @@ import { getEmployeeList,
   editLeaveEmployee,
   leaveEmployeeDetail } from '@/api/employee'
 import Label from '@/components/common/Label.vue'
+import permission from '@/directive/permission/index.js'
+import { ruleFormDep, rulesDep } from './config'
 export default {
   components: {
     Label
   },
+  directives: { permission },
   data() {
     return {
       title: '新建离职',
@@ -241,25 +249,13 @@ export default {
       pageNum: 1,
       pageSize: 10,
       total: 0,
-      ruleForm: {
-        name: '',
-        department_id: '',
-        employeeID: '',
-        ID: '',
-        position: '',
-        account: '', computer: '', phone: '', expense: '', device_req: '', work_day: '', off_day: '', half_day: '',
-        change_day: '', others: '', late_day: '', things_day: '', salary_day: '', annual_day: '', resignation_date: '', reason: ''
-      },
+      ruleForm: ruleFormDep,
       options: [
         { value: '拟入职', label: '拟入职' },
         { value: '未入职', label: '未入职' },
         { value: '已入职', label: '已入职' }
       ],
-      rules: {
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'change' }
-        ]
-      }
+      rules: rulesDep
     }
   },
   mounted() {

@@ -13,6 +13,16 @@ export const ruleForm = {
   level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
 }
 
+export const ruleFormDep = {
+  name: '',
+  department_id: '',
+  employeeID: '',
+  ID: '',
+  position: '',
+  account: '', computer: '', phone: '', expense: '', device_req: '', work_day: '', off_day: '', half_day: '',
+  change_day: '', others: '', late_day: '', things_day: '', salary_day: '', annual_day: '', resignation_date: '', reason: ''
+}
+
 export const rules = {
   name: [
     { required: true, message: '请输入姓名', trigger: 'blur' },
@@ -65,3 +75,18 @@ export const rules = {
   ]
 }
 
+export const rulesDep = {
+  name: [
+    { required: true, message: '请输入姓名', trigger: 'blur' },
+    { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
+  ],
+  resignation_date: [
+    { required: true, message: '选择离职日期', trigger: 'change' }
+  ],
+  reason: [
+    { required: true, message: '请输入离职原因', trigger: 'blur' }
+  ],
+  account: [
+    { required: true, message: '请输入账号', trigger: 'blur' }
+  ]
+}

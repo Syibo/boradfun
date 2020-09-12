@@ -20,7 +20,7 @@
         <div class="top">
           入职流程
         </div>
-        <el-steps :active="active" finish-status="success">
+        <el-steps :active="active" finish-status="success" style="padding: 0 10px">
           <el-step
             v-for="item in notes"
             :key="item.ID"

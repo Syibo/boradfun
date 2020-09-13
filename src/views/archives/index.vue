@@ -4,11 +4,11 @@
       <div class="left">
         <el-input placeholder="请输入员工编号" />
         <el-input placeholder="请输入员工姓名" style="width: 100%;margin-left: 10px" />
-        <el-select v-model="ruleForm.name" placeholder="所属部门" style="width: 100%;margin-left: 10px">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin-left: 10px">
+          <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
         </el-select>
-        <el-select v-model="ruleForm.name" placeholder="员工状态" style="width: 100%;margin: 0 10px">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="seachValue.status" placeholder="员工状态" style="width: 100%;margin: 0 10px">
+          <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <el-button type="primary">筛选</el-button>
       </div>
@@ -135,19 +135,19 @@
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="员工编号" prop="">
-                    <el-input v-model="ruleForm.ID" placeholder="" />
+                  <el-form-item label="员工编号" prop="ID">
+                    <el-input v-model="ruleForm.ID" placeholder="员工编号" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="民族" prop="">
-                    <el-input v-model="ruleForm.nation" placeholder="" />
+                  <el-form-item label="民族" prop="nation">
+                    <el-input v-model="ruleForm.nation" placeholder="民族" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="出生年月" prop="">
+                  <el-form-item label="出生年月" prop="employee_basic.birthday">
                     <el-date-picker
                       v-model="ruleForm.employee_basic.birthday"
                       prop="isNeed"
@@ -160,20 +160,20 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="年龄" prop="">
-                    <el-input v-model="ruleForm.age" placeholder="" />
+                  <el-form-item label="年龄" prop="age">
+                    <el-input v-model="ruleForm.age" placeholder="年龄" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="私人邮箱" prop="">
-                    <el-input v-model="ruleForm.personal_email" placeholder="" />
+                  <el-form-item label="私人邮箱" prop="personal_email">
+                    <el-input v-model="ruleForm.personal_email" placeholder="私人邮箱" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="政治面貌" prop="">
-                    <el-input v-model="ruleForm.politic_status" placeholder="" />
+                  <el-form-item label="政治面貌" prop="politic_status">
+                    <el-input v-model="ruleForm.politic_status" placeholder="政治面貌" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -181,7 +181,7 @@
             <Label id="interviewiInfo" title="面试信息" />
             <el-row :gutter="20">
               <el-col :span="24">
-                <el-form-item label="面试评价">
+                <el-form-item label="面试评价" prop="interview_comment">
                   <el-input v-model="ruleForm.interview_comment" type="textarea" placeholder="" />
                 </el-form-item>
               </el-col>
@@ -207,27 +207,27 @@
             <Label id="jobsInfo" title="岗位信息" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="所属部门">
-                  <el-select v-model="ruleForm.department_id" placeholder="" style="width: 100%">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                <el-form-item label="所属部门" prop="department_id">
+                  <el-select v-model="ruleForm.department_id" placeholder="请选择部门" style="width: 100%">
+                    <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="部门负责人" prop="phone"> <el-input v-model="ruleForm.department.department_name" placeholder="" /> </el-form-item>
+                <el-form-item label="部门负责人" prop="phone"> <el-input v-model="ruleForm.department.leader.name" disabled="" placeholder="" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="岗位" prop="phone"> <el-input v-model="ruleForm.position" placeholder="" /> </el-form-item>
+                <el-form-item label="岗位" prop="position"> <el-input v-model="ruleForm.position" placeholder="" /> </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="服务线"> <el-input v-model="ruleForm.service_line" placeholder="" /> </el-form-item>
+                <el-form-item label="服务线" prop="service_line"> <el-input v-model="ruleForm.service_line" placeholder="" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="级别">
+                <el-form-item label="级别" prop="level_id">
                   <el-select v-model="ruleForm.level_id" placeholder="" style="width: 100%">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
                   </el-select>
@@ -237,31 +237,31 @@
             <Label id="schoolInfo" title="学历信息" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="毕业院校">
+                <el-form-item label="毕业院校" prop="employee_basic.graduation_school">
                   <el-input v-model="ruleForm.employee_basic.graduation_school" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="专业">
+                <el-form-item label="专业" prop="employee_basic.major">
                   <el-input v-model="ruleForm.employee_basic.major" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="学历">
+                <el-form-item label="学历" prop="employee_basic.degree">
                   <el-input v-model="ruleForm.employee_basic.degree" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="性质">
+                <el-form-item label="性质" prop="employee_basic.degree_property">
                   <el-input v-model="ruleForm.employee_basic.degree_property" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="学历验证" prop="Gender">
+                <el-form-item label="学历验证" prop="employee_basic.degree_verification">
                   <el-radio-group v-model="ruleForm.employee_basic.degree_verification">
                     <el-radio label="未验证" />
                     <el-radio label="已验证" />
@@ -273,12 +273,12 @@
             <Label id="certificate" title="资格证书" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="英语技能">
+                <el-form-item label="英语技能" prop="employee_basic.en_skill">
                   <el-input v-model="ruleForm.employee_basic.en_skill" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="其他技能">
+                <el-form-item label="其他技能" prop="employee_basic.other_language_skill">
                   <el-input v-model="ruleForm.employee_basic.other_language_skill" placeholder="" />
                 </el-form-item>
               </el-col>
@@ -286,7 +286,7 @@
             <Label id="familyInfo" title="家庭信息" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="籍贯">
+                <el-form-item label="籍贯" prop="employee_basic.birthplace">
                   <el-input v-model="ruleForm.employee_basic.birthplace" placeholder="" />
                   <!-- <el-cascader
                     v-model="ruleForm.employee_basic.birthplace"
@@ -297,7 +297,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="居住城市">
+                <el-form-item label="居住城市" prop="employee_basic.inhabited_city">
                   <el-cascader
                     v-model="ruleForm.employee_basic.inhabited_city"
                     style="width: 100%"
@@ -310,14 +310,14 @@
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="居住详细地址">
+                <el-form-item label="居住详细地址" prop="employee_basic.inhabited_address">
                   <el-input v-model="ruleForm.employee_basic.inhabited_address" placeholder="" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="婚姻状态" prop="Gender">
+                <el-form-item label="婚姻状态" prop="employee_basic.marriage">
                   <el-radio-group v-model="ruleForm.employee_basic.marriage">
                     <el-radio label="未婚" />
                     <el-radio label="已婚" />
@@ -385,12 +385,12 @@
             <Label id="cardInfo" title="卡号信息" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="工商银行卡卡号">
+                <el-form-item label="工商银行卡卡号" prop="employee_basic.debit_card1">
                   <el-input v-model="ruleForm.employee_basic.debit_card1" placeholder="" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="招商银行卡卡号">
+                <el-form-item label="招商银行卡卡号" prop="employee_basic.debit_card2">
                   <el-input v-model="ruleForm.employee_basic.debit_card2" placeholder="" />
                 </el-form-item>
               </el-col>
@@ -490,7 +490,7 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
-import { getEmployeeList, getEmployeeAllDetail, putEmployeeDetail, getContractsAllDetail } from '@/api/employee'
+import { getEmployeeList, getEmployeeAllDetail, putEmployeeDetail, getContractsAllDetail, getDepartmentList } from '@/api/employee'
 import { ruleForm, rules } from './config'
 import { STATUSVALUE, DOWNURL } from '@/utils/const'
 import store from '@/store'
@@ -540,11 +540,13 @@ export default {
       rules,
       myHeaders: {},
       api: '',
-      baseData: ruleForm
+      baseData: ruleForm,
+      departmentList: []
     }
   },
   mounted() {
     this.init()
+    this.getDepartmentList()
     this.api = process.env.VUE_APP_BASE_API
     if (store.getters.token) {
       this.myHeaders = {
@@ -562,6 +564,10 @@ export default {
         this.tableData = []
         this.total = 0
       }
+    },
+    async getDepartmentList() {
+      const res = await getDepartmentList()
+      this.departmentList = res.data
     },
     induction() {
       this.$router.push({
@@ -612,7 +618,8 @@ export default {
       parms.age = Number(parms.age)
       const res = await putEmployeeDetail(parms)
       if (res.ret === 0) {
-        console.log(res)
+        this.$message.success('编辑成功！')
+        this.init()
       }
       this.dialogVisible = false
     },

@@ -34,7 +34,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="" align="center" label="转正时间" />
-      <el-table-column prop="status" align="center" label="员工状态" />
+      <el-table-column prop="status" align="center" label="员工状态">
+        <template slot-scope="scope">
+          <EmStatus :status="scope.row.status" />
+        </template>
+      </el-table-column>
       <el-table-column prop="create_time" align="center" label="创建时间" show-overflow-tooltip sortable />
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
@@ -418,7 +422,11 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <Label id="contractInfo" title="合同信息" />
+            <Label id="contractInfo" title="合同信息">
+              <template slot="right">
+                <el-button size="mini" style="float: right">新建合同</el-button>
+              </template>
+            </Label>
             <el-table :data="conData" style="width: 100%;margin: 20px 0" :header-cell-style="{background:'#F7F8FA'}">
               <el-table-column prop="contract_type" align="center" label="合同编号/名称" />
               <el-table-column prop="contract_start_date" align="center" label="合同开始时间" />
@@ -428,8 +436,8 @@
               <el-table-column prop="status" align="center" label="签订状态" />
               <el-table-column align="center" label="操作" width="120">
                 <template>
-                  <el-button type="text" size="small">编辑</el-button>
-                  <el-button type="text" size="small">删除</el-button>
+                  <el-button type="text" disabled size="small">编辑</el-button>
+                  <el-button type="text" disabled size="small">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -496,10 +504,12 @@ import { STATUSVALUE, DOWNURL } from '@/utils/const'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import ArchivesDrawer from '@/components/Oa/ArchivesDrawer'
+import EmStatus from '@/components/common/EmStatus.vue'
 export default {
   components: {
     Label,
-    ArchivesDrawer
+    ArchivesDrawer,
+    EmStatus
   },
   data() {
     return {

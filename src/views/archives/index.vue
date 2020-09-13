@@ -91,7 +91,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="性别" prop="Gender">
+                  <el-form-item label="性别" prop="isNeed">
                     <el-radio-group v-model="ruleForm.gender">
                       <el-radio label="男" />
                       <el-radio label="女" />
@@ -101,7 +101,7 @@
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="入职状态">
+                  <el-form-item label="入职状态" prop="isNeed">
                     <el-select v-model="ruleForm.status" placeholder="" style="width: 100%">
                       <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
@@ -111,6 +111,7 @@
                   <el-form-item label="实际入职时间">
                     <el-date-picker
                       v-model="ruleForm.entry_date"
+                      prop="isNeed"
                       style="width: 100%"
                       type="date"
                       placeholder="选择日期"
@@ -122,19 +123,19 @@
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="手机号码" prop="phone">
-                    <el-input v-model="ruleForm.mobile" placeholder="" />
+                  <el-form-item label="手机号码" prop="isNeed">
+                    <el-input v-model="ruleForm.mobile" placeholder="手机号码" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="身份证号">
+                  <el-form-item label="身份证号" prop="isNeed">
                     <el-input v-model="ruleForm.id_card" placeholder="" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="员工编号" prop="phone">
+                  <el-form-item label="员工编号" prop="isNeed">
                     <el-input v-model="ruleForm.ID" placeholder="" />
                   </el-form-item>
                 </el-col>
@@ -532,6 +533,9 @@ export default {
         name: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
+        ],
+        isNeed: [
+          { required: true, message: '必填字断', trigger: 'blur' }
         ]
       },
       myHeaders: {},

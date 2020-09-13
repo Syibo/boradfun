@@ -75,9 +75,8 @@ export const ruleFormCon = {
 }
 
 export const rulesCon = {
-  name: [
-    { required: true, message: '请输入姓名', trigger: 'blur' },
-    { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
+  contract_party: [
+    { required: true, message: '请输入签约方', trigger: 'change' }
   ],
   contract_type: [
     { required: true, message: '请选择合同类型', trigger: 'change' }
@@ -99,5 +98,18 @@ export const rulesCon = {
   ],
   status: [
     { required: true, message: '请选择合同状态', trigger: 'blur' }
+  ]
+}
+
+export const rules = {
+  name: [
+    { required: true, message: '请输入姓名', trigger: 'blur' },
+    { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
+  ],
+  mobile: [
+    { required: true, message: '请输入手机号码', trigger: 'blur' }
+  ],
+  id_card: [
+    { required: true, message: '请输入身份证号码', trigger: 'blur' }
   ]
 }

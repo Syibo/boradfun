@@ -91,7 +91,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="性别" prop="isNeed">
+                  <el-form-item label="性别" prop="need">
                     <el-radio-group v-model="ruleForm.gender">
                       <el-radio label="男" />
                       <el-radio label="女" />
@@ -101,7 +101,7 @@
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="入职状态" prop="isNeed">
+                  <el-form-item label="入职状态" prop="need">
                     <el-select v-model="ruleForm.status" placeholder="" style="width: 100%">
                       <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
@@ -123,48 +123,56 @@
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="手机号码" prop="isNeed">
+                  <el-form-item label="手机号码" prop="mobile">
                     <el-input v-model="ruleForm.mobile" placeholder="手机号码" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="身份证号" prop="isNeed">
+                  <el-form-item label="身份证号" prop="id_card">
                     <el-input v-model="ruleForm.id_card" placeholder="" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="员工编号" prop="isNeed">
+                  <el-form-item label="员工编号" prop="">
                     <el-input v-model="ruleForm.ID" placeholder="" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="民族">
+                  <el-form-item label="民族" prop="">
                     <el-input v-model="ruleForm.nation" placeholder="" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="出生年月" prop="phone">
-                    <el-input v-model="ruleForm.employee_basic.birthday" placeholder="" />
+                  <el-form-item label="出生年月" prop="">
+                    <el-date-picker
+                      v-model="ruleForm.employee_basic.birthday"
+                      prop="isNeed"
+                      style="width: 100%"
+                      type="date"
+                      placeholder="选择日期"
+                      format="yyyy 年 MM 月 dd 日"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="年龄">
+                  <el-form-item label="年龄" prop="">
                     <el-input v-model="ruleForm.age" placeholder="" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="私人邮箱" prop="phone">
+                  <el-form-item label="私人邮箱" prop="">
                     <el-input v-model="ruleForm.personal_email" placeholder="" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="政治面貌">
+                  <el-form-item label="政治面貌" prop="">
                     <el-input v-model="ruleForm.politic_status" placeholder="" />
                   </el-form-item>
                 </el-col>
@@ -483,7 +491,7 @@
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
 import { getEmployeeList, getEmployeeAllDetail, putEmployeeDetail, getContractsAllDetail } from '@/api/employee'
-import { ruleForm } from './config'
+import { ruleForm, rules } from './config'
 import { STATUSVALUE, DOWNURL } from '@/utils/const'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
@@ -529,15 +537,7 @@ export default {
         { value: '未入职', label: '未入职' },
         { value: '已入职', label: '已入职' }
       ],
-      rules: {
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
-        ],
-        isNeed: [
-          { required: true, message: '必填字断', trigger: 'blur' }
-        ]
-      },
+      rules,
       myHeaders: {},
       api: '',
       baseData: ruleForm

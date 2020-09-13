@@ -75,7 +75,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="签约方" prop="name">
+              <el-form-item label="签约方" prop="contract_party">
                 <el-autocomplete
                   v-model="ruleForm.contract_party"
                   style="width: 100%"

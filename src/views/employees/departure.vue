@@ -118,13 +118,13 @@
         <Label :title="'流程信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="account">
+            <el-form-item :prop="userType === 7 ? 'account' : ''">
               <template slot="label"><span class="form-label-slot">账号<span>（IT填写）</span></span></template>
               <el-input v-model="ruleForm.account" placeholder="请输入账号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="computer">
+            <el-form-item :prop="userType === 7 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">电脑<span>（IT填写）</span></span></template>
               <el-input v-model="ruleForm.computer" placeholder="" />
             </el-form-item>
@@ -132,13 +132,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="">
+            <el-form-item :prop="userType === 8 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">手机<span>（财务填写）</span></span></template>
               <el-input v-model="ruleForm.phone" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="expense">
+            <el-form-item :prop="userType === 8 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">报销<span>（财务填写）</span></span></template>
               <el-input v-model="ruleForm.expense" placeholder="" />
             </el-form-item>
@@ -146,7 +146,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="device_req">
+            <el-form-item :prop="userType === 9 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">物品领用归还<span>（前台）</span></span></template>
               <el-input v-model="ruleForm.device_req" placeholder="" />
             </el-form-item>
@@ -154,13 +154,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="work_day">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">实际出勤天数<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.work_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="off_day">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">旷工<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.off_day" placeholder="" />
             </el-form-item>
@@ -168,13 +168,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="half_day">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">病假<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.half_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="change_day">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">剩余调休<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.change_day" placeholder="" />
             </el-form-item>
@@ -182,7 +182,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="others">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">其他结算<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.others" placeholder="" />
             </el-form-item>
@@ -190,13 +190,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="late_day">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">迟到/早退<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.late_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="things_day">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">事假<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.things_day" placeholder="" />
             </el-form-item>
@@ -204,13 +204,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item prop="salary_day">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">带薪假<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.salary_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="annual_day">
+            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
               <template slot="label"><span class="form-label-slot">剩余年假<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.annual_day" placeholder="" />
             </el-form-item>
@@ -229,6 +229,8 @@ import { getEmployeeList,
 import Label from '@/components/common/Label.vue'
 import permission from '@/directive/permission/index.js'
 import { ruleFormDep, rulesDep } from './config'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 export default {
   components: {
     Label
@@ -255,10 +257,14 @@ export default {
         { value: '未入职', label: '未入职' },
         { value: '已入职', label: '已入职' }
       ],
-      rules: rulesDep
+      rules: rulesDep,
+      userType: 0
     }
   },
   mounted() {
+    if (store.getters.token) {
+      this.userType = JSON.parse(getToken()).userType
+    }
     this.init()
   },
   methods: {
@@ -302,13 +308,11 @@ export default {
       }
     },
     handleSelect(item) {
-      console.log(item)
       this.ruleForm.ID = item.ID
       this.ruleForm.name = item.name
       this.ruleForm.employeeID = item.ID
       this.ruleForm.department_id = item.department.department_name
       this.ruleForm.position = item.position
-      console.log(this.ruleForm)
     },
     departure() {
       this.title = '新建离职'
@@ -400,7 +404,11 @@ export default {
         this.$refs['ruleForm'].resetFields()
       }
       this.ruleForm = {
-        name: '', department_id: '', employeeID: '', ID: '', position: '',
+        name: '',
+        department_id: '',
+        employeeID: '',
+        ID: '',
+        position: '',
         account: '', computer: '', phone: '', expense: '', device_req: '', work_day: '', off_day: '', half_day: '',
         change_day: '', others: '', late_day: '', things_day: '', salary_day: '', annual_day: '', resignation_date: '', reason: ''
       }

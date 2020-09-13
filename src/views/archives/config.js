@@ -68,3 +68,36 @@ export const ruleForm = {
     ]
   }
 }
+
+export const ruleFormCon = {
+  contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
+  trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
+}
+
+export const rulesCon = {
+  name: [
+    { required: true, message: '请输入姓名', trigger: 'blur' },
+    { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
+  ],
+  contract_type: [
+    { required: true, message: '请选择合同类型', trigger: 'change' }
+  ],
+  contract_main: [
+    { required: true, message: '请选择签约主体', trigger: 'change' }
+  ],
+  contract_start_date: [
+    { required: true, message: '请选择合同开始日期', trigger: 'change' }
+  ],
+  contract_end_date: [
+    { required: true, message: '请选择合同结束日期', trigger: 'change' }
+  ],
+  trial_period: [
+    { required: true, message: '请输入试用期（月）', trigger: 'blur' }
+  ],
+  annual_leave: [
+    { required: true, message: '请输入年假', trigger: 'blur' }
+  ],
+  status: [
+    { required: true, message: '请选择合同状态', trigger: 'blur' }
+  ]
+}

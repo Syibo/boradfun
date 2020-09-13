@@ -88,5 +88,8 @@ export const rulesDep = {
   ],
   account: [
     { required: true, message: '请输入账号', trigger: 'blur' }
+  ],
+  isNeed: [
+    { required: true, message: '必填字断', trigger: 'blur' }
   ]
 }

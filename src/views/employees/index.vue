@@ -188,16 +188,12 @@
                 <el-select v-model="ruleForm.leader_id" placeholder="部门负责人" style="width: 100%" disabled>
                   <el-option v-for="item in leaderList" :key="item.ID" :label="item.name" :value="item.ID" />
                 </el-select>
-              <!-- <el-input v-model="ruleForm.leader_id" placeholder="" /> -->
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="岗位" prop="position">
-                <!-- <el-select v-model="ruleForm.position" placeholder="" style="width: 100%">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select> -->
                 <el-input v-model="ruleForm.position" placeholder="请输入岗位" />
               </el-form-item>
             </el-col>
@@ -475,7 +471,20 @@ export default {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }
-      this.ruleForm = ruleForm
+      this.ruleForm = {
+        department: {
+          leader: {}
+        },
+        level: {},
+        name: '',
+        gender: '',
+        status: '',
+        mobile: '',
+        id_card: '', plan_date: '',
+        interview_comment: '',
+        resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
+        level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
+      }
     },
     getaActive(notes) {
       let active = 0

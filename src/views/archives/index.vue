@@ -18,7 +18,11 @@
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="ID" align="center" label="员工编号" />
-      <el-table-column prop="name" align="center" label="员工姓名" />
+      <el-table-column align="center" label="员工姓名">
+        <template slot-scope="scope">
+          <span class="bule-hover" @click="openDra(scope.row)"> {{ scope.row.name }} </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="department.department_name" align="center" label="所属部门" />
       <el-table-column prop="service_line" align="center" label="服务线" />
       <el-table-column prop="email" align="center" label="企业邮箱" show-overflow-tooltip />
@@ -261,9 +265,6 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="英语技能">
-                  <!-- <el-select v-model="ruleForm.employee_basic.en_skill" placeholder="" style="width: 100%">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                  </el-select> -->
                   <el-input v-model="ruleForm.employee_basic.en_skill" placeholder="" />
                 </el-form-item>
               </el-col>
@@ -472,6 +473,8 @@
         </div>
       </div>
     </el-dialog>
+    <ArchivesDrawer ref="archivesDrawer" :base-data="baseData" :con-data="conData" />
+
   </div>
 </template>
 
@@ -483,9 +486,11 @@ import { ruleForm } from './config'
 import { STATUSVALUE, DOWNURL } from '@/utils/const'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import ArchivesDrawer from '@/components/Oa/ArchivesDrawer'
 export default {
   components: {
-    Label
+    Label,
+    ArchivesDrawer
   },
   data() {
     return {
@@ -530,7 +535,8 @@ export default {
         ]
       },
       myHeaders: {},
-      api: ''
+      api: '',
+      baseData: ruleForm
     }
   },
   mounted() {
@@ -605,6 +611,19 @@ export default {
         console.log(res)
       }
       this.dialogVisible = false
+    },
+    async openDra(row) {
+      const con = await getContractsAllDetail(row.ID)
+      if (con.ret === 0 && con.data) {
+        this.conData = con.data
+      }
+      const res = await getEmployeeAllDetail(row.ID)
+      if (res.ret === 0) {
+        this.baseData = res.data
+        this.baseData.employee_basic.relations = JSON.parse(res.data.employee_basic.relations)
+        this.baseData.employee_basic.contacts = JSON.parse(res.data.employee_basic.contacts)
+      }
+      this.$refs.archivesDrawer.openDrawer()
     },
     changeAct(href) {
       this.active = href

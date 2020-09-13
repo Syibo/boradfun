@@ -64,12 +64,6 @@
       </span>
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
         <Label :title="'基本信息'" />
-        <!-- <el-row style="color: #2B2B2B">
-          <el-col :span="4"> 姓名：沈奕博 </el-col>
-          <el-col :span="4"> 性别：男 </el-col>
-          <el-col :span="8"> 身份证号码：362330199512263656 </el-col>
-          <el-col :span="6"> 手机号码：18720573255 </el-col>
-        </el-row> -->
         <el-row>
           <el-row :gutter="20">
             <el-col :span="12">
@@ -81,8 +75,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="签约方" prop="contract_party">
-                <!-- <el-input v-model=""  @change="input" /> -->
+              <el-form-item label="签约方" prop="name">
                 <el-autocomplete
                   v-model="ruleForm.contract_party"
                   style="width: 100%"
@@ -202,6 +195,7 @@ import { getContractsList,
 import { STATUSVALUE } from '@/utils/const'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import { ruleFormCon, rulesCon } from './config'
 export default {
   data() {
     return {
@@ -220,32 +214,9 @@ export default {
       pageNum: 1,
       pageSize: 10,
       total: 0,
-      ruleForm: {
-        contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
-        trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
-      },
+      ruleForm: ruleFormCon,
       options: STATUSVALUE,
-      rules: {
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
-        ],
-        email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' }
-        ],
-        wx: [
-          { required: true, message: '请输入企业微信', trigger: 'blur' }
-        ],
-        phone: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' }
-        ],
-        userType: [
-          { required: true, message: '请选择用户类型', trigger: 'change' }
-        ],
-        leaderId: [
-          { required: true, message: '请选择资源组长', trigger: 'blur' }
-        ]
-      },
+      rules: rulesCon,
       myHeaders: {},
       api: '',
       title: '新建合同'
@@ -395,7 +366,7 @@ export default {
       }
       this.ruleForm = {
         contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
-        trial_period: '', annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
+        trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
       }
     }
   }

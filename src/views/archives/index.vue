@@ -424,7 +424,7 @@
             </el-row>
             <Label id="contractInfo" title="合同信息">
               <template slot="right">
-                <el-button size="mini" style="float: right">新建合同</el-button>
+                <el-button size="mini" style="float: right" @click="addCon">新建合同</el-button>
               </template>
             </Label>
             <el-table :data="conData" style="width: 100%;margin: 20px 0" :header-cell-style="{background:'#F7F8FA'}">
@@ -491,6 +491,7 @@
       </div>
     </el-dialog>
     <ArchivesDrawer ref="archivesDrawer" :base-data="baseData" :con-data="conData" />
+    <ContactFrom :title="title" :visible="visible" :from-data="conFrom" @addSucc="addSucc" @close="closeFun" />
 
   </div>
 </template>
@@ -504,15 +505,23 @@ import { STATUSVALUE, DOWNURL } from '@/utils/const'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import ArchivesDrawer from '@/components/Oa/ArchivesDrawer'
+import ContactFrom from '@/components/Oa/ContactFrom'
 import EmStatus from '@/components/common/EmStatus.vue'
 export default {
   components: {
     Label,
     ArchivesDrawer,
-    EmStatus
+    EmStatus,
+    ContactFrom
   },
   data() {
     return {
+      title: '新建合同',
+      visible: false,
+      conFrom: {
+        contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
+        trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
+      },
       seachValue: {
         pagenum: 1,
         pagesize: 10,
@@ -574,6 +583,15 @@ export default {
         this.tableData = []
         this.total = 0
       }
+    },
+    addCon() {
+      this.visible = true
+    },
+    addSucc() {
+      this.visible = false
+    },
+    closeFun() {
+      this.visible = false
     },
     async getDepartmentList() {
       const res = await getDepartmentList()

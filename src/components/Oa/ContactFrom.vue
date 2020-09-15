@@ -1,11 +1,11 @@
 <template>
-  <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" width="60%" :show-close="false" @close="open">
+  <el-dialog :visible.sync="visible" :close-on-click-modal="false" width="60%" :show-close="false" class="contract-from" @close="closeVisble">
     <span slot="title" class="dialog-title">
       <div class="dialog-title-left">
         {{ title }}
       </div>
       <div class="dialog-title-right">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="closeVisble">取 消</el-button>
         <el-button size="small" type="primary" @click="submitForm('ruleForm')">提 交</el-button>
       </div>
     </span>
@@ -132,18 +132,145 @@
 </template>
 
 <script>
-
+import {
+  addContracts,
+  editContracts,
+  getEmployeeList } from '@/api/employee'
+import store from '@/store'
+import { rulesCon } from '@/views/archives/config'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'ContactFrom',
   props: {
-    dialogVisible: {
+    visible: {
       type: Boolean,
       default: false
+    },
+    fromData: {
+      type: Object,
+      default: () => {}
+    },
+    title: {
+      type: String,
+      default: '新建合同'
+    }
+  },
+  data() {
+    return {
+      ruleForm: {
+        contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
+        trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
+      },
+      rules: rulesCon,
+      myHeaders: {},
+      api: ''
+    }
+  },
+  watch: {
+    fromData: {
+      deep: true,
+      handler(value) {
+        this.ruleForm = value
+        console.log(this.ruleForm)
+      }
+    }
+  },
+  mounted() {
+    this.api = process.env.VUE_APP_BASE_API
+    if (store.getters.token) {
+      this.myHeaders = {
+        'Authorization': JSON.parse(getToken()).session
+      }
+    }
+  },
+  methods: {
+    oneUpload(response, file, fileList) {
+      this.ruleForm.soft_copy = response.data
+    },
+    oneUploadScanned(response, file, fileList) {
+      this.ruleForm.scanned_copy = response.data
+    },
+    async querySearchAsync(queryString, cb) {
+      let restaurants = []
+      const seach = {
+        pagenum: 1,
+        pagesize: 10,
+        name: this.ruleForm.contract_party,
+        departmentid: '',
+        status: 2
+      }
+      const res = await getEmployeeList(seach)
+      if (res.ret === 0 && res.data.list.length !== 0) {
+        for (let i = 0, len = res.data.list.length; i < len; i++) {
+          res.data.list[i].value = res.data.list[i].name
+        }
+        restaurants = res.data.list
+      } else {
+        restaurants = []
+      }
+      var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+      clearTimeout(this.timeout)
+      this.timeout = setTimeout(() => {
+        cb(results)
+      }, 3000 * Math.random())
+    },
+    createStateFilter(queryString) {
+      return (state) => {
+        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.addContracts()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async addContracts() {
+      if (!this.ruleForm.ID) {
+        this.$message.error('信息错误')
+        return
+      }
+      if (this.title === '新建合同') {
+        const res = await addContracts(this.ruleForm.ID, this.ruleForm)
+        if (res.ret === 0) {
+          this.$message.success('新建合同成功')
+          this.$emit('addSucc')
+        }
+      } else {
+        const res = await editContracts(this.ruleForm)
+        if (res.ret === 0) {
+          this.$message.success('编辑合同成功')
+        }
+      }
+    },
+    handleSelect(item) {
+      this.ruleForm.ID = item.ID
+    },
+    closeVisble() {
+      if (this.$refs['ruleForm']) {
+        this.$refs['ruleForm'].resetFields()
+      }
+      this.ruleForm = {
+        contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
+        trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
+      }
+      this.$emit('close')
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+.contract-from {
+  .el-dialog__header {
+    padding: 0;
+  }
+  .el-input-number {
+    text-align: left!important;
+  }
+}
 </style>

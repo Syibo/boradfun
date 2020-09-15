@@ -2,14 +2,14 @@
   <div class="container employees-container">
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="seachValue.name" placeholder="请输入员工姓名" />
-        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin-left: 10px" clearable>
+        <el-input v-model="seachValue.name" placeholder="请输入员工姓名" clearable @input="seachFun" />
+        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
           <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
         </el-select>
-        <el-select v-model="seachValue.status" placeholder="状态" style="width: 100%;margin-left: 10px" clearable>
+        <el-select v-model="seachValue.status" placeholder="状态" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
           <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-button style="margin-left: 10px" type="primary" @click="seachFun">搜索</el-button>
+        <!-- <el-button style="margin-left: 10px" type="primary" @click="seachFun">搜索</el-button> -->
       </div>
       <div class="right">
         <el-button v-permission="[6]" type="primary" @click="induction">新建入职</el-button>
@@ -344,6 +344,12 @@ export default {
         'Authorization': JSON.parse(getToken()).session
       }
       this.userType = JSON.parse(getToken()).userType
+    }
+    const openFrom = this.$route.query.openFrom
+    if (openFrom) {
+      setTimeout(() => {
+        this.dialogVisible = true
+      }, 500)
     }
   },
   methods: {

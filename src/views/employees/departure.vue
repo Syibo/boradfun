@@ -1,7 +1,16 @@
 <template>
   <div class="container">
-    <el-row class="baradfun-top">
-      <el-button v-permission="[6]" type="primary" @click="departure">新建离职</el-button>
+    <el-row class="table-top">
+      <div class="left">
+        <el-input v-model="seachValue.emp_no" placeholder="请输入员工姓名" clearable @input="seachFun" />
+        <el-input v-model="seachValue.name" placeholder="请输入员工姓名" style="width: 100%;margin-left: 10px" clearable @input="seachFun" />
+        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
+          <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
+        </el-select>
+      </div>
+      <div class="right">
+        <el-button v-permission="[6]" type="primary" @click="departure">新建离职</el-button>
+      </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="ID" align="center" label="离职员工编号" />
@@ -224,6 +233,7 @@
 <script>
 import { getEmployeeList,
   leaveEmployee,
+  getDepartmentList,
   editLeaveEmployee,
   leaveEmployeeDetail } from '@/api/employee'
 import Label from '@/components/common/Label.vue'
@@ -245,7 +255,8 @@ export default {
         pagesize: 10,
         name: '',
         departmentid: '',
-        status: 3
+        status: 3,
+        emp_no: ''
       },
       dialogVisible: false,
       pageNum: 1,
@@ -258,7 +269,8 @@ export default {
         { value: '已入职', label: '已入职' }
       ],
       rules: rulesDep,
-      userType: 0
+      userType: 0,
+      departmentList: []
     }
   },
   mounted() {
@@ -266,6 +278,7 @@ export default {
       this.userType = JSON.parse(getToken()).userType
     }
     this.init()
+    this.getDepartmentList()
   },
   methods: {
     async init() {
@@ -277,6 +290,13 @@ export default {
         this.tableData = []
         this.total = 0
       }
+    },
+    seachFun() {
+      this.init()
+    },
+    async getDepartmentList() {
+      const res = await getDepartmentList()
+      this.departmentList = res.data
     },
     async querySearchAsync(queryString, cb) {
       let restaurants = []

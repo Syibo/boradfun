@@ -2,12 +2,11 @@
   <div class="container contract-container">
     <el-row class="table-top">
       <div class="left">
-        <el-input placeholder="请输入员工姓名" />
-        <el-select v-model="ruleForm.name" placeholder="所属部门" style="width: 100%;margin-left: 10px">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-        <el-select v-model="ruleForm.name" placeholder="状态" style="width: 100%;margin-left: 10px">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-input v-model="seachValue.number" placeholder="请输入员工编号" clearable @input="seachFun" />
+        <el-input v-model="seachValue.name" placeholder="请输入员工姓名" style="width: 100%;margin-left: 10px" clearable @input="seachFun" />
+        <el-select v-model="seachValue.status" placeholder="状态" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
+          <el-option key="已签" label="已签" value="已签" />
+          <el-option key="未签" label="未签" value="未签" />
         </el-select>
       </div>
       <div class="right">
@@ -236,8 +235,14 @@ export default {
       const res = await getContractsList(this.seachValue)
       if (res.ret === 0 && res.data.list) {
         this.tableData = res.data.list
-        this.total - res.data.total
+        this.total = res.data.total
+      } else {
+        this.tableData = []
+        this.total = 0
       }
+    },
+    seachFun() {
+      this.init()
     },
     async input(val) {
       const seach = {
@@ -356,7 +361,7 @@ export default {
       }
     },
     openDra() {
-      this.$refs.employDrawer.openDrawer()
+      // this.$refs.employDrawer.openDrawer()
     },
     open() {
       if (this.$refs['ruleForm']) {

@@ -2,15 +2,15 @@
   <div class="container">
     <el-row class="table-top">
       <div class="left">
-        <el-input placeholder="请输入员工编号" />
-        <el-input placeholder="请输入员工姓名" style="width: 100%;margin-left: 10px" />
-        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin-left: 10px">
+        <el-input v-model="seachValue.emp_no" placeholder="请输入员工编号" clearable @input="changeSeach" />
+        <el-input v-model="seachValue.name" placeholder="请输入员工姓名" style="width: 100%;margin-left: 10px" clearable @input="changeSeach" />
+        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin-left: 10px" clearable @change="changeSeach">
           <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
         </el-select>
-        <el-select v-model="seachValue.status" placeholder="员工状态" style="width: 100%;margin: 0 10px">
+        <el-select v-model="seachValue.status" placeholder="员工状态" style="width: 100%;margin: 0 10px" clearable @change="changeSeach">
           <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-button type="primary">筛选</el-button>
+        <!-- <el-button type="primary">筛选</el-button> -->
       </div>
       <div class="right">
         <el-button type="primary" @click="induction">新建入职</el-button>
@@ -499,7 +499,13 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
-import { getEmployeeList, getEmployeeAllDetail, delContracts, putEmployeeDetail, getContractsAllDetail, getDepartmentList, getContractsDetail } from '@/api/employee'
+import { getEmployeeList,
+  getEmployeeAllDetail,
+  delContracts,
+  putEmployeeDetail,
+  getContractsAllDetail,
+  getDepartmentList,
+  getContractsDetail } from '@/api/employee'
 import { ruleForm, rules } from './config'
 import { STATUSVALUE, DOWNURL } from '@/utils/const'
 import store from '@/store'
@@ -527,7 +533,8 @@ export default {
         pagesize: 10,
         name: '',
         departmentid: '',
-        status: 2
+        status: 2,
+        emp_no: ''
       },
       regionData,
       STATUSVALUE,
@@ -584,6 +591,9 @@ export default {
         this.total = 0
       }
     },
+    changeSeach() {
+      this.init()
+    },
     addCon() {
       this.visible = true
     },
@@ -625,7 +635,10 @@ export default {
     },
     induction() {
       this.$router.push({
-        path: '/employees/induction'
+        path: '/employees/induction',
+        query: {
+          openFrom: 1
+        }
       })
     },
     async handleClick(item) {

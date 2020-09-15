@@ -435,9 +435,9 @@
               <el-table-column prop="contract_main" align="center" label="签订主体" />
               <el-table-column prop="status" align="center" label="签订状态" />
               <el-table-column align="center" label="操作" width="120">
-                <template>
-                  <el-button type="text" disabled size="small">编辑</el-button>
-                  <el-button type="text" disabled size="small">删除</el-button>
+                <template slot-scope="scope">
+                  <el-button type="text" size="small" @click="editCon(scope.row)">编辑</el-button>
+                  <el-button type="text" size="small" @click="handleDeleta(scope.row)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -499,7 +499,7 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
-import { getEmployeeList, getEmployeeAllDetail, putEmployeeDetail, getContractsAllDetail, getDepartmentList } from '@/api/employee'
+import { getEmployeeList, getEmployeeAllDetail, delContracts, putEmployeeDetail, getContractsAllDetail, getDepartmentList, getContractsDetail } from '@/api/employee'
 import { ruleForm, rules } from './config'
 import { STATUSVALUE, DOWNURL } from '@/utils/const'
 import store from '@/store'
@@ -587,11 +587,37 @@ export default {
     addCon() {
       this.visible = true
     },
-    addSucc() {
+    async addSucc(ID) {
       this.visible = false
+      const con = await getContractsAllDetail(ID)
+      if (con.ret === 0 && con.data) {
+        this.conData = con.data
+      }
     },
     closeFun() {
       this.visible = false
+    },
+    async editCon(row) {
+      this.title = '编辑合同'
+      const res = await getContractsDetail(row.ID)
+      if (res.ret === 0) {
+        this.conFrom = res.data
+        this.visible = true
+      }
+    },
+    async handleDeleta(row) {
+      const isDelete = await this.$confirm(`确定删除`, '提示', { type: 'warning' })
+      if (!isDelete) {
+        return
+      }
+      const res = await delContracts(row.ID)
+      if (res.ret === 0) {
+        this.$message.success('删除成功')
+        const con = await getContractsAllDetail(row.employee_id)
+        if (con.ret === 0 && con.data) {
+          this.conData = con.data
+        }
+      }
     },
     async getDepartmentList() {
       const res = await getDepartmentList()

@@ -171,7 +171,6 @@ export default {
       deep: true,
       handler(value) {
         this.ruleForm = value
-        console.log(this.ruleForm)
       }
     }
   },
@@ -238,12 +237,13 @@ export default {
         const res = await addContracts(this.ruleForm.ID, this.ruleForm)
         if (res.ret === 0) {
           this.$message.success('新建合同成功')
-          this.$emit('addSucc')
+          this.$emit('addSucc', this.ruleForm.ID)
         }
       } else {
         const res = await editContracts(this.ruleForm)
         if (res.ret === 0) {
           this.$message.success('编辑合同成功')
+          this.$emit('addSucc', this.ruleForm.employee_id)
         }
       }
     },

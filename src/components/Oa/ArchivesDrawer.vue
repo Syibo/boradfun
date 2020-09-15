@@ -255,6 +255,8 @@ export default {
       display: flex;
       flex-direction: column;
       .item {
+        color: #606266;
+        font-size: 14px;
         position: relative;
         line-height: 30px;
         cursor: pointer;

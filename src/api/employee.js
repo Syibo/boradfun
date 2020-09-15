@@ -183,13 +183,14 @@ export function getContractsAllDetail(id) {
 /**
  * 编辑合同
  */
-export function editContracts({ ID, contract_type, contract_party, contract_main, contract_start_date, contract_end_date,
+export function editContracts({ ID, contract_type, contract_party, employee_id, contract_main, contract_start_date, contract_end_date,
   trial_period, annual_leave, status, soft_copy, scanned_copy }) {
   return request({
     url: `/v1/employee/contract`,
     method: 'put',
     data: {
       ID,
+      employee_id,
       contract_type, contract_party, contract_main, contract_start_date, contract_end_date,
       trial_period: Number(trial_period),
       annual_leave: Number(annual_leave),

@@ -5,7 +5,7 @@ export const ruleForm = {
   level: {},
   name: '',
   gender: '',
-  status: '',
+  status: 0,
   mobile: '',
   id_card: '', plan_date: '',
   interview_comment: '',
@@ -77,8 +77,7 @@ export const rules = {
 
 export const rulesDep = {
   name: [
-    { required: true, message: '请输入姓名', trigger: 'blur' },
-    { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
+    { required: true, message: '请输入姓名', trigger: 'change' }
   ],
   resignation_date: [
     { required: true, message: '选择离职日期', trigger: 'change' }

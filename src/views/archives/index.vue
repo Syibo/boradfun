@@ -28,8 +28,8 @@
       <el-table-column prop="mobile" align="center" label="手机号码" />
       <el-table-column prop="create_time" align="center" label="实际入职时间" show-overflow-tooltip sortable />
       <el-table-column align="center" label="合同信息">
-        <template>
-          <span class="bule-hover"> 查看详情 </span>
+        <template slot-scope="scope">
+          <span class="bule-hover" @click="openCon(scope.row)"> 查看详情 </span>
         </template>
       </el-table-column>
       <el-table-column prop="" align="center" label="转正时间" />
@@ -732,6 +732,13 @@ export default {
       } else {
         this.levelList = []
       }
+    },
+    async openCon(row) {
+      this.openDra(row)
+      // this.$refs.archivesDrawer.active = 'contractInfo'
+      setTimeout(() => {
+        this.$refs.archivesDrawer.changeAct('contractInfo')
+      }, 100)
     },
     async openDra(row) {
       const con = await getContractsAllDetail(row.ID)

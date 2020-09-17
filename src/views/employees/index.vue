@@ -113,7 +113,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="入职状态" prop="status">
-                <el-select v-model="ruleForm.status" placeholder="" style="width: 100%">
+                <el-select v-model="ruleForm.status" placeholder="" style="width: 100%" disabled>
                   <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
@@ -143,14 +143,14 @@
           <el-row :gutter="20">
             <el-col :span="24">
               <el-form-item label="面试评价" prop="interview_comment">
-                <el-input v-model="ruleForm.interview_comment" type="textarea" placeholder="请输入面试评价" />
+                <el-input v-model="ruleForm.interview_comment" maxlength="200" show-word-limit :rows="3" type="textarea" placeholder="请输入面试评价" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20" class="empolyees-upload">
             <el-col :span="2">
               <el-upload
-                style="margin-top: -20px"
+                style="margin-top: -10px"
                 :headers="myHeaders"
                 name="file"
                 :action="`${api}/v1/file/upload?bucket=resume`"
@@ -194,7 +194,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="岗位" prop="position">
-                <el-input v-model="ruleForm.position" placeholder="请输入岗位" />
+                <el-input v-model="ruleForm.position" maxlength="23" placeholder="请输入岗位" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -485,7 +485,7 @@ export default {
         level: {},
         name: '',
         gender: '',
-        status: '',
+        status: 0,
         mobile: '',
         id_card: '', plan_date: '',
         interview_comment: '',

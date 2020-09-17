@@ -41,15 +41,15 @@
         <Label id="interviewiInfo" title="面试信息" />
         <el-row class="item" style="margin-bottom: 40px">
           <el-col class="item-main" :span="24"> <span class="left-label"> 面试评价 </span> {{ baseData.interview_comment }} </el-col>
-          <el-col class="item-main" :span="24"> <span class="left-label"> 履历 </span> <el-button icon="el-icon-upload" type="text">{{ baseData.resume }}</el-button></el-col>
+          <el-col class="item-main" :span="24"> <span class="left-label"> 履历 </span> <el-button type="text" @click="downFile(baseData.resume)">{{ returnName(baseData.resume) }}</el-button></el-col>
         </el-row>
         <Label id="jobsInfo" title="岗位信息" />
         <el-row class="item" style="margin-bottom: 40px">
-          <el-col class="item-main" :span="12"> <span class="left-label"> 所属部门 </span> {{ baseData.department_id }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 部门负责人 </span> {{ baseData.department.department_name }} </el-col>
+          <el-col class="item-main" :span="12"> <span class="left-label"> 所属部门 </span> {{ baseData.department.department_name }} </el-col>
+          <el-col class="item-main" :span="12"> <span class="left-label"> 部门负责人 </span> {{ baseData.department.leader.name }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 岗位 </span> {{ baseData.position }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 服务线 </span> {{ baseData.service_line }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 级别 </span> {{ baseData.level_id }} </el-col>
+          <el-col class="item-main" :span="12"> <span class="left-label"> 级别 </span> {{ baseData.level.level_name }} </el-col>
         </el-row>
         <Label id="schoolInfo" title="学历信息" />
         <el-row class="item" style="margin-bottom: 40px">
@@ -116,10 +116,10 @@
         <Label id="documentInfo" title="文档信息" />
         <el-row class="item" style="margin-bottom: 40px">
           <el-col class="item-main" :span="24"> <span class="left-label"> 身份证复印件 </span></el-col>
-          <el-col class="item-main" :span="12"> {{ baseData.employee_basic.id_card_front }} </el-col>
-          <el-col class="item-main" :span="12"> {{ baseData.employee_basic.id_card_back }} </el-col>
+          <el-col class="item-main" :span="24"> <el-button type="text" @click="downFile(baseData.employee_basic.id_card_front)">{{ returnName(baseData.employee_basic.id_card_front) }}</el-button> </el-col>
+          <el-col class="item-main" :span="24"> <el-button type="text" @click="downFile(baseData.employee_basic.id_card_back)">{{ returnName(baseData.employee_basic.id_card_back) }}</el-button> </el-col>
           <el-col class="item-main" :span="24"> <span class="left-label"> 学历证书复印件 </span></el-col>
-          <el-col class="item-main" :span="12"> {{ baseData.employee_basic.id_card_back }} </el-col>
+          <el-col class="item-main" :span="24"> <el-button type="text" @click="downFile(baseData.employee_basic.degree_certification_copy)">{{ returnName(baseData.employee_basic.degree_certification_copy) }}</el-button> </el-col>
         </el-row>
       </div>
     </div>
@@ -128,6 +128,7 @@
 
 <script>
 import Label from '@/components/common/Label.vue'
+import { DOWNURL } from '@/utils/const'
 // import EmStatus from '@/components/common/EmStatus.vue'
 export default {
   name: 'ArchivesDrawer',
@@ -172,6 +173,16 @@ export default {
     },
     openDrawer() {
       this.visible = true
+    },
+    returnName(name) {
+      let re = ''
+      if (name) {
+        re = name.split('_')[1]
+      }
+      return re
+    },
+    downFile(url) {
+      window.open(`${DOWNURL}${url}`)
     },
     changeAct(href) {
       this.active = href
@@ -297,6 +308,8 @@ export default {
         .item-main {
           height: 30px;
           line-height: 30px;
+          overflow: hidden;
+          white-space: nowrap;
           .left-label {
             color: #999999;
             font-size: 14px;

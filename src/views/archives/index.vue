@@ -10,7 +10,6 @@
         <el-select v-model="seachValue.status" placeholder="员工状态" style="width: 100%;margin: 0 10px" clearable @change="changeSeach">
           <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <!-- <el-button type="primary">筛选</el-button> -->
       </div>
       <div class="right">
         <el-button type="primary" @click="induction">新建入职</el-button>
@@ -212,7 +211,7 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="所属部门" prop="department_id">
-                  <el-select v-model="ruleForm.department_id" placeholder="请选择部门" style="width: 100%">
+                  <el-select v-model="ruleForm.department_id" placeholder="请选择部门" style="width: 100%" @change="departmentChange">
                     <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
                   </el-select>
                 </el-form-item>
@@ -233,7 +232,7 @@
               <el-col :span="12">
                 <el-form-item label="级别" prop="level_id">
                   <el-select v-model="ruleForm.level_id" placeholder="" style="width: 100%">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-option v-for="item in levelList" :key="item.ID" :label="item.level_name" :value="item.ID" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -449,12 +448,14 @@
                     class="avatar-uploader"
                     :headers="myHeaders"
                     name="file"
+                    :limit="1"
+                    accept=".pdf.jpg.png"
                     :action="`${api}/v1/file/upload?bucket=idcard`"
                     :on-success="oneUploadCardfront"
-                    :show-file-list="false"
+                    :show-file-list="true"
+                    :file-list="idCardFrontArr"
                   >
-                    <img v-if="ruleForm.employee_basic.id_card_front" :src="ruleForm.employee_basic.id_card_front" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon" />
+                    <el-button icon="el-icon-upload" size="small" type="text">身份证正面</el-button>
                   </el-upload>
                 </el-col>
                 <el-col :span="8">
@@ -464,10 +465,12 @@
                     name="file"
                     :action="`${api}/v1/file/upload?bucket=idcard`"
                     :on-success="oneUploadCardBack"
-                    :show-file-list="false"
+                    :show-file-list="true"
+                    :file-list="idCardBackArr"
                   >
-                    <img v-if="ruleForm.employee_basic.id_card_back" :src="ruleForm.employee_basic.id_card_back" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon" />
+                    <!-- <img v-if="ruleForm.employee_basic.id_card_back" :src="ruleForm.employee_basic.id_card_back" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon" /> -->
+                    <el-button icon="el-icon-upload" size="small" type="text">身份证反面</el-button>
                   </el-upload>
                 </el-col>
               </el-form-item>
@@ -480,8 +483,11 @@
                     :headers="myHeaders"
                     name="file"
                     :action="`${api}/v1/file/upload?bucket=degree`"
+                    :on-success="oneUploadDegree"
+                    :show-file-list="true"
+                    :file-list="degreeArr"
                   >
-                    <i class="el-icon-plus avatar-uploader-icon" />
+                    <el-button icon="el-icon-upload" size="small" type="text">学历证书复印件</el-button>
                   </el-upload>
                 </el-col>
               </el-form-item>
@@ -504,6 +510,7 @@ import { getEmployeeList,
   delContracts,
   putEmployeeDetail,
   getContractsAllDetail,
+  getDepartmentLevelList,
   getDepartmentList,
   getContractsDetail } from '@/api/employee'
 import { ruleForm, rules } from './config'
@@ -567,7 +574,12 @@ export default {
       myHeaders: {},
       api: '',
       baseData: ruleForm,
-      departmentList: []
+      departmentList: [],
+      leaderList: [],
+      levelList: [],
+      idCardFrontArr: [], // 身份证正面
+      idCardBackArr: [], // 身份证反面
+      degreeArr: [] // 毕业证书复印
     }
   },
   mounted() {
@@ -655,6 +667,13 @@ export default {
           this.ruleForm.employee_basic.relations = JSON.parse(this.ruleForm.employee_basic.relations)
           this.ruleForm.employee_basic.contacts = JSON.parse(this.ruleForm.employee_basic.contacts)
           this.ruleForm.employee_basic.inhabited_city = this.ruleForm.employee_basic.inhabited_city ? JSON.parse(this.ruleForm.employee_basic.inhabited_city) : []
+          this.getUploadArr()
+        }
+        const resLevel = await getDepartmentLevelList(this.ruleForm.department_id)
+        if (resLevel.ret === 0 && resLevel.data) {
+          this.levelList = resLevel.data
+        } else {
+          this.levelList = []
         }
       }
       this.dialogVisible = true
@@ -669,15 +688,28 @@ export default {
       this.init()
     },
     oneUploadCardfront(response, file, fileList) {
-      this.ruleForm.employee_basic.id_card_front = `${DOWNURL}${response.data}`
+      this.ruleForm.employee_basic.id_card_front = response.data
     },
     oneUploadCardBack(response) {
-      this.ruleForm.employee_basic.id_card_back = `${DOWNURL}${response.data}`
+      this.ruleForm.employee_basic.id_card_back = response.data
+    },
+    oneUploadDegree(response) {
+      this.ruleForm.employee_basic.degree_certification_copy = response.data
     },
     oneUpload(response, file, fileList) {
       this.ruleForm.resume = response.data
     },
-    async submitForm() {
+    async submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.editEmp()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async editEmp() {
       const parms = JSON.parse(JSON.stringify(this.ruleForm))
       parms.employee_basic.relations = JSON.stringify(parms.employee_basic.relations)
       parms.employee_basic.contacts = JSON.stringify(parms.employee_basic.contacts)
@@ -689,6 +721,17 @@ export default {
         this.init()
       }
       this.dialogVisible = false
+    },
+    async departmentChange(value) {
+      this.ruleForm.level_id = ''
+      this.ruleForm.department = this.departmentList.find((item) => { return item.ID === value })
+      this.leaderList = [this.departmentList.find((item) => { return item.ID === value }).leader]
+      const res = await getDepartmentLevelList(value)
+      if (res.ret === 0 && res.data) {
+        this.levelList = res.data
+      } else {
+        this.levelList = []
+      }
     },
     async openDra(row) {
       const con = await getContractsAllDetail(row.ID)
@@ -730,6 +773,26 @@ export default {
         right.scrollTop = total - 68
       }
     },
+    getUploadArr() {
+      const obj = {
+        name: this.ruleForm.employee_basic.id_card_front.split('_')[1]
+      }
+      const objBack = {
+        name: this.ruleForm.employee_basic.id_card_back.split('_')[1]
+      }
+      const objCopy = {
+        name: this.ruleForm.employee_basic.degree_certification_copy.split('_')[1]
+      }
+      if (this.ruleForm.employee_basic.id_card_back) {
+        this.idCardBackArr.push(objBack)
+      }
+      if (this.ruleForm.employee_basic.degree_certification_copy) {
+        this.degreeArr.push(objCopy)
+      }
+      if (this.ruleForm.employee_basic.id_card_front) {
+        this.idCardFrontArr.push(obj)
+      }
+    },
     handleChange(value) {
       console.log(value)
     },
@@ -740,13 +803,16 @@ export default {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }
+      this.idCardFrontArr = []
+      this.idCardBackArr = []
+      this.degreeArr = []
     }
   }
 }
 </script>
 
 <style>
-  .avatar-uploader .el-upload {
+  /* .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
@@ -769,7 +835,7 @@ export default {
     width: 300px;
     height: 178px;
     display: block;
-  }
+  } */
 </style>
 
 <style lang="scss" scoped>

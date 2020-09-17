@@ -368,6 +368,7 @@ export default {
       }
     },
     async departmentChange(value) {
+      this.ruleForm.level_id = ''
       this.ruleForm.leader_id = this.departmentList.find((item) => { return item.ID === value }).department_leader_id
       this.leaderList = [this.departmentList.find((item) => { return item.ID === value }).leader]
       const res = await getDepartmentLevelList(value)

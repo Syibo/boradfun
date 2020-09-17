@@ -82,9 +82,9 @@ export function getEmployeeDetail(id) {
 /**
  * 流程信息
  */
-export function getEmployeeWorkflow(id) {
+export function getEmployeeWorkflow(id, type = 'entry') {
   return request({
-    url: `/v1/employee/workflow/${id}`,
+    url: `/v1/employee/workflow/${id}?type=${type}`,
     method: 'get'
   })
 }

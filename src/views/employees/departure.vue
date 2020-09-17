@@ -18,11 +18,34 @@
       <el-table-column prop="department.department_name" align="center" label="所属部门" />
       <el-table-column prop="position" align="center" label="岗位" />
       <el-table-column prop="" align="center" label="部门领导" />
-      <el-table-column prop="" align="center" label="创建人" />
+      <el-table-column prop="req_user" align="center" label="创建人" />
       <el-table-column prop="create_time" align="center" label="创建时间" />
       <el-table-column align="center" label="离职原因">
         <template slot-scope="scope">
           {{ scope.row.reason }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="流程信息">
+        <template slot-scope="scope">
+          <el-popover
+            placement="top-start"
+            width="200"
+            trigger="click"
+            @show="show(scope.row)"
+          >
+            <div v-if="scope" style="height: 200px;">
+              <el-steps direction="vertical" :active="active" finish-status="success">
+                <el-step
+                  v-for="item in workflow"
+                  :key="item.ID"
+                  :title="item.user ? item.user.name : ''"
+                  icon="el-icon-time"
+                  :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
+                />
+              </el-steps>
+            </div>
+            <el-button slot="reference" type="text">查看详情</el-button>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
@@ -133,7 +156,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :prop="userType === 7 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 7 ? 'computer' : ''">
               <template slot="label"><span class="form-label-slot">电脑<span>（IT填写）</span></span></template>
               <el-input v-model="ruleForm.computer" placeholder="" />
             </el-form-item>
@@ -141,13 +164,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 8 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 8 ? 'phone' : ''">
               <template slot="label"><span class="form-label-slot">手机<span>（财务填写）</span></span></template>
               <el-input v-model="ruleForm.phone" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :prop="userType === 8 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 8 ? 'expense' : ''">
               <template slot="label"><span class="form-label-slot">报销<span>（财务填写）</span></span></template>
               <el-input v-model="ruleForm.expense" placeholder="" />
             </el-form-item>
@@ -155,7 +178,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 9 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 9 ? 'device_req' : ''">
               <template slot="label"><span class="form-label-slot">物品领用归还<span>（前台）</span></span></template>
               <el-input v-model="ruleForm.device_req" placeholder="" />
             </el-form-item>
@@ -163,13 +186,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'work_day' : ''">
               <template slot="label"><span class="form-label-slot">实际出勤天数<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.work_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'off_day' : ''">
               <template slot="label"><span class="form-label-slot">旷工<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.off_day" placeholder="" />
             </el-form-item>
@@ -177,13 +200,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'half_day' : ''">
               <template slot="label"><span class="form-label-slot">病假<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.half_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'change_day' : ''">
               <template slot="label"><span class="form-label-slot">剩余调休<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.change_day" placeholder="" />
             </el-form-item>
@@ -191,7 +214,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'others' : ''">
               <template slot="label"><span class="form-label-slot">其他结算<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.others" placeholder="" />
             </el-form-item>
@@ -199,13 +222,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'late_day' : ''">
               <template slot="label"><span class="form-label-slot">迟到/早退<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.late_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'things_day' : ''">
               <template slot="label"><span class="form-label-slot">事假<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.things_day" placeholder="" />
             </el-form-item>
@@ -213,13 +236,13 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'salary_day' : ''">
               <template slot="label"><span class="form-label-slot">带薪假<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.salary_day" placeholder="" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :prop="userType === 6 ? 'isNeed' : ''">
+            <el-form-item :prop="userType === 6 ? 'annual_day' : ''">
               <template slot="label"><span class="form-label-slot">剩余年假<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.annual_day" placeholder="" />
             </el-form-item>
@@ -234,9 +257,11 @@
 import { getEmployeeList,
   leaveEmployee,
   getDepartmentList,
+  getEmployeeWorkflow,
   editLeaveEmployee,
   leaveEmployeeDetail } from '@/api/employee'
 import Label from '@/components/common/Label.vue'
+// import _ from 'lodash'
 import permission from '@/directive/permission/index.js'
 import { ruleFormDep, rulesDep } from './config'
 import store from '@/store'
@@ -270,7 +295,9 @@ export default {
       ],
       rules: rulesDep,
       userType: 0,
-      departmentList: []
+      departmentList: [],
+      workflow: [],
+      active: 0
     }
   },
   mounted() {
@@ -326,6 +353,11 @@ export default {
       return (state) => {
         return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
+    },
+    async show(row) {
+      const res = await getEmployeeWorkflow(row.ID, 'leave')
+      this.active = this.getaActive(res.data.nodes)
+      this.workflow = res.data.nodes
     },
     handleSelect(item) {
       this.ruleForm.ID = item.ID
@@ -418,6 +450,13 @@ export default {
           this.init()
         }
       }
+    },
+    getaActive(notes) {
+      let active = 0
+      var na = notes.map((item) => item.status)
+      const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
+      active = countOccurences(na, 'Completed')
+      return active
     },
     open() {
       if (this.$refs['ruleForm']) {

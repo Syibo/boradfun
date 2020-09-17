@@ -88,7 +88,43 @@ export const rulesDep = {
   account: [
     { required: true, message: '请输入账号', trigger: 'blur' }
   ],
-  isNeed: [
-    { required: true, message: '必填字断', trigger: 'blur' }
+  computer: [
+    { required: true, message: '请输入电脑型号', trigger: 'blur' }
+  ],
+  phone: [
+    { required: true, message: '请输入手机型号', trigger: 'blur' }
+  ],
+  expense: [
+    { required: true, message: '请输入报销', trigger: 'blur' }
+  ],
+  device_req: [
+    { required: true, message: '请输入物品领用归还', trigger: 'blur' }
+  ],
+  work_day: [
+    { required: true, message: '请输入实际出勤天数', trigger: 'blur' }
+  ],
+  off_day: [
+    { required: true, message: '请输入旷工', trigger: 'blur' }
+  ],
+  half_day: [
+    { required: true, message: '请输入病假', trigger: 'blur' }
+  ],
+  change_day: [
+    { required: true, message: '请输入剩余调休', trigger: 'blur' }
+  ],
+  others: [
+    { required: true, message: '请输入其他结算', trigger: 'blur' }
+  ],
+  late_day: [
+    { required: true, message: '请输入迟到/早退', trigger: 'blur' }
+  ],
+  things_day: [
+    { required: true, message: '请输入事假', trigger: 'blur' }
+  ],
+  salary_day: [
+    { required: true, message: '请输入带薪假', trigger: 'blur' }
+  ],
+  annual_day: [
+    { required: true, message: '请输入剩余年假', trigger: 'blur' }
   ]
 }

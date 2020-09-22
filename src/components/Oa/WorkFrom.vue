@@ -10,7 +10,6 @@
       </div>
     </span>
     <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
-      <Label :title="'基本信息'" />
       <el-row>
         <el-row :gutter="20">
           <el-col :span="24">
@@ -61,6 +60,14 @@
           </el-col>
         </el-row>
 
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="审核人">
+              <el-input v-model="ruleForm.people" placeholder="" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
       </el-row>
     </el-form>
   </el-dialog>
@@ -68,8 +75,10 @@
 
 <script>
 import {
+  getWorkApprovals,
   overtime } from '@/api/work'
 import { TYPEVALUE } from '@/utils/const'
+import { isNum } from '@/utils/validate'
 export default {
   name: 'WorkFrom',
   props: {
@@ -90,7 +99,8 @@ export default {
         project: '',
         duration: '',
         cause: '',
-        overtime_date: ''
+        overtime_date: '',
+        people: ''
       },
       rules: {
         project: [
@@ -100,7 +110,8 @@ export default {
           { required: true, message: '请选择类型', trigger: 'change' }
         ],
         duration: [
-          { required: true, message: '请输入时长', trigger: 'blur' }
+          { required: true, message: '请输入时长', trigger: 'blur' },
+          { validator: isNum, trigger: 'blur' }
         ],
         overtime_date: [
           { required: true, message: '请选择日期', trigger: 'change' }
@@ -110,10 +121,19 @@ export default {
       api: ''
     }
   },
-  mounted() {
-
+  watch: {
+    visible: {
+      deep: true,
+      handler(value) {
+        this.getWorkApprovals()
+      }
+    }
   },
   methods: {
+    async getWorkApprovals() {
+      const res = await getWorkApprovals()
+      this.ruleForm.people = res.data
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -140,7 +160,8 @@ export default {
         project: '',
         duration: '',
         cause: '',
-        overtime_date: ''
+        overtime_date: '',
+        people: ''
       }
       this.$emit('close')
     }

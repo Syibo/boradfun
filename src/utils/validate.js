@@ -1,6 +1,14 @@
 /**
- * Created by PanJiaChen on 16/11/18.
+ * Created by Sbb on 20/09/22
  */
+export const isNum = (rule, value, callback) => {
+  const age = /^[0-9]*$/
+  if (!age.test(value)) {
+    callback(new Error('只能为数字'))
+  } else {
+    callback()
+  }
+}
 
 /**
  * @param {string} path

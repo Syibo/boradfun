@@ -34,6 +34,27 @@ export function getOneOverTime(id) {
   })
 }
 /**
+ * 加班审批
+ */
+export function putOneOverTime({ id, status, comment }) {
+  return request({
+    url: `/v1/work/overtime`,
+    method: 'put',
+    data: {
+      id: Number(id), status: Number(status), comment
+    }
+  })
+}
+/**
+ * 审批人
+ */
+export function getWorkApprovals() {
+  return request({
+    url: `/v1/work/approvals`,
+    method: 'get'
+  })
+}
+/**
  * 请假列表
  */
 export function getLeaveList({ pagesize = 10, pagenum = 1, name = '', status = '', type = '' }) {

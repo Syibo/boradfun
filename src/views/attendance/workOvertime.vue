@@ -62,6 +62,11 @@
           </el-popover>
         </template>
       </el-table-column>
+      <el-table-column v-if="activeName === 'third'" align="center" label="操作">
+        <template slot-scope="sope">
+          <el-button type="text" @click="openCheck(sope.row)">编辑</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <div class="broadfun_block">
@@ -78,6 +83,7 @@
 
     <WorkFrom :visible="visible" @close="closeFun" @addSucc="addSucc" />
     <WorkDrawer :id="workDrawerId" ref="workDrawer" :time="new Date().getTime()" />
+    <WorkApproval :id="WorkApprovalId" :visible="visibleApprova" @close="closeFunApp" @addSucc="addSuccApp" />
   </div>
 </template>
 
@@ -86,11 +92,13 @@ import { STATUSVALUE, TYPEVALUE, WORKSTATUSVALUE } from '@/utils/const'
 import { getWorkList, getOneOverTime } from '@/api/work'
 import WorkFrom from '@/components/Oa/WorkFrom'
 import WorkDrawer from '@/components/Oa/WorkDrawer'
+import WorkApproval from '@/components/Oa/WorkApproval'
 export default {
   name: 'WorkOvertime',
   components: {
     WorkFrom,
-    WorkDrawer
+    WorkDrawer,
+    WorkApproval
   },
   data() {
     return {
@@ -100,6 +108,7 @@ export default {
       activeName: 'first',
       name: '',
       visible: false,
+      visibleApprova: false,
       seachValue: {
         pagenum: 1,
         pagesize: 10,
@@ -111,7 +120,8 @@ export default {
       tableData: [],
       workflow: [],
       active: 0,
-      workDrawerId: 0
+      workDrawerId: 0,
+      WorkApprovalId: 0
     }
   },
   mounted() {
@@ -146,6 +156,10 @@ export default {
       this.workDrawerId = row.ID
       this.$refs.workDrawer.openDrawer()
     },
+    openCheck(row) {
+      this.visibleApprova = true
+      this.WorkApprovalId = row.ID
+    },
     changeSeach() {
       this.init()
     },
@@ -156,8 +170,15 @@ export default {
       this.visible = false
       this.init()
     },
+    addSuccApp() {
+      this.visibleApprova = false
+      this.init()
+    },
     closeFun() {
       this.visible = false
+    },
+    closeFunApp() {
+      this.visibleApprova = false
     },
     getaActive(notes) {
       let active = 0

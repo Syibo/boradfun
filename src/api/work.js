@@ -33,3 +33,31 @@ export function getOneOverTime(id) {
     method: 'get'
   })
 }
+/**
+ * 请假列表
+ */
+export function getLeaveList({ pagesize = 10, pagenum = 1, name = '', status = '', type = '' }) {
+  return request({
+    url: `/v1/work/leave?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&status=${status}&type=${type}`,
+    method: 'get'
+  })
+}
+/**
+ * 请假申请
+ */
+export function workLeave({ type, duration, cause, start_date, end_date, start, end }) {
+  return request({
+    url: '/v1/work/leave',
+    method: 'post',
+    data: { type, duration: Number(duration), cause, start_date, end_date, start, end }
+  })
+}
+/**
+ * 单个请假信息
+ */
+export function getOneLeave(id) {
+  return request({
+    url: `/v1/work/leave/${id}`,
+    method: 'get'
+  })
+}

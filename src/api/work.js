@@ -82,3 +82,15 @@ export function getOneLeave(id) {
     method: 'get'
   })
 }
+/**
+ * 请假审批
+ */
+export function putOneLeave({ id, status, comment }) {
+  return request({
+    url: `/v1/work/leave`,
+    method: 'put',
+    data: {
+      id: Number(id), status: Number(status), comment
+    }
+  })
+}

@@ -25,12 +25,13 @@
           <span class="bule-hover" @click="openDra(scope.row)"> {{ scope.row.e_name }} </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="加班类型">
+      <el-table-column align="center" label="请假类型">
         <template slot-scope="sope">
           {{ retType(sope.row.type) }}
         </template>
       </el-table-column>
-      <el-table-column prop="start_time" align="center" label="开始时间" />
+      <el-table-column prop="start_date" align="center" label="开始时间" />
+      <el-table-column prop="end_date" align="center" label="结束时间" />
       <el-table-column prop="duration" align="center" label="加班时长" />
       <el-table-column prop="real_duration" align="center" label="实际加班时长" />
       <el-table-column prop="req_time" align="center" label="申请时间" />
@@ -48,18 +49,27 @@
             @show="show(scope.row)"
           >
             <div v-if="scope" style="height: 150px;">
-              <el-steps direction="vertical" :active="active" finish-status="success">
+              <el-steps direction="vertical" :active="active" finish-status="finish">
                 <el-step
                   v-for="item in workflow"
                   :key="item.ID"
+                  :icon="retWorkflowIcon(item.status)"
                   :title="item.user ? item.user.name : ''"
-                  icon="el-icon-time"
-                  :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
-                />
+                  :description="retWorkflowLabel(item.status)"
+                >
+                  <template slot="icon">
+                    <i :class="retWorkflowIcon(item.status)" />
+                  </template>
+                </el-step>
               </el-steps>
             </div>
             <el-button slot="reference" type="text">查看详情</el-button>
           </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="activeName === 'third'" align="center" label="操作">
+        <template slot-scope="sope">
+          <el-button type="text" @click="openCheck(sope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,19 +88,23 @@
 
     <LeaveFrom :visible="visible" @close="closeFun" @addSucc="addSucc" />
     <WorkDrawer :id="workDrawerId" ref="workDrawer" :time="new Date().getTime()" />
+    <LeaveApproval :id="WorkApprovalId" :visible="visibleApprova" @close="closeFunApp" @addSucc="addSuccApp" />
   </div>
 </template>
 
 <script>
 import { STATUSVALUE, LEAVEVALUE, WORKSTATUSVALUE } from '@/utils/const'
 import { getLeaveList, getOneLeave } from '@/api/work'
+import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import LeaveFrom from '@/components/Oa/LeaveFrom'
+import LeaveApproval from '@/components/Oa/LeaveApproval'
 import WorkDrawer from '@/components/Oa/WorkDrawer'
 export default {
   name: 'WorkOvertime',
   components: {
     LeaveFrom,
-    WorkDrawer
+    WorkDrawer,
+    LeaveApproval
   },
   data() {
     return {
@@ -111,7 +125,9 @@ export default {
       tableData: [],
       workflow: [],
       active: 0,
-      workDrawerId: 0
+      workDrawerId: 0,
+      visibleApprova: false,
+      WorkApprovalId: 0
     }
   },
   mounted() {
@@ -143,8 +159,8 @@ export default {
       this.workflow = res.data.work_flow.nodes
     },
     async openDra(row) {
-      this.workDrawerId = row.ID
-      this.$refs.workDrawer.openDrawer()
+      // this.workDrawerId = row.ID
+      // this.$refs.workDrawer.openDrawer()
     },
     changeSeach() {
       this.init()
@@ -156,16 +172,23 @@ export default {
       this.visible = false
       this.init()
     },
+    addSuccApp() {
+      this.visibleApprova = false
+      this.init()
+    },
     closeFun() {
       this.visible = false
     },
-    getaActive(notes) {
-      let active = 0
-      var na = notes.map((item) => item.status)
-      const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
-      active = countOccurences(na, 'Completed')
-      return active
+    closeFunApp() {
+      this.visibleApprova = false
     },
+    openCheck(row) {
+      this.visibleApprova = true
+      this.WorkApprovalId = row.ID
+    },
+    getaActive,
+    retWorkflowLabel,
+    retWorkflowIcon,
     retType(type) {
       const ret = LEAVEVALUE.find((item) => { return item.value === type }).label
       return ret

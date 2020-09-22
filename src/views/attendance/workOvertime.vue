@@ -93,7 +93,7 @@
 
 <script>
 import { STATUSVALUE, TYPEVALUE, WORKSTATUSVALUE } from '@/utils/const'
-import { retWorkflowLabel, retWorkflowIcon } from '@/utils/common'
+import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import { getWorkList, getOneOverTime } from '@/api/work'
 import WorkFrom from '@/components/Oa/WorkFrom'
 import WorkDrawer from '@/components/Oa/WorkDrawer'
@@ -185,15 +185,6 @@ export default {
     closeFunApp() {
       this.visibleApprova = false
     },
-    getaActive(notes) {
-      let active = 0
-      let Approved = 0
-      var na = notes.map((item) => item.status)
-      const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
-      active = countOccurences(na, 'Completed')
-      Approved = countOccurences(na, 'Approved')
-      return active + Approved
-    },
     retType(type) {
       const ret = TYPEVALUE.find((item) => { return item.value === type }).label
       return ret
@@ -202,6 +193,7 @@ export default {
       const ret = WORKSTATUSVALUE.find((item) => { return item.value === type }).label
       return ret
     },
+    getaActive,
     retWorkflowLabel,
     retWorkflowIcon
   }

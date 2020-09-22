@@ -21,14 +21,18 @@
         <div class="top">
           审批流程
         </div>
-        <el-steps :active="active" finish-status="success" style="padding: 0 10px">
+        <el-steps style="padding: 0 10px" :active="active" finish-status="finish">
           <el-step
             v-for="item in workflow"
             :key="item.ID"
+            :icon="retWorkflowIcon(item.status)"
             :title="item.user ? item.user.name : ''"
-            icon="el-icon-time"
-            :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
-          />
+            :description="retWorkflowLabel(item.status)"
+          >
+            <template slot="icon">
+              <i :class="retWorkflowIcon(item.status)" />
+            </template>
+          </el-step>
         </el-steps>
       </div>
       <Label title="申请信息" />
@@ -53,6 +57,7 @@
 
 <script>
 import Label from '@/components/common/Label.vue'
+import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import { getOneOverTime } from '@/api/work'
 export default {
   name: 'WorkDrawer',
@@ -100,13 +105,9 @@ export default {
     handleClose() {
       this.visible = false
     },
-    getaActive(notes) {
-      let active = 0
-      var na = notes.map((item) => item.status)
-      const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
-      active = countOccurences(na, 'Completed')
-      return active
-    },
+    getaActive,
+    retWorkflowLabel,
+    retWorkflowIcon,
     openDrawer() {
       this.visible = true
     }

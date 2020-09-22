@@ -48,14 +48,18 @@
             @show="show(scope.row)"
           >
             <div v-if="scope" style="height: 150px;">
-              <el-steps direction="vertical" :active="active" finish-status="success">
+              <el-steps direction="vertical" :active="active" finish-status="finish">
                 <el-step
                   v-for="item in workflow"
                   :key="item.ID"
+                  :icon="retWorkflowIcon(item.status)"
                   :title="item.user ? item.user.name : ''"
-                  icon="el-icon-time"
-                  :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
-                />
+                  :description="retWorkflowLabel(item.status)"
+                >
+                  <template slot="icon">
+                    <i :class="retWorkflowIcon(item.status)" />
+                  </template>
+                </el-step>
               </el-steps>
             </div>
             <el-button slot="reference" type="text">查看详情</el-button>
@@ -89,6 +93,7 @@
 
 <script>
 import { STATUSVALUE, TYPEVALUE, WORKSTATUSVALUE } from '@/utils/const'
+import { retWorkflowLabel, retWorkflowIcon } from '@/utils/common'
 import { getWorkList, getOneOverTime } from '@/api/work'
 import WorkFrom from '@/components/Oa/WorkFrom'
 import WorkDrawer from '@/components/Oa/WorkDrawer'
@@ -182,10 +187,12 @@ export default {
     },
     getaActive(notes) {
       let active = 0
+      let Approved = 0
       var na = notes.map((item) => item.status)
       const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
       active = countOccurences(na, 'Completed')
-      return active
+      Approved = countOccurences(na, 'Approved')
+      return active + Approved
     },
     retType(type) {
       const ret = TYPEVALUE.find((item) => { return item.value === type }).label
@@ -194,7 +201,9 @@ export default {
     retStatus(type) {
       const ret = WORKSTATUSVALUE.find((item) => { return item.value === type }).label
       return ret
-    }
+    },
+    retWorkflowLabel,
+    retWorkflowIcon
   }
 }
 </script>

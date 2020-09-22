@@ -1,10 +1,11 @@
 <template>
-  <el-dialog :visible.sync="visible" width="60%" :show-close="false" class="contract-from" @close="closeVisble">
+  <el-dialog :visible.sync="visible" width="60%" :close-on-click-modal="false" :show-close="false" class="contract-from" @close="closeVisble">
     <span slot="title" class="dialog-title">
       <div class="dialog-title-left">
         {{ title }}
       </div>
       <div class="dialog-title-right">
+        <el-button @click="closeVisble">取 消</el-button>
         <el-button @click="submitForm(0)">拒 绝</el-button>
         <el-button size="small" type="primary" @click="submitForm(1)">同 意</el-button>
       </div>
@@ -43,14 +44,18 @@
         <div class="top">
           审批流程
         </div>
-        <el-steps :active="active" finish-status="success" style="padding: 0 10px">
+        <el-steps style="padding: 0 10px" :active="active" finish-status="finish">
           <el-step
             v-for="item in workflow"
             :key="item.ID"
+            :icon="retWorkflowIcon(item.status)"
             :title="item.user ? item.user.name : ''"
-            icon="el-icon-time"
-            :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
-          />
+            :description="retWorkflowLabel(item.status)"
+          >
+            <template slot="icon">
+              <i :class="retWorkflowIcon(item.status)" />
+            </template>
+          </el-step>
         </el-steps>
       </div>
       <el-input v-model="comment" type="textarea" rows="5" placeholder="请输入审核意见" />
@@ -64,6 +69,7 @@ import {
   putOneOverTime } from '@/api/work'
 import { TYPEVALUE } from '@/utils/const'
 import Label from '@/components/common/Label.vue'
+import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 export default {
   name: 'WorkApproval',
   components: {
@@ -125,13 +131,9 @@ export default {
         this.$emit('addSucc')
       }
     },
-    getaActive(notes) {
-      let active = 0
-      var na = notes.map((item) => item.status)
-      const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
-      active = countOccurences(na, 'Completed')
-      return active
-    },
+    getaActive,
+    retWorkflowLabel,
+    retWorkflowIcon,
     closeVisble() {
       this.$emit('close')
     }

@@ -468,8 +468,6 @@
                     :show-file-list="true"
                     :file-list="idCardBackArr"
                   >
-                    <!-- <img v-if="ruleForm.employee_basic.id_card_back" :src="ruleForm.employee_basic.id_card_back" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon" /> -->
                     <el-button icon="el-icon-upload" size="small" type="text">身份证反面</el-button>
                   </el-upload>
                 </el-col>
@@ -477,7 +475,7 @@
             </el-row>
             <el-row :gutter="20">
               <el-form-item label="学历证书复印件">
-                <el-col :span="24">
+                <el-col :span="8">
                   <el-upload
                     class="avatar-uploader"
                     :headers="myHeaders"

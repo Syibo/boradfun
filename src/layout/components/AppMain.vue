@@ -69,8 +69,20 @@ export default {
   cursor: pointer;
 }
 .dialog-container .el-dialog__header {
-    padding: 0;
-  }
+  padding: 0;
+}
+.el-step__head.is-finish {
+  color: #4DA89F;
+}
+.el-step__icon.is-icon {
+  font-size: 24px;
+}
+.error-color {
+  color: red;
+}
+.padd-color {
+  color: #FFC069;
+}
 </style>
 
 <style lang="scss" scoped>

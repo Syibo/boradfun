@@ -37,8 +37,8 @@ export const LEAVEVALUE = [
  */
 export const WORKSTATUSVALUE = [
   { value: 'NA', label: '未完成' },
-  { value: 'Approved', label: '审核中' },
-  { value: 'Rejected', label: '已完成' }
+  { value: 'Approved', label: '已完成' },
+  { value: 'Rejected', label: '已拒绝' }
 ]
 
 export const DOWNURL = 'http://172.16.9.195:9000'

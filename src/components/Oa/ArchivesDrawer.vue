@@ -166,7 +166,6 @@ export default {
   },
   methods: {
     retCodeToText(num) {
-      console.log(num)
       let city = ''
       if (num.length !== 0) {
         const arr = JSON.parse(num) || []

@@ -201,7 +201,7 @@
                 >
                   <el-button v-if="ruleForm.resume === ''" icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
                   <div v-else style="display: flex">
-                    <el-button icon="el-icon-upload" type="text">{{ ruleForm.resume }}</el-button>
+                    <el-button icon="el-icon-upload" type="text">{{ retFileName(ruleForm.resume) }}</el-button>
                     <el-button type="text" @click.stop="downFile(ruleForm.resume)"> 下载 </el-button>
                   </div>
                 </el-upload>
@@ -503,6 +503,7 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
+import { retFileName } from '@/utils/common'
 import { getEmployeeList,
   getEmployeeAllDetail,
   delContracts,
@@ -591,6 +592,7 @@ export default {
     }
   },
   methods: {
+    retFileName,
     async init() {
       const res = await getEmployeeList(this.seachValue)
       if (res.ret === 0) {

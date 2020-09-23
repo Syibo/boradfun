@@ -67,7 +67,7 @@
         <Label id="familyInfo" title="家庭信息" />
         <el-row class="item" style="margin-bottom: 40px">
           <el-col class="item-main" :span="12"> <span class="left-label"> 籍贯 </span> {{ baseData.employee_basic.birthplace }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 居住城市 </span> {{ baseData.employee_basic.inhabited_city }} </el-col>
+          <el-col class="item-main" :span="12"> <span class="left-label"> 居住城市 </span> {{ retCodeToText(baseData.employee_basic.inhabited_city) }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 居住地址 </span> {{ baseData.employee_basic.inhabited_address }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 婚姻状况 </span> {{ baseData.employee_basic.marriage }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 家庭及亲属情况 </span> </el-col>
@@ -129,7 +129,7 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { DOWNURL } from '@/utils/const'
-// import EmStatus from '@/components/common/EmStatus.vue'
+import { CodeToText } from 'element-china-area-data'
 export default {
   name: 'ArchivesDrawer',
   components: {
@@ -165,6 +165,15 @@ export default {
     }
   },
   methods: {
+    retCodeToText(num) {
+      console.log(num)
+      let city = ''
+      if (num.length !== 0) {
+        const arr = JSON.parse(num) || []
+        city = CodeToText[arr[0]] + '/' + CodeToText[arr[1]] + '/' + CodeToText[arr[2]]
+      }
+      return city
+    },
     closeDrawer() {
       this.visible = false
     },

@@ -72,3 +72,14 @@ export function getaActive(notes) {
   Approved = countOccurences(na, 'Approved')
   return active + Approved
 }
+/**
+ * 返回文件的名称
+ */
+export function retFileName(name) {
+  let re = ''
+  if (name) {
+    re = name.split('_')[1]
+  }
+  return re
+}
+

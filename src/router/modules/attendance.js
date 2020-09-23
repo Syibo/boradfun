@@ -5,7 +5,7 @@ import Layout from '@/layout'
 const attendanceRouter = {
   path: '/attendance',
   component: Layout,
-  redirect: '/attendanceRouter/month',
+  redirect: '/attendance/month',
   name: 'attendanceRouter',
   meta: {
     title: '考勤管理',

@@ -33,15 +33,19 @@
             trigger="click"
             @show="show(scope.row)"
           >
-            <div v-if="scope" style="height: 200px;">
-              <el-steps direction="vertical" :active="active" finish-status="success">
+            <div v-if="scope" style="height: auto">
+              <el-steps direction="vertical" :active="active" finish-status="finish">
                 <el-step
                   v-for="item in workflow"
                   :key="item.ID"
+                  :icon="retWorkflowIcon(item.status)"
                   :title="item.user ? item.user.name : ''"
-                  icon="el-icon-time"
-                  :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
-                />
+                  :description="retWorkflowLabel(item.status)"
+                >
+                  <template slot="icon">
+                    <i :class="retWorkflowIcon(item.status)" />
+                  </template>
+                </el-step>
               </el-steps>
             </div>
             <el-button slot="reference" type="text">查看详情</el-button>
@@ -261,7 +265,7 @@ import { getEmployeeList,
   editLeaveEmployee,
   leaveEmployeeDetail } from '@/api/employee'
 import Label from '@/components/common/Label.vue'
-// import _ from 'lodash'
+import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import permission from '@/directive/permission/index.js'
 import { ruleFormDep, rulesDep } from './config'
 import store from '@/store'
@@ -451,13 +455,9 @@ export default {
         }
       }
     },
-    getaActive(notes) {
-      let active = 0
-      var na = notes.map((item) => item.status)
-      const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
-      active = countOccurences(na, 'Completed')
-      return active
-    },
+    getaActive,
+    retWorkflowLabel,
+    retWorkflowIcon,
     open() {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()

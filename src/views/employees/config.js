@@ -1,3 +1,4 @@
+import { isNum } from '@/utils/validate'
 export const ruleForm = {
   department: {
     leader: {}
@@ -29,7 +30,7 @@ export const rules = {
     { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
   ],
   gender: [
-    { required: true, message: '请选择年龄', trigger: 'change' }
+    { required: true, message: '请选择性别', trigger: 'change' }
   ],
   id_card: [
     { required: true, message: '请输入身份证号', trigger: 'blur' }
@@ -38,7 +39,8 @@ export const rules = {
     { required: true, message: '请输入面试评价', trigger: 'blur' }
   ],
   mobile: [
-    { required: true, message: '请输入手机号码', trigger: 'blur' }
+    { required: true, message: '请输入手机号码', trigger: 'blur' },
+    { validator: isNum, trigger: 'blur' }
   ],
   status: [
     { required: true, message: '请选择入职状态', trigger: 'change' }

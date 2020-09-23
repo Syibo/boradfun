@@ -9,7 +9,6 @@
         <el-select v-model="seachValue.status" placeholder="状态" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
           <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <!-- <el-button style="margin-left: 10px" type="primary" @click="seachFun">搜索</el-button> -->
       </div>
       <div class="right">
         <el-button v-permission="[6]" type="primary" @click="induction">新建入职</el-button>
@@ -38,14 +37,18 @@
             @show="show(scope.row)"
           >
             <div v-if="scope" style="height: 150px;">
-              <el-steps direction="vertical" :active="active" finish-status="success">
+              <el-steps direction="vertical" :active="active" finish-status="finish">
                 <el-step
                   v-for="item in workflow"
                   :key="item.ID"
+                  :icon="retWorkflowIcon(item.status)"
                   :title="item.user ? item.user.name : ''"
-                  icon="el-icon-time"
-                  :description="item.status === 'Completed' ? '已提交' : item.status === 'Processing' ? '正在处理' : '未处理'"
-                />
+                  :description="retWorkflowLabel(item.status)"
+                >
+                  <template slot="icon">
+                    <i :class="retWorkflowIcon(item.status)" />
+                  </template>
+                </el-step>
               </el-steps>
             </div>
             <el-button slot="reference" type="text">查看详情</el-button>
@@ -55,7 +58,7 @@
       <el-table-column prop="create_time" align="center" label="创建时间" sortable />
       <el-table-column align="center" label="操作" width="280">
         <template slot-scope="scope">
-          <el-button v-permission="[6]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <!-- <el-button v-permission="[6]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button> -->
           <el-button v-permission="[6]" type="text" size="small">删除</el-button>
           <el-button v-permission="[7]" type="text" size="small" @click="handleClick(scope.row)">录入设备需求</el-button>
           <el-button v-permission="[10]" type="text" size="small" @click="handleClick(scope.row)">录入账号信息</el-button>
@@ -279,8 +282,8 @@
 import Label from '@/components/common/Label.vue'
 import EmployDrawer from '@/components/Oa/EmployDrawer'
 import permission from '@/directive/permission/index.js'
+import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import EmStatus from '@/components/common/EmStatus.vue'
-import _ from 'lodash'
 import { getDepartmentList,
   getEmployeeList,
   getDepartmentLevelList,
@@ -493,25 +496,9 @@ export default {
         level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
       }
     },
-    getaActive(notes) {
-      let active = 0
-      var na = _.uniq(notes.map((item) => item.status))
-      switch (na.length) {
-        case 3:
-          active = 1
-          break
-        case 2:
-          active = 2
-          break
-        case 1:
-          active = 3
-          break
-        default:
-          active = 0
-          break
-      }
-      return active
-    }
+    getaActive,
+    retWorkflowLabel,
+    retWorkflowIcon
   }
 }
 </script>

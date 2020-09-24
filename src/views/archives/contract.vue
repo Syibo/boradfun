@@ -125,7 +125,8 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="试用期（月）" prop="trial_period">
-                <el-input-number v-model="ruleForm.trial_period" :min="0" controls-position="right" class="num-inp" style="width: 100%;" />
+                <!-- <el-input-number v-model="ruleForm.trial_period" :min="0" controls-position="right" class="num-inp" style="width: 100%;" /> -->
+                <el-input v-model="ruleForm.trial_period" :min="0" placeholder="请输入试用期（月）" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -156,7 +157,7 @@
                   :show-file-list="false"
                 >
                   <el-button v-if="ruleForm.soft_copy === ''" icon="el-icon-upload" size="small" type="text">上传文件</el-button>
-                  <el-button v-else icon="el-icon-upload" size="small" type="text">{{ ruleForm.soft_copy }}</el-button>
+                  <el-button v-else icon="el-icon-upload" size="small" type="text">{{ retFileName(ruleForm.soft_copy) }}</el-button>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -173,7 +174,7 @@
                   :show-file-list="false"
                 >
                   <el-button v-if="ruleForm.scanned_copy === ''" icon="el-icon-upload" size="small" type="text">上传文件</el-button>
-                  <el-button v-else icon="el-icon-upload" size="small" type="text">{{ ruleForm.scanned_copy }}</el-button>
+                  <el-button v-else icon="el-icon-upload" size="small" type="text">{{ retFileName(ruleForm.scanned_copy) }}</el-button>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -194,6 +195,7 @@ import { getContractsList,
 import { STATUSVALUE } from '@/utils/const'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import { retFileName } from '@/utils/common'
 import { ruleFormCon, rulesCon } from './config'
 export default {
   data() {
@@ -231,6 +233,7 @@ export default {
     }
   },
   methods: {
+    retFileName,
     async init() {
       const res = await getContractsList(this.seachValue)
       if (res.ret === 0 && res.data.list) {

@@ -1,4 +1,4 @@
-import { isNum } from '@/utils/validate'
+import { isNum, isEmail } from '@/utils/validate'
 export const ruleForm = {
   department: {
     leader: {}
@@ -6,7 +6,7 @@ export const ruleForm = {
   level: {},
   name: '',
   gender: '',
-  status: 0,
+  status: 1,
   mobile: '',
   id_card: '', plan_date: '',
   interview_comment: '',
@@ -58,7 +58,8 @@ export const rules = {
     { required: true, message: '请选择级别', trigger: 'change' }
   ],
   email: [
-    { required: true, message: '请输入企业邮箱', trigger: 'blur' }
+    { required: true, message: '请输入企业邮箱', trigger: 'blur' },
+    { validator: isEmail, trigger: 'blur' }
   ],
   wx_work: [
     { required: true, message: '请输入企业微信', trigger: 'blur' }

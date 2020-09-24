@@ -82,4 +82,30 @@ export function retFileName(name) {
   }
   return re
 }
+/**
+ * 返回员工状态
+ */
+export function retStatus(status) {
+  let s = ''
+  switch (status) {
+    case 0:
+      s = '未入职'
+      break
+    case 1:
+      s = '拟入职'
+      break
+    case 2:
+      s = '已入职'
+      break
+    case 3:
+      s = '申请离职'
+      break
+    case 4:
+      s = '已离职'
+      break
+    default:
+      break
+  }
+  return s
+}
 

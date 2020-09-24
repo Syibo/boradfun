@@ -12,7 +12,7 @@
         </el-select>
       </div>
       <div class="right">
-        <el-button type="primary" @click="induction">新建入职</el-button>
+        <el-button v-permission="[6]" type="primary" @click="induction">新建入职</el-button>
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
@@ -515,6 +515,7 @@ import { getEmployeeList,
 import { ruleForm, rules } from './config'
 import { STATUSVALUE, DOWNURL } from '@/utils/const'
 import store from '@/store'
+import permission from '@/directive/permission/index.js'
 import { getToken } from '@/utils/auth'
 import ArchivesDrawer from '@/components/Oa/ArchivesDrawer'
 import ContactFrom from '@/components/Oa/ContactFrom'
@@ -526,6 +527,7 @@ export default {
     EmStatus,
     ContactFrom
   },
+  directives: { permission },
   data() {
     return {
       title: '新建合同',
@@ -735,7 +737,6 @@ export default {
     },
     async openCon(row) {
       this.openDra(row)
-      // this.$refs.archivesDrawer.active = 'contractInfo'
       setTimeout(() => {
         this.$refs.archivesDrawer.changeAct('contractInfo')
       }, 100)
@@ -748,8 +749,12 @@ export default {
       const res = await getEmployeeAllDetail(row.ID)
       if (res.ret === 0) {
         this.baseData = res.data
-        this.baseData.employee_basic.relations = JSON.parse(res.data.employee_basic.relations)
-        this.baseData.employee_basic.contacts = JSON.parse(res.data.employee_basic.contacts)
+        if (this.baseData.employee_basic === null) {
+          this.baseData.employee_basic = ruleForm.employee_basic
+        } else {
+          this.baseData.employee_basic.relations = JSON.parse(res.data.employee_basic.relations)
+          this.baseData.employee_basic.contacts = JSON.parse(res.data.employee_basic.contacts)
+        }
       }
       this.$refs.archivesDrawer.openDrawer()
     },

@@ -2,7 +2,7 @@
   <div class="container">
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="seachValue.emp_no" placeholder="请输入员工姓名" clearable @input="seachFun" />
+        <el-input v-model="seachValue.emp_no" placeholder="请输入员工编号" clearable @input="seachFun" />
         <el-input v-model="seachValue.name" placeholder="请输入员工姓名" style="width: 100%;margin-left: 10px" clearable @input="seachFun" />
         <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
           <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />

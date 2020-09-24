@@ -27,14 +27,14 @@
       <div class="right">
         <Label id="baseInfo" title="基本信息" />
         <el-row class="item" style="margin-bottom: 40px">
-          <el-col class="item-main" :span="12"> <span class="left-label"> 状态 </span> {{ baseData.status }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 实际入职时间 </span> {{ baseData.mobile }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 手机号码 </span> {{ baseData.entry_date }} </el-col>
+          <el-col class="item-main" :span="12"> <span class="left-label"> 状态 </span> {{ retStatus(baseData.status) }} </el-col>
+          <el-col class="item-main" :span="12"> <span class="left-label"> 实际入职时间 </span> {{ baseData.entry_date = "0001-01-01 00:00:00" ? '' : baseData.entry_date }} </el-col>
+          <el-col class="item-main" :span="12"> <span class="left-label"> 手机号码 </span> {{ baseData.mobile }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 身份证号 </span> {{ baseData.id_card }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 员工编号 </span> {{ baseData.ID }} </el-col>
+          <el-col class="item-main" :span="12"> <span class="left-label"> 员工编号 </span> #{{ baseData.ID }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 民族 </span> {{ baseData.nation }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 出生年月 </span> {{ baseData.employee_basic.birthday }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 年龄 </span> {{ baseData.age }} </el-col>
+          <!-- <el-col class="item-main" :span="12"> <span class="left-label"> 出生年月 </span> {{ baseData.employee_basic.birthday }} </el-col> -->
+          <el-col class="item-main" :span="12"> <span class="left-label"> 年龄 </span> {{ baseData.age || '' }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 私人邮箱 </span> {{ baseData.personal_email }} </el-col>
           <el-col class="item-main" :span="12"> <span class="left-label"> 政治面貌 </span> {{ baseData.politic_status }} </el-col>
         </el-row>
@@ -130,6 +130,7 @@
 import Label from '@/components/common/Label.vue'
 import { DOWNURL } from '@/utils/const'
 import { CodeToText } from 'element-china-area-data'
+import { retStatus } from '@/utils/common'
 export default {
   name: 'ArchivesDrawer',
   components: {
@@ -165,6 +166,7 @@ export default {
     }
   },
   methods: {
+    retStatus,
     retCodeToText(num) {
       let city = ''
       if (num.length !== 0) {

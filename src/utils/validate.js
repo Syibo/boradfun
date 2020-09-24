@@ -10,6 +10,15 @@ export const isNum = (rule, value, callback) => {
   }
 }
 
+export const isEmail = (rule, value, callback) => {
+  const email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  if (!email.test(value)) {
+    callback(new Error('请输入正确的邮箱格式'))
+  } else {
+    callback()
+  }
+}
+
 /**
  * @param {string} path
  * @returns {Boolean}

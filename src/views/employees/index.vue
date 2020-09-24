@@ -7,7 +7,7 @@
           <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
         </el-select>
         <el-select v-model="seachValue.status" placeholder="状态" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
-          <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option v-for="item in STATUSVALUEADD" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
       <div class="right">
@@ -22,12 +22,14 @@
       </el-table-column>
       <el-table-column prop="department.department_name" align="center" label="所属部门" />
       <el-table-column prop="position" align="center" label="岗位" />
+
+      <el-table-column prop="plan_date" align="center" label="计划入职时间" sortable />
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
           <EmStatus :status="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column prop="plan_date" align="center" label="计划入职时间" sortable />
+      <el-table-column prop="create_time" align="center" label="创建时间" sortable />
       <el-table-column align="center" label="流程信息">
         <template slot-scope="scope">
           <el-popover
@@ -55,11 +57,10 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="create_time" align="center" label="创建时间" sortable />
       <el-table-column align="center" label="操作" width="280">
         <template slot-scope="scope">
-          <!-- <el-button v-permission="[6]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button> -->
-          <el-button v-permission="[6]" type="text" size="small">删除</el-button>
+          <el-button v-permission="[6]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <!-- <el-button v-permission="[6]" type="text" size="small">删除</el-button> -->
           <el-button v-permission="[7]" type="text" size="small" @click="handleClick(scope.row)">录入设备需求</el-button>
           <el-button v-permission="[10]" type="text" size="small" @click="handleClick(scope.row)">录入账号信息</el-button>
         </template>
@@ -116,8 +117,8 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="入职状态" prop="status">
-                <el-select v-model="ruleForm.status" placeholder="" style="width: 100%" disabled>
-                  <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
+                <el-select v-model="ruleForm.status" placeholder="" style="width: 100%">
+                  <el-option v-for="item in STATUSVALUEADD" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -139,13 +140,13 @@
         <el-row v-if="title === '编辑'" style="color: #2B2B2B;margin: 15px 0;margin-bottom: 50px">
           <el-col :span="24"> {{ ruleForm.interview_comment }} </el-col>
           <el-col v-if="ruleForm.resume" :span="24">
-            <el-button icon="el-icon-upload" type="text">{{ ruleForm.resume }}</el-button>
+            <el-button icon="el-icon-upload" type="text">{{ retFileName(ruleForm.resume) }}</el-button>
             <el-button type="text"> 下载 </el-button> </el-col>
         </el-row>
         <div v-else>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="面试评价" prop="interview_comment">
+              <el-form-item label="面试评价" prop="">
                 <el-input v-model="ruleForm.interview_comment" maxlength="200" show-word-limit :rows="3" type="textarea" placeholder="请输入面试评价" />
               </el-form-item>
             </el-col>
@@ -162,7 +163,7 @@
               >
                 <el-button v-if="ruleForm.resume === ''" icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
                 <div v-else style="display: flex">
-                  <el-button icon="el-icon-upload" type="text">{{ ruleForm.resume }}</el-button>
+                  <el-button icon="el-icon-upload" type="text">{{ retFileName(ruleForm.resume) }}</el-button>
                   <el-button type="text"> 下载 </el-button>
                 </div>
               </el-upload>
@@ -173,7 +174,7 @@
         <el-row v-if="title === '编辑'" style="color: #2B2B2B;margin: 15px 0;margin-bottom: 50px">
           <el-col :span="4"> 所属部门：{{ ruleForm.department.department_name }}</el-col>
           <el-col :span="4"> 部门负责人：{{ ruleForm.department.leader.name }} </el-col>
-          <el-col :span="6"> 岗位：{{ ruleForm.id_card }} </el-col>
+          <el-col :span="6"> 岗位：{{ ruleForm.position }} </el-col>
           <el-col :span="4"> 服务线：{{ ruleForm.service_line }} </el-col>
           <el-col :span="4"> 级别：{{ ruleForm.level.level_name }} </el-col>
         </el-row>
@@ -291,7 +292,8 @@ import { getDepartmentList,
   putEmployee,
   getEmployeeWorkflow,
   getEmployeeDetail } from '@/api/employee'
-import { STATUSVALUE } from '@/utils/const'
+import { STATUSVALUEADD } from '@/utils/const'
+import { retFileName } from '@/utils/common'
 import { rules, ruleForm } from './config'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
@@ -326,7 +328,7 @@ export default {
         { value: '测试数据1', label: '测试数据1' },
         { value: '测试数据2', label: '测试数据2' }
       ],
-      STATUSVALUE,
+      STATUSVALUEADD,
       rules,
       departmentList: [],
       levelList: [],
@@ -356,6 +358,7 @@ export default {
     }
   },
   methods: {
+    retFileName,
     async getDepartmentList() {
       const res = await getDepartmentList()
       this.departmentList = res.data
@@ -397,7 +400,14 @@ export default {
       this.ruleForm.position = res.data.position
       this.ruleForm.level_id = res.data.level_id
       this.ruleForm.level = res.data.level
-      this.ruleForm.email = res.data.email
+      /**
+       * 如果邮箱没有@符号为空
+       */
+      if (res.data.email.indexOf('@') === -1) {
+        this.ruleForm.email = ''
+      } else {
+        this.ruleForm.email = res.data.email
+      }
       this.ruleForm.resume = res.data.resume
       this.ruleForm.wx_work = res.data.wx_work
       this.ruleForm.leader_id = res.data.department.department_leader_id
@@ -488,7 +498,7 @@ export default {
         level: {},
         name: '',
         gender: '',
-        status: 0,
+        status: 1,
         mobile: '',
         id_card: '', plan_date: '',
         interview_comment: '',

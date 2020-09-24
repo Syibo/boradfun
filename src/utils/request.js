@@ -47,17 +47,9 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.ret !== 0) {
-      Message.closeAll()
-      Message({
-        message: res.msg || 'Error',
-        type: 'error',
-        duration: 5 * 1000,
-        showClose: true
-      })
-
       if (res.ret === 401) {
         // to re-login
-        MessageBox.confirm('登录过期，您可以取消停留在此页面，或再次登录', 'Confirm logout', {
+        MessageBox.confirm('登录过期，您可以取消停留在此页面，或再次登录', '登录过期', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
@@ -66,7 +58,15 @@ service.interceptors.response.use(
             location.reload()
           })
         })
+        return
       }
+      Message.closeAll()
+      Message({
+        message: res.msg || 'Error',
+        type: 'error',
+        duration: 5 * 1000,
+        showClose: true
+      })
       if (res.msg === '无权限查看') {
         router.push({ path: '404' })
       }

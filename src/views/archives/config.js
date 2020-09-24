@@ -1,3 +1,4 @@
+import { isNum } from '@/utils/validate'
 export const ruleForm = {
   ID: '',
   name: '',
@@ -93,10 +94,12 @@ export const rulesCon = {
     { required: true, message: '请选择合同结束日期', trigger: 'change' }
   ],
   trial_period: [
-    { required: true, message: '请输入试用期（月）', trigger: 'blur' }
+    { required: true, message: '请输入试用期（月）', trigger: 'blur' },
+    { validator: isNum, trigger: 'blur' }
   ],
   annual_leave: [
-    { required: true, message: '请输入年假', trigger: 'blur' }
+    { required: true, message: '请输入年假', trigger: 'blur' },
+    { validator: isNum, trigger: 'blur' }
   ],
   status: [
     { required: true, message: '请选择合同状态', trigger: 'blur' }
@@ -124,7 +127,8 @@ export const rules = {
     { required: true, message: '请输入出生年月', trigger: 'blur' }
   ],
   age: [
-    { required: true, message: '请输入年龄', trigger: 'blur' }
+    { required: true, message: '请输入年龄', trigger: 'blur' },
+    { validator: isNum, trigger: 'blur' }
   ],
   personal_email: [
     { required: true, message: '请输入私人邮箱', trigger: 'blur' }

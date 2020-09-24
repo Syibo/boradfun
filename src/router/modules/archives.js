@@ -9,7 +9,8 @@ const archivesRouter = {
   name: 'archives',
   meta: {
     title: '档案信息',
-    icon: 'nested'
+    icon: 'nested',
+    roles: [6]
   },
   children: [
     {

@@ -1,55 +1,80 @@
 <template>
   <div class="container workbench-container">
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="代办" name="first" />
-      <el-tab-pane label="已完成" name="second" />
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane :label="`代办 · ${total}`" name="first" />
+      <el-tab-pane :label="`已完成 · ${totalDone}`" name="second" />
     </el-tabs>
     <div class="workbench-main">
       <div class="workbench-con">
-        <div class="item">
+        <div v-for="work in workData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text">入职流程</el-button>
-            <div class="status">待审核</div>
+            <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
+            <!-- <WorkStatus :status="work.definition.workflow_type" /> -->
+            <el-popover
+              placement="top-start"
+              width="200"
+              trigger="click"
+              @show="show(work)"
+            >
+              <div style="height: auto">
+                <el-steps direction="vertical" :active="active" finish-status="finish">
+                  <el-step
+                    v-for="item in workflow"
+                    :key="item.ID"
+                    :icon="retWorkflowIcon(item.status)"
+                    :title="item.user ? item.user.name : ''"
+                    :description="retWorkflowLabel(item.status)"
+                  >
+                    <template slot="icon">
+                      <i :class="retWorkflowIcon(item.status)" />
+                    </template>
+                  </el-step>
+                </el-steps>
+              </div>
+              <WorkStatus slot="reference" :status="work.definition.workflow_type" />
+            </el-popover>
           </div>
           <div class="right">
-            <span>创建人：shiwen</span>
-            <span>创建时间：2020-09-08 20:20:20</span>
-          </div>
-        </div>
-        <div class="item">
-          <div class="left">
-            <el-button type="text">入职流程</el-button>
-            <div class="status">待审核</div>
-          </div>
-          <div class="right">
-            <span>创建人：shiwen</span>
-            <span>创建时间：2020-09-08 20:20:20</span>
+            <span>创建人：{{ '-' }}</span>
+            <span>创建时间：{{ parseTime(work.CreatedAt) }}</span>
           </div>
         </div>
       </div>
 
       <div class="workbench-con">
         <div class="title">
-          我申请的流程 (4）
+          我申请的流程 ({{ totalMyrep }}）
         </div>
-        <div class="item">
+        <div v-for="work in myreqData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text">入职流程</el-button>
-            <div class="status">待审核</div>
+            <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
+            <el-popover
+              placement="top-start"
+              width="200"
+              trigger="click"
+              @show="show(work)"
+            >
+              <div style="height: auto">
+                <el-steps direction="vertical" :active="active" finish-status="finish">
+                  <el-step
+                    v-for="item in workflow"
+                    :key="item.ID"
+                    :icon="retWorkflowIcon(item.status)"
+                    :title="item.user ? item.user.name : ''"
+                    :description="retWorkflowLabel(item.status)"
+                  >
+                    <template slot="icon">
+                      <i :class="retWorkflowIcon(item.status)" />
+                    </template>
+                  </el-step>
+                </el-steps>
+              </div>
+              <WorkStatus slot="reference" :status="work.definition.workflow_type" />
+            </el-popover>
           </div>
           <div class="right">
-            <span>创建人：shiwen</span>
-            <span>创建时间：2020-09-08 20:20:20</span>
-          </div>
-        </div>
-        <div class="item">
-          <div class="left">
-            <el-button type="text">入职流程</el-button>
-            <div class="status">待审核</div>
-          </div>
-          <div class="right">
-            <span>创建人：shiwen</span>
-            <span>创建时间：2020-09-08 20:20:20</span>
+            <span>创建人：{{ '-' }}</span>
+            <span>创建时间：{{ parseTime(work.CreatedAt) }}</span>
           </div>
         </div>
       </div>
@@ -58,10 +83,91 @@
 </template>
 
 <script>
+import { getBenchmMapprove, getBenchMyreq } from '@/api/employee'
+import { retWorkflowLabel, retWorkflowIcon, getaActive, retWorkflowEntity, parseTime } from '@/utils/common'
+import WorkStatus from '@/components/common/WorkStatus'
 export default {
+  components: {
+    WorkStatus
+  },
   data() {
     return {
-      activeName: 'first'
+      activeName: 'first',
+      workData: [],
+      myreqData: [],
+      total: 0,
+      totalDone: 0,
+      totalMyrep: 0,
+      workflow: [],
+      active: 0,
+      todo: {
+        pagesize: 100,
+        pagenum: 1,
+        type: 'todo'
+      },
+      done: {
+        pagesize: 100,
+        pagenum: 1,
+        type: 'done'
+      },
+      myreq: {
+        pagesize: 100,
+        pagenum: 1,
+        type: 'todo'
+      }
+    }
+  },
+  mounted() {
+    this.init()
+    this.getBenchMyreq()
+  },
+  methods: {
+    retWorkflowEntity,
+    getaActive,
+    retWorkflowLabel,
+    retWorkflowIcon,
+    parseTime,
+    async init() {
+      const res = await getBenchmMapprove(this.todo)
+      if (res.ret === 0) {
+        this.workData = res.data.list
+        this.total = res.data.total
+      } else {
+        this.workData = []
+        this.total = 0
+      }
+    },
+    async initDone() {
+      const res = await getBenchmMapprove(this.done)
+      if (res.ret === 0) {
+        this.workData = res.data.list
+        this.totalDone = res.data.total
+      } else {
+        this.workData = []
+        this.totalDone = 0
+      }
+    },
+    async getBenchMyreq() {
+      const res = await getBenchMyreq(this.myreq)
+      if (res.ret === 0) {
+        this.myreqData = res.data.list
+        this.totalMyrep = res.data.total
+      } else {
+        this.myreqData = []
+        this.totalMyrep = 0
+      }
+    },
+    async show(row) {
+      console.log(row)
+      this.active = this.getaActive(row.nodes)
+      this.workflow = row.nodes
+    },
+    handleClick() {
+      if (this.activeName === 'first') {
+        this.init()
+      } else {
+        this.initDone()
+      }
     }
   }
 }

@@ -217,3 +217,21 @@ export function putEmployeeDetail(data) {
     data
   })
 }
+/**
+ * 我的审批
+ */
+export function getBenchmMapprove({ pagesize = 100, pagenum = 1, type = 'todo' }) {
+  return request({
+    url: `/v1/bench/myapprove?pagesize=${pagesize}&pagenum=${pagenum}&type=${type}`,
+    method: 'get'
+  })
+}
+/**
+ * 我的申请
+ */
+export function getBenchMyreq({ pagesize = 100, pagenum = 1, type = 'todo' }) {
+  return request({
+    url: `/v1/bench/myreq?pagesize=${pagesize}&pagenum=${pagenum}&type=${type}`,
+    method: 'get'
+  })
+}

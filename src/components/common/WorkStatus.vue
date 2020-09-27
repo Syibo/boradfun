@@ -1,0 +1,63 @@
+<template>
+  <div>
+    <span v-if="status === 'Approval'" class="brof_status confirm_col">审核通过</span>
+    <span v-else-if="status === 'Completed'" class="brof_status">待审核</span>
+    <span v-else-if="status === 'Processing'" class="brof_status">待审核</span>
+    <span v-else-if="status === 'NA'" class="brof_status">待审核</span>
+    <span v-else-if="status === 'Rejected'" class="brof_status stop_col">已驳回</span>
+    <span v-else class="brof_status" />
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: 'WorkStatus',
+  props: {
+    status: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+
+    }
+  },
+  mounted() {
+
+  },
+  methods: {
+
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.brof_status {
+    display: inline-block;
+    width: 65px;
+    height: 22px;
+    background: rgba(147, 164, 173, 0.15);
+    border-radius: 3px;
+    text-align: center;
+    line-height: 22px;
+    font-size: 12px;
+    margin-left: 65px;
+}
+.brof_status:hover {
+    cursor: pointer;
+}
+.create_col {
+    border: 1px solid #BCC0C3;
+    color: #808387;
+}
+.confirm_col {
+    background: rgba(77, 168, 159, 0.15);
+    color: #4DA89F;
+}
+.stop_col {
+    background: rgba(255, 92, 92, 0.15);
+    color: #EF5E54;
+}
+</style>

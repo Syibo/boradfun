@@ -49,4 +49,13 @@ export const WORKSTATUSVALUE = [
   { value: 'Rejected', label: '已拒绝' }
 ]
 
+/**
+ * 工作流程
+ */
+export const WORKFLOW = [
+  { value: 'Overtime', label: '加班流程' },
+  { value: 'Leave', label: '离职流程' },
+  { value: 'Employee', label: '入职流程' }
+]
+
 export const DOWNURL = 'http://172.16.9.195:9000'

@@ -9,6 +9,8 @@
  * 获取当前流程的状态
  * @param {string} status value
  */
+import { WORKFLOW } from './const.js'
+import Moment from 'moment'
 export function retWorkflowLabel(status) {
   let s = ''
   switch (status) {
@@ -108,4 +110,20 @@ export function retStatus(status) {
   }
   return s
 }
-
+/**
+ * 返回员工状态
+ */
+export function retWorkflowEntity(status) {
+  const workflow = WORKFLOW.find((item) => { return item.value === status })
+  if (workflow) {
+    return workflow.label || ''
+  } else {
+    return '未知状态'
+  }
+}
+/**
+ * 返回标准时间格式
+ */
+export function parseTime(date) {
+  return Moment(date).format('YYYY-MM-DD HH:mm:ss')
+}

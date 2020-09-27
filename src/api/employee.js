@@ -235,3 +235,12 @@ export function getBenchMyreq({ pagesize = 100, pagenum = 1, type = 'todo' }) {
     method: 'get'
   })
 }
+/**
+ * 续签列表
+ */
+export function getContinueList({ pagesize = 100, pagenum = 1 }) {
+  return request({
+    url: `/v1/employee/contract/continue?pagesize=${pagesize}&pagenum=${pagenum}`,
+    method: 'get'
+  })
+}

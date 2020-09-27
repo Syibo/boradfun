@@ -9,7 +9,6 @@
         <div v-for="work in workData" :key="work.ID" class="item">
           <div class="left">
             <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
-            <!-- <WorkStatus :status="work.definition.workflow_type" /> -->
             <el-popover
               placement="top-start"
               width="200"
@@ -78,12 +77,27 @@
           </div>
         </div>
       </div>
+
+      <div class="workbench-con">
+        <div class="title">
+          待续签员工 ({{ totalContinue }}）
+        </div>
+        <div v-for="work in continueData" :key="work.ID" class="item">
+          <div class="left">
+            <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
+          </div>
+          <div class="right">
+            <span>创建人：{{ '-' }}</span>
+            <span>创建时间：{{ parseTime(work.CreatedAt) }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getBenchmMapprove, getBenchMyreq } from '@/api/employee'
+import { getBenchmMapprove, getBenchMyreq, getContinueList } from '@/api/employee'
 import { retWorkflowLabel, retWorkflowIcon, getaActive, retWorkflowEntity, parseTime } from '@/utils/common'
 import WorkStatus from '@/components/common/WorkStatus'
 export default {
@@ -95,8 +109,10 @@ export default {
       activeName: 'first',
       workData: [],
       myreqData: [],
+      continueData: [],
       total: 0,
       totalDone: 0,
+      totalContinue: 0,
       totalMyrep: 0,
       workflow: [],
       active: 0,
@@ -114,12 +130,17 @@ export default {
         pagesize: 100,
         pagenum: 1,
         type: 'todo'
+      },
+      continue: {
+        pagesize: 100,
+        pagenum: 1
       }
     }
   },
   mounted() {
     this.init()
     this.getBenchMyreq()
+    this.getContinueList()
   },
   methods: {
     retWorkflowEntity,
@@ -157,8 +178,17 @@ export default {
         this.totalMyrep = 0
       }
     },
+    async getContinueList() {
+      const res = await getContinueList(this.continue)
+      if (res.ret === 0) {
+        this.continueData = res.data.list
+        this.totalContinue = res.data.total
+      } else {
+        this.continueData = []
+        this.totalContinue = 0
+      }
+    },
     async show(row) {
-      console.log(row)
       this.active = this.getaActive(row.nodes)
       this.workflow = row.nodes
     },

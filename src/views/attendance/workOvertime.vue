@@ -28,6 +28,7 @@
       <el-table-column align="center" label="加班类型">
         <template slot-scope="sope">
           {{ retType(sope.row.type) }}
+          <!-- {{ sope.row.type }} -->
         </template>
       </el-table-column>
       <el-table-column prop="start_time" align="center" label="开始时间" />
@@ -37,6 +38,7 @@
       <el-table-column align="center" label="申请状态">
         <template slot-scope="sope">
           {{ retStatus(sope.row.status) }}
+          <!-- {{ sope.row.status }} -->
         </template>
       </el-table-column>
       <el-table-column prop="name" align="center" label="流程信息">
@@ -94,7 +96,7 @@
 <script>
 import { STATUSVALUE, TYPEVALUE, WORKSTATUSVALUE } from '@/utils/const'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
-import { getWorkList, getOneOverTime } from '@/api/work'
+import { getWorkList, getOneOverTime, getWorkProjects } from '@/api/work'
 import WorkFrom from '@/components/Oa/WorkFrom'
 import WorkDrawer from '@/components/Oa/WorkDrawer'
 import WorkApproval from '@/components/Oa/WorkApproval'
@@ -168,7 +170,9 @@ export default {
     changeSeach() {
       this.init()
     },
-    overtime() {
+    async overtime() {
+      const res = await getWorkProjects()
+      console.log(res)
       this.visible = true
     },
     addSucc() {
@@ -186,12 +190,20 @@ export default {
       this.visibleApprova = false
     },
     retType(type) {
-      const ret = TYPEVALUE.find((item) => { return item.value === type }).label
-      return ret
+      let res = ''
+      const ret = TYPEVALUE.find((item) => { return item.value === type })
+      if (ret) {
+        res = ret.label
+      }
+      return res
     },
     retStatus(type) {
-      const ret = WORKSTATUSVALUE.find((item) => { return item.value === type }).label
-      return ret
+      let res = ''
+      const ret = WORKSTATUSVALUE.find((item) => { return item.value === type })
+      if (ret) {
+        res = ret.label
+      }
+      return res
     },
     getaActive,
     retWorkflowLabel,

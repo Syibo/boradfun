@@ -26,7 +26,12 @@
       <el-table-column prop="plan_date" align="center" label="计划入职时间" sortable />
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
-          <EmStatus :status="scope.row.status" />
+          <div v-if="scope.row.status === 1">
+            <el-select :value="scope.row.status" placeholder="状态" style="width: 100px" size="mini" @change="statusChange($event, scope.row)">
+              <el-option v-for="item in STATUSVALUEADD" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </div>
+          <EmStatus v-else :status="scope.row.status" />
         </template>
       </el-table-column>
       <el-table-column prop="create_time" align="center" label="创建时间" sortable />
@@ -276,6 +281,7 @@
       </el-form>
     </el-dialog>
     <EmployDrawer ref="employDrawer" :base-data="detailData" :notes="workflow" :active="active" />
+    <StatusFrom :id="statusId" ref="statusFrom" :type="statusType" @addSucc="addSucc" />
   </div>
 </template>
 
@@ -289,6 +295,7 @@ import { getDepartmentList,
   getEmployeeList,
   getDepartmentLevelList,
   addEmployee,
+  putEmployeeStatus,
   putEmployee,
   getEmployeeWorkflow,
   getEmployeeDetail } from '@/api/employee'
@@ -297,11 +304,13 @@ import { retFileName } from '@/utils/common'
 import { rules, ruleForm } from './config'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import StatusFrom from '@/components/Oa/StatusFrom'
 export default {
   components: {
     Label,
     EmployDrawer,
-    EmStatus
+    EmStatus,
+    StatusFrom
   },
   directives: { permission },
   data() {
@@ -337,7 +346,9 @@ export default {
       myHeaders: {},
       title: '新建入职',
       leaderList: [],
-      userType: 0
+      userType: 0,
+      statusId: 0,
+      statusType: 0
     }
   },
   mounted() {
@@ -372,6 +383,22 @@ export default {
         this.tableData = []
         this.total = 0
       }
+    },
+    async statusChange(value, row) {
+      this.statusId = row.ID
+      this.statusType = value
+      if (value === 2) {
+        this.$refs.statusFrom.openDia()
+      } else {
+        const res = await putEmployeeStatus({ id: this.statusId, status: this.statusType, entry_date: '' })
+        if (res.ret === 0) {
+          this.$message.success('修改状态成功')
+          this.getEmployeeList()
+        }
+      }
+    },
+    addSucc() {
+      this.getEmployeeList()
     },
     async departmentChange(value) {
       this.ruleForm.level_id = ''
@@ -481,7 +508,7 @@ export default {
       const res = await getEmployeeDetail(row.ID)
       this.detailData = res.data
       const resEle = await getEmployeeWorkflow(row.ID)
-      this.detailData.plan_date = resEle.data.elements[0].value
+      // this.detailData.plan_date = resEle.data.elements[0].value
       this.detailData.seat_number = resEle.data.elements[1].value
       this.detailData.device_req = resEle.data.elements[2].value
       this.show(row)

@@ -190,12 +190,20 @@ export default {
     retWorkflowLabel,
     retWorkflowIcon,
     retType(type) {
-      const ret = LEAVEVALUE.find((item) => { return item.value === type }).label
-      return ret
+      let res = ''
+      const ret = LEAVEVALUE.find((item) => { return item.value === type })
+      if (ret) {
+        res = ret.label
+      }
+      return res
     },
     retStatus(type) {
-      const ret = WORKSTATUSVALUE.find((item) => { return item.value === type }).label
-      return ret
+      let res = ''
+      const ret = WORKSTATUSVALUE.find((item) => { return item.value === type })
+      if (ret) {
+        res = ret.label
+      }
+      return res
     }
   }
 }

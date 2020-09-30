@@ -94,3 +94,12 @@ export function putOneLeave({ id, status, comment }) {
     }
   })
 }
+/**
+ * 部门下项目
+ */
+export function getWorkProjects(desc = '') {
+  return request({
+    url: `/v1/work/overtime/projects?desc=${desc}`,
+    method: 'get'
+  })
+}

@@ -37,10 +37,10 @@ export default {
       tableData: [],
       tableHeader: [],
       calendarData: [
-        { months: ['09'], days: ['01'], things: '2020-09-01 09:30:15' },
-        { months: ['09'], days: ['01'], things: '2020-09-01 18:30:15' },
-        { months: ['09'], days: ['02'], things: '2020-09-02 18:30:15' },
-        { months: ['09'], days: ['02'], things: '2020-09-02 18:30:15' }
+        { months: ['10'], days: ['01'], things: '2020-09-01 09:30:15' },
+        { months: ['10'], days: ['01'], things: '2020-09-01 18:30:15' },
+        { months: ['10'], days: ['02'], things: '2020-09-02 18:30:15' },
+        { months: ['10'], days: ['02'], things: '2020-09-02 18:30:15' }
       ],
       value: new Date()
     }

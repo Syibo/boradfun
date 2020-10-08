@@ -62,12 +62,10 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="280">
+      <el-table-column v-if="roles[0] == 7 || roles[0] == 10" align="center" label="操作" width="280">
         <template slot-scope="scope">
-          <el-button v-permission="[6]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-          <!-- <el-button v-permission="[6]" type="text" size="small">删除</el-button> -->
-          <el-button v-permission="[7]" type="text" size="small" @click="handleClick(scope.row)">录入设备需求</el-button>
-          <el-button v-permission="[10]" type="text" size="small" @click="handleClick(scope.row)">录入账号信息</el-button>
+          <el-button v-permission="[7]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <el-button v-permission="[10]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -291,6 +289,7 @@ import EmployDrawer from '@/components/Oa/EmployDrawer'
 import permission from '@/directive/permission/index.js'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import EmStatus from '@/components/common/EmStatus.vue'
+import { mapGetters } from 'vuex'
 import { getDepartmentList,
   getEmployeeList,
   getDepartmentLevelList,
@@ -350,6 +349,11 @@ export default {
       statusId: 0,
       statusType: 0
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   mounted() {
     this.api = process.env.VUE_APP_BASE_API

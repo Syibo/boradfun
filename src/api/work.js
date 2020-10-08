@@ -112,3 +112,12 @@ export function upWorkAttendance() {
     method: 'post'
   })
 }
+/**
+ * 查询考勤
+ */
+export function getWorkAttendance({ name = '', year = '', month = '' }) {
+  return request({
+    url: `/v1/work/attendance?name=${name}&year=${year}&month=${month}`,
+    method: 'get'
+  })
+}

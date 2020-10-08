@@ -44,7 +44,15 @@
             >
               <el-button type="primary" size="mini">上传考勤</el-button>
             </el-upload>
-            <el-button type="primary" size="mini">导出考勤</el-button>
+            <el-dropdown>
+              <el-button type="primary" size="mini">
+                导出考勤<i class="el-icon-arrow-down el-icon--right" />
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>POS表格</el-dropdown-item>
+                <el-dropdown-item>考勤统计表格</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
         <!-- <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:10px;">
@@ -53,7 +61,10 @@
         <el-calendar id="calendar" v-model="value">
           <template slot="dateCell" slot-scope="{data}">
             <div slot="reference" class="date-cla" @click="handDayClick(data)">
-              <div class="calendar-day">{{ data.day.split('-').slice(2).join('-') }}</div>
+              <div class="calendar-day">
+                <span class="calendar-day-span">{{ data.day.split('-').slice(2).join('-') }}</span>
+                <p class="calendar-day-p" size="mini" type="danger">异常</p>
+              </div>
               <div v-for="(item, index) in calendarData" :key="index">
                 <div v-if="(item.months).indexOf(data.day.split('-').slice(1)[0])!=-1">
                   <div v-if="(item.days).indexOf(data.day.split('-').slice(2).join('-'))!=-1">
@@ -68,6 +79,27 @@
         </el-calendar>
       </div>
     </div>
+    <el-dialog :visible.sync="visible" :close-on-click-modal="false" width="700px" :show-close="false" class="contract-from" @close="closeVisble">
+      <span slot="title" class="dialog-title">
+        <div class="dialog-title-left">
+          员工打卡明细
+        </div>
+        <div class="dialog-title-right">
+          <el-button type="text"> 编辑考勤 </el-button>
+        </div>
+      </span>
+      <div class="content">
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="date" label="打卡时间" width="180" />
+          <el-table-column prop="name" label="打卡结果" width="180" />
+          <el-table-column prop="address" label="异常判断" />
+        </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="visible = false">取 消</el-button>
+        <el-button type="primary" @click="visible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -76,15 +108,21 @@
 import Moment from 'moment'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import { getWorkAttendance } from '@/api/work'
 export default {
   name: 'MonthAtt',
   // components: { UploadExcelComponent },
   data() {
     return {
-      tableData: [],
       tableHeader: [],
+      tableData: [{
+        date: '2016-05-02',
+        name: '异常',
+        address: '无'
+      }],
       calendarData: [
         { months: ['10'], days: ['01'], things: '2020-09-01 09:30:15' },
+        { months: ['10'], days: ['01'], things: '2020-09-01 18:30:15' },
         { months: ['10'], days: ['01'], things: '2020-09-01 18:30:15' },
         { months: ['10'], days: ['02'], things: '2020-09-02 18:30:15' },
         { months: ['10'], days: ['02'], things: '2020-09-02 18:30:15' }
@@ -125,7 +163,8 @@ export default {
         label: 'label'
       },
       api: '',
-      myHeaders: {}
+      myHeaders: {},
+      visible: false
     }
   },
   watch: {
@@ -154,9 +193,10 @@ export default {
       })
       return false
     },
-    handDayClick(data) {
+    async handDayClick(data) {
       setTimeout(() => {
         console.log(Moment(this.value).format('YYYY-MM-DD'))
+        this.visible = true
       }, 100)
     },
     filterNode(value, data) {
@@ -165,14 +205,29 @@ export default {
     },
     oneUpload(response, file, fileList) {
       console.log(response)
+      if (response.ret === 0) {
+        this.$message.success('上传成功')
+      } else {
+        this.$message.error('上传失败')
+      }
     },
     handleSuccess({ results, header }) {
       this.tableData = results
       this.tableHeader = header
     },
-    dateChange() {
+    closeVisble() {
+      console.log(9999)
+    },
+    async dateChange() {
       console.log(this.planDate)
       this.value = this.planDate
+      const res = await getWorkAttendance({ name: '陈鹏宇', year: '2020', month: '08' })
+      console.log(res)
+      if (res.ret === 0 && res.data[0].users[0].attendances) {
+        this.calendarData = res.data[0].users[0].attendances
+        console.log(this.calendarData)
+        console.log(this.calendarData[0].attendance_date)
+      }
     }
   }
 }
@@ -182,6 +237,38 @@ export default {
 .attend-container {
   .el-calendar-day {
     padding: 0;
+    height: auto;
+    min-height: 100px;
+  }
+  .calendar-day {
+    color: #5A5D5F;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    .calendar-day-span {
+      display: inline-block;
+      flex: 1;
+    }
+    .calendar-day-p {
+      width: 36px;
+      height: 20px;
+      background: rgba(255, 92, 92, 0.15);
+      color: #EF5E54;
+      font-size: 12px;
+      line-height: 20px;
+      text-align: center;
+      margin: 0;
+    }
+  }
+  .contract-from {
+    .el-dialog__header {
+      padding: 0;
+    }
+    .el-input-number {
+      text-align: left!important;
+    }
   }
 }
 </style>
@@ -210,6 +297,12 @@ export default {
         padding: 8px;
         width: 100%;
         height: 100%;
+        min-height: 100px;
+      }
+      .is-selected {
+        color: #BCC0C3;
+        font-size: 14px;
+        margin-bottom: 3px;
       }
     }
   }

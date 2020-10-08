@@ -132,14 +132,14 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="身份证号" prop="id_card">
-                    <el-input v-model="ruleForm.id_card" placeholder="" />
+                    <el-input v-model="ruleForm.id_card" placeholder="身份证号" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="员工编号" prop="ID">
-                    <el-input v-model="ruleForm.ID" placeholder="员工编号" />
+                    <el-input v-model="ruleForm.ID" placeholder="员工编号" disabled />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -541,7 +541,7 @@ export default {
         pagesize: 10,
         name: '',
         departmentid: '',
-        status: 2,
+        status: '',
         emp_no: ''
       },
       regionData,

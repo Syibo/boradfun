@@ -1,7 +1,8 @@
 <template>
   <div>
     <span v-if="status === 'Approval'" class="brof_status confirm_col">审核通过</span>
-    <span v-else-if="status === 'Completed'" class="brof_status">待审核</span>
+    <span v-else-if="status === 'Approved'" class="brof_status confirm_col">审核通过</span>
+    <span v-else-if="status === 'Completed'" class="brof_status confirm_col">已完成</span>
     <span v-else-if="status === 'Processing'" class="brof_status">待审核</span>
     <span v-else-if="status === 'NA'" class="brof_status">待审核</span>
     <span v-else-if="status === 'Rejected'" class="brof_status stop_col">已驳回</span>

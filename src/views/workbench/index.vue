@@ -68,7 +68,7 @@
                   </el-step>
                 </el-steps>
               </div>
-              <WorkStatus slot="reference" :status="work.definition.workflow_type" />
+              <WorkStatus slot="reference" :status="work.Status" />
             </el-popover>
           </div>
           <div class="right">

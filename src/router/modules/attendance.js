@@ -15,15 +15,15 @@ const attendanceRouter = {
     {
       path: 'month',
       component: () => import('@/views/attendance/index'),
-      name: '月考勤记录',
-      meta: { title: '月考勤记录' }
+      name: '考勤日历',
+      meta: { title: '考勤日历' }
     },
-    {
-      path: 'day',
-      component: () => import('@/views/attendance/day'),
-      name: '日考勤记录',
-      meta: { title: '日考勤记录' }
-    },
+    // {
+    //   path: 'day',
+    //   component: () => import('@/views/attendance/day'),
+    //   name: '日考勤记录',
+    //   meta: { title: '日考勤记录' }
+    // },
     {
       path: 'workOvertime',
       component: () => import('@/views/attendance/workOvertime'),

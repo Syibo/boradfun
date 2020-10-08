@@ -103,3 +103,12 @@ export function getWorkProjects(desc = '') {
     method: 'get'
   })
 }
+/**
+ * 上传考勤
+ */
+export function upWorkAttendance() {
+  return request({
+    url: `/v1/work/attendance`,
+    method: 'post'
+  })
+}

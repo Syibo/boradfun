@@ -44,6 +44,7 @@ export default {
     line-height: 22px;
     font-size: 12px;
     margin-left: 65px;
+    color: #808387;
 }
 .brof_status:hover {
     cursor: pointer;

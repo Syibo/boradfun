@@ -22,7 +22,6 @@
       </el-table-column>
       <el-table-column prop="department.department_name" align="center" label="所属部门" />
       <el-table-column prop="position" align="center" label="岗位" />
-
       <el-table-column prop="plan_date" align="center" label="计划入职时间" sortable />
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
@@ -43,7 +42,7 @@
             trigger="click"
             @show="show(scope.row)"
           >
-            <div v-if="scope" style="height: 150px;">
+            <div v-if="scope" style="height: 100%;">
               <el-steps direction="vertical" :active="active" finish-status="finish">
                 <el-step
                   v-for="item in workflow"
@@ -62,7 +61,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column v-if="roles[0] == 7 || roles[0] == 10" align="center" label="操作" width="280">
+      <el-table-column v-if="roles[0] == 7 || roles[0] == 10" align="center" label="操作">
         <template slot-scope="scope">
           <el-button v-permission="[7]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
           <el-button v-permission="[10]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>

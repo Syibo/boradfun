@@ -28,15 +28,15 @@ const archivesRouter = {
     {
       path: 'hire',
       component: () => import('@/views/archives/hire'),
-      name: '招工信息',
-      meta: { title: '招工信息' }
-    },
-    {
-      path: 'termination',
-      component: () => import('@/views/archives/termination'),
-      name: '退工信息',
-      meta: { title: '退工信息' }
+      name: '社保信息',
+      meta: { title: '社保信息' }
     }
+    // {
+    //   path: 'termination',
+    //   component: () => import('@/views/archives/termination'),
+    //   name: '退工信息',
+    //   meta: { title: '退工信息' }
+    // }
   ]
 }
 

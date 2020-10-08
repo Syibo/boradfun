@@ -222,9 +222,8 @@ export default {
       console.log(this.planDate)
       this.value = this.planDate
       const res = await getWorkAttendance({ name: '陈鹏宇', year: '2020', month: '08' })
-      console.log(res)
       if (res.ret === 0 && res.data[0].users[0].attendances) {
-        this.calendarData = res.data[0].users[0].attendances
+        // this.calendarData = res.data[0].users[0].attendances
         console.log(this.calendarData)
         console.log(this.calendarData[0].attendance_date)
       }

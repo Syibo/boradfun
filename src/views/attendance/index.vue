@@ -64,8 +64,14 @@
               <div v-for="(item, index) in calendarData" :key="index" class="selected-con">
                 <div v-if="(item.months).indexOf(data.day.split('-').slice(1)[0])!=-1">
                   <div v-if="(item.days).indexOf(data.day.split('-').slice(2).join('-'))!=-1">
-                    <div class="is-selected"><span> {{ item.check_in }} </span> <el-tag v-if="item.in_status !== 'Normal'" size="mini" class="calendar-day-p" type="danger">{{ item.in_result }}</el-tag> </div>
-                    <div class="is-selected"><span> {{ item.check_out }} </span> <el-tag v-if="item.out_status !== 'Normal'" size="mini" class="calendar-day-p2" type="danger">{{ item.out_result }}</el-tag> </div>
+                    <div class="is-selected">
+                      <span :class="item.in_status !== 'Normal' ? 'error-color' : ''"> {{ item.check_in }} </span>
+                      <el-tag v-if="item.in_status !== 'Normal'" size="mini" class="calendar-day-p" type="danger">{{ item.in_result }}</el-tag>
+                    </div>
+                    <div class="is-selected">
+                      <span :class="item.out_status !== 'Normal' ? 'error-color' : ''"> {{ item.check_out }} </span>
+                      <el-tag v-if="item.out_status !== 'Normal'" size="mini" class="calendar-day-p2" type="danger">{{ item.out_result }}</el-tag>
+                    </div>
                   </div>
                   <div v-else />
                 </div>
@@ -79,7 +85,7 @@
     <el-dialog :visible.sync="visible" :close-on-click-modal="false" width="900px" :show-close="false" class="contract-from" @close="closeVisble">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
-          员工{{ value }}打卡明细
+          {{ name }} {{ value }} 打卡明细
         </div>
         <div class="dialog-title-right">
           <el-button type="text" @click="editAtt"> 编辑考勤 </el-button>
@@ -345,7 +351,6 @@ export default {
       }
     },
     async handEditAtt() {
-      console.log(this.ruleForm)
       const res = await putWorkAttendance(this.ruleForm)
       if (res.ret === 0) {
         this.$message.success('修改记录成功')

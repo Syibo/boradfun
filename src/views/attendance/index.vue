@@ -16,13 +16,14 @@
           :props="defaultProps"
           default-expand-all
           :filter-node-method="filterNode"
+          @node-click="handleNodeClick"
         />
       </div>
       <div class="right">
         <div class="top">
           <el-date-picker
             v-model="planDate"
-            style="width: 200px"
+            style="width: 200px;margin-left: 10px"
             type="month"
             size="mini"
             placeholder="选择日期"
@@ -33,7 +34,6 @@
           <div />
           <!-- <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" /> -->
           <div class="up-btn">
-            <!-- <el-button type="primary" size="mini">上传考勤</el-button> -->
             <el-upload
               style="margin-right: 10px"
               :headers="myHeaders"
@@ -55,20 +55,17 @@
             </el-dropdown>
           </div>
         </div>
-        <!-- <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:10px;">
-          <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item" />
-        </el-table> -->
         <el-calendar id="calendar" v-model="value">
           <template slot="dateCell" slot-scope="{data}">
             <div slot="reference" class="date-cla" @click="handDayClick(data)">
               <div class="calendar-day">
                 <span class="calendar-day-span">{{ data.day.split('-').slice(2).join('-') }}</span>
-                <p class="calendar-day-p" size="mini" type="danger">异常</p>
               </div>
-              <div v-for="(item, index) in calendarData" :key="index">
+              <div v-for="(item, index) in calendarData" :key="index" class="selected-con">
                 <div v-if="(item.months).indexOf(data.day.split('-').slice(1)[0])!=-1">
                   <div v-if="(item.days).indexOf(data.day.split('-').slice(2).join('-'))!=-1">
-                    <div class="is-selected">{{ item.things }}</div>
+                    <div class="is-selected"><span> {{ item.check_in }} </span> <el-tag v-if="item.in_status !== 'Normal'" size="mini" class="calendar-day-p" type="danger">{{ item.in_result }}</el-tag> </div>
+                    <div class="is-selected"><span> {{ item.check_out }} </span> <el-tag v-if="item.out_status !== 'Normal'" size="mini" class="calendar-day-p2" type="danger">{{ item.out_result }}</el-tag> </div>
                   </div>
                   <div v-else />
                 </div>
@@ -79,25 +76,119 @@
         </el-calendar>
       </div>
     </div>
-    <el-dialog :visible.sync="visible" :close-on-click-modal="false" width="700px" :show-close="false" class="contract-from" @close="closeVisble">
+    <el-dialog :visible.sync="visible" :close-on-click-modal="false" width="900px" :show-close="false" class="contract-from" @close="closeVisble">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
-          员工打卡明细
+          员工{{ value }}打卡明细
         </div>
         <div class="dialog-title-right">
-          <el-button type="text"> 编辑考勤 </el-button>
+          <el-button type="text" @click="editAtt"> 编辑考勤 </el-button>
         </div>
       </span>
-      <div class="content">
-        <el-table :data="tableData" style="width: 100%">
+      <div class="dialog-content">
+        <!-- <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="date" label="打卡时间" width="180" />
           <el-table-column prop="name" label="打卡结果" width="180" />
           <el-table-column prop="address" label="异常判断" />
-        </el-table>
+        </el-table> -->
+        <div class="header">
+          <div style="flex: 1.2">打卡时间</div>
+          <div>打卡结果</div>
+          <div>异常判断</div>
+        </div>
+        <div class="item-time">
+          <div class="item-date">
+            <span>{{ ruleForm.check_in }}</span>
+            <el-date-picker
+              v-if="isEdit"
+              v-model="ruleForm.check_in"
+              style="margin: 0 10px"
+              type="datetime"
+              placeholder="选择日期时间"
+              size="mini"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :clearable="false"
+            />
+          </div>
+          <div> <AttStatus :status="ruleForm.in_status" /> </div>
+          <div>
+            <span>{{ ruleForm.in_result }}</span>
+            <el-popover
+              v-if="isEdit"
+              placement="bottom-start"
+              width="200"
+              title="打卡结果"
+              trigger="click"
+            >
+              <el-radio-group v-model="ruleForm.in_result" @change="inChange">
+                <div class="radio">
+                  <div class="radio-item">
+                    <el-radio :label="'迟到'">迟到</el-radio>
+                    <el-radio :label="'早退'">早退</el-radio>
+                    <el-radio :label="'旷工'">旷工</el-radio>
+                  </div>
+                  <div class="radio-item">
+                    <el-radio :label="'弹性'">弹性</el-radio>
+                    <el-radio :label="'在家办公'">在家办公</el-radio>
+                    <el-radio :label="'忘记打卡'">忘记打卡</el-radio>
+                    <el-radio :label="'通宵'">通宵</el-radio>
+                  </div>
+                </div>
+              </el-radio-group>
+              <i slot="reference" class="el-icon-arrow-down" />
+            </el-popover>
+          </div>
+        </div>
+        <div class="item-time">
+          <div class="item-date">
+            <span>{{ ruleForm.check_out }}</span>
+            <el-date-picker
+              v-if="isEdit"
+              v-model="ruleForm.check_out"
+              style="margin: 0 10px"
+              type="datetime"
+              placeholder="选择日期时间"
+              size="mini"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :clearable="false"
+            />
+          </div>
+          <!-- <div>{{ ruleForm.out_status }}</div> -->
+          <div> <AttStatus :status="ruleForm.out_status" /> </div>
+          <div>
+            <span>{{ ruleForm.out_result }}</span>
+            <el-popover
+              v-if="isEdit"
+              placement="bottom-start"
+              width="200"
+              title="打卡结果"
+              trigger="click"
+            >
+              <el-radio-group v-model="ruleForm.out_result" @change="outChange">
+                <div class="radio">
+                  <div class="radio-item">
+                    <el-radio :label="'迟到'">迟到</el-radio>
+                    <el-radio :label="'早退'">早退</el-radio>
+                    <el-radio :label="'旷工'">旷工</el-radio>
+                  </div>
+                  <div class="radio-item">
+                    <el-radio :label="'弹性'">弹性</el-radio>
+                    <el-radio :label="'在家办公'">在家办公</el-radio>
+                    <el-radio :label="'忘记打卡'">忘记打卡</el-radio>
+                    <el-radio :label="'通宵'">通宵</el-radio>
+                  </div>
+                </div>
+              </el-radio-group>
+              <i slot="reference" class="el-icon-arrow-down" />
+            </el-popover>
+          </div>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="visible = false">取 消</el-button>
-        <el-button type="primary" @click="visible = false">确 定</el-button>
+        <el-button type="primary" @click="handEditAtt">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -108,10 +199,11 @@
 import Moment from 'moment'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import { getWorkAttendance } from '@/api/work'
+import { getWorkAttendance, putWorkAttendance } from '@/api/work'
+import AttStatus from '@/components/common/AttStatus'
 export default {
   name: 'MonthAtt',
-  // components: { UploadExcelComponent },
+  components: { AttStatus },
   data() {
     return {
       tableHeader: [],
@@ -120,42 +212,17 @@ export default {
         name: '异常',
         address: '无'
       }],
-      calendarData: [
-        { months: ['10'], days: ['01'], things: '2020-09-01 09:30:15' },
-        { months: ['10'], days: ['01'], things: '2020-09-01 18:30:15' },
-        { months: ['10'], days: ['01'], things: '2020-09-01 18:30:15' },
-        { months: ['10'], days: ['02'], things: '2020-09-02 18:30:15' },
-        { months: ['10'], days: ['02'], things: '2020-09-02 18:30:15' }
-      ],
+      calendarData: [],
       value: new Date(),
       planDate: new Date(),
+      nowDate: new Date(),
       filterText: '',
       treedata: [{
         id: 1,
         label: '游戏测试',
         children: [{
           id: 4,
-          label: '员工1'
-        }]
-      }, {
-        id: 2,
-        label: '专家实施',
-        children: [{
-          id: 5,
-          label: '员工2-1'
-        }, {
-          id: 6,
-          label: '员工2-2'
-        }]
-      }, {
-        id: 3,
-        label: 'wetest',
-        children: [{
-          id: 7,
-          label: '员工3-1'
-        }, {
-          id: 8,
-          label: '员工3-2'
+          label: '陈鹏宇'
         }]
       }],
       defaultProps: {
@@ -164,7 +231,22 @@ export default {
       },
       api: '',
       myHeaders: {},
-      visible: false
+      visible: false,
+      ruleForm: {
+        ID: '',
+        dept: '',
+        name: '',
+        attendance_date: '',
+        check_in: '',
+        check_out: '',
+        in_status: '',
+        in_result: '',
+        out_status: '',
+        out_result: ''
+      },
+      isEdit: false,
+      radio: '',
+      name: ''
     }
   },
   watch: {
@@ -193,10 +275,40 @@ export default {
       })
       return false
     },
-    async handDayClick(data) {
+    handDayClick(data) {
       setTimeout(() => {
-        console.log(Moment(this.value).format('YYYY-MM-DD'))
-        this.visible = true
+        if (Moment(this.nowDate).format('YYYY-MM-DD').substring(5, 7) !== Moment(this.value).format('YYYY-MM-DD').substring(5, 7)) {
+          (async() => {
+            this.value = Moment(this.value).format('YYYY-MM-DD')
+            this.nowDate = this.value
+            this.planDate = this.value
+            if (!this.value) {
+              return
+            }
+            if (!this.name) {
+              this.$message.error('先选择员工')
+              return
+            }
+            const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+            if (res.ret === 0 && res.data.length !== 0) {
+              const attenData = res.data[0].users[0].attendances
+              for (let i = 0; i < attenData.length; i++) {
+                attenData[i]['months'] = [attenData[i].attendance_date.substring(5, 7)]
+                attenData[i]['days'] = [attenData[i].attendance_date.substring(8, 10)]
+              }
+              this.calendarData = attenData
+            }
+          })()
+        } else {
+          this.visible = true
+          this.value = Moment(this.value).format('YYYY-MM-DD')
+          this.nowDate = this.value
+          this.planDate = this.value
+          const from = this.calendarData.find((item) => { return item.attendance_date === this.value })
+          if (from) {
+            this.ruleForm = JSON.parse(JSON.stringify(from))
+          }
+        }
       }, 100)
     },
     filterNode(value, data) {
@@ -204,7 +316,6 @@ export default {
       return data.label.indexOf(value) !== -1
     },
     oneUpload(response, file, fileList) {
-      console.log(response)
       if (response.ret === 0) {
         this.$message.success('上传成功')
       } else {
@@ -216,17 +327,59 @@ export default {
       this.tableHeader = header
     },
     closeVisble() {
-      console.log(9999)
+      this.isEdit = false
+    },
+    editAtt() {
+      this.isEdit = true
+    },
+    inChange(value) {
+      this.ruleForm.in_status = this.retResult(value)
+    },
+    outChange(value) {
+      this.ruleForm.out_status = this.retResult(value)
+    },
+    handleNodeClick(data) {
+      // eslint-disable-next-line eqeqeq
+      if (data.$treeNodeId == 2) {
+        this.name = data.label
+      }
+    },
+    async handEditAtt() {
+      console.log(this.ruleForm)
+      const res = await putWorkAttendance(this.ruleForm)
+      if (res.ret === 0) {
+        this.$message.success('修改记录成功')
+        this.visible = false
+        this.dateChange()
+      }
     },
     async dateChange() {
-      console.log(this.planDate)
       this.value = this.planDate
-      const res = await getWorkAttendance({ name: '陈鹏宇', year: '2020', month: '08' })
-      if (res.ret === 0 && res.data[0].users[0].attendances) {
-        // this.calendarData = res.data[0].users[0].attendances
-        console.log(this.calendarData)
-        console.log(this.calendarData[0].attendance_date)
+      if (!this.value) {
+        return
       }
+      if (!this.name) {
+        this.$message.error('先选择员工')
+        return
+      }
+      const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+      if (res.ret === 0 && res.data.length !== 0) {
+        const attenData = res.data[0].users[0].attendances
+        for (let i = 0; i < attenData.length; i++) {
+          attenData[i]['months'] = [attenData[i].attendance_date.substring(5, 7)]
+          attenData[i]['days'] = [attenData[i].attendance_date.substring(8, 10)]
+        }
+        this.calendarData = attenData
+      }
+    },
+    retResult(value) {
+      let res = ''
+      if (value === '弹性' || value === '在家办公' || value === '忘记打卡' || value === '通宵') {
+        res = 'Normal'
+      } else {
+        res = 'Exception'
+      }
+      return res
     }
   }
 }
@@ -234,10 +387,20 @@ export default {
 
 <style lang="scss">
 .attend-container {
+  .el-calendar__body {
+    table {
+      thead {
+        background-color:#F7F9FA;
+      }
+    }
+  }
   .el-calendar-day {
     padding: 0;
     height: auto;
     min-height: 100px;
+  }
+  .el-calendar__header {
+    display: none;
   }
   .calendar-day {
     color: #5A5D5F;
@@ -298,10 +461,71 @@ export default {
         height: 100%;
         min-height: 100px;
       }
-      .is-selected {
-        color: #BCC0C3;
-        font-size: 14px;
-        margin-bottom: 3px;
+      .selected-con {
+        position: relative;
+        .is-selected {
+          color: #BCC0C3;
+          font-size: 14px;
+          margin-bottom: 3px;
+          display: flex;
+          align-items: center;
+          .calendar-day-p {
+            position: absolute;
+            top: -25px;
+            right: 0;
+          }
+          .calendar-day-p2 {
+            position: absolute;
+            top: -25px;
+            right: 50px;
+          }
+        }
+      }
+    }
+  }
+  .dialog-content {
+    .header {
+      background-color: #F7F8FA;
+      display: flex;
+      align-items: center;
+      height: 44px;
+      color: #2B2B2B;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 0 10px;
+      div {
+        flex: 1;
+      }
+    }
+    .item-time {
+      display: flex;
+      align-items: center;
+      height: 44px;
+      font-size: 12px;
+      color: #333333;
+      border-top: 1px solid #D8D8D8;
+      div {
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+      .item-date {
+        flex: 1.2;
+      }
+    }
+    .item-time:last-child {
+      border-bottom: 1px solid #D8D8D8;
+    }
+  }
+}
+.el-radio-group {
+  .radio {
+    display: flex;
+    .radio-item {
+      display: flex;
+      flex-direction: column;
+      label {
+        margin-bottom: 5px;
       }
     }
   }

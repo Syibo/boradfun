@@ -121,3 +121,13 @@ export function getWorkAttendance({ name = '', year = '', month = '' }) {
     method: 'get'
   })
 }
+/**
+ * 修改考勤
+ */
+export function putWorkAttendance({ ID, dept, name, attendance_date, check_in, check_out, in_status, in_result, out_status, out_result }) {
+  return request({
+    url: `/v1/work/attendance`,
+    method: 'put',
+    data: { ID, dept, name, attendance_date, check_in, check_out, in_status, in_result, out_status, out_result }
+  })
+}

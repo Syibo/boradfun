@@ -14,10 +14,10 @@
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column align="center" label="合同编号/名称">
-        <template slot-scope="scope">
+      <el-table-column align="center" label="合同编号/名称" prop="contract_type">
+        <!-- <template slot-scope="scope">
           <span class="bule-hover" @click="openDra"> {{ scope.row.contract_type }} </span>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column prop="contract_start_date" align="center" label="合同开始时间" />
       <el-table-column prop="contract_end_date" align="center" label="合同到期时间" />
@@ -152,12 +152,13 @@
                   class="upload-demo"
                   :headers="myHeaders"
                   name="file"
+                  :limit="1"
                   :action="`${api}/v1/file/upload?bucket=contract`"
                   :on-success="oneUpload"
-                  :show-file-list="false"
+                  :show-file-list="true"
+                  :file-list="eleContract"
                 >
-                  <el-button v-if="ruleForm.soft_copy === ''" icon="el-icon-upload" size="small" type="text">上传文件</el-button>
-                  <el-button v-else icon="el-icon-upload" size="small" type="text">{{ retFileName(ruleForm.soft_copy) }}</el-button>
+                  <el-button icon="el-icon-upload" size="small" type="text">上传文件</el-button>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -169,12 +170,13 @@
                   class="upload-demo"
                   :headers="myHeaders"
                   name="file"
+                  :limit="1"
                   :action="`${api}/v1/file/upload?bucket=contract`"
                   :on-success="oneUploadScanned"
-                  :show-file-list="false"
+                  :show-file-list="true"
+                  :file-list="eleContractScanned"
                 >
-                  <el-button v-if="ruleForm.scanned_copy === ''" icon="el-icon-upload" size="small" type="text">上传文件</el-button>
-                  <el-button v-else icon="el-icon-upload" size="small" type="text">{{ retFileName(ruleForm.scanned_copy) }}</el-button>
+                  <el-button icon="el-icon-upload" size="small" type="text">上传文件</el-button>
                 </el-upload>
               </el-form-item>
             </el-col>
@@ -220,7 +222,9 @@ export default {
       rules: rulesCon,
       myHeaders: {},
       api: '',
-      title: '新建合同'
+      title: '新建合同',
+      eleContract: [],
+      eleContractScanned: []
     }
   },
   mounted() {
@@ -295,10 +299,10 @@ export default {
       this.ruleForm.ID = item.ID
     },
     oneUpload(response, file, fileList) {
-      this.ruleForm.soft_copy = file.name
+      this.ruleForm.soft_copy = response.data
     },
     oneUploadScanned(response, file, fileList) {
-      this.ruleForm.scanned_copy = file.name
+      this.ruleForm.scanned_copy = response.data
     },
     induction() {
       this.title = '新建合同'
@@ -319,6 +323,18 @@ export default {
       if (res.ret === 0) {
         this.dialogVisible = true
         this.ruleForm = res.data
+        const obj = {
+          name: this.ruleForm.soft_copy.split('_')[1]
+        }
+        const objS = {
+          name: this.ruleForm.scanned_copy.split('_')[1]
+        }
+        if (this.ruleForm.soft_copy) {
+          this.eleContract.push(obj)
+        }
+        if (this.ruleForm.scanned_copy) {
+          this.eleContractScanned.push(objS)
+        }
       }
     },
     async handleDeleta(row) {
@@ -374,6 +390,8 @@ export default {
         contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
         trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
       }
+      this.eleContract = []
+      this.eleContractScanned = []
     }
   }
 }

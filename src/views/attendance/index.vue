@@ -1,5 +1,6 @@
 <template>
   <div class="container attend-container">
+    <!-- <div class="top-btn"> <el-button type="primary" size="mini">确认考勤数据</el-button> </div> -->
     <div class="content">
       <div class="left">
         <el-input
@@ -45,7 +46,7 @@
               <el-button type="primary" size="mini">上传考勤</el-button>
             </el-upload>
             <el-dropdown>
-              <el-button type="primary" size="mini">
+              <el-button type="primary" size="mini" style="margin-right: 10px">
                 导出考勤<i class="el-icon-arrow-down el-icon--right" />
               </el-button>
               <el-dropdown-menu slot="dropdown">
@@ -53,6 +54,7 @@
                 <el-dropdown-item>考勤统计表格</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
+            <el-button type="primary" size="mini">确认考勤数据</el-button>
           </div>
         </div>
         <el-calendar id="calendar" v-model="value">
@@ -442,6 +444,12 @@ export default {
 
 <style lang="scss" scoped>
 .attend-container {
+  .top-btn {
+    display: flex;
+    flex-direction: row-reverse;
+    padding-right: 20px;
+    margin-bottom: 10px;
+  }
   .content {
     display: flex;
     .left {

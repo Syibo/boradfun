@@ -17,11 +17,11 @@ export function getWorkList({ pagesize = 10, pagenum = 1, name = '', status = ''
 /**
  * 加班申请
  */
-export function overtime({ type, project, duration, cause, overtime_date }) {
+export function overtime({ type, project, duration, cause, overtime_date, engagement_code, leader_id }) {
   return request({
     url: '/v1/work/overtime',
     method: 'post',
-    data: { type, project, duration: Number(duration), cause, overtime_date }
+    data: { type, project, duration: Number(duration), cause, overtime_date, engagement_code, leader_id }
   })
 }
 /**

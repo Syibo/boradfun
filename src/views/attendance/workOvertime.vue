@@ -28,7 +28,6 @@
       <el-table-column align="center" label="加班类型">
         <template slot-scope="sope">
           {{ retType(sope.row.type) }}
-          <!-- {{ sope.row.type }} -->
         </template>
       </el-table-column>
       <el-table-column prop="start_time" align="center" label="开始时间" />
@@ -38,7 +37,6 @@
       <el-table-column align="center" label="申请状态">
         <template slot-scope="sope">
           {{ retStatus(sope.row.status) }}
-          <!-- {{ sope.row.status }} -->
         </template>
       </el-table-column>
       <el-table-column prop="name" align="center" label="流程信息">
@@ -96,7 +94,7 @@
 <script>
 import { STATUSVALUE, TYPEVALUE, WORKSTATUSVALUE } from '@/utils/const'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
-import { getWorkList, getOneOverTime, getWorkProjects } from '@/api/work'
+import { getWorkList, getOneOverTime } from '@/api/work'
 import WorkFrom from '@/components/Oa/WorkFrom'
 import WorkDrawer from '@/components/Oa/WorkDrawer'
 import WorkApproval from '@/components/Oa/WorkApproval'
@@ -204,8 +202,6 @@ export default {
       this.init()
     },
     async overtime() {
-      const res = await getWorkProjects()
-      console.log(res)
       this.visible = true
     },
     addSucc() {

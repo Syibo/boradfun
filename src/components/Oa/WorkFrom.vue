@@ -14,7 +14,9 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="加班项目" prop="project">
-              <el-input v-model="ruleForm.project" placeholder="请输入项目" />
+              <el-select v-model="ruleForm.project" placeholder="请选择项目" style="width: 100%" @change="proChange">
+                <el-option v-for="item in projectList" :key="item.ID" :label="item.engagement_code_desc" :value="item.engagement_code_desc" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -76,6 +78,7 @@
 <script>
 import {
   getWorkApprovals,
+  getWorkProjects,
   overtime } from '@/api/work'
 import { TYPEVALUE } from '@/utils/const'
 import { isNum } from '@/utils/validate'
@@ -100,7 +103,9 @@ export default {
         duration: '',
         cause: '',
         overtime_date: '',
-        people: ''
+        people: '',
+        engagement_code: '',
+        leader_id: ''
       },
       rules: {
         project: [
@@ -117,8 +122,7 @@ export default {
           { required: true, message: '请选择日期', trigger: 'change' }
         ]
       },
-      myHeaders: {},
-      api: ''
+      projectList: []
     }
   },
   watch: {
@@ -133,6 +137,8 @@ export default {
     async getWorkApprovals() {
       const res = await getWorkApprovals()
       this.ruleForm.people = res.data
+      const resP = await getWorkProjects()
+      this.projectList = resP.data
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -143,6 +149,13 @@ export default {
           return false
         }
       })
+    },
+    proChange(val) {
+      const obj = this.projectList.find((item) => { return item.engagement_code_desc === val })
+      if (obj) {
+        this.ruleForm.engagement_code = obj.engagement_code
+        this.ruleForm.leader_id = obj.code_owner_id
+      }
     },
     async addContracts() {
       const res = await overtime(this.ruleForm)
@@ -161,7 +174,9 @@ export default {
         duration: '',
         cause: '',
         overtime_date: '',
-        people: ''
+        people: '',
+        engagement_code: '',
+        leader_id: ''
       }
       this.$emit('close')
     }

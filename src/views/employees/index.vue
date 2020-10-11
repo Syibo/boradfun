@@ -144,8 +144,7 @@
           <el-col :span="24"> {{ ruleForm.interview_comment }} </el-col>
           <el-col v-if="ruleForm.resume" :span="24">
             <el-button icon="el-icon-upload" type="text">{{ retFileName(ruleForm.resume) }}</el-button>
-            <el-button type="text"> 下载 </el-button> </el-col>
-        </el-row>
+          </el-col></el-row>
         <div v-else>
           <el-row :gutter="20">
             <el-col :span="24">
@@ -155,20 +154,18 @@
             </el-col>
           </el-row>
           <el-row :gutter="20" class="empolyees-upload">
-            <el-col :span="2">
+            <el-col :span="24">
               <el-upload
                 style="margin-top: -10px"
                 :headers="myHeaders"
                 name="file"
+                :limit="1"
                 :action="`${api}/v1/file/upload?bucket=resume`"
                 :on-success="oneUpload"
-                :show-file-list="false"
+                :show-file-list="true"
+                :file-list="resumeArr"
               >
-                <el-button v-if="ruleForm.resume === ''" icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
-                <div v-else style="display: flex">
-                  <el-button icon="el-icon-upload" type="text">{{ retFileName(ruleForm.resume) }}</el-button>
-                  <el-button type="text"> 下载 </el-button>
-                </div>
+                <el-button icon="el-icon-upload" size="small" type="text">点击上传履历</el-button>
               </el-upload>
             </el-col>
           </el-row>
@@ -348,7 +345,8 @@ export default {
       leaderList: [],
       userType: 0,
       statusId: 0,
-      statusType: 0
+      statusType: 0,
+      resumeArr: []
     }
   },
   computed: {
@@ -441,6 +439,12 @@ export default {
         this.ruleForm.email = res.data.email
       }
       this.ruleForm.resume = res.data.resume
+      const obj = {
+        name: this.ruleForm.resume.split('_')[1]
+      }
+      if (this.ruleForm.resume) {
+        this.resumeArr.push(obj)
+      }
       this.ruleForm.wx_work = res.data.wx_work
       this.ruleForm.leader_id = res.data.department.department_leader_id
       this.ruleForm.plan_date = res.data.plan_date
@@ -549,6 +553,7 @@ export default {
         resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
         level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
       }
+      this.resumeArr = []
     },
     getaActive,
     retWorkflowLabel,
@@ -558,15 +563,15 @@ export default {
 </script>
 
 <style lang="scss">
-.empolyees-upload {
-	.el-upload {
-		width: 100%;
-		.el-upload-dragger {
-			width: 100%;
-			height: 150px;
-		}
-	}
-}
+// .empolyees-upload {
+// 	.el-upload {
+// 		width: 100%;
+// 		.el-upload-dragger {
+// 			width: 100%;
+// 			height: 150px;
+// 		}
+// 	}
+// }
 .employees-container {
   .el-dialog__header {
     padding: 0;

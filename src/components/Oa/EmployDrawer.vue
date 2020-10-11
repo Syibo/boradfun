@@ -44,7 +44,7 @@
         {{ baseData.interview_comment }}
       </el-row>
       <el-row class="item" style="margin-bottom: 40px">
-        <el-button type="text"> {{ baseData.resume }} </el-button>
+        <el-button type="text" @click="downFile(baseData.resume)"> {{ retFileName(baseData.resume) }} </el-button>
       </el-row>
       <Label title="岗位信息" />
       <el-row class="item">
@@ -79,6 +79,8 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import EmStatus from '@/components/common/EmStatus.vue'
+import { DOWNURL } from '@/utils/const'
+import { retFileName } from '@/utils/common'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 export default {
   name: 'EmployDrawer',
@@ -109,12 +111,16 @@ export default {
     closeDrawer() {
       this.visible = false
     },
+    downFile(url) {
+      window.open(`${DOWNURL}${url}`)
+    },
     handleClose() {
       this.visible = false
     },
     getaActive,
     retWorkflowLabel,
     retWorkflowIcon,
+    retFileName,
     openDrawer() {
       this.visible = true
     }

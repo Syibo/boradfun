@@ -1,7 +1,7 @@
 <template>
   <div class="container workOvertime-container">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="请假记录" name="first" />
+    <el-tabs v-model="activeName" v-permission="[1, 6, 10]" @tab-click="handleClick">
+      <el-tab-pane v-if="roles.indexOf(6)!=-1" label="请假记录" name="first" />
       <el-tab-pane label="我的申请" name="second" />
       <el-tab-pane label="待我审核" name="third" />
     </el-tabs>
@@ -97,8 +97,10 @@ import { STATUSVALUE, LEAVEVALUE, WORKSTATUSVALUE } from '@/utils/const'
 import { getLeaveList, getOneLeave } from '@/api/work'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import LeaveFrom from '@/components/Oa/LeaveFrom'
+import permission from '@/directive/permission/index.js'
 import LeaveApproval from '@/components/Oa/LeaveApproval'
 import WorkDrawer from '@/components/Oa/WorkDrawer'
+import { mapGetters } from 'vuex'
 export default {
   name: 'WorkOvertime',
   components: {
@@ -106,6 +108,7 @@ export default {
     WorkDrawer,
     LeaveApproval
   },
+  directives: { permission },
   data() {
     return {
       STATUSVALUE,
@@ -131,6 +134,11 @@ export default {
       visibleApprova: false,
       WorkApprovalId: 0
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   mounted() {
     this.init()

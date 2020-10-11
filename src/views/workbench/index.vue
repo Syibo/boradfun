@@ -34,13 +34,13 @@
             </el-popover>
           </div>
           <div class="right">
-            <span>创建人：{{ '-' }}</span>
+            <span>创建人：{{ work.nodes[0].user.name }}</span>
             <span>创建时间：{{ parseTime(work.CreatedAt) }}</span>
           </div>
         </div>
       </div>
 
-      <div class="workbench-con">
+      <div class="workbench-con workbench-over">
         <div class="title">
           我申请的流程 ({{ totalMyrep }}）
         </div>
@@ -72,7 +72,7 @@
             </el-popover>
           </div>
           <div class="right">
-            <span>创建人：{{ '-' }}</span>
+            <!-- <span>创建人：{{ work.nodes[0].user.name }}</span> -->
             <span>创建时间：{{ parseTime(work.CreatedAt) }}</span>
           </div>
         </div>
@@ -87,7 +87,7 @@
             <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
           </div>
           <div class="right">
-            <span>创建人：{{ '-' }}</span>
+            <span>创建人：{{ work.nodes[0].user.name }}</span>
             <span>创建时间：{{ parseTime(work.CreatedAt) }}</span>
           </div>
         </div>
@@ -223,6 +223,10 @@ export default {
 .workbench-container {
   .workbench-main {
     background-color: white;
+    .workbench-over {
+      max-height: 328px;
+      overflow-y: auto;
+    }
     .workbench-con {
       background-color: #F7F8FA;
       padding: 12px;

@@ -1,6 +1,6 @@
 <template>
   <div class="container workOvertime-container">
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="加班记录" name="first" />
       <el-tab-pane label="我的申请" name="second" />
       <el-tab-pane label="待我审核" name="third" />
@@ -121,7 +121,9 @@ export default {
         pagesize: 10,
         name: '',
         type: '',
-        status: ''
+        status: '',
+        myreq: '',
+        mytodo: ''
       },
       total: 0,
       tableData: [],
@@ -143,6 +145,37 @@ export default {
       } else {
         this.tableData = []
         this.total = 0
+      }
+    },
+    handleClick() {
+      if (this.activeName === 'first') {
+        this.reseveFrom()
+        this.init()
+      } else if (this.activeName === 'second') {
+        this.seachValue = {
+          pagenum: 1,
+          pagesize: 10,
+          name: '',
+          type: '',
+          status: '',
+          myreq: true,
+          mytodo: ''
+        }
+        this.init()
+      } else if (this.activeName === 'third') {
+        this.seachValue = {
+          pagenum: 1,
+          pagesize: 10,
+          name: '',
+          type: '',
+          status: '',
+          myreq: '',
+          mytodo: true
+        }
+        this.init()
+      } else {
+        this.reseveFrom()
+        this.init()
       }
     },
     handleSizeChange(val) {
@@ -204,6 +237,17 @@ export default {
         res = ret.label
       }
       return res
+    },
+    reseveFrom() {
+      this.seachValue = {
+        pagenum: 1,
+        pagesize: 10,
+        name: '',
+        type: '',
+        status: '',
+        myreq: '',
+        mytodo: ''
+      }
     },
     getaActive,
     retWorkflowLabel,

@@ -8,9 +8,9 @@ import request from '@/utils/request'
 /**
  * 加班列表
  */
-export function getWorkList({ pagesize = 10, pagenum = 1, name = '', status = '', type = '' }) {
+export function getWorkList({ pagesize = 10, pagenum = 1, name = '', status = '', type = '', myreq, mytodo }) {
   return request({
-    url: `/v1/work/overtime?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&status=${status}&type=${type}`,
+    url: `/v1/work/overtime?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&status=${status}&type=${type}&myreq=${myreq}&mytodo=${mytodo}`,
     method: 'get'
   })
 }
@@ -57,9 +57,9 @@ export function getWorkApprovals() {
 /**
  * 请假列表
  */
-export function getLeaveList({ pagesize = 10, pagenum = 1, name = '', status = '', type = '' }) {
+export function getLeaveList({ pagesize = 10, pagenum = 1, name = '', status = '', type = '', myreq, mytodo }) {
   return request({
-    url: `/v1/work/leave?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&status=${status}&type=${type}`,
+    url: `/v1/work/leave?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&status=${status}&type=${type}&myreq=${myreq}&mytodo=${mytodo}`,
     method: 'get'
   })
 }

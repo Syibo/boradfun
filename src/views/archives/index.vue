@@ -124,6 +124,13 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+              <el-row v-if="ruleForm.status === 4" :gutter="20">
+                <el-col :span="24">
+                  <el-form-item label="离职原因">
+                    <el-input v-model="ruleForm.reason" placeholder="离职原因" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="手机号码" prop="mobile">
@@ -159,6 +166,7 @@
                       placeholder="选择日期"
                       format="yyyy 年 MM 月 dd 日"
                       value-format="yyyy-MM-dd HH:mm:ss"
+                      @change="birthdayChange"
                     />
                   </el-form-item>
                 </el-col>
@@ -253,12 +261,29 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="学历" prop="employee_basic.degree">
-                  <el-input v-model="ruleForm.employee_basic.degree" placeholder="" />
+                  <!-- <el-input v-model="ruleForm.employee_basic.degree" placeholder="" /> -->
+                  <el-select v-model="ruleForm.employee_basic.degree" placeholder="" style="width: 100%">
+                    <el-option key="小学" label="小学" value="小学" />
+                    <el-option key="初级中学" label="初级中学" value="初级中学" />
+                    <el-option key="高级中学" label="高级中学" value="高级中学" />
+                    <el-option key="专科" label="专科" value="专科" />
+                    <el-option key="本科" label="本科" value="本科" />
+                    <el-option key="硕士研究生" label="硕士研究生" value="硕士研究生" />
+                    <el-option key="博士研究生" label="博士研究生" value="博士研究生" />
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="性质" prop="employee_basic.degree_property">
-                  <el-input v-model="ruleForm.employee_basic.degree_property" placeholder="" />
+                  <!-- <el-input v-model="ruleForm.employee_basic.degree_property" placeholder="" /> -->
+                  <el-select v-model="ruleForm.employee_basic.degree_property" placeholder="" style="width: 100%">
+                    <el-option key="全日制" label="全日制" value="全日制" />
+                    <el-option key="自主招生" label="自主招生" value="自主招生" />
+                    <el-option key="保送" label="保送" value="保送" />
+                    <el-option key="统招专升本" label="统招专升本" value="统招专升本" />
+                    <el-option key="非全日制" label="非全日制" value="非全日制" />
+                    <el-option key="自学考试" label="自学考试" value="自学考试" />
+                  </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -503,7 +528,7 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { regionData, provinceAndCityData } from 'element-china-area-data'
-import { retFileName } from '@/utils/common'
+import { retFileName, ages } from '@/utils/common'
 import { getEmployeeList,
   getEmployeeAllDetail,
   delContracts,
@@ -786,6 +811,12 @@ export default {
         right.scrollTop = total - 68
       }
     },
+    birthdayChange() {
+      if (this.ruleForm.employee_basic.birthday) {
+        this.ruleForm.age = this.ages(this.ruleForm.employee_basic.birthday)
+      }
+    },
+    ages,
     getUploadArr() {
       const obj = {
         name: this.ruleForm.employee_basic.id_card_front.split('_')[1]

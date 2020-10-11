@@ -19,12 +19,12 @@ const employeesRouter = {
       name: '员工入职',
       meta: { title: '员工入职' }
     },
-    {
-      path: 'positive',
-      component: () => import('@/views/employees/positive'),
-      name: '员工转正',
-      meta: { title: '员工转正' }
-    },
+    // {
+    //   path: 'positive',
+    //   component: () => import('@/views/employees/positive'),
+    //   name: '员工转正',
+    //   meta: { title: '员工转正' }
+    // },
     {
       path: 'departure',
       component: () => import('@/views/employees/departure'),

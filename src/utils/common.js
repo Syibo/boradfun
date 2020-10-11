@@ -127,3 +127,13 @@ export function retWorkflowEntity(status) {
 export function parseTime(date) {
   return Moment(date).format('YYYY-MM-DD HH:mm:ss')
 }
+/**
+ * 根据日期算年龄
+ */
+export function ages(str) {
+  const aDate = new Date()
+  const thisYear = aDate.getFullYear()
+  const brith = str.substr(0, 4)
+  const age = (thisYear - brith)
+  return age
+}

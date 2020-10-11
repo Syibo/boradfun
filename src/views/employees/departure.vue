@@ -170,13 +170,13 @@
           <el-col :span="12">
             <el-form-item :prop="userType === 8 ? 'phone' : ''">
               <template slot="label"><span class="form-label-slot">手机<span>（财务填写）</span></span></template>
-              <el-input v-model="ruleForm.phone" placeholder="" />
+              <el-input v-model="ruleForm.phone" placeholder="请输入手机" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :prop="userType === 8 ? 'expense' : ''">
               <template slot="label"><span class="form-label-slot">报销<span>（财务填写）</span></span></template>
-              <el-input v-model="ruleForm.expense" placeholder="" />
+              <el-input v-model="ruleForm.expense" placeholder="请输入报销" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -184,7 +184,7 @@
           <el-col :span="12">
             <el-form-item :prop="userType === 9 ? 'device_req' : ''">
               <template slot="label"><span class="form-label-slot">物品领用归还<span>（前台）</span></span></template>
-              <el-input v-model="ruleForm.device_req" placeholder="" />
+              <el-input v-model="ruleForm.device_req" placeholder="物品领用归还" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -192,13 +192,13 @@
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'work_day' : ''">
               <template slot="label"><span class="form-label-slot">实际出勤天数<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.work_day" placeholder="" />
+              <el-input v-model="ruleForm.work_day" type="number" placeholder="实际出勤天数" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'off_day' : ''">
               <template slot="label"><span class="form-label-slot">旷工<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.off_day" placeholder="" />
+              <el-input v-model="ruleForm.off_day" type="number" placeholder="旷工" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -206,13 +206,13 @@
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'half_day' : ''">
               <template slot="label"><span class="form-label-slot">病假<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.half_day" placeholder="" />
+              <el-input v-model="ruleForm.half_day" type="number" placeholder="病假" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'change_day' : ''">
               <template slot="label"><span class="form-label-slot">剩余调休<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.change_day" placeholder="" />
+              <el-input v-model="ruleForm.change_day" type="number" placeholder="剩余调休" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -220,7 +220,7 @@
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'others' : ''">
               <template slot="label"><span class="form-label-slot">其他结算<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.others" placeholder="" />
+              <el-input v-model="ruleForm.others" placeholder="其他结算" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -228,13 +228,13 @@
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'late_day' : ''">
               <template slot="label"><span class="form-label-slot">迟到/早退<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.late_day" placeholder="" />
+              <el-input v-model="ruleForm.late_day" type="number" placeholder="迟到/早退" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'things_day' : ''">
               <template slot="label"><span class="form-label-slot">事假<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.things_day" placeholder="" />
+              <el-input v-model="ruleForm.things_day" type="number" placeholder="事假" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -242,13 +242,13 @@
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'salary_day' : ''">
               <template slot="label"><span class="form-label-slot">带薪假<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.salary_day" placeholder="" />
+              <el-input v-model="ruleForm.salary_day" type="number" placeholder="带薪假" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :prop="userType === 6 ? 'annual_day' : ''">
               <template slot="label"><span class="form-label-slot">剩余年假<span>（HR填写）</span></span></template>
-              <el-input v-model="ruleForm.annual_day" placeholder="" />
+              <el-input v-model="ruleForm.annual_day" type="number" placeholder="剩余年假" />
             </el-form-item>
           </el-col>
         </el-row>

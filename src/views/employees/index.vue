@@ -64,8 +64,8 @@
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button v-permission="[6]" type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
-          <el-button v-permission="[7]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-          <el-button v-permission="[10]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <el-button v-permission="[7]" :disabled="scope.row.status !== 1" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <el-button v-permission="[10]" :disabled="scope.row.status !== 1" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>

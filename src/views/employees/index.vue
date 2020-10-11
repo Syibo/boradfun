@@ -61,8 +61,9 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column v-if="roles[0] == 7 || roles[0] == 10" align="center" label="操作">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
+          <el-button v-permission="[6]" type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
           <el-button v-permission="[7]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
           <el-button v-permission="[10]" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
         </template>
@@ -296,6 +297,7 @@ import { getDepartmentList,
   putEmployeeStatus,
   putEmployee,
   getEmployeeWorkflow,
+  delEmployeeId,
   getEmployeeDetail } from '@/api/employee'
 import { STATUSVALUEADD } from '@/utils/const'
 import { retFileName } from '@/utils/common'
@@ -455,6 +457,18 @@ export default {
       this.ruleForm.seat_number = resEle.data.elements[1].value
       this.ruleForm.device_req = resEle.data.elements[2].value
       this.dialogVisible = true
+    },
+    async handleDel(row) {
+      console.log(row)
+      const isDelete = await this.$confirm(`确定删除`, '提示', { type: 'warning' })
+      if (!isDelete) {
+        return
+      }
+      const res = await delEmployeeId(row.ID)
+      if (res.ret === 0) {
+        this.$message.success('删除成功')
+        this.getEmployeeList()
+      }
     },
     seachFun() {
       this.getEmployeeList()

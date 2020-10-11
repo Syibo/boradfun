@@ -25,6 +25,16 @@ export function getDepartmentLevelList(id) {
 }
 
 /**
+ * 删除员工
+ */
+export function delEmployeeId(id) {
+  return request({
+    url: `/v1/employee/${id}`,
+    method: 'delete'
+  })
+}
+
+/**
  * 员工列表
  */
 export function getEmployeeList({ pagesize = 10, pagenum = 1, name = '', departmentid = '', status = '', emp_no = '' }) {

@@ -69,6 +69,7 @@
       <el-table-column v-if="activeName === 'third'" align="center" label="操作">
         <template slot-scope="sope">
           <el-button type="text" @click="openCheck(sope.row)">编辑</el-button>
+          <el-button type="text" @click="timeCheck(sope.row)">时长校验</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -87,7 +88,7 @@
 
     <WorkFrom :visible="visible" @close="closeFun" @addSucc="addSucc" />
     <WorkDrawer :id="workDrawerId" ref="workDrawer" :time="new Date().getTime()" />
-    <WorkApproval :id="WorkApprovalId" :visible="visibleApprova" @close="closeFunApp" @addSucc="addSuccApp" />
+    <WorkApproval :id="WorkApprovalId" :visible="visibleApprova" :title="title" @close="closeFunApp" @addSucc="addSuccApp" />
   </div>
 </template>
 
@@ -132,7 +133,8 @@ export default {
       active: 0,
       workDrawerId: 0,
       WorkApprovalId: 0,
-      userType: ''
+      userType: '',
+      title: '申请加班'
     }
   },
   computed: {
@@ -145,6 +147,7 @@ export default {
   },
   methods: {
     async init() {
+      console.log(this.seachValue)
       const res = await getWorkList(this.seachValue)
       if (res.ret === 0) {
         this.tableData = res.data.list
@@ -204,6 +207,12 @@ export default {
       this.$refs.workDrawer.openDrawer()
     },
     openCheck(row) {
+      this.title = '申请加班'
+      this.visibleApprova = true
+      this.WorkApprovalId = row.ID
+    },
+    timeCheck(row) {
+      this.title = '时长校验'
       this.visibleApprova = true
       this.WorkApprovalId = row.ID
     },

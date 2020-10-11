@@ -46,6 +46,24 @@ export function putOneOverTime({ id, status, comment }) {
   })
 }
 /**
+ * 校验加班时长
+ */
+export function putOneOverTimeCheck({ id, real }) {
+  return request({
+    url: `/v1/work/overtime/${id}/check?real=${real}`,
+    method: 'put'
+  })
+}
+/**
+ * 请假时长校验
+ */
+export function putOneLeaveCheck({ id, real }) {
+  return request({
+    url: `/v1/work/leave/${id}/check?real=${real}`,
+    method: 'put'
+  })
+}
+/**
  * 审批人
  */
 export function getWorkApprovals() {

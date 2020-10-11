@@ -70,6 +70,7 @@
       <el-table-column v-if="activeName === 'third'" align="center" label="操作">
         <template slot-scope="sope">
           <el-button type="text" @click="openCheck(sope.row)">编辑</el-button>
+          <el-button type="text" @click="timeCheck(sope.row)">时长校验</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -132,7 +133,8 @@ export default {
       active: 0,
       workDrawerId: 0,
       visibleApprova: false,
-      WorkApprovalId: 0
+      WorkApprovalId: 0,
+      title: '申请请假'
     }
   },
   computed: {
@@ -224,6 +226,12 @@ export default {
       this.visibleApprova = false
     },
     openCheck(row) {
+      this.title = '时长校验'
+      this.visibleApprova = true
+      this.WorkApprovalId = row.ID
+    },
+    timeCheck(row) {
+      this.title = '时长校验'
       this.visibleApprova = true
       this.WorkApprovalId = row.ID
     },

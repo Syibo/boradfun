@@ -6,8 +6,8 @@
       </div>
       <div class="dialog-title-right">
         <el-button @click="closeVisble">取 消</el-button>
-        <el-button @click="submitForm(0)">拒 绝</el-button>
-        <el-button size="small" type="primary" @click="submitForm(1)">同 意</el-button>
+        <el-button v-if="title === '申请加班'" @click="submitForm(0)">拒 绝</el-button>
+        <el-button size="small" type="primary" @click="submitForm(1)">{{ title === '申请加班' ? '同 意' : '确 定' }}</el-button>
       </div>
     </span>
     <div class="work-container">
@@ -39,26 +39,32 @@
       <div class="item" style="margin-bottom: 50px">
         <span>加班事由：</span> {{ info.cause }}
       </div>
-      <Label title="审批流程" />
-      <div class="steps">
-        <div class="top">
-          审批流程
+      <div v-if="title === '申请加班'">
+        <Label title="审批流程" />
+        <div class="steps">
+          <div class="top">
+            审批流程
+          </div>
+          <el-steps style="padding: 0 10px" :active="active" finish-status="finish">
+            <el-step
+              v-for="item in workflow"
+              :key="item.ID"
+              :icon="retWorkflowIcon(item.status)"
+              :title="item.user ? item.user.name : ''"
+              :description="retWorkflowLabel(item.status)"
+            >
+              <template slot="icon">
+                <i :class="retWorkflowIcon(item.status)" />
+              </template>
+            </el-step>
+          </el-steps>
         </div>
-        <el-steps style="padding: 0 10px" :active="active" finish-status="finish">
-          <el-step
-            v-for="item in workflow"
-            :key="item.ID"
-            :icon="retWorkflowIcon(item.status)"
-            :title="item.user ? item.user.name : ''"
-            :description="retWorkflowLabel(item.status)"
-          >
-            <template slot="icon">
-              <i :class="retWorkflowIcon(item.status)" />
-            </template>
-          </el-step>
-        </el-steps>
+        <el-input v-model="comment" type="textarea" rows="5" placeholder="请输入审核意见" />
       </div>
-      <el-input v-model="comment" type="textarea" rows="5" placeholder="请输入审核意见" />
+      <div v-else>
+        <label>实际加班时长</label>
+        <el-input v-model="real" type="number" placeholder="实际加班时长" style="margin-top: 10px" />
+      </div>
     </div>
   </el-dialog>
 </template>
@@ -66,6 +72,7 @@
 <script>
 import {
   getOneOverTime,
+  putOneOverTimeCheck,
   putOneOverTime } from '@/api/work'
 import { TYPEVALUE } from '@/utils/const'
 import Label from '@/components/common/Label.vue'
@@ -95,7 +102,8 @@ export default {
       info: {},
       active: 0,
       workflow: '',
-      comment: ''
+      comment: '',
+      real: ''
     }
   },
   watch: {
@@ -116,18 +124,29 @@ export default {
       }
     },
     submitForm(status) {
-      const label = status ? '同意' : '拒绝'
-      this.$confirm(`确认${label}?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        this.addContracts(status)
-      }).catch(() => {})
+      if (this.title === '申请加班') {
+        const label = status ? '同意' : '拒绝'
+        this.$confirm(`确认${label}?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          this.addContracts(status)
+        }).catch(() => {})
+      } else {
+        this.timeCheck(status)
+      }
     },
     async addContracts(status) {
       const res = await putOneOverTime({ id: this.id, status, comment: this.comment })
       if (res.ret === 0) {
         this.$message.success('审核成功')
+        this.$emit('addSucc')
+      }
+    },
+    async timeCheck(status) {
+      const res = await putOneOverTimeCheck({ id: this.id, real: this.real })
+      if (res.ret === 0) {
+        this.$message.success('校验成功')
         this.$emit('addSucc')
       }
     },

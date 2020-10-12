@@ -126,7 +126,7 @@ export function getWorkProjects(desc = '') {
  */
 export function upWorkAttendance() {
   return request({
-    url: `/v1/work/attendance`,
+    url: `/v1/work/attendance/tmp`,
     method: 'post'
   })
 }
@@ -147,5 +147,14 @@ export function putWorkAttendance({ ID, dept, name, attendance_date, check_in, c
     url: `/v1/work/attendance`,
     method: 'put',
     data: { ID, dept, name, attendance_date, check_in, check_out, in_status, in_result, out_status, out_result }
+  })
+}
+/**
+ * 查询部门人员
+ */
+export function getWorkDeptuser({ name = '', year = '', month = '' }) {
+  return request({
+    url: `/v1/work/attendance/deptuser?name=${name}&year=${year}&month=${month}`,
+    method: 'get'
   })
 }

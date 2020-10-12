@@ -15,7 +15,6 @@
           class="filter-tree"
           :data="treedata"
           :props="defaultProps"
-          default-expand-all
           :filter-node-method="filterNode"
           @node-click="handleNodeClick"
         />
@@ -39,7 +38,7 @@
               style="margin-right: 10px"
               :headers="myHeaders"
               name="file"
-              :action="`${api}/v1/work/attendance`"
+              :action="`${api}/v1/work/attendance/tmp`"
               :on-success="oneUpload"
               :show-file-list="false"
             >
@@ -207,7 +206,8 @@
 import Moment from 'moment'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import { getWorkAttendance, putWorkAttendance } from '@/api/work'
+import { getWorkAttendance, putWorkAttendance,
+  getWorkDeptuser } from '@/api/work'
 import AttStatus from '@/components/common/AttStatus'
 export default {
   name: 'MonthAtt',
@@ -234,8 +234,8 @@ export default {
         }]
       }],
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: 'users',
+        label: 'name'
       },
       api: '',
       myHeaders: {},
@@ -270,8 +270,17 @@ export default {
       }
       this.userType = JSON.parse(getToken()).userType
     }
+    this.init()
   },
   methods: {
+    async init() {
+      const res = await getWorkDeptuser({ name: '', year: '2020', month: '08' })
+      const treedata = res.data
+      for (let i = 0; i < treedata.length; i++) {
+        treedata[i]['name'] = treedata[i].dept
+      }
+      this.treedata = treedata
+    },
     beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 1
       if (isLt1M) {
@@ -321,7 +330,7 @@ export default {
     },
     filterNode(value, data) {
       if (!value) return true
-      return data.label.indexOf(value) !== -1
+      return data.name.indexOf(value) !== -1
     },
     oneUpload(response, file, fileList) {
       if (response.ret === 0) {
@@ -454,6 +463,8 @@ export default {
     display: flex;
     .left {
       width: 230px;
+      max-height: 700px;
+      overflow-y: auto;
     }
     .right {
       flex: 1;

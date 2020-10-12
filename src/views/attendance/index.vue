@@ -270,7 +270,7 @@ export default {
       }
       this.userType = JSON.parse(getToken()).userType
     }
-    this.init()
+    // this.init()
   },
   methods: {
     async init() {
@@ -374,19 +374,25 @@ export default {
       if (!this.value) {
         return
       }
-      if (!this.name) {
-        this.$message.error('先选择员工')
-        return
+      const resName = await getWorkDeptuser({ name: '', year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+      const treedata = resName.data
+      for (let i = 0; i < treedata.length; i++) {
+        treedata[i]['name'] = treedata[i].dept
       }
-      const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
-      if (res.ret === 0 && res.data.length !== 0) {
-        const attenData = res.data[0].users[0].attendances
-        for (let i = 0; i < attenData.length; i++) {
-          attenData[i]['months'] = [attenData[i].attendance_date.substring(5, 7)]
-          attenData[i]['days'] = [attenData[i].attendance_date.substring(8, 10)]
-        }
-        this.calendarData = attenData
-      }
+      this.treedata = treedata
+      // if (!this.name) {
+      //   this.$message.error('先选择员工')
+      //   return
+      // }
+      // const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+      // if (res.ret === 0 && res.data.length !== 0) {
+      //   const attenData = res.data[0].users[0].attendances
+      //   for (let i = 0; i < attenData.length; i++) {
+      //     attenData[i]['months'] = [attenData[i].attendance_date.substring(5, 7)]
+      //     attenData[i]['days'] = [attenData[i].attendance_date.substring(8, 10)]
+      //   }
+      //   this.calendarData = attenData
+      // }
     },
     retResult(value) {
       let res = ''

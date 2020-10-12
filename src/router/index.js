@@ -114,111 +114,111 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true },
 
   employeesRouter,
-  attendanceRouter,
+  attendanceRouter
 
-  {
-    path: '/base',
-    component: Layout,
-    redirect: '/base/user',
-    alwaysShow: true, // will always show the root menu
-    name: 'Base',
-    meta: {
-      title: '基础数据',
-      icon: 'lock',
-      roles: [1]
-    },
-    children: [
-      {
-        path: 'user',
-        component: () => import('@/views/base-data/user'),
-        name: '用户维护',
-        meta: {
-          title: '用户维护'
-        }
-      },
-      {
-        path: 'customer',
-        component: () => import('@/views/base-data/customer'),
-        name: '客户维护',
-        meta: {
-          title: '客户维护'
-        },
-        children: [
-          {
-            path: 'info',
-            component: () => import('@/views/base-data/cus-info'),
-            name: '客户信息',
-            hidden: true,
-            meta: {
-              title: '客户信息'
-            },
-            children: [
-              {
-                path: 'ser',
-                component: () => import('@/views/base-data/service-info'),
-                name: '服务详情',
-                hidden: true,
-                meta: {
-                  title: '服务详情'
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        path: 'service',
-        component: () => import('@/views/base-data/service'),
-        name: '服务类型',
-        meta: {
-          title: '服务类型',
-          roles: [1, 2, 3, 4, 5]
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/base',
+  //   component: Layout,
+  //   redirect: '/base/user',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Base',
+  //   meta: {
+  //     title: '基础数据',
+  //     icon: 'lock',
+  //     roles: [1]
+  //   },
+  //   children: [
+  //     {
+  //       path: 'user',
+  //       component: () => import('@/views/base-data/user'),
+  //       name: '用户维护',
+  //       meta: {
+  //         title: '用户维护'
+  //       }
+  //     },
+  //     {
+  //       path: 'customer',
+  //       component: () => import('@/views/base-data/customer'),
+  //       name: '客户维护',
+  //       meta: {
+  //         title: '客户维护'
+  //       },
+  //       children: [
+  //         {
+  //           path: 'info',
+  //           component: () => import('@/views/base-data/cus-info'),
+  //           name: '客户信息',
+  //           hidden: true,
+  //           meta: {
+  //             title: '客户信息'
+  //           },
+  //           children: [
+  //             {
+  //               path: 'ser',
+  //               component: () => import('@/views/base-data/service-info'),
+  //               name: '服务详情',
+  //               hidden: true,
+  //               meta: {
+  //                 title: '服务详情'
+  //               }
+  //             }
+  //           ]
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'service',
+  //       component: () => import('@/views/base-data/service'),
+  //       name: '服务类型',
+  //       meta: {
+  //         title: '服务类型',
+  //         roles: [1, 2, 3, 4, 5]
+  //       }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/task',
-    component: Layout,
-    redirect: '/task/dashboard',
-    alwaysShow: true,
-    name: 'Task',
-    meta: {
-      title: '任务管理',
-      icon: 'lock'
-    },
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: '任务看板',
-        meta: { title: '任务看板', icon: 'dashboard' }
-      },
-      {
-        path: 'task',
-        component: () => import('@/views/dashboard/task'),
-        name: '任务详情',
-        hidden: true,
-        meta: { title: '任务详情', icon: 'dashboard' }
-      },
-      {
-        path: 'history',
-        component: () => import('@/views/dashboard/history'),
-        name: '历史版本',
-        hidden: true,
-        meta: {
-          title: '历史版本'
-        }
-      },
-      {
-        path: 'lines',
-        component: () => import('@/views/lines/list'),
-        name: '额度',
-        meta: { title: '额度', icon: 'guide' }
-      }
-    ]
-  }
+  // {
+  //   path: '/task',
+  //   component: Layout,
+  //   redirect: '/task/dashboard',
+  //   alwaysShow: true,
+  //   name: 'Task',
+  //   meta: {
+  //     title: '任务管理',
+  //     icon: 'lock'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'dashboard',
+  //       component: () => import('@/views/dashboard/index'),
+  //       name: '任务看板',
+  //       meta: { title: '任务看板', icon: 'dashboard' }
+  //     },
+  //     {
+  //       path: 'task',
+  //       component: () => import('@/views/dashboard/task'),
+  //       name: '任务详情',
+  //       hidden: true,
+  //       meta: { title: '任务详情', icon: 'dashboard' }
+  //     },
+  //     {
+  //       path: 'history',
+  //       component: () => import('@/views/dashboard/history'),
+  //       name: '历史版本',
+  //       hidden: true,
+  //       meta: {
+  //         title: '历史版本'
+  //       }
+  //     },
+  //     {
+  //       path: 'lines',
+  //       component: () => import('@/views/lines/list'),
+  //       name: '额度',
+  //       meta: { title: '额度', icon: 'guide' }
+  //     }
+  //   ]
+  // }
 ]
 
 const createRouter = () => new Router({

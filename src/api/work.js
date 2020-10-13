@@ -5,6 +5,7 @@
  * @date 09-21-2020
  */
 import request from '@/utils/request'
+import requestDown from '@/utils/request-down'
 /**
  * 加班列表
  */
@@ -131,12 +132,31 @@ export function upWorkAttendance() {
   })
 }
 /**
- * 查询考勤
+ * 查询人员考勤tmp
+ */
+export function getWorkAttendanceTmp({ name = '', year = '', month = '' }) {
+  return request({
+    url: `/v1/work/attendance/tmp?name=${name}&year=${year}&month=${month}`,
+    method: 'get'
+  })
+}
+/**
+ * 查询已确认考勤
  */
 export function getWorkAttendance({ name = '', year = '', month = '' }) {
   return request({
     url: `/v1/work/attendance?name=${name}&year=${year}&month=${month}`,
     method: 'get'
+  })
+}
+/**
+ * 修改考勤tmp
+ */
+export function putWorkAttendanceTmp({ ID, dept, name, date, status, result }) {
+  return request({
+    url: `/v1/work/attendance/tmp`,
+    method: 'put',
+    data: { ID, dept, name, date, status, result }
   })
 }
 /**
@@ -150,11 +170,38 @@ export function putWorkAttendance({ ID, dept, name, attendance_date, check_in, c
   })
 }
 /**
+ * 删除考勤tmp
+ */
+export function delWorkAttendanceTmp(id) {
+  return request({
+    url: `/v1/work/attendance/tmp/${id}`,
+    method: 'delete'
+  })
+}
+/**
  * 查询部门人员
  */
 export function getWorkDeptuser({ name = '', year = '', month = '' }) {
   return request({
     url: `/v1/work/attendance/deptuser?name=${name}&year=${year}&month=${month}`,
+    method: 'get'
+  })
+}
+/**
+ * 导出POS
+ */
+export function downWorkPos({ year = '2020', month = '08' }) {
+  return requestDown({
+    url: `/v1/work/attendance/pos?year=${year}&month=${month}`,
+    method: 'get'
+  })
+}
+/**
+ * 导出考勤请假迟到
+ */
+export function downWorkData({ year = '2020', month = '08' }) {
+  return requestDown({
+    url: `/v1/work/attendance/data?year=${year}&month=${month}`,
     method: 'get'
   })
 }

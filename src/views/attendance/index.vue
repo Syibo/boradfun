@@ -406,6 +406,7 @@ export default {
     },
     async downWorkPos() {
       const res = await await downWorkPos({ year: '2020', month: '08' })
+      console.log(res)
       const blob = new Blob([res])
       const fileName = `${this.value}.xlsx`
       if ('download' in document.createElement('a')) {

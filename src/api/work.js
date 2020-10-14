@@ -152,21 +152,21 @@ export function getWorkAttendance({ name = '', year = '', month = '' }) {
 /**
  * 修改考勤tmp
  */
-export function putWorkAttendanceTmp({ ID, dept, name, date, status, result }) {
+export function putWorkAttendanceTmp({ ID, dept, name, status, result, check_time, employee_id }) {
   return request({
     url: `/v1/work/attendance/tmp`,
     method: 'put',
-    data: { ID, dept, name, date, status, result }
+    data: { ID, dept, name, status, result, attendance_date: check_time.substring(0, 10), check_time, employee_id }
   })
 }
 /**
  * 修改考勤
  */
-export function putWorkAttendance({ ID, dept, name, attendance_date, check_in, check_out, in_status, in_result, out_status, out_result }) {
+export function putWorkAttendance({ ID, dept, name, status, result, attendance_date, check_time, employee_id }) {
   return request({
     url: `/v1/work/attendance`,
     method: 'put',
-    data: { ID, dept, name, attendance_date, check_in, check_out, in_status, in_result, out_status, out_result }
+    data: { ID, dept, name, status, result, attendance_date: check_time.substring(0, 10), check_time, employee_id }
   })
 }
 /**

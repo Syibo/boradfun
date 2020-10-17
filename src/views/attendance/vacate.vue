@@ -89,7 +89,7 @@
 
     <LeaveFrom :visible="visible" @close="closeFun" @addSucc="addSucc" />
     <WorkDrawer :id="workDrawerId" ref="workDrawer" :time="new Date().getTime()" />
-    <LeaveApproval :id="WorkApprovalId" :visible="visibleApprova" @close="closeFunApp" @addSucc="addSuccApp" />
+    <LeaveApproval :id="WorkApprovalId" :title="title" :visible="visibleApprova" @close="closeFunApp" @addSucc="addSuccApp" />
   </div>
 </template>
 
@@ -226,7 +226,7 @@ export default {
       this.visibleApprova = false
     },
     openCheck(row) {
-      this.title = '时长校验'
+      this.title = '申请请假'
       this.visibleApprova = true
       this.WorkApprovalId = row.ID
     },

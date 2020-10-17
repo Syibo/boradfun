@@ -67,7 +67,7 @@
               <div v-for="(item, index) in calendarData" :key="index" class="selected-con">
                 <div v-if="(item.months).indexOf(data.day.split('-').slice(1)[0])!=-1">
                   <div v-if="(item.days).indexOf(data.day.split('-').slice(2).join('-'))!=-1">
-                    <div v-for="tmps in item.tmps" :key="tmps.ID" class="is-selected">
+                    <div v-for="(tmps, indexTmp) in item.tmps" :key="indexTmp" class="is-selected">
                       <!-- <span> {{ tmps.check_time }} </span> -->
                       <span :class="tmps.status !== 'Normal' ? 'error-color' : ''"> {{ tmps.check_time }} </span>
                       <!-- <el-tag v-if="item.in_status !== 'Normal'" size="mini" class="calendar-day-p" type="danger">{{ item.in_result }}</el-tag> -->
@@ -92,7 +92,7 @@
           {{ name }} {{ value }} 打卡明细
         </div>
         <div class="dialog-title-right">
-          <!-- <el-button type="text" @click="editAtt"> 编辑考勤 </el-button> -->
+          <el-button v-if="isConfirm === 0" type="text" @click="addAtt"> 添加考勤 </el-button>
         </div>
       </span>
       <div class="dialog-content">
@@ -151,13 +151,39 @@
             <template slot-scope="scope">
               <el-button v-if="!scope.row.isEdit" type="text" @click="handEdit(scope.row, scope.$index)">编辑</el-button>
               <el-button v-if="scope.row.isEdit" type="text" @click="handSave(scope.row, scope.$index)">保存</el-button>
-              <el-button type="text" @click="handDel(scope.row, scope.$index)">删除</el-button>
+              <el-button v-if="isConfirm === 0" type="text" @click="handDel(scope.row, scope.$index)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
+        <div class="leave-history">
+          关联请假记录
+          <el-divider direction="vertical" />
+          <el-popover
+            placement="bottom-start"
+            title=""
+            trigger="click"
+          >
+            <el-checkbox-group v-model="checkList" @change="checkboxChange">
+              <el-checkbox v-for="item in leaveList" :key="item.ID" :label="item.ID">{{ retCheclLabel(item) }}</el-checkbox>
+            </el-checkbox-group>
+            <i slot="reference" class="el-icon-circle-plus-outline" />
+          </el-popover>
+        </div>
+        <el-table :data="leaveData" style="width: 100%">
+          <el-table-column prop="e_name" label="申请人" />
+          <el-table-column prop="type" label="请假类型">
+            <template slot-scope="scope">
+              {{ retLeaveValue(scope.row.type) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="start_date" label="开始时间" />
+          <el-table-column prop="end_date" label="结束时间" />
+          <el-table-column prop="duration" label="休假时长" />
+          <el-table-column prop="real_duration" label="实际休假时长" />
+        </el-table>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="visible = false">取 消</el-button>
+        <el-button @click="visible = false">关 闭</el-button>
         <!-- <el-button type="primary" @click="handEditAtt">确 定</el-button> -->
       </span>
     </el-dialog>
@@ -169,14 +195,19 @@
 import Moment from 'moment'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import { retLeaveValue } from '@/utils/common'
 import { getWorkAttendance, putWorkAttendance, getWorkAttendanceTmp, putWorkAttendanceTmp, delWorkAttendanceTmp,
-  getWorkDeptuser, downWorkPos, downWorkData } from '@/api/work'
+  getWorkDeptuser, downWorkPos, downWorkData, checkPostAtt, getLeavebydate, addWorkAttendanceTmp } from '@/api/work'
 import AttStatus from '@/components/common/AttStatus'
 export default {
   name: 'MonthAtt',
   components: { AttStatus },
   data() {
     return {
+      isConfirm: 0,
+      checkList: [],
+      leaveList: [],
+      leaveData: [],
       tableHeader: [],
       tableData: [],
       calendarData: [],
@@ -250,39 +281,33 @@ export default {
             this.value = Moment(this.value).format('YYYY-MM-DD')
             this.nowDate = this.value
             this.planDate = this.value
-            // if (!this.value) {
-            //   return
-            // }
-            // if (!this.name) {
-            //   this.$message.error('先选择员工')
-            //   return
-            // }
-            // const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
-            // if (res.ret === 0 && res.data.length !== 0) {
-            //   const attenData = res.data[0].users[0].attendances
-            //   for (let i = 0; i < attenData.length; i++) {
-            //     attenData[i]['months'] = [attenData[i].attendance_date.substring(5, 7)]
-            //     attenData[i]['days'] = [attenData[i].attendance_date.substring(8, 10)]
-            //   }
-            //   this.calendarData = attenData
-            // }
+            this.getCalendarData()
           })()
         } else {
-          this.visible = true
-          this.value = Moment(this.value).format('YYYY-MM-DD')
-          this.nowDate = this.value
-          this.planDate = this.value
-          const from = this.calendarData.find((item) => { return item.date === this.value })
-          console.log(from)
-          if (from) {
-            const tmps = JSON.parse(JSON.stringify(from.tmps))
-            for (let index = 0; index < tmps.length; index++) {
-              tmps[index].isEdit = false
+          (async() => {
+            this.visible = true
+            this.value = Moment(this.value).format('YYYY-MM-DD')
+            this.nowDate = this.value
+            this.planDate = this.value
+            const res = await getLeavebydate({ date: this.value, name: this.name })
+            if (res.ret === 0) {
+              this.leaveList = res.data
             }
-            this.tableData = tmps
-          } else {
-            this.tableData = []
-          }
+            const from = this.calendarData.find((item) => { return item.date === this.value })
+            if (from) {
+              const tmps = JSON.parse(JSON.stringify(from.tmps))
+              for (let index = 0; index < tmps.length; index++) {
+                tmps[index].isEdit = false
+              }
+              this.tableData = tmps
+              if (this.tableData[0].leave_id !== 0) {
+                this.checkList = [this.tableData[0].leave_id]
+                this.leaveData = this.leaveList
+              }
+            } else {
+              this.tableData = []
+            }
+          })()
         }
       }, 100)
     },
@@ -312,38 +337,92 @@ export default {
         this.calendarData = attenData
       }
     },
-    editAtt() {
-      this.isEdit = true
+    addAtt() {
+      this.tableData.push({
+        dept: '', name: '', status: '', result: '', check_time: '', employee_id: '', leave_id: 0, isEdit: true
+      })
     },
     inChange(value, index) {
       this.tableData[index].status = this.retResult(value)
     },
     async handleNodeClick(data) {
+      this.$message.closeAll()
       this.$message({
         message: data.name,
-        type: 'success'
+        type: 'info'
       })
+      this.isConfirm = data.is_confirm
       this.name = data.name
-      if (data.is_confirm === 0) {
-        const res = await getWorkAttendanceTmp({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
-        if (res.ret === 0 && res.data.length !== 0) {
-          const attenData = res.data
+      switch (this.isConfirm) {
+        case 0:
+          this.getCalendarDataTmp()
+          break
+        case 1:
+          this.getCalendarDataCheck()
+          break
+        default:
+          this.getCalendarData()
+          break
+      }
+    },
+    /**
+     * 获取考勤数据 先去请求getWorkAttendance如果getWorkAttendance没有数据再去请求getWorkAttendanceTmp临时表
+     */
+    async getCalendarData() {
+      this.calendarData = []
+      let attenData = []
+      const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+      if (res.ret === 0) {
+        if (res.data.length === 0) {
+          const resTmp = await getWorkAttendanceTmp({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+          if (resTmp.ret === 0 && resTmp.data) {
+            attenData = resTmp.data
+            for (let i = 0; i < attenData.length; i++) {
+              attenData[i]['months'] = [attenData[i].date.substring(5, 7)]
+              attenData[i]['days'] = [attenData[i].date.substring(8, 10)]
+            }
+            this.calendarData = attenData
+          }
+        } else {
+          attenData = res.data
           for (let i = 0; i < attenData.length; i++) {
             attenData[i]['months'] = [attenData[i].date.substring(5, 7)]
             attenData[i]['days'] = [attenData[i].date.substring(8, 10)]
           }
           this.calendarData = attenData
         }
-      } else {
-        const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
-        if (res.ret === 0 && res.data.length !== 0) {
-          const attenData = res.data[0].users[0].attendances
-          for (let i = 0; i < attenData.length; i++) {
-            attenData[i]['months'] = [attenData[i].date.substring(5, 7)]
-            attenData[i]['days'] = [attenData[i].date.substring(8, 10)]
-          }
-          this.calendarData = attenData
+      }
+    },
+    /**
+     * 获取考勤数据isconfig === 1
+     */
+    async getCalendarDataCheck() {
+      this.calendarData = []
+      let attenData = []
+      const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+      if (res.ret === 0 && res.data) {
+        attenData = res.data
+        for (let i = 0; i < attenData.length; i++) {
+          attenData[i]['months'] = [attenData[i].date.substring(5, 7)]
+          attenData[i]['days'] = [attenData[i].date.substring(8, 10)]
         }
+        this.calendarData = attenData
+      }
+    },
+    /**
+     * 获取考勤数据isconfig === 1
+     */
+    async getCalendarDataTmp() {
+      this.calendarData = []
+      let attenData = []
+      const res = await getWorkAttendanceTmp({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+      if (res.ret === 0 && res.data) {
+        attenData = res.data
+        for (let i = 0; i < attenData.length; i++) {
+          attenData[i]['months'] = [attenData[i].date.substring(5, 7)]
+          attenData[i]['days'] = [attenData[i].date.substring(8, 10)]
+        }
+        this.calendarData = attenData
       }
     },
     handleCheckChange(data, checked, indeterminate) {
@@ -364,24 +443,44 @@ export default {
       }
     },
     async handSave(row, index) {
-      const res = await putWorkAttendanceTmp(row)
-      if (res.ret === 0) {
-        this.$message.success('修改记录成功')
-        this.tableData[index].isEdit = false
-        // this.visible = false
-        // this.dateChange()
-      }
-    },
-    async handEditAtt() {
-      const res = await putWorkAttendance(this.ruleForm)
-      if (res.ret === 0) {
-        this.$message.success('修改记录成功')
-        this.visible = false
-        this.dateChange()
+      if (this.isConfirm === 1) {
+        const obj = {
+          ID: this.tableData[0].ID,
+          dept: this.tableData[0].dept,
+          name: this.tableData[0].name,
+          attendance_date: this.tableData[0].attendance_date,
+          check_in: this.tableData[0].check_time,
+          check_out: this.tableData[1].check_time,
+          in_status: this.tableData[0].status,
+          out_status: this.tableData[1].status,
+          in_result: this.tableData[0].result,
+          out_result: this.tableData[1].result
+        }
+        const res = await await putWorkAttendance(obj)
+        if (res.ret === 0) {
+          this.$message.success('修改成功')
+        }
+        this.tableData[0].isEdit = false
+        this.tableData[1].isEdit = false
+      } else {
+        if (row.ID === 0) {
+          const resAdd = await addWorkAttendanceTmp(row)
+          if (resAdd.ret === 0) {
+            this.$message.success('新增记录成功')
+            this.tableData[index].isEdit = false
+          }
+        } else {
+          const res = await putWorkAttendanceTmp(row)
+          if (res.ret === 0) {
+            this.$message.success('修改记录成功')
+            this.tableData[index].isEdit = false
+          }
+        }
       }
     },
     async dateChange() {
       this.value = this.planDate
+      this.nowDate = this.planDate
       if (!this.value) {
         return
       }
@@ -406,9 +505,8 @@ export default {
     },
     async downWorkPos() {
       const res = await await downWorkPos({ year: '2020', month: '08' })
-      console.log(res)
       const blob = new Blob([res])
-      const fileName = `${this.value}.xlsx`
+      const fileName = `${Moment(this.value).format('YYYY-MM-DD')}.xlsx`
       if ('download' in document.createElement('a')) {
         const link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
@@ -425,7 +523,7 @@ export default {
     async downWorkData() {
       const res = await await downWorkData({ year: '2020', month: '08' })
       const blob = new Blob([res])
-      const fileName = `${this.value}.xlsx`
+      const fileName = `${Moment(this.value).format('YYYY-MM-DD')}.xlsx`
       if ('download' in document.createElement('a')) {
         const link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
@@ -439,8 +537,43 @@ export default {
         window.navigator.msSaveBlob(blob, fileName)
       }
     },
-    checkData() {
-      console.log(this.$refs.tree.getCheckedNodes())
+    async checkboxChange() {
+      /**
+       * 目前只做了关联一条记录的 后续后端接口支持再优化
+       */
+      if (this.checkList.length === 0) {
+        this.leaveData = []
+        if (this.tableData) {
+          const row = this.tableData[0]
+          row.leave_id = 0
+          await putWorkAttendanceTmp(row)
+        }
+      } else {
+        this.leaveData = this.leaveList
+        if (this.tableData) {
+          const row = this.tableData[0]
+          row.leave_id = this.checkList[0]
+          const res = await putWorkAttendanceTmp(row)
+          if (res.ret === 0) {
+            this.$message.success('关联请假成功')
+          }
+        }
+      }
+    },
+    async checkData() {
+      const name = this.$refs.tree.getCheckedNodes().map((item) => item.name)
+      if (name.length !== 0) {
+        const res = await checkPostAtt({ year: '2020', month: '08', name })
+        if (res.ret === 0) {
+          this.$message.success('确定考勤成功')
+        }
+      } else {
+        this.$message.error('请先选择员工')
+      }
+    },
+    retLeaveValue,
+    retCheclLabel(data) {
+      return `${this.retLeaveValue(data.type)} ${data.start_date}(${data.start}) ${data.end_date}(${data.end}) ${data.duration}h `
     },
     retResult(value) {
       let res = ''
@@ -520,6 +653,21 @@ export default {
       max-height: 700px;
       overflow-y: auto;
     }
+    .left::-webkit-scrollbar-track-piece { //滚动条凹槽的颜色，还可以设置边框属性
+      background-color:#f8f8f8;
+    }
+    .left::-webkit-scrollbar {//滚动条的宽度
+      width:9px;
+      height:9px;
+    }
+    .left::-webkit-scrollbar-thumb {//滚动条的设置
+      background-color:#dddddd;
+      background-clip:padding-box;
+      min-height:28px;
+    }
+    .left::-webkit-scrollbar-thumb:hover {
+      background-color:#bbb;
+    }
     .right {
       flex: 1;
       .top {
@@ -593,6 +741,19 @@ export default {
     }
     .item-time:last-child {
       border-bottom: 1px solid #D8D8D8;
+    }
+    .leave-history {
+      font-size: 14px;
+      font-weight: 500;
+      color: #2B2B2B;
+      line-height: 21px;
+      margin-top: 15px;
+      .el-icon-circle-plus-outline {
+        color: #3293FF;
+      }
+      .el-icon-circle-plus-outline:hover {
+        cursor: pointer;
+      }
     }
   }
 }

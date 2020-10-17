@@ -12,11 +12,10 @@
     <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
       <Label :title="'基本信息'" />
       <el-row>
-
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="请选择加班类型" prop="type">
-              <el-select v-model="ruleForm.type" placeholder="请选择加班类型" style="width: 100%">
+            <el-form-item label="请选择请假类型" prop="type">
+              <el-select v-model="ruleForm.type" placeholder="请选择请假类型" style="width: 100%">
                 <el-option v-for="item in LEAVEVALUE" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>

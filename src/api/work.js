@@ -152,21 +152,21 @@ export function getWorkAttendance({ name = '', year = '', month = '' }) {
 /**
  * 修改考勤tmp
  */
-export function putWorkAttendanceTmp({ ID, dept, name, status, result, check_time, employee_id }) {
+export function putWorkAttendanceTmp({ ID, dept, name, status, result, check_time, employee_id, leave_id }) {
   return request({
     url: `/v1/work/attendance/tmp`,
     method: 'put',
-    data: { ID, dept, name, status, result, attendance_date: check_time.substring(0, 10), check_time, employee_id }
+    data: { ID, dept, name, status, result, attendance_date: check_time.substring(0, 10), check_time, employee_id, leave_id }
   })
 }
 /**
  * 修改考勤
  */
-export function putWorkAttendance({ ID, dept, name, status, result, attendance_date, check_time, employee_id }) {
+export function putWorkAttendance({ ID, dept, name, attendance_date, check_in, check_out, in_status, out_status, in_result, out_result, leave_id }) {
   return request({
     url: `/v1/work/attendance`,
     method: 'put',
-    data: { ID, dept, name, status, result, attendance_date: check_time.substring(0, 10), check_time, employee_id }
+    data: { ID, dept, name, attendance_date, check_in, check_out, in_status, out_status, in_result, out_result, leave_id }
   })
 }
 /**
@@ -193,7 +193,8 @@ export function getWorkDeptuser({ name = '', year = '', month = '' }) {
 export function downWorkPos({ year = '2020', month = '08' }) {
   return requestDown({
     url: `/v1/work/attendance/pos?year=${year}&month=${month}`,
-    method: 'get'
+    method: 'get',
+    responseType: 'arraybuffer'
   })
 }
 /**
@@ -202,6 +203,36 @@ export function downWorkPos({ year = '2020', month = '08' }) {
 export function downWorkData({ year = '2020', month = '08' }) {
   return requestDown({
     url: `/v1/work/attendance/data?year=${year}&month=${month}`,
+    method: 'get',
+    responseType: 'arraybuffer'
+  })
+}
+/**
+ * 批量确认考勤
+ */
+export function checkPostAtt({ year = '2020', month = '08', name }) {
+  return requestDown({
+    url: `/v1/work/attendance?year=${year}&month=${month}`,
+    method: 'post',
+    data: name
+  })
+}
+/**
+ * 按日期查询请假
+ */
+export function getLeavebydate({ date, name }) {
+  return requestDown({
+    url: `/v1/work/leavebydate?date=${date}&name=${name}`,
     method: 'get'
+  })
+}
+/**
+ * 添加考勤tmp
+ */
+export function addWorkAttendanceTmp({ dept, name, status, result, check_time, employee_id, leave_id }) {
+  return request({
+    url: `/v1/work/attendance/create/tmp`,
+    method: 'post',
+    data: { dept, name, status, result, attendance_date: check_time.substring(0, 10), check_time, employee_id, leave_id }
   })
 }

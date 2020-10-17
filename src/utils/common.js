@@ -9,7 +9,7 @@
  * 获取当前流程的状态
  * @param {string} status value
  */
-import { WORKFLOW } from './const.js'
+import { WORKFLOW, LEAVEVALUE } from './const.js'
 import Moment from 'moment'
 export function retWorkflowLabel(status) {
   let s = ''
@@ -117,6 +117,17 @@ export function retWorkflowEntity(status) {
   const workflow = WORKFLOW.find((item) => { return item.value === status })
   if (workflow) {
     return workflow.label || ''
+  } else {
+    return '未知状态'
+  }
+}
+/**
+ * 返回员工状态
+ */
+export function retLeaveValue(status) {
+  const leave = LEAVEVALUE.find((item) => { return item.value === status })
+  if (leave) {
+    return leave.label || ''
   } else {
     return '未知状态'
   }

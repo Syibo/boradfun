@@ -39,7 +39,7 @@
       <div class="item" style="margin-bottom: 50px">
         <span>请假事由：</span> {{ info.cause }}
       </div>
-      <div v-if="title === '申请加班'">
+      <div v-if="title === '申请请假'">
         <Label title="审批流程" />
         <div class="steps">
           <div class="top">

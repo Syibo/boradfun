@@ -1,6 +1,6 @@
 import { isNum } from '@/utils/validate'
 export const ruleForm = {
-  ID: '',
+  ID: 0,
   name: '',
   gender: '',
   status: '',

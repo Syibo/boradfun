@@ -2,9 +2,9 @@
  * Created by Sbb on 20/09/22
  */
 export const isNum = (rule, value, callback) => {
-  const age = /^\d+$|^\d+[.]?\d+$/
+  const age = /^[0-9]*$/
   if (!age.test(value)) {
-    callback(new Error('只能为数字'))
+    callback(new Error('只能为整数'))
   } else {
     callback()
   }

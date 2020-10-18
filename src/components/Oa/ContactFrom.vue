@@ -25,6 +25,7 @@
             <el-form-item label="签约方" prop="contract_party">
               <el-autocomplete
                 v-model="ruleForm.contract_party"
+                :disabled="contractParty !== ''"
                 style="width: 100%"
                 :fetch-suggestions="querySearchAsync"
                 placeholder="请输入签约方"
@@ -99,12 +100,13 @@
                 class="upload-demo"
                 :headers="myHeaders"
                 name="file"
+                :limit="1"
                 :action="`${api}/v1/file/upload?bucket=contract`"
                 :on-success="oneUpload"
-                :show-file-list="false"
+                :show-file-list="true"
+                :file-list="eleContract"
               >
-                <el-button v-if="ruleForm.soft_copy === ''" icon="el-icon-upload" size="small" type="text">上传文件</el-button>
-                <el-button v-else icon="el-icon-upload" size="small" type="text">{{ ruleForm.soft_copy }}</el-button>
+                <el-button icon="el-icon-upload" size="small" type="text">上传文件</el-button>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -116,12 +118,13 @@
                 class="upload-demo"
                 :headers="myHeaders"
                 name="file"
+                :limit="1"
                 :action="`${api}/v1/file/upload?bucket=contract`"
                 :on-success="oneUploadScanned"
-                :show-file-list="false"
+                :show-file-list="true"
+                :file-list="eleContractScanned"
               >
-                <el-button v-if="ruleForm.scanned_copy === ''" icon="el-icon-upload" size="small" type="text">上传文件</el-button>
-                <el-button v-else icon="el-icon-upload" size="small" type="text">{{ ruleForm.scanned_copy }}</el-button>
+                <el-button icon="el-icon-upload" size="small" type="text">上传文件</el-button>
               </el-upload>
             </el-form-item>
           </el-col>
@@ -153,6 +156,14 @@ export default {
     title: {
       type: String,
       default: '新建合同'
+    },
+    contractParty: {
+      type: String,
+      default: ''
+    },
+    id: {
+      type: Number || String,
+      default: 0
     }
   },
   data() {
@@ -163,14 +174,35 @@ export default {
       },
       rules: rulesCon,
       myHeaders: {},
-      api: ''
+      api: '',
+      eleContract: [],
+      eleContractScanned: []
     }
   },
   watch: {
     fromData: {
       deep: true,
       handler(value) {
-        this.ruleForm = value
+        this.ruleForm = JSON.parse(JSON.stringify(value))
+        const obj = {
+          name: this.ruleForm.soft_copy.split('_')[1]
+        }
+        const objS = {
+          name: this.ruleForm.scanned_copy.split('_')[1]
+        }
+        if (this.ruleForm.soft_copy) {
+          this.eleContract.push(obj)
+        }
+        if (this.ruleForm.scanned_copy) {
+          this.eleContractScanned.push(objS)
+        }
+      }
+    },
+    contractParty: {
+      deep: true,
+      handler(value) {
+        this.ruleForm.contract_party = value
+        this.ruleForm.ID = this.id
       }
     }
   },
@@ -259,6 +291,8 @@ export default {
         trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
       }
       this.$emit('close')
+      this.eleContract = []
+      this.eleContractScanned = []
     }
   }
 }

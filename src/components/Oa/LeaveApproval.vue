@@ -62,16 +62,21 @@
         <el-input v-model="comment" type="textarea" rows="5" placeholder="请输入审核意见" />
       </div>
       <div v-else>
-        <label>实际请假时长</label>
-        <el-input
-          v-model="real"
-          type="number"
-          placeholder="实际请假时长"
-          style="margin-top: 10px"
-          :rules="{
-            required: true, message: '域名不能为空', trigger: 'blur'
-          }"
-        />
+        <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
+          <el-row>
+            <el-row :gutter="20">
+              <el-col :span="24">
+                <el-form-item label="实际请假时长" prop="real">
+                  <el-input
+                    v-model="ruleForm.real"
+                    type="number"
+                    placeholder="实际请假时长"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-row>
+        </el-form>
       </div>
     </div>
   </el-dialog>
@@ -85,6 +90,7 @@ import {
 import { TYPEVALUE } from '@/utils/const'
 import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive, retLeaveValue } from '@/utils/common'
+import { isNum } from '@/utils/validate'
 export default {
   name: 'LeaveApproval',
   components: {
@@ -108,10 +114,18 @@ export default {
     return {
       TYPEVALUE,
       info: {},
+      ruleForm: {
+        real: ''
+      },
       active: 0,
       workflow: '',
       comment: '',
-      real: ''
+      rules: {
+        real: [
+          { required: true, message: '请输入时长', trigger: 'blur' },
+          { validator: isNum, trigger: 'blur' }
+        ]
+      }
     }
   },
   watch: {
@@ -152,7 +166,17 @@ export default {
       }
     },
     async timeCheck(status) {
-      const res = await putOneLeaveCheck({ id: this.id, real: this.real })
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.timeCheckFun(status)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async timeCheckFun(status) {
+      const res = await putOneLeaveCheck({ id: this.id, real: this.ruleForm.real })
       if (res.ret === 0) {
         this.$message.success('校验成功')
         this.$emit('addSucc')
@@ -163,7 +187,7 @@ export default {
     retWorkflowIcon,
     retLeaveValue,
     closeVisble() {
-      this.real = ''
+      this.ruleForm.real = ''
       this.$emit('close')
     }
   }

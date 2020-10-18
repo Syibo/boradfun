@@ -147,7 +147,6 @@ export default {
   },
   methods: {
     async init() {
-      console.log(this.seachValue)
       const res = await getWorkList(this.seachValue)
       if (res.ret === 0) {
         this.tableData = res.data.list

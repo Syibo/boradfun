@@ -33,13 +33,15 @@ export const rules = {
     { required: true, message: '请选择性别', trigger: 'change' }
   ],
   id_card: [
-    { required: true, message: '请输入身份证号', trigger: 'blur' }
+    { required: true, message: '请输入身份证号', trigger: 'blur' },
+    { min: 18, max: 18, message: '身份证号应为18位字符', trigger: 'blur' }
   ],
   interview_comment: [
     { required: true, message: '请输入面试评价', trigger: 'blur' }
   ],
   mobile: [
     { required: true, message: '请输入手机号码', trigger: 'blur' },
+    { min: 11, max: 11, message: '手机号码应为11位数字', trigger: 'blur' },
     { validator: isNum, trigger: 'blur' }
   ],
   status: [

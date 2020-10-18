@@ -520,7 +520,7 @@
       </div>
     </el-dialog>
     <ArchivesDrawer ref="archivesDrawer" :base-data="baseData" :con-data="conData" />
-    <ContactFrom :title="title" :visible="visible" :from-data="conFrom" @addSucc="addSucc" @close="closeFun" />
+    <ContactFrom :id="ruleForm.ID" :title="title" :visible="visible" :from-data="conFrom" :contract-party="ruleForm.name" @addSucc="addSucc" @close="closeFun" />
 
   </div>
 </template>

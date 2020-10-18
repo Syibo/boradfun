@@ -9,7 +9,7 @@
  * 获取当前流程的状态
  * @param {string} status value
  */
-import { WORKFLOW, LEAVEVALUE } from './const.js'
+import { WORKFLOW, LEAVEVALUE, TYPEVALUE } from './const.js'
 import Moment from 'moment'
 export function retWorkflowLabel(status) {
   let s = ''
@@ -111,7 +111,7 @@ export function retStatus(status) {
   return s
 }
 /**
- * 返回员工状态
+ * 返回流程value
  */
 export function retWorkflowEntity(status) {
   const workflow = WORKFLOW.find((item) => { return item.value === status })
@@ -122,10 +122,45 @@ export function retWorkflowEntity(status) {
   }
 }
 /**
- * 返回员工状态
+ * 返回流程detail
+ */
+export function goDetail(status) {
+  switch (status) {
+    case 'Overtime':
+      this.$router.push({
+        path: 'attendance/workOvertime'
+      })
+      break
+    case 'Leave':
+      this.$router.push({
+        path: 'attendance/vacate'
+      })
+      break
+    case 'Employee':
+      this.$router.push({
+        path: 'employees/induction'
+      })
+      break
+    default:
+      break
+  }
+}
+/**
+ * 返回请假类型
  */
 export function retLeaveValue(status) {
   const leave = LEAVEVALUE.find((item) => { return item.value === status })
+  if (leave) {
+    return leave.label || ''
+  } else {
+    return '未知状态'
+  }
+}
+/**
+ * 返回加班类型
+ */
+export function retWorkValue(status) {
+  const leave = TYPEVALUE.find((item) => { return item.value === status })
   if (leave) {
     return leave.label || ''
   } else {

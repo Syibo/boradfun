@@ -6,7 +6,7 @@
         <img src="../../assets/logo.png">
       </div>
       <div class="title-container">
-        <h3 class="title">用户登陆</h3>
+        <h3 class="title">用户登录</h3>
       </div>
 
       <el-form-item prop="username" class="input-container">
@@ -47,7 +47,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" size="medium" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登陆</el-button>
+      <el-button :loading="loading" size="medium" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
     </el-form>
 
     <div class="fotter">Copyright © 2017 - 2020 Broadfun. All Rights Reserved</div>

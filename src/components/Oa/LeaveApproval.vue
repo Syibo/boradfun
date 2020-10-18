@@ -6,8 +6,8 @@
       </div>
       <div class="dialog-title-right">
         <el-button @click="closeVisble">取 消</el-button>
-        <el-button v-if="title === '申请加班'" @click="submitForm(0)">拒 绝</el-button>
-        <el-button size="small" type="primary" @click="submitForm(1)">{{ title === '申请加班' ? '同 意' : '确 定' }}</el-button>
+        <el-button v-if="title === '申请请假'" @click="submitForm(0)">拒 绝</el-button>
+        <el-button size="small" type="primary" @click="submitForm(1)">{{ title === '申请请假' ? '同 意' : '确 定' }}</el-button>
       </div>
     </span>
     <div class="work-container">
@@ -25,7 +25,7 @@
         </el-col>
       </el-row>
       <div class="item" style="margin-top: -3px">
-        <span>请假类型：</span> {{ info.type }}
+        <span>请假类型：</span> {{ retLeaveValue(info.type) }}
       </div>
       <div class="item">
         <span>开始日期：</span> {{ info.start_date }}
@@ -63,7 +63,15 @@
       </div>
       <div v-else>
         <label>实际请假时长</label>
-        <el-input v-model="real" type="number" placeholder="实际请假时长" style="margin-top: 10px" />
+        <el-input
+          v-model="real"
+          type="number"
+          placeholder="实际请假时长"
+          style="margin-top: 10px"
+          :rules="{
+            required: true, message: '域名不能为空', trigger: 'blur'
+          }"
+        />
       </div>
     </div>
   </el-dialog>
@@ -76,7 +84,7 @@ import {
   putOneLeave } from '@/api/work'
 import { TYPEVALUE } from '@/utils/const'
 import Label from '@/components/common/Label.vue'
-import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
+import { retWorkflowLabel, retWorkflowIcon, getaActive, retLeaveValue } from '@/utils/common'
 export default {
   name: 'LeaveApproval',
   components: {
@@ -124,7 +132,7 @@ export default {
       }
     },
     submitForm(status) {
-      if (this.title === '申请加班') {
+      if (this.title === '申请请假') {
         const label = status ? '同意' : '拒绝'
         this.$confirm(`确认${label}?`, '提示', {
           confirmButtonText: '确定',
@@ -153,7 +161,9 @@ export default {
     getaActive,
     retWorkflowLabel,
     retWorkflowIcon,
+    retLeaveValue,
     closeVisble() {
+      this.real = ''
       this.$emit('close')
     }
   }

@@ -67,10 +67,9 @@
               <div v-for="(item, index) in calendarData" :key="index" class="selected-con">
                 <div v-if="(item.months).indexOf(data.day.split('-').slice(1)[0])!=-1">
                   <div v-if="(item.days).indexOf(data.day.split('-').slice(2).join('-'))!=-1">
+                    <el-tag v-if="retException(item.tmps)" size="mini" class="calendar-day-p" type="danger">异常</el-tag>
                     <div v-for="(tmps, indexTmp) in item.tmps" :key="indexTmp" class="is-selected">
-                      <!-- <span> {{ tmps.check_time }} </span> -->
                       <span :class="tmps.status !== 'Normal' ? 'error-color' : ''"> {{ tmps.check_time }} </span>
-                      <!-- <el-tag v-if="item.in_status !== 'Normal'" size="mini" class="calendar-day-p" type="danger">{{ item.in_result }}</el-tag> -->
                     </div>
                     <!-- <div class="is-selected">
                       <span :class="item.out_status !== 'Normal' ? 'error-color' : ''"> {{ item.check_out }} </span>
@@ -236,7 +235,8 @@ export default {
         out_result: ''
       },
       radio: '',
-      name: ''
+      name: '',
+      dept: ''
     }
   },
   watch: {
@@ -327,42 +327,57 @@ export default {
       this.tableHeader = header
     },
     async closeVisble() {
-      const res = await getWorkAttendanceTmp({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
-      if (res.ret === 0 && res.data.length !== 0) {
-        const attenData = res.data
-        for (let i = 0; i < attenData.length; i++) {
-          attenData[i]['months'] = [attenData[i].date.substring(5, 7)]
-          attenData[i]['days'] = [attenData[i].date.substring(8, 10)]
+      if (this.isConfirm === 0) {
+        const res = await getWorkAttendanceTmp({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+        if (res.ret === 0 && res.data.length !== 0) {
+          const attenData = res.data
+          for (let i = 0; i < attenData.length; i++) {
+            attenData[i]['months'] = [attenData[i].date.substring(5, 7)]
+            attenData[i]['days'] = [attenData[i].date.substring(8, 10)]
+          }
+          this.calendarData = attenData
         }
-        this.calendarData = attenData
+      } else {
+        const res = await getWorkAttendance({ name: this.name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+        if (res.ret === 0 && res.data.length !== 0) {
+          const attenData = res.data
+          for (let i = 0; i < attenData.length; i++) {
+            attenData[i]['months'] = [attenData[i].date.substring(5, 7)]
+            attenData[i]['days'] = [attenData[i].date.substring(8, 10)]
+          }
+          this.calendarData = attenData
+        }
       }
     },
     addAtt() {
       this.tableData.push({
-        dept: '', name: '', status: '', result: '', check_time: '', employee_id: '', leave_id: 0, isEdit: true
+        ID: '', dept: this.dept, name: this.name, status: '', result: '', check_time: '', employee_id: 0, leave_id: 0, isEdit: true, attendance_date: this.value
       })
     },
     inChange(value, index) {
       this.tableData[index].status = this.retResult(value)
     },
-    async handleNodeClick(data) {
-      this.$message.closeAll()
-      this.$message({
-        message: data.name,
-        type: 'info'
-      })
-      this.isConfirm = data.is_confirm
-      this.name = data.name
-      switch (this.isConfirm) {
-        case 0:
-          this.getCalendarDataTmp()
-          break
-        case 1:
-          this.getCalendarDataCheck()
-          break
-        default:
-          this.getCalendarData()
-          break
+    async handleNodeClick(data, node) {
+      if (node.level === 2) {
+        this.$message.closeAll()
+        this.$message({
+          message: data.name,
+          type: 'info'
+        })
+        this.dept = node.parent.data.dept
+        this.isConfirm = data.is_confirm
+        this.name = data.name
+        switch (this.isConfirm) {
+          case 0:
+            this.getCalendarDataTmp()
+            break
+          case 1:
+            this.getCalendarDataCheck()
+            break
+          default:
+            this.getCalendarData()
+            break
+        }
       }
     },
     /**
@@ -463,7 +478,7 @@ export default {
         this.tableData[0].isEdit = false
         this.tableData[1].isEdit = false
       } else {
-        if (row.ID === 0) {
+        if (row.ID === '') {
           const resAdd = await addWorkAttendanceTmp(row)
           if (resAdd.ret === 0) {
             this.$message.success('新增记录成功')
@@ -574,6 +589,19 @@ export default {
     retLeaveValue,
     retCheclLabel(data) {
       return `${this.retLeaveValue(data.type)} ${data.start_date}(${data.start}) ${data.end_date}(${data.end}) ${data.duration}h `
+    },
+    retException(item) {
+      let status = false
+      if (item.length >= 3) {
+        status = true
+      }
+      var na = item.map((item) => item.status)
+      const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
+      const Exception = countOccurences(na, 'Exception')
+      if (Exception > 0) {
+        status = true
+      }
+      return status
     },
     retResult(value) {
       let res = ''
@@ -689,17 +717,17 @@ export default {
       }
       .selected-con {
         position: relative;
+        .calendar-day-p {
+          position: absolute;
+          top: -25px;
+          right: 0;
+        }
         .is-selected {
           color: #BCC0C3;
           font-size: 14px;
           margin-bottom: 3px;
           display: flex;
           align-items: center;
-          .calendar-day-p {
-            position: absolute;
-            top: -25px;
-            right: 0;
-          }
           .calendar-day-p2 {
             position: absolute;
             top: -25px;

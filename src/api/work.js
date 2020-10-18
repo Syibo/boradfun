@@ -229,10 +229,10 @@ export function getLeavebydate({ date, name }) {
 /**
  * 添加考勤tmp
  */
-export function addWorkAttendanceTmp({ dept, name, status, result, check_time, employee_id, leave_id }) {
+export function addWorkAttendanceTmp({ dept, name, status, result, check_time, employee_id, leave_id, attendance_date }) {
   return request({
     url: `/v1/work/attendance/create/tmp`,
     method: 'post',
-    data: { dept, name, status, result, attendance_date: check_time.substring(0, 10), check_time, employee_id, leave_id }
+    data: { dept, name, status, result, attendance_date, check_time, employee_id, leave_id }
   })
 }

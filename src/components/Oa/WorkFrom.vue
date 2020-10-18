@@ -122,7 +122,8 @@ export default {
           { required: true, message: '请选择日期', trigger: 'change' }
         ]
       },
-      projectList: []
+      projectList: [],
+      people: ''
     }
   },
   watch: {
@@ -137,6 +138,7 @@ export default {
     async getWorkApprovals() {
       const res = await getWorkApprovals()
       this.ruleForm.people = res.data
+      this.people = res.data
       const resP = await getWorkProjects()
       this.projectList = resP.data
     },
@@ -155,6 +157,11 @@ export default {
       if (obj) {
         this.ruleForm.engagement_code = obj.engagement_code
         this.ruleForm.leader_id = obj.code_owner_id
+        if (obj.owner) {
+          this.ruleForm.people = `${obj.owner.name},${this.people}`
+        } else {
+          this.ruleForm.people = `${this.people}`
+        }
       }
     },
     async addContracts() {

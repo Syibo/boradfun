@@ -27,6 +27,7 @@
             <el-form-item label="开始日期" prop="start_date">
               <el-date-picker
                 v-model="ruleForm.start_date"
+                :picker-options="pickerOptions1"
                 style="width: 100%"
                 type="date"
                 placeholder="选择日期"
@@ -51,6 +52,7 @@
             <el-form-item label="结束日期" prop="end_date">
               <el-date-picker
                 v-model="ruleForm.end_date"
+                :picker-options="pickerOptions2"
                 style="width: 100%"
                 type="date"
                 placeholder="选择日期"
@@ -146,10 +148,43 @@ export default {
       api: ''
     }
   },
+  computed: {
+    /**
+     * 日期选择禁用
+    */
+    pickerOptions1() {
+      return {
+        disabledDate: this.disabledDate1
+      }
+    },
+    pickerOptions2() {
+      return {
+        disabledDate: this.disabledDate2
+      }
+    }
+  },
   mounted() {
 
   },
   methods: {
+    disabledDate1(time) {
+      const endTime = new Date(this.ruleForm.end_date).getTime()
+      if (this.ruleForm.end_date) {
+        const filterEndTime = new Date(this.ruleForm.end_date).getTime()
+        return time.getTime() < Date.now() - 8.64e7 || time.getTime() > filterEndTime // 选择了结束日期, 禁点之后日期
+      } else {
+        return time.getTime() < Date.now() - 8.64e7 || time.getTime() > endTime // 禁用以前的日期，今天不禁用
+      }
+    },
+    disabledDate2(time) {
+      if (this.ruleForm.start_date) {
+        const thisTime = this.ruleForm.start_date.replace(/-/g, '/')
+        const startTime = new Date(thisTime).getTime()
+        return time.getTime() < startTime
+      } else {
+        return time.getTime() < Date.now() - 8.64e7
+      }
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

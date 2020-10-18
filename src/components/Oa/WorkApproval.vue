@@ -28,7 +28,7 @@
         <span>加班项目：</span> {{ info.project }}
       </div>
       <div class="item">
-        <span>加班类型：</span> {{ info.type }}
+        <span>加班类型：</span> {{ retWorkValue(info.type) }}
       </div>
       <div class="item">
         <span>加班日期：</span> {{ info.overtime_date }}
@@ -76,7 +76,7 @@ import {
   putOneOverTime } from '@/api/work'
 import { TYPEVALUE } from '@/utils/const'
 import Label from '@/components/common/Label.vue'
-import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
+import { retWorkflowLabel, retWorkflowIcon, getaActive, retWorkValue } from '@/utils/common'
 export default {
   name: 'WorkApproval',
   components: {
@@ -153,7 +153,9 @@ export default {
     getaActive,
     retWorkflowLabel,
     retWorkflowIcon,
+    retWorkValue,
     closeVisble() {
+      this.real = ''
       this.$emit('close')
     }
   }

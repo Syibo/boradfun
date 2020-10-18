@@ -8,7 +8,7 @@
       <div class="workbench-con">
         <div v-for="work in workData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
+            <el-button type="text" @click="goDetail(work.definition.workflow_entity)">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
             <el-popover
               placement="top-start"
               width="200"
@@ -46,7 +46,7 @@
         </div>
         <div v-for="work in myreqData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
+            <el-button type="text" @click="goDetail(work.definition.workflow_entity)">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
             <el-popover
               placement="top-start"
               width="200"
@@ -98,7 +98,7 @@
 
 <script>
 import { getBenchmMapprove, getBenchMyreq, getContinueList } from '@/api/employee'
-import { retWorkflowLabel, retWorkflowIcon, getaActive, retWorkflowEntity, parseTime } from '@/utils/common'
+import { retWorkflowLabel, retWorkflowIcon, getaActive, retWorkflowEntity, parseTime, goDetail } from '@/utils/common'
 import WorkStatus from '@/components/common/WorkStatus'
 export default {
   components: {
@@ -139,6 +139,7 @@ export default {
   },
   mounted() {
     this.init()
+    this.initDoneTotal()
     this.getBenchMyreq()
     this.getContinueList()
   },
@@ -148,6 +149,7 @@ export default {
     retWorkflowLabel,
     retWorkflowIcon,
     parseTime,
+    goDetail,
     async init() {
       const res = await getBenchmMapprove(this.todo)
       if (res.ret === 0) {
@@ -165,6 +167,14 @@ export default {
         this.totalDone = res.data.total
       } else {
         this.workData = []
+        this.totalDone = 0
+      }
+    },
+    async initDoneTotal() {
+      const res = await getBenchmMapprove(this.done)
+      if (res.ret === 0) {
+        this.totalDone = res.data.total
+      } else {
         this.totalDone = 0
       }
     },
@@ -226,6 +236,21 @@ export default {
     .workbench-over {
       max-height: 328px;
       overflow-y: auto;
+    }
+    .workbench-over::-webkit-scrollbar-track-piece { //滚动条凹槽的颜色，还可以设置边框属性
+      background-color:#f8f8f8;
+    }
+    .workbench-over::-webkit-scrollbar {//滚动条的宽度
+      width:9px;
+      height:9px;
+    }
+    .workbench-over::-webkit-scrollbar-thumb {//滚动条的设置
+      background-color:#dddddd;
+      background-clip:padding-box;
+      min-height:28px;
+    }
+    .workbench-over::-webkit-scrollbar-thumb:hover {
+      background-color:#bbb;
     }
     .workbench-con {
       background-color: #F7F8FA;

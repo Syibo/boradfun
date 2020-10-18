@@ -44,9 +44,9 @@ export const LEAVEVALUE = [
  * 加班状态
  */
 export const WORKSTATUSVALUE = [
-  { value: 'NA', label: '未完成' },
-  { value: 'Approved', label: '已完成' },
-  { value: 'Rejected', label: '已拒绝' }
+  { value: 'NA', label: '待审核' },
+  { value: 'Approved', label: '审核通过' },
+  { value: 'Rejected', label: '驳回' }
 ]
 
 /**
@@ -54,7 +54,7 @@ export const WORKSTATUSVALUE = [
  */
 export const WORKFLOW = [
   { value: 'Overtime', label: '加班流程' },
-  { value: 'Leave', label: '离职流程' },
+  { value: 'Leave', label: '请假流程' },
   { value: 'Employee', label: '入职流程' }
 ]
 

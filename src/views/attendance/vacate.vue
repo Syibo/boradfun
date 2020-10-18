@@ -32,8 +32,8 @@
       </el-table-column>
       <el-table-column prop="start_date" align="center" label="开始时间" />
       <el-table-column prop="end_date" align="center" label="结束时间" />
-      <el-table-column prop="duration" align="center" label="加班时长" />
-      <el-table-column prop="real_duration" align="center" label="实际加班时长" />
+      <el-table-column prop="duration" align="center" label="请假时长" />
+      <el-table-column prop="real_duration" align="center" label="实际请假时长" />
       <el-table-column prop="req_time" align="center" label="申请时间" />
       <el-table-column align="center" label="申请状态">
         <template slot-scope="sope">
@@ -70,7 +70,7 @@
       <el-table-column v-if="activeName === 'third'" align="center" label="操作">
         <template slot-scope="sope">
           <el-button type="text" @click="openCheck(sope.row)">编辑</el-button>
-          <el-button type="text" @click="timeCheck(sope.row)">时长校验</el-button>
+          <el-button v-permission="[6]" type="text" @click="timeCheck(sope.row)">时长校验</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -115,7 +115,7 @@ export default {
       STATUSVALUE,
       LEAVEVALUE,
       WORKSTATUSVALUE,
-      activeName: 'first',
+      activeName: 'second',
       name: '',
       visible: false,
       seachValue: {
@@ -124,7 +124,7 @@ export default {
         name: '',
         type: '',
         status: '',
-        myreq: '',
+        myreq: true,
         mytodo: ''
       },
       total: 0,

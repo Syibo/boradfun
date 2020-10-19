@@ -171,9 +171,9 @@ export default {
       const endTime = new Date(this.ruleForm.end_date).getTime()
       if (this.ruleForm.end_date) {
         const filterEndTime = new Date(this.ruleForm.end_date).getTime()
-        return time.getTime() < Date.now() - 8.64e7 || time.getTime() > filterEndTime // 选择了结束日期, 禁点之后日期
+        return time.getTime() > filterEndTime // 选择了结束日期, 禁点之后日期
       } else {
-        return time.getTime() < Date.now() - 8.64e7 || time.getTime() > endTime // 禁用以前的日期，今天不禁用
+        return time.getTime() > endTime // 禁用以前的日期，今天不禁用
       }
     },
     disabledDate2(time) {

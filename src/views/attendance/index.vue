@@ -1,6 +1,5 @@
 <template>
   <div class="container attend-container">
-    <!-- <div class="top-btn"> <el-button type="primary" size="mini">确认考勤数据</el-button> </div> -->
     <div class="content">
       <div class="left">
         <el-input
@@ -578,12 +577,21 @@ export default {
     async checkData() {
       const name = this.$refs.tree.getCheckedNodes().map((item) => item.name)
       if (name.length !== 0) {
-        const res = await checkPostAtt({ year: '2020', month: '08', name })
-        if (res.ret === 0) {
-          this.$message.success('确定考勤成功')
-        }
+        this.$confirm(`是否确认所有员工的考勤数据都已全部整理完成<br><span style="color: #FFB218">请确保每位员工只有两天数据，以防数据丢失</span>`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          dangerouslyUseHTMLString: true
+        }).then(() => {
+          this.addContracts(name)
+        }).catch(() => {})
       } else {
         this.$message.error('请先选择员工')
+      }
+    },
+    async addContracts(name) {
+      const res = await checkPostAtt({ year: '2020', month: '08', name })
+      if (res.ret === 0) {
+        this.$message.success('确定考勤成功')
       }
     },
     retLeaveValue,

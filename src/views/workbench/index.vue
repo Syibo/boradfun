@@ -1,11 +1,11 @@
 <template>
   <div class="container workbench-container">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName" v-permission="[6, 10]" @tab-click="handleClick">
       <el-tab-pane :label="`代办 · ${total}`" name="first" />
       <el-tab-pane :label="`已完成 · ${totalDone}`" name="second" />
     </el-tabs>
     <div class="workbench-main">
-      <div class="workbench-con">
+      <div v-permission="[6, 10]" class="workbench-con">
         <div v-for="work in workData" :key="work.ID" class="item">
           <div class="left">
             <el-button type="text" @click="goDetail(work.definition.workflow_entity)">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
@@ -78,7 +78,7 @@
         </div>
       </div>
 
-      <div class="workbench-con">
+      <div v-permission="[6]" class="workbench-con">
         <div class="title">
           待续签员工 ({{ totalContinue }}）
         </div>
@@ -100,10 +100,12 @@
 import { getBenchmMapprove, getBenchMyreq, getContinueList } from '@/api/employee'
 import { retWorkflowLabel, retWorkflowIcon, getaActive, retWorkflowEntity, parseTime, goDetail } from '@/utils/common'
 import WorkStatus from '@/components/common/WorkStatus'
+import permission from '@/directive/permission/index.js'
 export default {
   components: {
     WorkStatus
   },
+  directives: { permission },
   data() {
     return {
       activeName: 'first',

@@ -71,9 +71,7 @@
                     <div v-for="(tmps, indexTmp) in item.tmps" :key="indexTmp" class="is-selected">
                       <span :class="tmps.status !== 'Normal' ? 'error-color' : ''"> {{ tmps.check_time }} </span>
                     </div>
-                    <div class="is-selected">
-                      <!-- <span :class="item.status !== 'Normal' ? 'error-color' : ''"> {{ item.result }} </span> -->
-                    </div>
+                    <el-tag v-if="retException3(item.tmps)" size="mini" class="calendar-day-p3">请假</el-tag>
                   </div>
                   <div v-else />
                 </div>
@@ -161,6 +159,9 @@
             title=""
             trigger="click"
           >
+            <div v-if="leaveList.length === 0" class="no-data">
+              当天无请假记录
+            </div>
             <el-checkbox-group v-model="checkList" @change="checkboxChange">
               <el-checkbox v-for="item in leaveList" :key="item.ID" :label="item.ID">{{ retCheclLabel(item) }}</el-checkbox>
             </el-checkbox-group>
@@ -347,6 +348,7 @@ export default {
           this.calendarData = attenData
         }
       }
+      this.leaveData = []
     },
     addAtt() {
       this.tableData.push({
@@ -616,23 +618,34 @@ export default {
       if (item.length === 0) {
         return status
       }
-      if (item.length >= 3) {
+      const one = item[0]
+      if (item.length !== 2 && one.leave_id === 0) {
         status = '异常'
         return status
       }
-      const one = item[0]
-      if (one.status === 'Exception') {
+      if (one.status === 'Exception' && one.leave_id === 0) {
         status = one.result
+      }
+      return status
+    },
+    retException3(item) {
+      let status = false
+      if (item.length === 0) {
+        return status
+      }
+      const one = item[0]
+      if (one && one.leave_id !== 0) {
+        status = one.leave_id
       }
       return status
     },
     retException2(item) {
       let status = false
-      if (item.length === 0) {
+      if (item.length !== 2) {
         return status
       }
       const one = item[1]
-      if (one.status === 'Exception') {
+      if (one && one.status === 'Exception') {
         status = one.result
       }
       return status
@@ -761,6 +774,11 @@ export default {
           top: -25px;
           right: 50px;
         }
+        .calendar-day-p3 {
+          position: absolute;
+          bottom: -43px;
+          left: 0;
+        }
         .is-selected {
           color: #BCC0C3;
           font-size: 14px;
@@ -817,6 +835,10 @@ export default {
       margin-top: 15px;
       .el-icon-circle-plus-outline {
         color: #3293FF;
+      }
+      .no-data {
+        color: #999;
+        padding: 10px;
       }
       .el-icon-circle-plus-outline:hover {
         cursor: pointer;

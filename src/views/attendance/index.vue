@@ -67,14 +67,14 @@
               <div v-for="(item, index) in calendarData" :key="index" class="selected-con">
                 <div v-if="(item.months).indexOf(data.day.split('-').slice(1)[0])!=-1">
                   <div v-if="(item.days).indexOf(data.day.split('-').slice(2).join('-'))!=-1">
-                    <el-tag v-if="retException(item.tmps)" size="mini" class="calendar-day-p" type="danger">异常</el-tag>
+                    <el-tag v-if="retException2(item.tmps)" size="mini" class="calendar-day-p2" type="danger">{{ retException2(item.tmps) }}</el-tag>
+                    <el-tag v-if="retException1(item.tmps)" size="mini" class="calendar-day-p" type="danger">{{ retException1(item.tmps) }}</el-tag>
                     <div v-for="(tmps, indexTmp) in item.tmps" :key="indexTmp" class="is-selected">
                       <span :class="tmps.status !== 'Normal' ? 'error-color' : ''"> {{ tmps.check_time }} </span>
                     </div>
-                    <!-- <div class="is-selected">
-                      <span :class="item.out_status !== 'Normal' ? 'error-color' : ''"> {{ item.check_out }} </span>
-                      <el-tag v-if="item.out_status !== 'Normal'" size="mini" class="calendar-day-p2" type="danger">{{ item.out_result }}</el-tag>
-                    </div> -->
+                    <div class="is-selected">
+                      <!-- <span :class="item.status !== 'Normal' ? 'error-color' : ''"> {{ item.result }} </span> -->
+                    </div>
                   </div>
                   <div v-else />
                 </div>
@@ -603,6 +603,32 @@ export default {
       }
       return status
     },
+    retException1(item) {
+      let status = false
+      if (item.length === 0) {
+        return status
+      }
+      if (item.length >= 3) {
+        status = '异常'
+        return status
+      }
+      const one = item[0]
+      if (one.status === 'Exception') {
+        status = one.result
+      }
+      return status
+    },
+    retException2(item) {
+      let status = false
+      if (item.length === 0) {
+        return status
+      }
+      const one = item[1]
+      if (one.status === 'Exception') {
+        status = one.result
+      }
+      return status
+    },
     retResult(value) {
       let res = ''
       if (value === '弹性' || value === '在家办公' || value === '忘记打卡' || value === '通宵') {
@@ -721,6 +747,11 @@ export default {
           position: absolute;
           top: -25px;
           right: 0;
+        }
+        .calendar-day-p2 {
+          position: absolute;
+          top: -25px;
+          right: 50px;
         }
         .is-selected {
           color: #BCC0C3;

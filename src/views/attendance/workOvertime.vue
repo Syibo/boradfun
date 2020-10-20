@@ -36,7 +36,8 @@
       <el-table-column prop="req_time" align="center" label="申请时间" />
       <el-table-column align="center" label="申请状态">
         <template slot-scope="sope">
-          {{ retStatus(sope.row.status) }}
+          <!-- {{ retStatus(sope.row.status) }} -->
+          <AttStatus :status="sope.row.status" />
         </template>
       </el-table-column>
       <el-table-column prop="name" align="center" label="流程信息">
@@ -98,6 +99,7 @@ import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import { getWorkList, getOneOverTime } from '@/api/work'
 import permission from '@/directive/permission/index.js'
 import WorkFrom from '@/components/Oa/WorkFrom'
+import AttStatus from '@/components/Oa/AttStatus'
 import WorkDrawer from '@/components/Oa/WorkDrawer'
 import WorkApproval from '@/components/Oa/WorkApproval'
 import { mapGetters } from 'vuex'
@@ -106,7 +108,8 @@ export default {
   components: {
     WorkFrom,
     WorkDrawer,
-    WorkApproval
+    WorkApproval,
+    AttStatus
   },
   directives: { permission },
   data() {

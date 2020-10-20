@@ -10,14 +10,14 @@ const employeesRouter = {
   meta: {
     title: '人事流程',
     icon: 'el-icon-s-custom',
-    roles: [6, 7, 10]
+    roles: [6, 7, 8, 10]
   },
   children: [
     {
       path: 'induction',
       component: () => import('@/views/employees/index'),
       name: '员工入职',
-      meta: { title: '员工入职' }
+      meta: { title: '员工入职', roles: [6, 7, 10] }
     },
     // {
     //   path: 'positive',

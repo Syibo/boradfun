@@ -452,9 +452,13 @@ export default {
       if (!isDelete) {
         return
       }
-      const res = await delWorkAttendanceTmp(row.ID)
-      if (res.ret === 0) {
-        this.$message.success('删除成功')
+      if (row.ID) {
+        const res = await delWorkAttendanceTmp(row.ID)
+        if (res.ret === 0) {
+          this.$message.success('删除成功')
+          this.tableData.splice(index, 1)
+        }
+      } else {
         this.tableData.splice(index, 1)
       }
     },

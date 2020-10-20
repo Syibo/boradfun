@@ -26,7 +26,7 @@
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
           <div v-if="scope.row.status === 1">
-            <el-select :value="scope.row.status" placeholder="状态" style="width: 100px" size="mini" @change="statusChange($event, scope.row)">
+            <el-select :value="scope.row.status" placeholder="状态" :disabled="roles[0] !== 6" style="width: 100px" size="mini" @change="statusChange($event, scope.row)">
               <el-option v-for="item in STATUSVALUEADD" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>

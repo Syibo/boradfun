@@ -88,6 +88,14 @@
           </el-col>
         </el-row>
 
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="审核人">
+              <el-input v-model="ruleForm.people" placeholder="" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
       </el-row>
     </el-form>
   </el-dialog>
@@ -95,6 +103,7 @@
 
 <script>
 import {
+  getleaveApprovals,
   workLeave } from '@/api/work'
 import { LEAVEVALUE } from '@/utils/const'
 export default {
@@ -119,7 +128,8 @@ export default {
         cause: '',
         start: '',
         end: '',
-        end_date: ''
+        end_date: '',
+        people: ''
       },
       rules: {
         project: [
@@ -163,10 +173,22 @@ export default {
       }
     }
   },
+  watch: {
+    visible: {
+      deep: true,
+      handler(value) {
+        this.getleaveApprovals()
+      }
+    }
+  },
   mounted() {
 
   },
   methods: {
+    async getleaveApprovals() {
+      const res = await getleaveApprovals()
+      this.ruleForm.people = res.data
+    },
     disabledDate1(time) {
       const endTime = new Date(this.ruleForm.end_date).getTime()
       if (this.ruleForm.end_date) {
@@ -213,7 +235,8 @@ export default {
         cause: '',
         start: '',
         end: '',
-        end_date: ''
+        end_date: '',
+        people: ''
       }
       this.$emit('close')
     }

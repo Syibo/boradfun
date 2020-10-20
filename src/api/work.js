@@ -18,11 +18,11 @@ export function getWorkList({ pagesize = 10, pagenum = 1, name = '', status = ''
 /**
  * 加班申请
  */
-export function overtime({ type, project, duration, cause, overtime_date, engagement_code, leader_id }) {
+export function overtime({ type, project, duration, cause, engagement_code, leader_id, start_time, end_time }) {
   return request({
     url: '/v1/work/overtime',
     method: 'post',
-    data: { type, project, duration: Number(duration), cause, overtime_date, engagement_code, leader_id }
+    data: { type, project, duration: Number(duration), cause, overtime_date: start_time.substring(0, 10), engagement_code, leader_id, start_time, end_time }
   })
 }
 /**
@@ -70,6 +70,15 @@ export function putOneLeaveCheck({ id, real }) {
 export function getWorkApprovals() {
   return request({
     url: `/v1/work/approvals`,
+    method: 'get'
+  })
+}
+/**
+ * 请假审批人
+ */
+export function getleaveApprovals() {
+  return request({
+    url: `/v1/work/leave/approvals`,
     method: 'get'
   })
 }

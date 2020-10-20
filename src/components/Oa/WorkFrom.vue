@@ -32,15 +32,27 @@
         </el-row>
 
         <el-row :gutter="20">
-          <el-col :span="24">
-            <el-form-item label="加班日期" prop="overtime_date">
+          <el-col :span="12">
+            <el-form-item label="开始时间" prop="start_time">
               <el-date-picker
-                v-model="ruleForm.overtime_date"
+                v-model="ruleForm.start_time"
                 style="width: 100%"
                 type="date"
                 placeholder="选择日期"
                 format="yyyy 年 MM 月 dd 日"
-                value-format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd HH:mm:ss"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="结束时间" prop="end_time">
+              <el-date-picker
+                v-model="ruleForm.end_time"
+                style="width: 100%"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd HH:mm:ss"
               />
             </el-form-item>
           </el-col>
@@ -102,10 +114,11 @@ export default {
         project: '',
         duration: '',
         cause: '',
-        overtime_date: '',
         people: '',
         engagement_code: '',
-        leader_id: ''
+        leader_id: '',
+        start_time: '',
+        end_time: ''
       },
       rules: {
         project: [
@@ -118,7 +131,10 @@ export default {
           { required: true, message: '请输入时长', trigger: 'blur' },
           { validator: isNum, trigger: 'blur' }
         ],
-        overtime_date: [
+        start_time: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        end_time: [
           { required: true, message: '请选择日期', trigger: 'change' }
         ]
       },
@@ -180,10 +196,11 @@ export default {
         project: '',
         duration: '',
         cause: '',
-        overtime_date: '',
         people: '',
         engagement_code: '',
-        leader_id: ''
+        leader_id: '',
+        start_time: '',
+        end_time: ''
       }
       this.$emit('close')
     }

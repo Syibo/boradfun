@@ -13,8 +13,8 @@ export default {
   name: 'AttStatus',
   props: {
     status: {
-      type: Number,
-      default: 0
+      type: String,
+      default: 'NA'
     }
   },
   data() {

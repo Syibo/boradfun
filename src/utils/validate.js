@@ -10,6 +10,16 @@ export const isNum = (rule, value, callback) => {
   }
 }
 
+export const isNumPlus = (rule, value, callback) => {
+  if (isNaN(value)) {
+    callback(new Error('只能为数字'))
+  } else if (value < 0) {
+    callback(new Error('不能为负数'))
+  } else {
+    callback()
+  }
+}
+
 export const isEmail = (rule, value, callback) => {
   const email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   if (!email.test(value)) {

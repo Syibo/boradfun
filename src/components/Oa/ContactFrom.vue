@@ -38,9 +38,9 @@
           <el-col :span="12">
             <el-form-item label="签约主体" prop="contract_main">
               <el-select v-model="ruleForm.contract_main" placeholder="请选择签约主体" style="width: 100%">
-                <el-option key="宁波比浮" label="宁波比浮" value="宁波比浮" />
+                <el-option key="宁波比孚" label="宁波比孚" value="宁波比孚" />
                 <el-option key="上海游因" label="上海游因" value="上海游因" />
-                <el-option key="上海比程" label="上海比程" value="上海比程" />
+                <el-option key="上海品埃" label="上海品埃" value="上海品埃" />
               </el-select>
             </el-form-item>
           </el-col>

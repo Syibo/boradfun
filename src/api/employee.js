@@ -140,9 +140,9 @@ export function leaveEmployeeDetail(id) {
 /**
  * 合同列表
  */
-export function getContractsList({ pagesize = 10, pagenum = 1, name = '', number = '', status = '' }) {
+export function getContractsList({ pagesize = 10, pagenum = 1, name = '', number = '', status = '', main = '' }) {
   return request({
-    url: `/v1/employee/contracts?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&number=${number}&status=${status}`,
+    url: `/v1/employee/contracts?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&number=${number}&status=${status}&main=${main}`,
     method: 'get'
   })
 }
@@ -261,5 +261,14 @@ export function putEmployeeStatus({ id, status, entry_date }) {
   return request({
     url: `/v1/employee/status/${id}?status=${status}&entry_date=${entry_date}`,
     method: 'put'
+  })
+}
+/**
+ * 社保信息
+ */
+export function getSslist() {
+  return request({
+    url: `/v1/file/sslist`,
+    method: 'get'
   })
 }

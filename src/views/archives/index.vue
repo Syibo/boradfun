@@ -230,10 +230,10 @@
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="岗位" prop="position"> <el-input v-model="ruleForm.position" placeholder="" /> </el-form-item>
+                <el-form-item label="岗位" prop="position"> <el-input v-model="ruleForm.position" placeholder="岗位" /> </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="服务线" prop="service_line"> <el-input v-model="ruleForm.service_line" placeholder="" /> </el-form-item>
+                <el-form-item label="服务线" prop="service_line"> <el-input v-model="ruleForm.service_line" placeholder="服务线" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
@@ -249,12 +249,12 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="毕业院校" prop="employee_basic.graduation_school">
-                  <el-input v-model="ruleForm.employee_basic.graduation_school" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.graduation_school" placeholder="毕业院校" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="专业" prop="employee_basic.major">
-                  <el-input v-model="ruleForm.employee_basic.major" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.major" placeholder="专业" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -302,12 +302,12 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="英语技能" prop="employee_basic.en_skill">
-                  <el-input v-model="ruleForm.employee_basic.en_skill" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.en_skill" placeholder="英语技能" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="其他技能" prop="employee_basic.other_language_skill">
-                  <el-input v-model="ruleForm.employee_basic.other_language_skill" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.other_language_skill" placeholder="其他技能" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -339,7 +339,7 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="居住详细地址" prop="employee_basic.inhabited_address">
-                  <el-input v-model="ruleForm.employee_basic.inhabited_address" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.inhabited_address" placeholder="居住详细地址" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -413,13 +413,32 @@
             <Label id="cardInfo" title="卡号信息" />
             <el-row :gutter="20">
               <el-col :span="12">
+                <el-form-item label="工商银行发卡行" prop="employee_basic.issuing_bank1">
+                  <el-input v-model="ruleForm.employee_basic.issuing_bank1" placeholder="工商银行发卡行" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="招商银行发卡行" prop="employee_basic.issuing_bank2">
+                  <el-input v-model="ruleForm.employee_basic.issuing_bank2" placeholder="招商银行发卡行" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
                 <el-form-item label="工商银行卡卡号" prop="employee_basic.debit_card1">
-                  <el-input v-model="ruleForm.employee_basic.debit_card1" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.debit_card1" placeholder="工商银行卡卡号" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="招商银行卡卡号" prop="employee_basic.debit_card2">
-                  <el-input v-model="ruleForm.employee_basic.debit_card2" placeholder="" />
+                  <el-input v-model="ruleForm.employee_basic.debit_card2" placeholder="招商银行卡卡号" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="公积金信息" prop="employee_basic.public_fund">
+                  <el-input v-model="ruleForm.employee_basic.public_fund" placeholder="公积金信息" />
                 </el-form-item>
               </el-col>
             </el-row>

@@ -1,4 +1,4 @@
-import { isNum, isEmail } from '@/utils/validate'
+import { isNum, isEmail, isNumPlus } from '@/utils/validate'
 export const ruleForm = {
   department: {
     leader: {}
@@ -100,36 +100,46 @@ export const rulesDep = {
     { required: true, message: '请输入手机型号', trigger: 'blur' }
   ],
   expense: [
-    { required: true, message: '请输入报销', trigger: 'blur' }
+    { required: true, message: '请输入报销', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   device_req: [
     { required: true, message: '请输入物品领用归还', trigger: 'blur' }
   ],
   work_day: [
-    { required: true, message: '请输入实际出勤天数', trigger: 'blur' }
+    { required: true, message: '请输入实际出勤天数', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   off_day: [
-    { required: true, message: '请输入旷工', trigger: 'blur' }
+    { required: true, message: '请输入旷工', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   half_day: [
-    { required: true, message: '请输入病假', trigger: 'blur' }
+    { required: true, message: '请输入病假', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   change_day: [
-    { required: true, message: '请输入剩余调休', trigger: 'blur' }
+    { required: true, message: '请输入剩余调休', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   others: [
-    { required: true, message: '请输入其他结算', trigger: 'blur' }
+    { required: true, message: '请输入其他结算', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   late_day: [
-    { required: true, message: '请输入迟到/早退', trigger: 'blur' }
+    { required: true, message: '请输入迟到/早退', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   things_day: [
-    { required: true, message: '请输入事假', trigger: 'blur' }
+    { required: true, message: '请输入事假', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   salary_day: [
-    { required: true, message: '请输入带薪假', trigger: 'blur' }
+    { required: true, message: '请输入带薪假', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ],
   annual_day: [
-    { required: true, message: '请输入剩余年假', trigger: 'blur' }
+    { required: true, message: '请输入剩余年假', trigger: 'blur' },
+    { validator: isNumPlus, trigger: 'blur' }
   ]
 }

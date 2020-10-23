@@ -8,6 +8,11 @@
           <el-option key="已签" label="已签" value="已签" />
           <el-option key="未签" label="未签" value="未签" />
         </el-select>
+        <el-select v-model="seachValue.main" placeholder="签约主体" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
+          <el-option key="宁波比孚" label="宁波比孚" value="宁波比孚" />
+          <el-option key="上海游因" label="上海游因" value="上海游因" />
+          <el-option key="上海品埃" label="上海品埃" value="上海品埃" />
+        </el-select>
       </div>
       <div class="right">
         <el-button type="primary" @click="induction">新建合同</el-button>
@@ -91,7 +96,7 @@
                 <el-select v-model="ruleForm.contract_main" placeholder="请选择签约主体" style="width: 100%">
                   <el-option key="宁波比孚" label="宁波比孚" value="宁波比孚" />
                   <el-option key="上海游因" label="上海游因" value="上海游因" />
-                  <el-option key="上海比程" label="上海比程" value="上海比程" />
+                  <el-option key="上海品埃" label="上海品埃" value="上海品埃" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -208,7 +213,8 @@ export default {
         pagesize: 10,
         name: '',
         number: '',
-        status: ''
+        status: '',
+        main: ''
       },
       state2: '',
       dialogVisible: false,

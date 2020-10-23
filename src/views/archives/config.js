@@ -190,6 +190,15 @@ export const rules = {
   'employee_basic.debit_card2': [
     { required: true, message: '请输入招商银行卡卡号', trigger: 'blur' }
   ],
+  'employee_basic.issuing_bank1': [
+    { required: true, message: '请输入工商银行发卡行', trigger: 'blur' }
+  ],
+  'employee_basic.issuing_bank2': [
+    { required: true, message: '请输入招商银行发卡行', trigger: 'blur' }
+  ],
+  'employee_basic.public_fund': [
+    { required: true, message: '请输入公积金信息', trigger: 'blur' }
+  ],
   email: [
     { required: true, message: '请输入企业邮箱', trigger: 'blur' }
   ],

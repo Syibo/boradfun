@@ -17,7 +17,6 @@
           show-checkbox
           :filter-node-method="filterNode"
           @node-click="handleNodeClick"
-          @check-change="handleCheckChange"
         />
       </div>
       <div class="right">
@@ -442,9 +441,6 @@ export default {
         this.calendarData = attenData
       }
     },
-    handleCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate)
-    },
     handEdit(row, index) {
       this.tableData[index].isEdit = true
     },
@@ -596,7 +592,7 @@ export default {
       }
     },
     async addContracts(name) {
-      const res = await checkPostAtt({ year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
+      const res = await checkPostAtt({ name, year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
       if (res.ret === 0) {
         this.$message.success('确定考勤成功')
       }

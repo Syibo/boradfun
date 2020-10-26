@@ -257,7 +257,7 @@ export default {
   methods: {
     Moment,
     async init() {
-      const res = await getWorkDeptuser({ name: '', year: '2020', month: '08' })
+      const res = await getWorkDeptuser({ name: '', year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
       const treedata = res.data
       for (let i = 0; i < treedata.length; i++) {
         treedata[i]['name'] = treedata[i].dept
@@ -596,7 +596,7 @@ export default {
       }
     },
     async addContracts(name) {
-      const res = await checkPostAtt({ year: '2020', month: '08', name })
+      const res = await checkPostAtt({ year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
       if (res.ret === 0) {
         this.$message.success('确定考勤成功')
       }

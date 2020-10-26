@@ -37,9 +37,9 @@ export function delEmployeeId(id) {
 /**
  * 员工列表
  */
-export function getEmployeeList({ pagesize = 10, pagenum = 1, name = '', departmentid = '', status = '', emp_no = '' }) {
+export function getEmployeeList({ pagesize = 10, pagenum = 1, name = '', departmentid = '', status = '', emp_no = '', flow }) {
   return request({
-    url: `/v1/employee/entry/list?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&departmentid=${departmentid}&status=${status}&emp_no=${emp_no}`,
+    url: `/v1/employee/entry/list?pagesize=${pagesize}&pagenum=${pagenum}&name=${name}&departmentid=${departmentid}&status=${status}&emp_no=${emp_no}&flow=${flow}`,
     method: 'get'
   })
 }

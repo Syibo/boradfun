@@ -1,7 +1,7 @@
 <template>
   <div class="container workbench-container">
     <el-tabs v-model="activeName" v-permission="[6, 7, 8, 10]" @tab-click="handleClick">
-      <el-tab-pane :label="`代办 · ${total}`" name="first" />
+      <el-tab-pane :label="`待办 · ${total}`" name="first" />
       <el-tab-pane :label="`已完成 · ${totalDone}`" name="second" />
     </el-tabs>
     <div class="workbench-main">

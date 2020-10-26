@@ -320,7 +320,8 @@ export default {
         pagesize: 10,
         name: '',
         departmentid: '',
-        status: ''
+        status: '',
+        flow: 1
       },
       total: 0,
       ruleForm,

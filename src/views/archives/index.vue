@@ -188,6 +188,13 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="公积金信息" prop="employee_basic.public_fund">
+                    <el-input v-model="ruleForm.employee_basic.public_fund" placeholder="公积金信息" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </el-row>
             <Label id="interviewiInfo" title="面试信息" />
             <el-row :gutter="20">
@@ -413,32 +420,25 @@
             <Label id="cardInfo" title="卡号信息" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="工商银行发卡行" prop="employee_basic.issuing_bank1">
-                  <el-input v-model="ruleForm.employee_basic.issuing_bank1" placeholder="工商银行发卡行" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="招商银行发卡行" prop="employee_basic.issuing_bank2">
-                  <el-input v-model="ruleForm.employee_basic.issuing_bank2" placeholder="招商银行发卡行" />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="12">
                 <el-form-item label="工商银行卡卡号" prop="employee_basic.debit_card1">
                   <el-input v-model="ruleForm.employee_basic.debit_card1" placeholder="工商银行卡卡号" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="招商银行卡卡号" prop="employee_basic.debit_card2">
-                  <el-input v-model="ruleForm.employee_basic.debit_card2" placeholder="招商银行卡卡号" />
+                <el-form-item label="开户行地址" prop="employee_basic.issuing_bank1">
+                  <el-input v-model="ruleForm.employee_basic.issuing_bank1" placeholder="工商银行发卡行" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="公积金信息" prop="employee_basic.public_fund">
-                  <el-input v-model="ruleForm.employee_basic.public_fund" placeholder="公积金信息" />
+                <el-form-item label="招商银行卡卡号" prop="employee_basic.debit_card2">
+                  <el-input v-model="ruleForm.employee_basic.debit_card2" placeholder="招商银行卡卡号" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="开户行地址" prop="employee_basic.issuing_bank2">
+                  <el-input v-model="ruleForm.employee_basic.issuing_bank2" placeholder="招商银行发卡行" />
                 </el-form-item>
               </el-col>
             </el-row>

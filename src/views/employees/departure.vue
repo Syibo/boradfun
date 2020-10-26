@@ -285,7 +285,8 @@ export default {
         name: '',
         departmentid: '',
         status: 3,
-        emp_no: ''
+        emp_no: '',
+        flow: 2
       },
       dialogVisible: false,
       pageNum: 1,

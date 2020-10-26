@@ -2,16 +2,15 @@
   <div class="container contract-container">
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="seachValue.number" placeholder="请输入员工编号" clearable @input="seachFun" />
-        <el-input v-model="seachValue.name" placeholder="请输入员工姓名" style="width: 100%;margin-left: 10px" clearable @input="seachFun" />
-        <el-select v-model="seachValue.status" placeholder="状态" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
-          <el-option key="已签" label="已签" value="已签" />
-          <el-option key="未签" label="未签" value="未签" />
-        </el-select>
+        <el-input v-model="seachValue.name" placeholder="请输入签约方" style="width: 100%;margin-left: 10px" clearable @input="seachFun" />
         <el-select v-model="seachValue.main" placeholder="签约主体" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
           <el-option key="宁波比孚" label="宁波比孚" value="宁波比孚" />
           <el-option key="上海游因" label="上海游因" value="上海游因" />
           <el-option key="上海品埃" label="上海品埃" value="上海品埃" />
+        </el-select>
+        <el-select v-model="seachValue.status" placeholder="状态" style="width: 100%;margin-left: 10px" clearable @change="seachFun">
+          <el-option key="已签" label="已签" value="已签" />
+          <el-option key="未签" label="未签" value="未签" />
         </el-select>
       </div>
       <div class="right">

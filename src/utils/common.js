@@ -136,9 +136,14 @@ export function goDetail(status) {
         path: 'attendance/vacate'
       })
       break
-    case 'Employee':
+    case 'EmployeeEntry':
       this.$router.push({
         path: 'employees/induction'
+      })
+      break
+    case 'EmployeeLeave':
+      this.$router.push({
+        path: 'employees/departure'
       })
       break
     default:

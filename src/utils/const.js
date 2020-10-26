@@ -56,7 +56,8 @@ export const WORKSTATUSVALUE = [
 export const WORKFLOW = [
   { value: 'Overtime', label: '加班流程' },
   { value: 'Leave', label: '请假流程' },
-  { value: 'Employee', label: '入职流程' }
+  { value: 'EmployeeEntry', label: '入职流程' },
+  { value: 'EmployeeLeave', label: '离职流程' }
 ]
 
 export const DOWNURL = 'http://172.16.9.195:9000'

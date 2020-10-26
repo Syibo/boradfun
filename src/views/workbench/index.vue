@@ -8,7 +8,7 @@
       <div v-permission="[6, 7, 10]" class="workbench-con">
         <div v-for="work in workData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text" @click="goDetail(work.definition.workflow_entity)">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
+            <el-button type="text" @click="goDetail(work.definition.workflow_purpose)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
             <el-popover
               placement="top-start"
               width="200"
@@ -46,7 +46,7 @@
         </div>
         <div v-for="work in myreqData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text" @click="goDetail(work.definition.workflow_entity)">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
+            <el-button type="text" @click="goDetail(work.definition.workflow_purpose)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
             <el-popover
               placement="top-start"
               width="200"
@@ -84,7 +84,7 @@
         </div>
         <div v-for="work in continueData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text">{{ work.contract_party }}</el-button>
+            <el-button type="text" @click="goCon">{{ work.contract_party }}</el-button>
           </div>
           <div class="right">
             <span>创建时间：{{ work.enddate }}</span>
@@ -198,6 +198,11 @@ export default {
         this.continueData = []
         this.totalContinue = 0
       }
+    },
+    goCon() {
+      this.$router.push({
+        path: 'archives/contract'
+      })
     },
     async show(row) {
       this.active = this.getaActive(row.nodes)

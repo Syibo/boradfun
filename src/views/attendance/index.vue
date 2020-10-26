@@ -210,9 +210,9 @@ export default {
       tableHeader: [],
       tableData: [],
       calendarData: [],
-      value: new Date(),
-      planDate: new Date(),
-      nowDate: new Date(),
+      value: Moment(new Date()).format('YYYY-MM-DD'),
+      planDate: Moment(new Date()).format('YYYY-MM-DD'),
+      nowDate: Moment(new Date()).format('YYYY-MM-DD'),
       filterText: '',
       treedata: [],
       defaultProps: {
@@ -252,9 +252,10 @@ export default {
       }
       this.userType = JSON.parse(getToken()).userType
     }
-    // this.init()
+    this.dateChange()
   },
   methods: {
+    Moment,
     async init() {
       const res = await getWorkDeptuser({ name: '', year: '2020', month: '08' })
       const treedata = res.data
@@ -524,7 +525,7 @@ export default {
       }
     },
     async downWorkPos() {
-      const res = await await downWorkPos({ year: '2020', month: '08' })
+      const res = await await downWorkPos({ year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
       const blob = new Blob([res])
       const fileName = `${Moment(this.value).format('YYYY-MM-DD')}.xlsx`
       if ('download' in document.createElement('a')) {
@@ -541,7 +542,7 @@ export default {
       }
     },
     async downWorkData() {
-      const res = await await downWorkData({ year: '2020', month: '08' })
+      const res = await await downWorkData({ year: this.value.substring(0, 4), month: this.value.substring(5, 7) })
       const blob = new Blob([res])
       const fileName = `${Moment(this.value).format('YYYY-MM-DD')}.xlsx`
       if ('download' in document.createElement('a')) {

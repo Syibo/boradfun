@@ -84,11 +84,10 @@
         </div>
         <div v-for="work in continueData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_entity) }}</el-button>
+            <el-button type="text">{{ work.contract_party }}</el-button>
           </div>
           <div class="right">
-            <span>创建人：{{ work.nodes[0].user.name }}</span>
-            <span>创建时间：{{ parseTime(work.CreatedAt) }}</span>
+            <span>创建时间：{{ work.enddate }}</span>
           </div>
         </div>
       </div>

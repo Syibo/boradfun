@@ -60,8 +60,8 @@
 
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="加班时长(h 只能是4的倍数)" prop="duration">
-              <el-input-number v-model="ruleForm.duration" :min="0" placeholder="请输入时长" :step="4" step-strictly />
+            <el-form-item label="加班时长" prop="duration">
+              <el-input-number v-model="ruleForm.duration" :min="0" placeholder="请输入时长" step-strictly />
             </el-form-item>
           </el-col>
         </el-row>

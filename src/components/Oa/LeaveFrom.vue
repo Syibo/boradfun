@@ -74,8 +74,11 @@
 
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="休假时长(h)" prop="duration">
+            <!-- <el-form-item label="请假时长(h)" prop="duration">
               <el-input v-model="ruleForm.duration" placeholder="请输入时长" />
+            </el-form-item> -->
+            <el-form-item label="请假时长(h 只能是4的倍数)" prop="duration">
+              <el-input-number v-model="ruleForm.duration" :min="0" placeholder="请输入时长" :step="4" step-strictly />
             </el-form-item>
           </el-col>
         </el-row>

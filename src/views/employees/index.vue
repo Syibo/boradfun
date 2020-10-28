@@ -464,7 +464,6 @@ export default {
       this.dialogVisible = true
     },
     async handleDel(row) {
-      console.log(row)
       const isDelete = await this.$confirm(`确定删除`, '提示', { type: 'warning' })
       if (!isDelete) {
         return

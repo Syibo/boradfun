@@ -55,7 +55,7 @@
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-          <el-button type="text" size="small">删除</el-button>
+          <el-button type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -263,6 +263,7 @@ import { getEmployeeList,
   getDepartmentList,
   getEmployeeWorkflow,
   editLeaveEmployee,
+  delEmployeeId,
   leaveEmployeeDetail } from '@/api/employee'
 import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
@@ -352,11 +353,22 @@ export default {
       clearTimeout(this.timeout)
       this.timeout = setTimeout(() => {
         cb(results)
-      }, 3000 * Math.random())
+      }, 1000 * Math.random())
     },
     createStateFilter(queryString) {
       return (state) => {
-        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+        return (state.value.indexOf(queryString === 0))
+      }
+    },
+    async handleDel(row) {
+      const isDelete = await this.$confirm(`确定删除`, '提示', { type: 'warning' })
+      if (!isDelete) {
+        return
+      }
+      const res = await delEmployeeId(row.ID)
+      if (res.ret === 0) {
+        this.$message.success('删除成功')
+        this.init()
       }
     },
     async show(row) {

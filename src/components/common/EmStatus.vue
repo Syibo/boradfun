@@ -1,10 +1,10 @@
 <template>
   <span>
     <span v-if="status === 0" class="brof_status create_col">未入职</span>
-    <span v-else-if="status === 1" class="brof_status confirm_col">拟入职</span>
-    <span v-else-if="status === 2" class="brof_status frozen_col">已入职</span>
-    <span v-else-if="status === 3" class="brof_status stop_col">申请离职</span>
-    <span v-else-if="status === 4" class="brof_status b_col">已离职</span>
+    <span v-else-if="status === 1" class="brof_status create_col">未入职</span>
+    <span v-else-if="status === 2" class="brof_status frozen_col">在职</span>
+    <span v-else-if="status === 3" class="brof_status stop_col">离职</span>
+    <span v-else-if="status === 4" class="brof_status stop_col">离职</span>
     <span v-else class="brof_status create_col" />
   </span>
 </template>

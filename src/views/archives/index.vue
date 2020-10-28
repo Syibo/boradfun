@@ -8,7 +8,7 @@
           <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
         </el-select>
         <el-select v-model="seachValue.status" placeholder="员工状态" style="width: 100%;margin: 0 10px" clearable @change="changeSeach">
-          <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option v-for="item in STATUSVALUEAll" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
       <div class="right">
@@ -105,7 +105,7 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="入职状态" prop="need">
-                    <el-select v-model="ruleForm.status" placeholder="" style="width: 100%">
+                    <el-select v-model="ruleForm.status" placeholder="" style="width: 100%" disabled>
                       <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                   </el-form-item>
@@ -558,7 +558,7 @@ import { getEmployeeList,
   delEmployeeId,
   getContractsDetail } from '@/api/employee'
 import { ruleForm, rules } from './config'
-import { STATUSVALUE, DOWNURL } from '@/utils/const'
+import { STATUSVALUE, DOWNURL, STATUSVALUEAll } from '@/utils/const'
 import store from '@/store'
 import permission from '@/directive/permission/index.js'
 import { getToken } from '@/utils/auth'
@@ -591,6 +591,7 @@ export default {
       },
       regionData,
       STATUSVALUE,
+      STATUSVALUEAll,
       provinceAndCityData,
       selectedOptions: [],
       label: [

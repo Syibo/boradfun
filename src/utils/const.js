@@ -11,6 +11,16 @@ export const STATUSVALUE = [
 /**
  * 状态
  */
+export const STATUSVALUEDIS = [
+  { value: 0, label: '未入职' },
+  { value: 1, label: '未入职' },
+  { value: 2, label: '在职' },
+  { value: 3, label: '离职' },
+  { value: 4, label: '离职' }
+]
+/**
+ * 状态
+ */
 export const STATUSVALUEAll = [
   { value: 0, label: '未入职' },
   { value: 2, label: '在职' },

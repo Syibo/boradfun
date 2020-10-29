@@ -106,7 +106,7 @@
                 <el-col :span="12">
                   <el-form-item label="入职状态" prop="need">
                     <el-select v-model="ruleForm.status" placeholder="" style="width: 100%" disabled>
-                      <el-option v-for="item in STATUSVALUE" :key="item.value" :label="item.label" :value="item.value" />
+                      <el-option v-for="item in STATUSVALUEDIS" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -558,7 +558,7 @@ import { getEmployeeList,
   delEmployeeId,
   getContractsDetail } from '@/api/employee'
 import { ruleForm, rules } from './config'
-import { STATUSVALUE, DOWNURL, STATUSVALUEAll } from '@/utils/const'
+import { STATUSVALUE, DOWNURL, STATUSVALUEAll, STATUSVALUEDIS } from '@/utils/const'
 import store from '@/store'
 import permission from '@/directive/permission/index.js'
 import { getToken } from '@/utils/auth'
@@ -592,6 +592,7 @@ export default {
       regionData,
       STATUSVALUE,
       STATUSVALUEAll,
+      STATUSVALUEDIS,
       provinceAndCityData,
       selectedOptions: [],
       label: [

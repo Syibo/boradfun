@@ -16,7 +16,7 @@
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="ID" align="center" label="员工编号" />
+      <el-table-column prop="emp_no" align="center" label="员工编号" />
       <el-table-column align="center" label="员工姓名">
         <template slot-scope="scope">
           <span class="bule-hover" @click="openDra(scope.row)"> {{ scope.row.name }} </span>
@@ -145,12 +145,12 @@
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="员工编号" prop="ID">
-                    <el-input v-model="ruleForm.ID" placeholder="员工编号" disabled />
+                  <el-form-item label="员工编号" prop="emp_no">
+                    <el-input v-model="ruleForm.emp_no" placeholder="员工编号" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="民族" prop="nation">
+                  <el-form-item label="民族">
                     <el-input v-model="ruleForm.nation" placeholder="民族" />
                   </el-form-item>
                 </el-col>
@@ -171,26 +171,26 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="年龄" prop="age">
+                  <el-form-item label="年龄">
                     <el-input v-model="ruleForm.age" placeholder="年龄" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="私人邮箱" prop="personal_email">
+                  <el-form-item label="私人邮箱">
                     <el-input v-model="ruleForm.personal_email" placeholder="私人邮箱" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="政治面貌" prop="politic_status">
+                  <el-form-item label="政治面貌">
                     <el-input v-model="ruleForm.politic_status" placeholder="政治面貌" />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="公积金信息" prop="employee_basic.public_fund">
+                  <el-form-item label="公积金信息">
                     <el-input v-model="ruleForm.employee_basic.public_fund" placeholder="公积金信息" />
                   </el-form-item>
                 </el-col>
@@ -232,20 +232,20 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="部门负责人" prop="phone"> <el-input v-model="ruleForm.department.leader.name" disabled="" placeholder="" /> </el-form-item>
+                <el-form-item label="部门负责人"> <el-input v-model="ruleForm.department.leader.name" disabled="" placeholder="" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="岗位" prop="position"> <el-input v-model="ruleForm.position" placeholder="岗位" /> </el-form-item>
+                <el-form-item label="岗位"> <el-input v-model="ruleForm.position" placeholder="岗位" /> </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="服务线" prop="service_line"> <el-input v-model="ruleForm.service_line" placeholder="服务线" /> </el-form-item>
+                <el-form-item label="服务线"> <el-input v-model="ruleForm.service_line" placeholder="服务线" /> </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="级别" prop="level_id">
+                <el-form-item label="级别">
                   <el-select v-model="ruleForm.level_id" placeholder="" style="width: 100%">
                     <el-option v-for="item in levelList" :key="item.ID" :label="item.level_name" :value="item.ID" />
                   </el-select>
@@ -260,7 +260,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="专业" prop="employee_basic.major">
+                <el-form-item label="专业">
                   <el-input v-model="ruleForm.employee_basic.major" placeholder="专业" />
                 </el-form-item>
               </el-col>
@@ -269,7 +269,7 @@
               <el-col :span="12">
                 <el-form-item label="学历" prop="employee_basic.degree">
                   <!-- <el-input v-model="ruleForm.employee_basic.degree" placeholder="" /> -->
-                  <el-select v-model="ruleForm.employee_basic.degree" placeholder="" style="width: 100%">
+                  <el-select v-model="ruleForm.employee_basic.degree" placeholder="学历" style="width: 100%">
                     <el-option key="小学" label="小学" value="小学" />
                     <el-option key="初级中学" label="初级中学" value="初级中学" />
                     <el-option key="高级中学" label="高级中学" value="高级中学" />
@@ -281,9 +281,9 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="性质" prop="employee_basic.degree_property">
+                <el-form-item label="性质">
                   <!-- <el-input v-model="ruleForm.employee_basic.degree_property" placeholder="" /> -->
-                  <el-select v-model="ruleForm.employee_basic.degree_property" placeholder="" style="width: 100%">
+                  <el-select v-model="ruleForm.employee_basic.degree_property" placeholder="性质" style="width: 100%">
                     <el-option key="全日制" label="全日制" value="全日制" />
                     <el-option key="自主招生" label="自主招生" value="自主招生" />
                     <el-option key="保送" label="保送" value="保送" />
@@ -308,12 +308,12 @@
             <Label id="certificate" title="资格证书" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="英语技能" prop="employee_basic.en_skill">
+                <el-form-item label="英语技能">
                   <el-input v-model="ruleForm.employee_basic.en_skill" placeholder="英语技能" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="其他技能" prop="employee_basic.other_language_skill">
+                <el-form-item label="其他技能">
                   <el-input v-model="ruleForm.employee_basic.other_language_skill" placeholder="其他技能" />
                 </el-form-item>
               </el-col>
@@ -420,24 +420,24 @@
             <Label id="cardInfo" title="卡号信息" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="工商银行卡卡号" prop="employee_basic.debit_card1">
+                <el-form-item label="工商银行卡卡号">
                   <el-input v-model="ruleForm.employee_basic.debit_card1" placeholder="工商银行卡卡号" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="开户行地址" prop="employee_basic.issuing_bank1">
+                <el-form-item label="开户行地址">
                   <el-input v-model="ruleForm.employee_basic.issuing_bank1" placeholder="工商银行发卡行" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="招商银行卡卡号" prop="employee_basic.debit_card2">
+                <el-form-item label="招商银行卡卡号">
                   <el-input v-model="ruleForm.employee_basic.debit_card2" placeholder="招商银行卡卡号" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="开户行地址" prop="employee_basic.issuing_bank2">
+                <el-form-item label="开户行地址">
                   <el-input v-model="ruleForm.employee_basic.issuing_bank2" placeholder="招商银行发卡行" />
                 </el-form-item>
               </el-col>
@@ -445,13 +445,13 @@
             <Label id="accountInfo" title="账号信息" />
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item prop="name">
+                <el-form-item>
                   <template slot="label"><span class="form-label-slot">企业邮箱<span>（IT填写）</span></span></template>
                   <el-input v-model="ruleForm.email" placeholder="请输入企业邮箱" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item prop="name">
+                <el-form-item>
                   <template slot="label"><span class="form-label-slot">企业微信<span>（IT填写）</span></span></template>
                   <el-input v-model="ruleForm.wx_work" placeholder="请输入企业微信" />
                 </el-form-item>
@@ -459,7 +459,7 @@
             </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item prop="name">
+                <el-form-item>
                   <template slot="label"><span class="form-label-slot">TAPD<span>（IT填写）</span></span></template>
                   <el-input v-model="ruleForm.tapd" placeholder="请输入TAPD" />
                 </el-form-item>

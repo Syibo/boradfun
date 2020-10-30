@@ -13,7 +13,7 @@
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="ID" align="center" label="离职员工编号" />
+      <el-table-column prop="emp_no" align="center" label="离职员工编号" />
       <el-table-column prop="name" align="center" label="员工姓名" />
       <el-table-column prop="department.department_name" align="center" label="所属部门" />
       <el-table-column prop="position" align="center" label="岗位" />
@@ -72,7 +72,9 @@
       />
     </div>
 
-    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" :show-close="false" width="60%" class="dialog-container" @close="open">
+    <DepartureApproval :id="WorkApprovalId" :visible="dialogVisible" :title="title" @close="closeFunApp" @addSucc="addSuccApp" />
+
+    <!-- <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" :show-close="false" width="60%" class="dialog-container" @close="open">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
           {{ title }}
@@ -101,13 +103,7 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="姓名" prop="name">
-                  <el-autocomplete
-                    v-model="ruleForm.name"
-                    style="width: 100%"
-                    :fetch-suggestions="querySearchAsync"
-                    placeholder="请输入姓名"
-                    @select="handleSelect"
-                  />
+                  <el-button>选择员工</el-button>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -253,7 +249,7 @@
           </el-col>
         </el-row>
       </el-form>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -263,9 +259,9 @@ import { getEmployeeList,
   getDepartmentList,
   getEmployeeWorkflow,
   editLeaveEmployee,
-  delEmployeeId,
-  leaveEmployeeDetail } from '@/api/employee'
-import Label from '@/components/common/Label.vue'
+  delEmployeeId } from '@/api/employee'
+// import Label from '@/components/common/Label.vue'
+import DepartureApproval from '@/components/Oa/departureApproval'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import permission from '@/directive/permission/index.js'
 import { ruleFormDep, rulesDep } from './config'
@@ -273,12 +269,15 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 export default {
   components: {
-    Label
+    // Label,
+    DepartureApproval
   },
   directives: { permission },
   data() {
     return {
       title: '新建离职',
+      visibleApprovaDep: false,
+      WorkApprovalId: 0,
       tableData: [],
       seachValue: {
         pagenum: 1,
@@ -326,6 +325,13 @@ export default {
     },
     seachFun() {
       this.init()
+    },
+    addSuccApp() {
+      this.dialogVisible = false
+      this.init()
+    },
+    closeFunApp() {
+      this.dialogVisible = false
     },
     async getDepartmentList() {
       const res = await getDepartmentList()
@@ -426,29 +432,7 @@ export default {
     },
     async handleClick(row) {
       this.title = '编辑'
-      const res = await leaveEmployeeDetail(row.ID)
-      console.log(res.data)
-      this.ruleForm.ID = res.data.ID
-      this.ruleForm.name = row.name
-      this.ruleForm.employeeID = row.ID
-      this.ruleForm.department_id = row.department_id
-      this.ruleForm.position = row.position
-      this.ruleForm.reason = row.reason
-      this.ruleForm.resignation_date = row.resignation_date
-      this.ruleForm.account = res.data.account
-      this.ruleForm.computer = res.data.computer
-      this.ruleForm.phone = res.data.phone
-      this.ruleForm.expense = res.data.expense
-      this.ruleForm.device_req = res.data.device_req
-      this.ruleForm.work_day = res.data.work_day
-      this.ruleForm.off_day = res.data.off_day
-      this.ruleForm.half_day = res.data.half_day
-      this.ruleForm.change_day = res.data.change_day
-      this.ruleForm.others = res.data.others
-      this.ruleForm.late_day = res.data.late_day
-      this.ruleForm.things_day = res.data.things_day
-      this.ruleForm.salary_day = res.data.salary_day
-      this.ruleForm.annual_day = res.data.annual_day
+      this.WorkApprovalId = row.ID
       this.dialogVisible = true
     },
     async leaveEmployee() {

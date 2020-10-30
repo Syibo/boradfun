@@ -8,7 +8,7 @@
       <div v-permission="[6, 7, 10]" class="workbench-con">
         <div v-for="work in workData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text" @click="goDetail(work.definition.workflow_purpose)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
+            <el-button type="text" @click="open(work.definition.workflow_purpose, work.EntityID)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
             <el-popover
               placement="top-start"
               width="200"
@@ -46,7 +46,7 @@
         </div>
         <div v-for="work in myreqData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text" @click="goDetail(work.definition.workflow_purpose)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
+            <el-button type="text" @click="open(work.definition.workflow_purpose, work.EntityID)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
             <el-popover
               placement="top-start"
               width="200"
@@ -92,22 +92,43 @@
         </div>
       </div>
     </div>
+
+    <WorkApproval :id="WorkApprovalId" :visible="visibleApprova" @close="closeFunApp" @addSucc="addSuccApp" />
+    <LeaveApproval :id="WorkApprovalIdLea" :visible="visibleApprovaLea" @close="closeFunApp" @addSucc="addSuccApp" />
+    <DepartureApproval :id="WorkApprovalIdDep" :visible="visibleApprovaDep" @close="closeFunApp" @addSucc="addSuccApp" />
+    <EmpApproval :id="WorkApprovalIdEmp" :visible="visibleApprovaEmp" @close="closeFunApp" @addSucc="addSuccApp" />
   </div>
 </template>
 
 <script>
 import { getBenchmMapprove, getBenchMyreq, getContinueList } from '@/api/employee'
+import WorkApproval from '@/components/Oa/WorkApproval'
+import LeaveApproval from '@/components/Oa/LeaveApproval'
+import DepartureApproval from '@/components/Oa/departureApproval'
+import EmpApproval from '@/components/Oa/empApproval'
 import { retWorkflowLabel, retWorkflowIcon, getaActive, retWorkflowEntity, parseTime, goDetail } from '@/utils/common'
 import WorkStatus from '@/components/common/WorkStatus'
 import permission from '@/directive/permission/index.js'
 export default {
   components: {
-    WorkStatus
+    WorkStatus,
+    WorkApproval,
+    LeaveApproval,
+    DepartureApproval,
+    EmpApproval
   },
   directives: { permission },
   data() {
     return {
       activeName: 'first',
+      visibleApprova: false,
+      visibleApprovaLea: false,
+      visibleApprovaDep: false,
+      visibleApprovaEmp: false,
+      WorkApprovalId: 0,
+      WorkApprovalIdLea: 0,
+      WorkApprovalIdDep: 0,
+      WorkApprovalIdEmp: 0,
       workData: [],
       myreqData: [],
       continueData: [],
@@ -151,6 +172,46 @@ export default {
     retWorkflowIcon,
     parseTime,
     goDetail,
+    open(type, id) {
+      switch (type) {
+        case 'Overtime':
+          console.log(111111)
+          this.WorkApprovalId = id
+          this.visibleApprova = true
+          break
+        case 'Leave':
+          console.log(222222)
+          this.WorkApprovalIdLea = id
+          this.visibleApprovaLea = true
+          break
+        case 'EmployeeEntry':
+          console.log(33333)
+          this.WorkApprovalIdEmp = id
+          this.visibleApprovaEmp = true
+          break
+        case 'EmployeeLeave':
+          console.log(444444)
+          this.WorkApprovalIdDep = id
+          this.visibleApprovaDep = true
+          break
+        default:
+          break
+      }
+    },
+    addSuccApp() {
+      this.visibleApprova = false
+      this.visibleApprovaLea = false
+      this.visibleApprovaEmp = false
+      this.visibleApprovaDep = false
+      this.init()
+      this.initDoneTotal()
+    },
+    closeFunApp() {
+      this.visibleApprova = false
+      this.visibleApprovaLea = false
+      this.visibleApprovaEmp = false
+      this.visibleApprovaDep = false
+    },
     async init() {
       const res = await getBenchmMapprove(this.todo)
       if (res.ret === 0) {

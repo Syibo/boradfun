@@ -120,6 +120,9 @@ export const rules = {
   ID: [
     { required: true, message: '请输入员工编号', trigger: 'blur' }
   ],
+  emp_no: [
+    { required: true, message: '请输入员工编号', trigger: 'blur' }
+  ],
   nation: [
     { required: true, message: '请输入民族', trigger: 'blur' }
   ],

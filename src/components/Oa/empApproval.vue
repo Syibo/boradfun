@@ -197,13 +197,15 @@
 <script>
 import { addEmployee,
   putEmployee,
+  getEmployeeWorkflow,
+  getDepartmentLevelList,
   getDepartmentList,
   getEmployeeDetail } from '@/api/employee'
 import { TYPEVALUE } from '@/utils/const'
 import Label from '@/components/common/Label.vue'
-import { isNum, isEmail } from '@/utils/validate'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import { rules, ruleForm } from '@/views/employees/config'
 export default {
   name: 'DepartureApproval',
   components: {
@@ -232,75 +234,8 @@ export default {
       comment: '',
       userType: 0,
       departmentList: [],
-      rules: {
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 2, max: 23, message: '长度在 2 到 23 个字符', trigger: 'blur' }
-        ],
-        gender: [
-          { required: true, message: '请选择性别', trigger: 'change' }
-        ],
-        id_card: [
-          { required: true, message: '请输入身份证号', trigger: 'blur' },
-          { min: 18, max: 18, message: '身份证号应为18位字符', trigger: 'blur' }
-        ],
-        interview_comment: [
-          { required: true, message: '请输入面试评价', trigger: 'blur' }
-        ],
-        mobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' },
-          { min: 11, max: 11, message: '手机号码应为11位数字', trigger: 'blur' },
-          { validator: isNum, trigger: 'blur' }
-        ],
-        status: [
-          { required: true, message: '请选择入职状态', trigger: 'change' }
-        ],
-        department_id: [
-          { required: true, message: '请选择部门', trigger: 'change' }
-        ],
-        position: [
-          { required: true, message: '请输入岗位', trigger: 'blur' }
-        ],
-        service_line: [
-          { required: true, message: '请选择服务线', trigger: 'change' }
-        ],
-        level_id: [
-          { required: true, message: '请选择级别', trigger: 'change' }
-        ],
-        email: [
-          { required: true, message: '请输入企业邮箱', trigger: 'blur' },
-          { validator: isEmail, trigger: 'blur' }
-        ],
-        wx_work: [
-          { required: true, message: '请输入企业微信', trigger: 'blur' }
-        ],
-        tapd: [
-          { required: true, message: '请输入TAPD', trigger: 'blur' }
-        ],
-        plan_date: [
-          { required: true, message: '请选择计划入职时间', trigger: 'change' }
-        ],
-        seat_number: [
-          { required: true, message: '请输入座位号', trigger: 'blur' }
-        ],
-        device_req: [
-          { required: true, message: '请输入设备需求', trigger: 'blur' }
-        ]
-      },
-      ruleForm: {
-        department: {
-          leader: {}
-        },
-        level: {},
-        name: '',
-        gender: '',
-        status: 1,
-        mobile: '',
-        id_card: '', plan_date: '',
-        interview_comment: '',
-        resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
-        level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
-      }
+      rules: rules,
+      ruleForm: ruleForm
     }
   },
   watch: {
@@ -319,7 +254,50 @@ export default {
       if (this.id !== 0) {
         const res = await getEmployeeDetail(this.id)
         this.getDepartmentList()
-        this.ruleForm = res.data
+        this.ruleForm.ID = res.data.ID
+        this.ruleForm.name = res.data.name
+        this.ruleForm.gender = res.data.gender
+        this.ruleForm.status = res.data.status
+        this.ruleForm.mobile = res.data.mobile
+        this.ruleForm.id_card = res.data.id_card
+        this.ruleForm.interview_comment = res.data.interview_comment
+        this.ruleForm.department_id = res.data.department_id
+        this.ruleForm.position = res.data.position
+        this.ruleForm.service_line = res.data.service_line
+        this.ruleForm.position = res.data.position
+        this.ruleForm.level_id = res.data.level_id
+        this.ruleForm.level = res.data.level
+        /**
+       * 如果邮箱没有@符号为空
+       */
+        if (res.data.email.indexOf('@') === -1) {
+          this.ruleForm.email = ''
+        } else {
+          this.ruleForm.email = res.data.email
+        }
+        this.ruleForm.resume = res.data.resume
+        const obj = {
+          name: this.ruleForm.resume.split('_')[1]
+        }
+        if (this.ruleForm.resume) {
+          this.resumeArr.push(obj)
+        }
+        this.ruleForm.wx_work = res.data.wx_work
+        this.ruleForm.leader_id = res.data.department.department_leader_id
+        this.ruleForm.plan_date = res.data.plan_date
+        this.ruleForm.tapd = res.data.tapd
+        this.ruleForm.department = res.data.department
+        this.leaderList = [res.data.department.leader]
+        const resL = await getDepartmentLevelList(res.data.department_id)
+        if (res.ret === 0 && res.data) {
+          this.levelList = resL.data
+        } else {
+          this.levelList = []
+        }
+        const resEle = await getEmployeeWorkflow(this.id)
+        this.ruleForm.seat_number = resEle.data.elements[1].value
+        this.ruleForm.device_req = resEle.data.elements[2].value
+        this.dialogVisible = true
       }
     },
     async getDepartmentList() {
@@ -353,20 +331,6 @@ export default {
       }
     },
     closeVisble() {
-      this.ruleForm = {
-        department: {
-          leader: {}
-        },
-        level: {},
-        name: '',
-        gender: '',
-        status: 1,
-        mobile: '',
-        id_card: '', plan_date: '',
-        interview_comment: '',
-        resume: '', email: '', wx_work: '', tapd: '', service_line: '', department_id: '', leader_id: '',
-        level_id: '', position: '', entry_date: '', seat_number: '', device_req: ''
-      }
       this.$emit('close')
     }
   }

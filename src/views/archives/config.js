@@ -32,7 +32,8 @@ export const ruleForm = {
   req_user: '',
   employee_basic: {
     ID: 0,
-    employee_id: 16,
+    employee_id: 0,
+    huji_type: '',
     id_card_front: '',
     id_card_back: '',
     debit_card1: '',

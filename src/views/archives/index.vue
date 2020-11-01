@@ -194,6 +194,11 @@
                     <el-input v-model="ruleForm.employee_basic.public_fund" placeholder="公积金信息" />
                   </el-form-item>
                 </el-col>
+                <el-col :span="12">
+                  <el-form-item label="户籍性质">
+                    <el-input v-model="ruleForm.employee_basic.huji_type" placeholder="户籍性质" />
+                  </el-form-item>
+                </el-col>
               </el-row>
             </el-row>
             <Label id="interviewiInfo" title="面试信息" />

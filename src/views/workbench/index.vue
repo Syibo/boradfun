@@ -46,7 +46,7 @@
         </div>
         <div v-for="work in myreqData" :key="work.ID" class="item">
           <div class="left">
-            <el-button type="text" @click="open(work.definition.workflow_purpose, work.EntityID)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
+            <el-button type="text">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
             <el-popover
               placement="top-start"
               width="200"
@@ -95,8 +95,8 @@
 
     <WorkApproval :id="WorkApprovalId" :visible="visibleApprova" @close="closeFunApp" @addSucc="addSuccApp" />
     <LeaveApproval :id="WorkApprovalIdLea" :visible="visibleApprovaLea" @close="closeFunApp" @addSucc="addSuccApp" />
-    <DepartureApproval :id="WorkApprovalIdDep" :visible="visibleApprovaDep" @close="closeFunApp" @addSucc="addSuccApp" />
-    <EmpApproval :id="WorkApprovalIdEmp" :visible="visibleApprovaEmp" @close="closeFunApp" @addSucc="addSuccApp" />
+    <DepartureApproval :id="WorkApprovalIdDep" :visible="visibleApprovaDep" :title="title" @close="closeFunApp" @addSucc="addSuccApp" />
+    <EmpApproval :id="WorkApprovalIdEmp" :visible="visibleApprovaEmp" :title="title" @close="closeFunApp" @addSucc="addSuccApp" />
   </div>
 </template>
 
@@ -138,6 +138,7 @@ export default {
       totalMyrep: 0,
       workflow: [],
       active: 0,
+      title: '编辑',
       todo: {
         pagesize: 100,
         pagenum: 1,
@@ -173,24 +174,21 @@ export default {
     parseTime,
     goDetail,
     open(type, id) {
+      this.title = '编辑'
       switch (type) {
         case 'Overtime':
-          console.log(111111)
           this.WorkApprovalId = id
           this.visibleApprova = true
           break
         case 'Leave':
-          console.log(222222)
           this.WorkApprovalIdLea = id
           this.visibleApprovaLea = true
           break
         case 'EmployeeEntry':
-          console.log(33333)
           this.WorkApprovalIdEmp = id
           this.visibleApprovaEmp = true
           break
         case 'EmployeeLeave':
-          console.log(444444)
           this.WorkApprovalIdDep = id
           this.visibleApprovaDep = true
           break

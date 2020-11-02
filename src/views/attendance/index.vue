@@ -135,6 +135,7 @@
                       <el-radio :label="'在家办公'">在家办公</el-radio>
                       <el-radio :label="'忘记打卡'">忘记打卡</el-radio>
                       <el-radio :label="'通宵'">通宵</el-radio>
+                      <el-radio :label="'请假'">请假</el-radio>
                     </div>
                   </div>
                 </el-radio-group>
@@ -653,7 +654,7 @@ export default {
     },
     retResult(value) {
       let res = ''
-      if (value === '弹性' || value === '在家办公' || value === '忘记打卡' || value === '通宵') {
+      if (value === '弹性' || value === '在家办公' || value === '忘记打卡' || value === '通宵' || value === '请假') {
         res = 'Normal'
       } else {
         res = 'Exception'

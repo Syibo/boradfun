@@ -110,7 +110,26 @@
           </el-table-column>
           <el-table-column prop="status" label="打卡结果">
             <template slot-scope="scope">
-              <AttStatus :status="scope.row.status" />
+              <div style="display: flex; align-items: center;">
+                <AttStatus :status="scope.row.status" />
+                <el-popover
+                  v-if="scope.row.isEdit"
+                  placement="bottom-start"
+                  width="200"
+                  title="打卡结果"
+                  trigger="click"
+                >
+                  <el-radio-group v-model="scope.row.status" @change="inChangeAttStatus($event, scope.$index)">
+                    <div class="radio">
+                      <div class="radio-item">
+                        <el-radio :label="'Normal'">正常</el-radio>
+                        <el-radio :label="'Exception'">异常</el-radio>
+                      </div>
+                    </div>
+                  </el-radio-group>
+                  <i slot="reference" class="el-icon-edit-outline" />
+                </el-popover>
+              </div>
             </template>
           </el-table-column>
           <el-table-column prop="address" label="异常判断">
@@ -139,7 +158,7 @@
                     </div>
                   </div>
                 </el-radio-group>
-                <i slot="reference" class="el-icon-arrow-down" />
+                <i slot="reference" class="el-icon-edit-outline" />
               </el-popover>
             </template>
           </el-table-column>
@@ -358,6 +377,9 @@ export default {
     },
     inChange(value, index) {
       this.tableData[index].status = this.retResult(value)
+    },
+    inChangeAttStatus(value, index) {
+      this.tableData[index].status = value
     },
     async handleNodeClick(data, node) {
       if (node.level === 2) {
@@ -859,5 +881,11 @@ export default {
       }
     }
   }
+}
+.el-icon-edit-outline {
+  margin-left: 5px;
+}
+.el-icon-edit-outline:hover {
+  cursor: pointer;
 }
 </style>

@@ -79,7 +79,7 @@
       </div>
 
       <div v-if="eva" v-permission="[1, 2, 4, 5]" class="task_eva">
-        <div class="title">实施评价</div>
+        <div class="title">交付工作评分</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaData.score }}</div>
@@ -95,7 +95,7 @@
       </div>
 
       <div v-if="evaCus" v-permission="[1, 2, 3, 4]" class="task_eva">
-        <div class="title">客户服务经理评价</div>
+        <div class="title">客户服务评分</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaCusData.score }}</div>
@@ -191,7 +191,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="评价" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
+    <el-dialog :title="roles[0] === 2 ? '交付工作评分' : '客户服务评分'" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
       <el-form ref="ruleFormEva" label-width="120px" label-position="top" :model="ruleFormEva" :rules="rulesEva">
         <el-form-item label="实际交付时间" prop="realTime">
           <el-date-picker
@@ -205,7 +205,7 @@
         <el-form-item label="结单返工次数" prop="reExeTimes">
           <el-input-number v-model="ruleFormEva.reExeTimes" :min="0" controls-position="right" />
         </el-form-item>
-        <el-form-item label="客户服务评分" prop="score">
+        <el-form-item :label="`${roles[0] === 2 ? '交付工作评分' : '客户服务评分'}（满分10分，及格6分，最低1分）`" prop="score">
           <!-- <el-input-number v-model="ruleFormEva.score" :min="1" controls-position="right" /> -->
           <el-rate
             v-model="ruleFormEva.score"
@@ -299,7 +299,7 @@ export default {
           { required: true, message: '请输入结单返工次数', trigger: 'blur' }
         ],
         score: [
-          { required: true, message: '请输入客户服务评分', trigger: 'blur' }
+          { required: true, message: '请输入评分', trigger: 'blur' }
         ],
         other: [
           { required: true, message: '请输入其他补充信息', trigger: 'blur' }

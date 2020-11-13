@@ -175,10 +175,10 @@ export default {
         this.$message.error('请保存当前需求')
         return
       }
-      if (this.baseData.taskDetail.instanceTxt === '' || this.baseData.taskDetail.instanceMv === '') {
-        this.$message.error('内网地址不完整')
-        return
-      }
+      // if (this.baseData.taskDetail.instanceTxt === '' || this.baseData.taskDetail.instanceMv === '') {
+      //   this.$message.error('内网地址不完整')
+      //   return
+      // }
       this.$confirm('确认冻结此任务?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'

@@ -37,7 +37,7 @@
           <span class="task_info_label"> 任务类型 </span>
           <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realService !== null ? baseData.realService.serviceName : '' }} </span>
           <span v-else class="task_info_con">
-            <el-select v-model="baseData.realServiceId" style="width: 100%" placeholder="请选择任务类型">
+            <el-select v-model="baseData.serviceId" style="width: 100%" placeholder="请选择任务类型">
               <el-option
                 v-for="item in service"
                 :key="item.ID"

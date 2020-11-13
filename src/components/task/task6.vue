@@ -88,7 +88,7 @@
           <div class="mid" />
           <div class="right">
             <div> <span>实际交付时间</span> {{ evaData.realTime }} </div>
-            <div> <span>实施反工次数</span> {{ evaData.reExeTimes }}</div>
+            <div> <span>实施返工次数</span> {{ evaData.reExeTimes }}</div>
             <div> <span>其他补充信息</span> {{ evaData.other }} </div>
           </div>
         </div>
@@ -104,7 +104,7 @@
           <div class="mid" />
           <div class="right">
             <div> <span>实际结单时间</span> {{ evaCusData.realTime }} </div>
-            <div> <span>实施反工次数</span> {{ evaCusData.reExeTimes }}</div>
+            <div> <span>实施返工次数</span> {{ evaCusData.reExeTimes }}</div>
             <div> <span>其他补充信息</span> {{ evaCusData.other }} </div>
           </div>
         </div>
@@ -202,7 +202,7 @@
             value-format="yyyy-MM-dd HH:mm:ss"
           />
         </el-form-item>
-        <el-form-item label="结单反工次数" prop="reExeTimes">
+        <el-form-item label="结单返工次数" prop="reExeTimes">
           <el-input-number v-model="ruleFormEva.reExeTimes" :min="0" controls-position="right" />
         </el-form-item>
         <el-form-item label="客户服务评分" prop="score">
@@ -296,7 +296,7 @@ export default {
           { required: true, message: '请输入实际交付时间', trigger: 'blur' }
         ],
         reExeTimes: [
-          { required: true, message: '请输入结单反工次数', trigger: 'blur' }
+          { required: true, message: '请输入结单返工次数', trigger: 'blur' }
         ],
         score: [
           { required: true, message: '请输入客户服务评分', trigger: 'blur' }

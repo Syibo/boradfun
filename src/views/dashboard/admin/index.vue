@@ -13,7 +13,7 @@
         <div class="today_task">
           <div class="title"> 明日{{ roles[0] === 4 || roles[0] === 5 ? '交付' : '结单' }}任务{{ temData.length }} </div>
           <div v-for="item in temData" :key="item.ID" class="item">
-            <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.service.serviceName }}</span> <Status :status="item.status" />
+            <i @click="goTask(item.ID, item.status)">{{ item.client.name }} <level :level="item.client.level" /> </i> <span class="ser-name">{{ item.realService.serviceName }}</span> <Status :status="item.status" />
           </div>
         </div>
       </el-col>

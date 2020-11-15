@@ -35,9 +35,9 @@
         </el-col>
         <el-col :span="12" class="task_info_item">
           <span class="task_info_label"> 任务类型 </span>
-          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.service !== null ? baseData.service.serviceName : '' }} </span>
+          <span v-if="taskFrom === 3" class="task_info_con"> {{ baseData.realService !== null ? baseData.realService.serviceName : '' }} </span>
           <span v-else class="task_info_con">
-            <el-select v-model="baseData.serviceId" style="width: 100%" placeholder="请选择任务类型">
+            <el-select v-model="baseData.realServiceId" style="width: 100%" placeholder="请选择任务类型">
               <el-option
                 v-for="item in service"
                 :key="item.ID"
@@ -156,7 +156,7 @@ export default {
       if (res.ret === 0) {
         this.baseData = JSON.parse(JSON.stringify(res.data))
         this.datacopy = JSON.parse(JSON.stringify(res.data))
-        if (res.data.expDeliverTime === '0001-01-01 00:00:00') {
+        if (res.data.expDeliverTime === '0001-01-01 00:00:00' || res.data.expDeliverTime === '') {
           this.baseData.expEndTime = _.replace(this.baseData.expEndDate, '00:00:00', '18:00:00')
           this.baseData.expDeliverTime = Moment(this.baseData.expEndTime).subtract(3, 'hours').format('YYYY-MM-DD HH:mm:ss')
           this.baseData.realServiceId = this.baseData.serviceId
@@ -228,6 +228,7 @@ export default {
       ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
       ruleFormInfo.expEndTime = this.baseData.expEndTime
       ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
+      console.log(ruleFormInfo)
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
         this.$message.success('保存成功')

@@ -79,7 +79,7 @@
       </div>
 
       <div v-if="eva" v-permission="[1, 2, 4, 5]" class="task_eva">
-        <div class="title">交付工作评分</div>
+        <div class="title">客户服务评分</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaData.score }}</div>
@@ -95,7 +95,7 @@
       </div>
 
       <div v-if="evaCus" v-permission="[1, 2, 3, 4]" class="task_eva">
-        <div class="title">客户服务评分</div>
+        <div class="title">交付工作评分</div>
         <div class="task_eva_con">
           <div class="left">
             <div class="task_eva_num">{{ evaCusData.score }}</div>
@@ -191,7 +191,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog :title="roles[0] === 2 ? '交付工作评分' : '客户服务评分'" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
+    <el-dialog :title="roles[0] === 2 ? '客户服务评分' : '交付工作评分'" :visible.sync="dialogVisibleEva" :close-on-click-modal="false" width="600px" @close="closeEva">
       <el-form ref="ruleFormEva" label-width="120px" label-position="top" :model="ruleFormEva" :rules="rulesEva">
         <el-form-item label="实际交付时间" prop="realTime">
           <el-date-picker

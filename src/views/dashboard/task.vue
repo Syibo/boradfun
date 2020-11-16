@@ -59,7 +59,7 @@ import Task2 from '@/components/task/task2'
 import Task3 from '@/components/task/task3'
 import Task4 from '@/components/task/task4'
 import Task6 from '@/components/task/task6'
-import { getList } from '@/api/service'
+import { getList, getCusAmountList } from '@/api/service'
 import { getOneTask } from '@/api/task'
 export default {
   name: 'Task',
@@ -106,8 +106,8 @@ export default {
     this.type = this.$route.query.type
     this.taskId = Number(this.$route.query.id)
     // console.log(this.taskId)
-    this.getServiceList()
-    // this.getOneTask()
+    // this.getServiceList()
+    this.getOneTask()
   },
   methods: {
     async getServiceList() {
@@ -147,7 +147,11 @@ export default {
     async getOneTask() {
       const res = await getOneTask({ id: this.taskId })
       if (res.ret === 0) {
-        this.taskData = res.data
+        console.log(res.data)
+        const clientid = res.data.client.ID
+        const res2 = await getCusAmountList({ clientId: clientid, deadline: '' })
+        this.serviceData = res2.data
+        console.log(this.serviceData)
       }
     },
     async accept() {

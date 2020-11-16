@@ -205,7 +205,7 @@
         <el-form-item label="结单返工次数" prop="reExeTimes">
           <el-input-number v-model="ruleFormEva.reExeTimes" :min="0" controls-position="right" />
         </el-form-item>
-        <el-form-item :label="`${roles[0] === 2 ? '交付工作评分' : '客户服务评分'}（满分10分，及格6分，最低1分）`" prop="score">
+        <el-form-item :label="`${roles[0] === 2 ? '客户服务评分' : '交付工作评分'}（满分10分，及格6分，最低1分）`" prop="score">
           <!-- <el-input-number v-model="ruleFormEva.score" :min="1" controls-position="right" /> -->
           <el-rate
             v-model="ruleFormEva.score"

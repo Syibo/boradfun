@@ -77,9 +77,18 @@
             <!-- <el-form-item label="请假时长(h)" prop="duration">
               <el-input v-model="ruleForm.duration" placeholder="请输入时长" />
             </el-form-item> -->
-            <el-form-item label="请假时长(h 只能是4的倍数)" prop="duration">
+            <el-form-item label="请假时长(h)只能是4的倍数" prop="duration">
               <el-input-number v-model="ruleForm.duration" :min="0" placeholder="请输入时长" :step="4" step-strictly />
             </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20" style="margin-bottom:10px">
+          <el-col :span="12">
+            周末加班剩余可调休天数： {{ holiday.weekend }}
+          </el-col>
+          <el-col :span="12">
+            剩余年假天数： {{ holiday.annual }}
           </el-col>
         </el-row>
 
@@ -107,6 +116,7 @@
 <script>
 import {
   getleaveApprovals,
+  getHoliday,
   workLeave } from '@/api/work'
 import { LEAVEVALUE } from '@/utils/const'
 export default {
@@ -129,8 +139,8 @@ export default {
         start_date: '',
         duration: '',
         cause: '',
-        start: '',
-        end: '',
+        start: 'am',
+        end: 'am',
         end_date: '',
         people: ''
       },
@@ -158,7 +168,11 @@ export default {
         ]
       },
       myHeaders: {},
-      api: ''
+      api: '',
+      holiday: {
+        annual: 0,
+        weekend: 0
+      }
     }
   },
   computed: {
@@ -181,6 +195,7 @@ export default {
       deep: true,
       handler(value) {
         this.getleaveApprovals()
+        this.getHoliday()
       }
     }
   },
@@ -191,6 +206,12 @@ export default {
     async getleaveApprovals() {
       const res = await getleaveApprovals()
       this.ruleForm.people = res.data
+    },
+    async getHoliday() {
+      const res = await getHoliday()
+      if (res.ret === 0) {
+        this.holiday = res.data
+      }
     },
     disabledDate1(time) {
       const endTime = new Date(this.ruleForm.end_date).getTime()

@@ -245,3 +245,13 @@ export function addWorkAttendanceTmp({ dept, name, status, result, check_time, e
     data: { dept, name, status, result, attendance_date, check_time, employee_id, leave_id }
   })
 }
+
+/**
+ * 获取剩余年假
+ */
+export function getHoliday() {
+  return request({
+    url: `/v1/work/remain/holiday`,
+    method: 'get'
+  })
+}

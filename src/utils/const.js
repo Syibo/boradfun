@@ -51,8 +51,8 @@ export const TYPEVALUE = [
 export const LEAVEVALUE = [
   { value: 'PrivateAffair', label: '事假' },
   { value: 'Sick', label: '病假' },
-  { value: 'Shift', label: '轮休' },
-  { value: 'Flexible', label: '调休' },
+  { value: 'Shift', label: '调休' },
+  { value: 'Flexible', label: '弹性' },
   { value: 'Annual', label: '年假' },
   { value: 'Marital', label: '婚假' },
   { value: 'Maternity', label: '产假' },

@@ -22,6 +22,15 @@
           </el-col>
         </el-row>
 
+        <el-row :gutter="20" style="margin-bottom:10px">
+          <el-col :span="12">
+            周末加班剩余可调休天数： {{ holiday.weekend }}
+          </el-col>
+          <el-col :span="12">
+            剩余年假天数： {{ holiday.annual }}
+          </el-col>
+        </el-row>
+
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="开始日期" prop="start_date">
@@ -80,15 +89,6 @@
             <el-form-item label="请假时长(h)只能是4的倍数" prop="duration">
               <el-input-number v-model="ruleForm.duration" :min="0" placeholder="请输入时长" :step="4" step-strictly />
             </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="20" style="margin-bottom:10px">
-          <el-col :span="12">
-            周末加班剩余可调休天数： {{ holiday.weekend }}
-          </el-col>
-          <el-col :span="12">
-            剩余年假天数： {{ holiday.annual }}
           </el-col>
         </el-row>
 

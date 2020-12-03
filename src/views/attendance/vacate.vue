@@ -22,7 +22,7 @@
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column align="center" label="申请人">
         <template slot-scope="scope">
-          <span class="bule-hover" @click="openDra(scope.row)"> {{ scope.row.e_name }} </span>
+          <span @click="openDra(scope.row)"> {{ scope.row.e_name }} </span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="请假类型">

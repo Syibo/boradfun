@@ -94,11 +94,11 @@ export function getLeaveList({ pagesize = 10, pagenum = 1, name = '', status = '
 /**
  * 请假申请
  */
-export function workLeave({ type, duration, cause, start_date, end_date, start, end }) {
+export function workLeave({ type, duration, cause, start_date, end_date, start, end, others }) {
   return request({
     url: '/v1/work/leave',
     method: 'post',
-    data: { type, duration: Number(duration), cause, start_date, end_date, start, end }
+    data: { type, duration: Number(duration), cause, start_date, end_date, start, end, others }
   })
 }
 /**

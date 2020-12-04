@@ -15,7 +15,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="请选择请假类型" prop="type">
-              <el-select v-model="ruleForm.type" placeholder="请选择请假类型" style="width: 100%">
+              <el-select v-model="ruleForm.type" placeholder="请选择请假类型" style="width: 100%" @change="changeType">
                 <el-option v-for="item in LEAVEVALUE" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -86,8 +86,8 @@
             <!-- <el-form-item label="请假时长(h)" prop="duration">
               <el-input v-model="ruleForm.duration" placeholder="请输入时长" />
             </el-form-item> -->
-            <el-form-item label="请假时长(h)只能是4的倍数" prop="duration">
-              <el-input-number v-model="ruleForm.duration" :min="0" placeholder="请输入时长" :step="4" step-strictly />
+            <el-form-item label="请假时长(h)" prop="duration">
+              <el-input-number v-model="ruleForm.duration" :min="0" placeholder="请输入时长" :step="stepNum" step-strictly />
             </el-form-item>
           </el-col>
         </el-row>
@@ -101,7 +101,29 @@
         </el-row>
 
         <el-row :gutter="20">
-          <el-col :span="24">
+          <el-col :span="12">
+            <el-form-item label="添加审核人" :prop="roles.indexOf(5)!=-1 ? 'others' : ''">
+              <el-select
+                v-model="ruleForm.others"
+                multiple
+                filterable
+                remote
+                reserve-keyword
+                placeholder="添加审核人"
+                :remote-method="remoteMethod"
+                :loading="loading"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.ID"
+                  :label="item.Name"
+                  :value="item.ID"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="审核人">
               <el-input v-model="ruleForm.people" placeholder="" disabled />
             </el-form-item>
@@ -118,7 +140,9 @@ import {
   getleaveApprovals,
   getHoliday,
   workLeave } from '@/api/work'
+import { getEmpSearch } from '@/api/employee'
 import { LEAVEVALUE } from '@/utils/const'
+import { mapGetters } from 'vuex'
 export default {
   name: 'LeaveFrom',
   props: {
@@ -140,10 +164,15 @@ export default {
         duration: '',
         cause: '',
         start: 'am',
-        end: 'am',
+        end: 'pm',
         end_date: '',
-        people: ''
+        people: '',
+        others: []
       },
+      stepNum: 0.5,
+      options: [],
+      value: [],
+      loading: false,
       rules: {
         project: [
           { required: true, message: '请输入项目', trigger: 'blur' }
@@ -165,6 +194,9 @@ export default {
         ],
         end_date: [
           { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        others: [
+          { required: true, message: '请选择审核人', trigger: 'blur' }
         ]
       },
       myHeaders: {},
@@ -184,6 +216,9 @@ export default {
         disabledDate: this.disabledDate1
       }
     },
+    ...mapGetters([
+      'roles'
+    ]),
     pickerOptions2() {
       return {
         disabledDate: this.disabledDate2
@@ -199,18 +234,35 @@ export default {
       }
     }
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     async getleaveApprovals() {
       const res = await getleaveApprovals()
       this.ruleForm.people = res.data
     },
+    async remoteMethod(query) {
+      if (query !== '') {
+        this.loading = true
+        const res = await getEmpSearch(query)
+        this.options = res.data
+        setTimeout(() => {
+          this.loading = false
+        }, 200)
+      } else {
+        this.options = []
+      }
+    },
     async getHoliday() {
       const res = await getHoliday()
       if (res.ret === 0) {
         this.holiday = res.data
+      }
+    },
+    changeType(val) {
+      if (val === 'Flexible') {
+        this.stepNum = 0.5
+      } else {
+        this.stepNum = 4
       }
     },
     disabledDate1(time) {
@@ -232,6 +284,7 @@ export default {
       }
     },
     submitForm(formName) {
+      console.log(this.value)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.addContracts()
@@ -260,7 +313,8 @@ export default {
         start: '',
         end: '',
         end_date: '',
-        people: ''
+        people: '',
+        others: []
       }
       this.$emit('close')
     }

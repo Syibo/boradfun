@@ -33,7 +33,7 @@
       <el-table-column prop="start_date" align="center" label="开始时间" />
       <el-table-column prop="end_date" align="center" label="结束时间" />
       <el-table-column prop="duration" align="center" label="请假时长" />
-      <el-table-column prop="real_duration" align="center" label="实际请假时长" />
+      <el-table-column v-permission="[6, 7, 8, 9, 10]" prop="real_duration" align="center" label="实际请假时长" />
       <el-table-column prop="req_time" align="center" label="申请时间" />
       <el-table-column align="center" label="申请状态">
         <template slot-scope="sope">
@@ -45,11 +45,12 @@
         <template slot-scope="scope">
           <el-popover
             placement="top-start"
+            style="height: 100%"
             width="200"
             trigger="click"
             @show="show(scope.row)"
           >
-            <div v-if="scope" style="height: 150px;">
+            <div v-if="scope">
               <el-steps direction="vertical" :active="active" finish-status="finish">
                 <el-step
                   v-for="item in workflow"

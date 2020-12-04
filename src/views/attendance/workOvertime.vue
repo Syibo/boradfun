@@ -32,7 +32,7 @@
       </el-table-column>
       <el-table-column prop="start_time" align="center" label="开始时间" />
       <el-table-column prop="duration" align="center" label="加班时长" />
-      <el-table-column prop="real_duration" align="center" label="实际加班时长" />
+      <el-table-column v-permission="[6, 7, 8, 9, 10]" prop="real_duration" align="center" label="实际加班时长" />
       <el-table-column prop="req_time" align="center" label="申请时间" />
       <el-table-column align="center" label="申请状态">
         <template slot-scope="sope">
@@ -48,7 +48,7 @@
             trigger="click"
             @show="show(scope.row)"
           >
-            <div v-if="scope" style="height: 150px;">
+            <div v-if="scope">
               <el-steps direction="vertical" :active="active" finish-status="finish">
                 <el-step
                   v-for="item in workflow"

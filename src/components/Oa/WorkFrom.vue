@@ -61,7 +61,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="加班时长" prop="duration">
-              <el-input-number v-model="ruleForm.duration" :min="0" placeholder="请输入时长" step-strictly />
+              <el-input-number v-model="ruleForm.duration" :step="0.5" :min="1" placeholder="请输入时长" step-strictly />
             </el-form-item>
           </el-col>
         </el-row>
@@ -93,7 +93,7 @@ import {
   getWorkProjects,
   overtime } from '@/api/work'
 import { TYPEVALUE } from '@/utils/const'
-import { isNum } from '@/utils/validate'
+// import { isNum } from '@/utils/validate'
 export default {
   name: 'WorkFrom',
   props: {
@@ -106,6 +106,7 @@ export default {
       default: '申请加班'
     }
   },
+
   data() {
     return {
       TYPEVALUE,
@@ -128,8 +129,7 @@ export default {
           { required: true, message: '请选择类型', trigger: 'change' }
         ],
         duration: [
-          { required: true, message: '请输入时长', trigger: 'blur' },
-          { validator: isNum, trigger: 'blur' }
+          { required: true, message: '请输入时长', trigger: 'blur' }
         ],
         start_time: [
           { required: true, message: '请选择日期', trigger: 'change' }

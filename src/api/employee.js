@@ -272,3 +272,12 @@ export function getSslist() {
     method: 'get'
   })
 }
+/**
+ * 获取信息
+ */
+export function getEmpSearch(name) {
+  return request({
+    url: `/v1/employee/search?name=${name}`,
+    method: 'get'
+  })
+}

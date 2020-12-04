@@ -7,8 +7,8 @@
       <div class="dialog-title-right">
         <el-button @click="closeVisble">取 消</el-button>
         <el-button v-if="title === '申请请假' && active !== 3" @click="submitForm(0)">拒 绝</el-button>
-        <el-button v-if="active !== 3" size="small" type="primary" @click="submitForm(1)">{{ title === '申请请假' ? '同 意' : '确 定' }}</el-button>
-        <el-button v-if="active === 3" @click="closeVisble">关 闭</el-button>
+        <el-button v-if="active !== workflow.length" size="small" type="primary" @click="submitForm(1)">{{ title === '申请请假' ? '同 意' : '确 定' }}</el-button>
+        <el-button v-if="active === workflow.length" @click="closeVisble">关 闭</el-button>
       </div>
     </span>
     <div class="work-container">

@@ -8,6 +8,7 @@ import Layout from '@/layout'
 import employeesRouter from './modules/employees'
 import archivesRouter from './modules/archives'
 import attendanceRouter from './modules/attendance'
+import { reimbursementRouter, personnelRouter, settlementRouter } from './modules/reimbursement'
 
 /* Router Modules */
 // import nestedRouter from './modules/nested'
@@ -114,7 +115,10 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true },
 
   employeesRouter,
-  attendanceRouter
+  attendanceRouter,
+  reimbursementRouter,
+  personnelRouter,
+  settlementRouter
 
   // {
   //   path: '/base',

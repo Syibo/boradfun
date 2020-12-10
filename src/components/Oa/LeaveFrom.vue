@@ -95,14 +95,14 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item label="请假事由" prop="cause">
-              <el-input v-model="ruleForm.cause" type="textarea" rows="5" maxlength="100" show-word-limit placeholder="请输入加班事由" />
+              <el-input v-model="ruleForm.cause" type="textarea" rows="5" maxlength="100" show-word-limit placeholder="请输入请假事由" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="添加审核人" :prop="roles.indexOf(5)!=-1 ? 'others' : ''">
+            <el-form-item label="添加审核人">
               <el-select
                 v-model="ruleForm.others"
                 multiple

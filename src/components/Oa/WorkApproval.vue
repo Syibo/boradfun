@@ -91,7 +91,7 @@ import {
 import { TYPEVALUE } from '@/utils/const'
 import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive, retWorkValue } from '@/utils/common'
-import { isNum } from '@/utils/validate'
+// import { isNum } from '@/utils/validate'
 export default {
   name: 'WorkApproval',
   components: {
@@ -120,8 +120,7 @@ export default {
       comment: '',
       rules: {
         real: [
-          { required: true, message: '请输入时长', trigger: 'blur' },
-          { validator: isNum, trigger: 'blur' }
+          { required: true, message: '请输入时长', trigger: 'blur' }
         ]
       },
       ruleForm: {

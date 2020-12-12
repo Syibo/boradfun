@@ -7,13 +7,10 @@
       <el-tab-pane label="已支付" name="four" />
     </el-tabs>
     <el-row :gutter="20" class="three">
-      <el-col :span="8">
+      <el-col :span="12">
         <div class="three-item">s</div>
       </el-col>
-      <el-col :span="8">
-        <div class="three-item">s</div>
-      </el-col>
-      <el-col :span="8">
+      <el-col :span="12">
         <div class="three-item">s</div>
       </el-col>
     </el-row>
@@ -28,16 +25,17 @@
           format="yyyy 年 MM 月"
           value-format="yyyy-MM-dd"
         />
+        <el-button type="primary" style="margin-left: 10px">重置</el-button>
       </div>
       <div class="right">
-        <el-button type="primary">申请报销</el-button>
+        <el-button type="primary" @click="goApply">申请报销</el-button>
       </div>
     </el-row>
 
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column align="center" label="申请人">
         <template slot-scope="scope">
-          <span class="bule-hover"> {{ scope.row.e_name }} </span>
+          <span class="bule-hover" @click="openDrawer"> {{ scope.row.e_name }} </span>
         </template>
       </el-table-column>
       <el-table-column prop="start_time" align="center" label="开始时间" />
@@ -62,14 +60,19 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <RemiDrawer ref="remiDrawer" />
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
+import RemiDrawer from './reimDrawer'
 export default {
   name: 'RimbursementIndex',
   directives: { permission },
+  components: {
+    RemiDrawer
+  },
   data() {
     return {
       activeName: 'first',
@@ -90,6 +93,14 @@ export default {
     }
   },
   methods: {
+    goApply() {
+      this.$router.push({
+        path: 'apply'
+      })
+    },
+    openDrawer() {
+      this.$refs.remiDrawer.openDrawer()
+    },
     handleClick() {},
     handleSizeChange(val) {
       this.seachValue.pagenum = 1

@@ -1,39 +1,32 @@
 <template>
-  <div class="container personnel-container">
+  <div class="container settlement-container">
     <el-row class="table-top">
       <div class="left">
         <el-input v-model="planDate" placeholder="编号" />
         <el-date-picker
           v-model="planDate"
-          style="width: 200px;margin-left: 10px"
-          type="month"
+          style="width: 250px;margin-left: 10px"
+          type="week"
           placeholder="选择日期"
-          format="yyyy 年 MM 月"
+          format="yyyy 第 WW 周"
+          :picker-options="optiondate"
           value-format="yyyy-MM-dd"
         />
       </div>
       <div class="right">
-        <el-button type="primary">上传结算数据</el-button>
+        <el-button type="primary">上传表格数据</el-button>
       </div>
     </el-row>
 
-    <el-row class="pirce">
-      总支付价值----
-    </el-row>
-
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column align="center" label="申请人">
+      <el-table-column label="申请人">
         <template slot-scope="scope">
           <span class="bule-hover"> {{ scope.row.e_name }} </span>
         </template>
       </el-table-column>
-      <el-table-column prop="start_time" align="center" label="开始时间" />
-      <el-table-column prop="duration" align="center" label="加班时长" />
-      <el-table-column v-permission="[6, 7, 8, 9, 10]" prop="real_duration" align="center" label="实际加班时长" />
-      <el-table-column prop="req_time" align="center" label="申请时间" />
-      <el-table-column prop="name" align="center" label="流程信息">
+      <el-table-column align="right" label="流程信息">
         <template>
-          <el-button slot="reference" type="text">查看详情</el-button>
+          <el-button type="text">查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,8 +65,14 @@ export default {
       total: 0,
       planDate: '',
       tableData: [
-        { e_name: '#67566' }
-      ]
+        { e_name: '#67566', name: '33' }
+      ],
+      optiondate: {
+        // disabledDate(date) {
+        //   return date.getDay() === 2 || date.getDay() === 6
+        // },
+        'firstDayOfWeek': 1
+      }
     }
   },
   methods: {
@@ -92,7 +91,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.personnel-container {
+.settlement-container {
   padding-bottom: 50px;
   .pirce {
     font-size: 12px;
@@ -100,4 +99,3 @@ export default {
   }
 }
 </style>
-

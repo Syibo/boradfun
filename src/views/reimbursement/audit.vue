@@ -22,7 +22,7 @@
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column align="center" label="申请人">
         <template slot-scope="scope">
-          <span class="bule-hover"> {{ scope.row.e_name }} </span>
+          <span class="bule-hover" @click="goDetail"> {{ scope.row.e_name }} </span>
         </template>
       </el-table-column>
       <el-table-column prop="start_time" align="center" label="开始时间" />
@@ -75,6 +75,11 @@ export default {
     }
   },
   methods: {
+    goDetail() {
+      this.$router.push({
+        path: 'remiDetail'
+      })
+    },
     handleClick() {},
     handleSizeChange(val) {
       this.seachValue.pagenum = 1

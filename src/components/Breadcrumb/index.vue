@@ -63,7 +63,7 @@ export default {
       /**
        * 如果返回的路由有query参数，则使用go(-1)
        */
-      if (item.path === '/base/customer/info') {
+      if (item.path === '/base/customer/info' || item.path === '/reimbursement') {
         this.$router.go(-1)
         return false
       }

@@ -1,24 +1,23 @@
 <template>
-  <div class="container personnel-container">
-    <el-row class="table-top">
-      <div class="left">
-        <el-input v-model="planDate" placeholder="编号" />
-        <el-date-picker
-          v-model="planDate"
-          style="width: 200px;margin-left: 10px"
-          type="month"
-          placeholder="选择日期"
-          format="yyyy 年 MM 月"
-          value-format="yyyy-MM-dd"
-        />
-      </div>
-      <div class="right">
-        <el-button type="primary">上传结算数据</el-button>
-      </div>
-    </el-row>
+  <div class="container apply-container">
+    <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="项目" prop="remi">
+            <el-input v-model="ruleForm.remi" placeholder="项目" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="审核人" prop="people">
+            <el-input v-model="ruleForm.people" placeholder="审核人" disabled />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
 
     <el-row class="pirce">
-      总支付价值----
+      <el-button type="primary">导入文件</el-button>
+      <el-button type="text" style="margin-left: 10px">下载示例</el-button>
     </el-row>
 
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
@@ -38,16 +37,9 @@
       </el-table-column>
     </el-table>
 
-    <div class="broadfun_block">
-      <el-pagination
-        :current-page="seachValue.pagenum"
-        :page-sizes="[10, 20, 50]"
-        :page-size="seachValue.pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+    <div class="broadfun_block-app">
+      <el-button slot="reference" type="primary">提交</el-button>
+      <el-button slot="reference">取消</el-button>
     </div>
   </div>
 </template>
@@ -55,7 +47,7 @@
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
-  name: 'Settlement',
+  name: 'Apply',
   directives: { permission },
   data() {
     return {
@@ -68,6 +60,18 @@ export default {
         status: '',
         myreq: true,
         mytodo: ''
+      },
+      ruleForm: {
+        remi: '',
+        people: ''
+      },
+      rules: {
+        remi: [
+          { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        people: [
+          { required: true, message: '请选择审核人', trigger: 'blur' }
+        ]
       },
       total: 0,
       planDate: '',
@@ -92,11 +96,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.personnel-container {
+.apply-container {
   padding-bottom: 50px;
   .pirce {
     font-size: 12px;
     margin-bottom: 10px;
+  }
+  .broadfun_block-app {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
   }
 }
 </style>

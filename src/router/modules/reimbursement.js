@@ -23,6 +23,24 @@ export const reimbursementRouter = {
       component: () => import('@/views/reimbursement/audit'),
       name: '我的审核',
       meta: { title: '我的审核' }
+    },
+    {
+      path: 'apply',
+      component: () => import('@/views/reimbursement/apply'),
+      name: '申请报销',
+      hidden: true,
+      meta: {
+        title: '申请报销'
+      }
+    },
+    {
+      path: 'remiDetail',
+      component: () => import('@/views/reimbursement/remiDetail'),
+      name: '报销详情',
+      hidden: true,
+      meta: {
+        title: '报销详情'
+      }
     }
   ]
 }

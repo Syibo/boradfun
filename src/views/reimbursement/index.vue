@@ -8,22 +8,37 @@
     </el-tabs>
     <el-row :gutter="20" class="three">
       <el-col :span="12">
-        <div class="three-item">s</div>
+        <div class="three-item">
+          <div class="top">最近一个月内报销金额合计
+            <el-tooltip class="item" effect="dark" content="最近一个月内提交报销单总金额" placement="right">
+              <i class="el-icon-warning" />
+            </el-tooltip>
+          </div>
+          <div class="num">787</div>
+        </div>
       </el-col>
       <el-col :span="12">
-        <div class="three-item">s</div>
+        <div class="three-item">
+          <div class="top">最近一个月内已支付金额合计
+            <el-tooltip class="item" effect="dark" content="最近一个月内已支付总金额" placement="right">
+              <i class="el-icon-warning" />
+            </el-tooltip>
+          </div>
+          <div class="num">446</div>
+        </div>
       </el-col>
     </el-row>
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="planDate" placeholder="编号" />
+        <el-input v-model="seachValue.searchid" placeholder="编号" @input="changeSeach" />
         <el-date-picker
           v-model="planDate"
-          style="width: 200px;margin-left: 10px"
+          style="width: 300px;margin-left: 10px"
           type="month"
           placeholder="选择日期"
           format="yyyy 年 MM 月"
           value-format="yyyy-MM-dd"
+          @change="changeDateFun"
         />
         <el-button type="primary" style="margin-left: 10px">重置</el-button>
       </div>
@@ -33,18 +48,24 @@
     </el-row>
 
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column align="center" label="申请人">
+      <el-table-column align="center" label="申请编号">
         <template slot-scope="scope">
-          <span class="bule-hover" @click="openDrawer"> {{ scope.row.e_name }} </span>
+          <span class="bule-hover" @click="openDrawer"> #{{ scope.row.ID }} </span>
         </template>
       </el-table-column>
-      <el-table-column prop="start_time" align="center" label="开始时间" />
-      <el-table-column prop="duration" align="center" label="加班时长" />
-      <el-table-column v-permission="[6, 7, 8, 9, 10]" prop="real_duration" align="center" label="实际加班时长" />
-      <el-table-column prop="req_time" align="center" label="申请时间" />
+      <el-table-column prop="e_name" align="center" label="申请人" />
+      <el-table-column prop="expense_summary" align="center" label="报销金额" />
+      <el-table-column prop="CreatedAt" align="center" label="提交时间">
+        <template slot-scope="scope">
+          {{ parseTime(scope.row.CreatedAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="project" align="center" label="相关项目" />
+      <el-table-column prop="status" align="center" label="申请状态" />
       <el-table-column prop="name" align="center" label="流程信息">
         <template>
-          <el-button slot="reference" type="text">查看详情</el-button>
+          <!-- <el-button slot="reference" type="text">查看详情</el-button> -->
+          <el-button type="text">查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -67,6 +88,8 @@
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import RemiDrawer from './reimDrawer'
+import { getRemiList } from '@/api/remi'
+import { parseTime } from '@/utils/common'
 export default {
   name: 'RimbursementIndex',
   directives: { permission },
@@ -77,13 +100,13 @@ export default {
     return {
       activeName: 'first',
       seachValue: {
-        pagenum: 1,
         pagesize: 10,
-        name: '',
-        type: '',
+        pagenum: 1,
+        searchid: '',
         status: '',
-        myreq: true,
-        mytodo: ''
+        myreq: false,
+        application_date_begin: '',
+        application_date_end: ''
       },
       total: 0,
       planDate: '',
@@ -92,7 +115,30 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.init()
+  },
   methods: {
+    async init() {
+      const res = await getRemiList(this.seachValue)
+      if (res.ret === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      }
+      console.log(res)
+    },
+    parseTime,
+    changeSeach() {
+      this.init()
+    },
+    changeDateFun() {
+      this.seachValue.application_date_begin = this.planDate
+      const lastDay = new Date(this.planDate.substring(0, 4), this.planDate.substring(5, 7), 0).getDate()
+      this.seachValue.application_date_end = `${this.planDate.substring(0, 4)}-${this.planDate.substring(5, 7)}-${lastDay}`
+      console.log(this.seachValue.application_date_begin)
+      console.log(this.seachValue.application_date_end)
+      this.init()
+    },
     goApply() {
       this.$router.push({
         path: 'apply'
@@ -122,7 +168,15 @@ export default {
    margin-bottom: 10px;
    .three-item {
      min-height: 100px;
-     background: #d3dce6;
+     background: #f0f3f6;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     padding: 0 20px;
+     .top {
+       margin-bottom: 10px;
+       color: #666;
+     }
    }
  }
 }

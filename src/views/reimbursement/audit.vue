@@ -20,18 +20,24 @@
     </el-row>
 
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column align="center" label="申请人">
+      <el-table-column align="center" label="申请编号">
         <template slot-scope="scope">
-          <span class="bule-hover" @click="goDetail"> {{ scope.row.e_name }} </span>
+          <span class="bule-hover" @click="openDrawer"> #{{ scope.row.ID }} </span>
         </template>
       </el-table-column>
-      <el-table-column prop="start_time" align="center" label="开始时间" />
-      <el-table-column prop="duration" align="center" label="加班时长" />
-      <el-table-column v-permission="[6, 7, 8, 9, 10]" prop="real_duration" align="center" label="实际加班时长" />
-      <el-table-column prop="req_time" align="center" label="申请时间" />
+      <el-table-column prop="e_name" align="center" label="申请人" />
+      <el-table-column prop="expense_summary" align="center" label="报销金额" />
+      <el-table-column prop="CreatedAt" align="center" label="提交时间">
+        <template slot-scope="scope">
+          {{ parseTime(scope.row.CreatedAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="project" align="center" label="相关项目" />
+      <el-table-column prop="status" align="center" label="申请状态" />
       <el-table-column prop="name" align="center" label="流程信息">
         <template>
-          <el-button slot="reference" type="text">查看详情</el-button>
+          <!-- <el-button slot="reference" type="text">查看详情</el-button> -->
+          <el-button type="text">查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,25 +53,32 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <RemiDrawer ref="remiDrawer" />
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
+import RemiDrawer from './reimDrawer'
+import { getRemiList } from '@/api/remi'
+import { parseTime } from '@/utils/common'
 export default {
   name: 'RimbursementAudit',
   directives: { permission },
+  components: {
+    RemiDrawer
+  },
   data() {
     return {
       activeName: 'first',
       seachValue: {
-        pagenum: 1,
         pagesize: 10,
-        name: '',
-        type: '',
+        pagenum: 1,
+        searchid: '',
         status: '',
         myreq: true,
-        mytodo: ''
+        application_date_begin: '',
+        application_date_end: ''
       },
       total: 0,
       planDate: '',
@@ -74,7 +87,22 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.init()
+  },
   methods: {
+    async init() {
+      const res = await getRemiList(this.seachValue)
+      if (res.ret === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      }
+      console.log(res)
+    },
+    parseTime,
+    openDrawer() {
+      this.$refs.remiDrawer.openDrawer()
+    },
     goDetail() {
       this.$router.push({
         path: 'remiDetail'

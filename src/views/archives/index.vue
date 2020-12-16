@@ -361,7 +361,7 @@
                   <el-radio-group v-model="ruleForm.employee_basic.marriage">
                     <el-radio label="未婚" />
                     <el-radio label="已婚" />
-                    <el-radio label="已婚以育" />
+                    <el-radio label="已婚已育" />
                   </el-radio-group>
                 </el-form-item>
               </el-col>

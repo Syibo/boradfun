@@ -76,7 +76,7 @@ export default {
         pagenum: 1,
         searchid: '',
         status: '',
-        myreq: true,
+        mytodo: true,
         application_date_begin: '',
         application_date_end: ''
       },

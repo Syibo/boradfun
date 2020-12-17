@@ -104,7 +104,7 @@ export default {
         pagenum: 1,
         searchid: '',
         status: '',
-        myreq: false,
+        myreq: true,
         application_date_begin: '',
         application_date_end: ''
       },

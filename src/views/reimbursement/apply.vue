@@ -18,7 +18,6 @@
     </el-form>
 
     <el-row class="pirce">
-      <!-- <el-button type="primary">导入文件</el-button> -->
       <el-upload
         class="upload-demo"
         :headers="myHeaders"
@@ -28,7 +27,7 @@
         :show-file-list="false"
         :on-success="oneUpload"
       >
-        <el-button icon="el-icon-upload" size="small">导入文件</el-button>
+        <el-button icon="el-icon-upload" size="small" type="primary">导入文件</el-button>
       </el-upload>
       <el-button type="text" style="margin-left: 10px">下载示例</el-button>
     </el-row>
@@ -102,15 +101,9 @@ export default {
     proChange(val) {
       const obj = this.projectList.find((item) => { return item.engagement_code_desc === val })
       if (obj) {
-        console.log(obj.owner.name)
         this.people = `${obj.owner.name},曹一香`
         this.ruleForm.engagement_code = obj.engagement_code
         this.ruleForm.leader_id = obj.code_owner_id
-        // if (obj.owner) {
-        //   this.ruleForm.people = `${obj.owner.name},${this.people}`
-        // } else {
-        //   this.ruleForm.people = `${this.people}`
-        // }
       }
     },
     oneUpload(response, file, fileList) {
@@ -126,8 +119,8 @@ export default {
     async setRemi() {
       const res = await setRemi(this.ruleForm)
       if (res.ret === 0) {
-        console.log(res)
         this.$message.success('申请报销成功')
+        this.$router.go(-1)
       }
     },
     goBack() {

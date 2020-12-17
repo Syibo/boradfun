@@ -54,6 +54,16 @@ export function putRemi(data) {
   })
 }
 /**
+ * 支付报销
+ */
+export function putRemiPaid(data) {
+  return request({
+    url: `/v1/expense/paid`,
+    method: 'put',
+    data
+  })
+}
+/**
  * 获取单条报销记录
  */
 export function getRemiDetail(id) {

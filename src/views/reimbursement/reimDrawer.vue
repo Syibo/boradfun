@@ -14,7 +14,7 @@
       </div>
     </template>
     <div class="content">
-      <Label :title="info.ID" />
+      <Label :title="`${info.ID}`" />
       <div class="steps">
         <div class="top">
           审批流程
@@ -81,9 +81,7 @@ export default {
       },
       active: 0,
       workflow: [],
-      tableData: [
-        { e_name: '#67566' }
-      ]
+      tableData: []
     }
   },
   watch: {

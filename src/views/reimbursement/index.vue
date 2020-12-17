@@ -40,7 +40,7 @@
           value-format="yyyy-MM-dd"
           @change="changeDateFun"
         />
-        <el-button type="primary" style="margin-left: 10px">重置</el-button>
+        <el-button type="primary" style="margin-left: 10px" @click="resert">重置</el-button>
       </div>
       <div class="right">
         <el-button type="primary" @click="goApply">申请报销</el-button>
@@ -61,7 +61,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="project" align="center" label="相关项目" />
-      <el-table-column prop="status" align="center" label="申请状态" />
+      <el-table-column align="center" label="申请状态">
+        <template slot-scope="scope">
+          <AttStatus :status="scope.row.status" />
+        </template>
+      </el-table-column>
       <el-table-column prop="name" align="center" label="流程信息">
         <template slot-scope="scope">
           <el-popover
@@ -113,15 +117,17 @@ import RemiDrawer from './reimDrawer'
 import { getRemiList, getRemiDetail } from '@/api/remi'
 import { parseTime } from '@/utils/common'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
+import AttStatus from '@/components/Oa/AttStatus'
 export default {
   name: 'RimbursementIndex',
   directives: { permission },
   components: {
-    RemiDrawer
+    RemiDrawer,
+    AttStatus
   },
   data() {
     return {
-      activeName: 'first',
+      activeName: '',
       seachValue: {
         pagesize: 10,
         pagenum: 1,
@@ -136,9 +142,7 @@ export default {
       active: 0,
       total: 0,
       planDate: '',
-      tableData: [
-        { e_name: '#67566' }
-      ]
+      tableData: []
     }
   },
   mounted() {
@@ -165,9 +169,14 @@ export default {
       this.init()
     },
     changeDateFun() {
-      this.seachValue.application_date_begin = this.planDate
-      const lastDay = new Date(this.planDate.substring(0, 4), this.planDate.substring(5, 7), 0).getDate()
-      this.seachValue.application_date_end = `${this.planDate.substring(0, 4)}-${this.planDate.substring(5, 7)}-${lastDay}`
+      if (this.planDate) {
+        this.seachValue.application_date_begin = this.planDate
+        const lastDay = new Date(this.planDate.substring(0, 4), this.planDate.substring(5, 7), 0).getDate()
+        this.seachValue.application_date_end = `${this.planDate.substring(0, 4)}-${this.planDate.substring(5, 7)}-${lastDay}`
+      } else {
+        this.seachValue.application_date_begin = ''
+        this.seachValue.application_date_end = ''
+      }
       this.init()
     },
     goApply() {
@@ -178,10 +187,19 @@ export default {
     async openDrawer(id) {
       this.remiDrawerId = id
       this.$refs.remiDrawer.openDrawer()
-      // const res = await getRemiDetail(id)
-      // if (res.ret === 0) {
-      //   console.log(res)
-      // }
+    },
+    resert() {
+      this.seachValue = {
+        pagesize: 10,
+        pagenum: 1,
+        searchid: '',
+        status: '',
+        myreq: true,
+        application_date_begin: '',
+        application_date_end: ''
+      }
+      this.planDate = ''
+      this.init()
     },
     handleClick() {
       console.log(this.activeName)

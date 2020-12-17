@@ -28,7 +28,7 @@
       >
         <el-button icon="el-icon-upload" size="small" type="primary">导入文件</el-button>
       </el-upload>
-      <el-button type="text" style="margin-left: 10px">下载示例</el-button>
+      <el-link download="example.xlsx" href="/example.xlsx" type="primary" :underline="false" style="margin-left: 15px">下载示例</el-link>
     </el-row>
 
     <el-table :data="tableData" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
@@ -40,7 +40,6 @@
       <el-table-column prop="remarks2" align="center" label="备注二" />
       <el-table-column prop="remarks3" align="center" label="备注三" />
     </el-table>
-
     <div class="broadfun_block-app">
       <el-button slot="reference" type="primary" @click="setRemi">提交</el-button>
       <el-button slot="reference" @click="goBack">取消</el-button>

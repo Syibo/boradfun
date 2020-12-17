@@ -3,34 +3,25 @@
     <Label title="申请信息" />
     <el-row :gutter="20" class="three">
       <el-col :span="8">
-        申请人: 员工1
+        申请人: {{ info.e_name }}
       </el-col>
       <el-col :span="8">
-        申请项目: 云测合研
+        申请项目: {{ info.project }}
       </el-col>
     </el-row>
-    <el-table :data="tableData" border style="width: 100%;margin-bottom: 20px" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column align="center" label="申请人">
-        <template slot-scope="scope">
-          <span class="bule-hover"> {{ scope.row.e_name }} </span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="start_time" align="center" label="开始时间" />
-      <el-table-column prop="duration" align="center" label="加班时长" />
-      <el-table-column prop="req_time" align="center" label="申请时间" />
-      <el-table-column prop="name" align="center" label="流程信息">
-        <template>
-          <el-button slot="reference" type="text">查看详情</el-button>
-        </template>
-      </el-table-column>
+    <el-table :data="info.expense_details" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
+      <el-table-column type="index" width="50" label="序号" />
+      <el-table-column prop="ocurred_date" align="center" label="发生时间" />
+      <el-table-column prop="expense_account.expense_account_name" align="center" label="报销科目" />
+      <el-table-column prop="expense_amount" align="center" label="费用金额" />
+      <el-table-column prop="remarks1" align="center" label="备注一" />
+      <el-table-column prop="remarks2" align="center" label="备注二" />
+      <el-table-column prop="remarks3" align="center" label="备注三" />
     </el-table>
-    <Label v-if="pass" title="申请流程" />
+    <Label v-if="pass" title="申请流程" style="margin-top: 20px" />
     <div v-if="pass" class="content">
-      <el-steps style="padding: 0 10px;" :active="active" finish-status="finish">
-        <el-step title="步骤 1" icon="el-icon-edit" />
-        <el-step title="步骤 2" icon="el-icon-upload" />
-        <el-step title="步骤 3" icon="el-icon-picture" />
-        <!-- <el-step
+      <el-steps style="padding: 0 10px;margin-bottom: 10px" :active="active" finish-status="finish">
+        <el-step
           v-for="item in workflow"
           :key="item.ID"
           :icon="retWorkflowIcon(item.status)"
@@ -40,22 +31,19 @@
           <template slot="icon">
             <i :class="retWorkflowIcon(item.status)" />
           </template>
-        </el-step>-->
+        </el-step>
       </el-steps>
       <el-input type="textarea" :rows="5" />
       <el-row class="btn">
-        <el-button>驳回</el-button>
-        <el-button @click="passfun">通过</el-button>
+        <el-button icon="el-icon-error" type="danger" plain>驳回</el-button>
+        <el-button icon="el-icon-success" type="success" plain @click="passfun">通过</el-button>
       </el-row>
     </div>
     <div v-else class="two">
       <div class="left">
         <Label title="申请流程" />
-        <el-steps direction="vertical" style="padding: 0 10px;margin-top:10px" :active="active" finish-status="finish">
-          <el-step title="步骤 1" icon="el-icon-edit" />
-          <el-step title="步骤 2" icon="el-icon-upload" />
-          <el-step title="步骤 3" icon="el-icon-picture" />
-          <!-- <el-step
+        <el-steps style="padding: 0 10px;margin-top: 20px" direction="vertical" :active="active" finish-status="finish">
+          <el-step
             v-for="item in workflow"
             :key="item.ID"
             :icon="retWorkflowIcon(item.status)"
@@ -65,7 +53,7 @@
             <template slot="icon">
               <i :class="retWorkflowIcon(item.status)" />
             </template>
-          </el-step>-->
+          </el-step>
         </el-steps>
         <div class="pass-btn">
           <el-button>发生邮件通知</el-button>
@@ -108,6 +96,7 @@
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
+import { getRemiDetail } from '@/api/remi'
 export default {
   name: 'RemiDetail',
   directives: { permission },
@@ -117,53 +106,35 @@ export default {
   data() {
     return {
       pass: true,
+      info: {
+        expense_details: []
+      },
       active: 0,
-      workflow: '',
-      activeName: 'first',
-      tableData: [
-        { e_name: '#67566' }
-      ],
-      seachValue: {
-        pagenum: 1,
-        pagesize: 10,
-        name: '',
-        type: '',
-        status: '',
-        myreq: true,
-        mytodo: ''
-      },
-      ruleForm: {
-        remi: '',
-        people: ''
-      },
-      rules: {
-        remi: [
-          { required: true, message: '请选择日期', trigger: 'change' }
-        ],
-        people: [
-          { required: true, message: '请选择审核人', trigger: 'blur' }
-        ]
-      },
-      total: 0,
-      planDate: ''
+      workflow: [],
+      tableData: [],
+      id: ''
     }
   },
+  mounted() {
+    this.id = this.$route.query.id
+    this.init()
+  },
   methods: {
+    async init() {
+      if (this.id !== 0) {
+        const res = await getRemiDetail(this.id)
+        if (res.ret === 0) {
+          this.active = this.getaActive(res.data.work_flow.nodes)
+          this.info = res.data.info
+          this.workflow = res.data.work_flow.nodes
+        }
+      }
+    },
     getaActive,
     retWorkflowLabel,
     retWorkflowIcon,
     passfun() {
       this.pass = false
-    },
-    handleClick() {},
-    handleSizeChange(val) {
-      this.seachValue.pagenum = 1
-      this.seachValue.pagesize = val
-      this.init()
-    },
-    handleCurrentChange(val) {
-      this.seachValue.pagenum = val
-      this.init()
     }
   }
 }
@@ -205,6 +176,7 @@ export default {
   .two {
     height: 300px;
     display: flex;
+    margin-top: 20px;
     .left {
       flex: 1;
       position: relative;

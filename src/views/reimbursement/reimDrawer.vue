@@ -14,7 +14,7 @@
       </div>
     </template>
     <div class="content">
-      <Label title="#10010" />
+      <Label :title="info.ID" />
       <div class="steps">
         <div class="top">
           审批流程
@@ -36,29 +36,23 @@
       <Label title="申请信息" />
       <el-row :gutter="20" class="three">
         <el-col :span="8">
-          申请人: 员工1
+          申请人: {{ info.e_name }}
         </el-col>
         <el-col :span="8">
-          申请项目: 云测合研
+          申请项目: {{ info.project }}
         </el-col>
         <el-col :span="8">
-          总计: 80
+          总计: {{ info.expense_summary }}
         </el-col>
       </el-row>
-      <el-table :data="tableData" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-        <el-table-column align="center" label="申请人">
-          <template slot-scope="scope">
-            <span class="bule-hover" @click="openDrawer"> {{ scope.row.e_name }} </span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="start_time" align="center" label="开始时间" />
-        <el-table-column prop="duration" align="center" label="加班时长" />
-        <el-table-column prop="req_time" align="center" label="申请时间" />
-        <el-table-column prop="name" align="center" label="流程信息">
-          <template>
-            <el-button slot="reference" type="text">查看详情</el-button>
-          </template>
-        </el-table-column>
+      <el-table :data="info.expense_details" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
+        <el-table-column type="index" width="50" label="序号" />
+        <el-table-column prop="ocurred_date" align="center" label="发生时间" />
+        <el-table-column prop="expense_account.expense_account_name" align="center" label="报销科目" />
+        <el-table-column prop="expense_amount" align="center" label="费用金额" />
+        <el-table-column prop="remarks1" align="center" label="备注一" />
+        <el-table-column prop="remarks2" align="center" label="备注二" />
+        <el-table-column prop="remarks3" align="center" label="备注三" />
       </el-table>
     </div>
   </el-drawer>
@@ -67,17 +61,13 @@
 <script>
 import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
-import { getOneOverTime } from '@/api/work'
+import { getRemiDetail } from '@/api/remi'
 export default {
   name: 'RemiDrawer',
   components: {
     Label
   },
   props: {
-    time: {
-      type: Number,
-      default: 0
-    },
     id: {
       type: Number,
       default: 0
@@ -86,17 +76,18 @@ export default {
   data() {
     return {
       visible: false,
-      info: {},
+      info: {
+        expense_details: []
+      },
       active: 0,
-      workflow: '',
+      workflow: [],
       tableData: [
         { e_name: '#67566' }
       ]
     }
   },
   watch: {
-    time: {
-      deep: true,
+    id: {
       handler(value) {
         this.init()
       }
@@ -105,10 +96,12 @@ export default {
   methods: {
     async init() {
       if (this.id !== 0) {
-        const res = await getOneOverTime(this.id)
-        this.active = this.getaActive(res.data.work_flow.nodes)
-        this.info = res.data.info
-        this.workflow = res.data.work_flow.nodes
+        const res = await getRemiDetail(this.id)
+        if (res.ret === 0) {
+          this.active = this.getaActive(res.data.work_flow.nodes)
+          this.info = res.data.info
+          this.workflow = res.data.work_flow.nodes
+        }
       }
     },
     closeDrawer() {

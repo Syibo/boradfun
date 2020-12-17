@@ -22,7 +22,6 @@
         class="upload-demo"
         :headers="myHeaders"
         name="file"
-        :limit="1"
         :action="`${api}/v1/expense/details`"
         :show-file-list="false"
         :on-success="oneUpload"
@@ -33,11 +32,7 @@
     </el-row>
 
     <el-table :data="tableData" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column align="center" label="序号">
-        <template slot-scope="scope">
-          <span class="bule-hover"> {{ scope.row.expense_id }} </span>
-        </template>
-      </el-table-column>
+      <el-table-column type="index" width="50" label="序号" />
       <el-table-column prop="ocurred_date" align="center" label="发生时间" />
       <el-table-column prop="expense_account.expense_account_name" align="center" label="报销科目" />
       <el-table-column prop="expense_amount" align="center" label="费用金额" />
@@ -56,10 +51,8 @@
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import store from '@/store'
-import { setRemi } from '@/api/remi'
+import { setRemi, getRemiProjects, getRemiPeople } from '@/api/remi'
 import { getToken } from '@/utils/auth'
-import {
-  getWorkProjects } from '@/api/work'
 export default {
   name: 'Apply',
   directives: { permission },
@@ -68,7 +61,7 @@ export default {
       projectList: [],
       api: '',
       myHeaders: {},
-      people: '曹一香',
+      people: '',
       ruleForm: {
         'engagement_code': '',
         'expense_details': [],
@@ -94,14 +87,17 @@ export default {
         'Authorization': JSON.parse(getToken()).session
       }
     }
-    const resP = await getWorkProjects()
+    const res = await getRemiPeople()
+    this.people = res.data || '财务'
+    this.financialName = res.data || '财务'
+    const resP = await getRemiProjects()
     this.projectList = resP.data
   },
   methods: {
     proChange(val) {
       const obj = this.projectList.find((item) => { return item.engagement_code_desc === val })
       if (obj) {
-        this.people = `${obj.owner.name},曹一香`
+        this.people = `${obj.owner.name},${this.financialName}`
         this.ruleForm.engagement_code = obj.engagement_code
         this.ruleForm.leader_id = obj.code_owner_id
       }

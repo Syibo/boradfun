@@ -1,10 +1,10 @@
 <template>
   <div class="container rimbu-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="全部" name="first" />
-      <el-tab-pane label="待审核" name="second" />
-      <el-tab-pane label="待支付" name="third" />
-      <el-tab-pane label="已支付" name="four" />
+      <el-tab-pane label="全部" name="" />
+      <el-tab-pane label="待审核" name="1" />
+      <el-tab-pane label="待支付" name="2" />
+      <el-tab-pane label="已支付" name="3" />
     </el-tabs>
     <el-row :gutter="20" class="three">
       <el-col :span="12">
@@ -50,7 +50,7 @@
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column align="center" label="申请编号">
         <template slot-scope="scope">
-          <span class="bule-hover" @click="openDrawer"> #{{ scope.row.ID }} </span>
+          <span class="bule-hover" @click="openDrawer(scope.row.ID)"> #{{ scope.row.ID }} </span>
         </template>
       </el-table-column>
       <el-table-column prop="e_name" align="center" label="申请人" />
@@ -63,9 +63,31 @@
       <el-table-column prop="project" align="center" label="相关项目" />
       <el-table-column prop="status" align="center" label="申请状态" />
       <el-table-column prop="name" align="center" label="流程信息">
-        <template>
-          <!-- <el-button slot="reference" type="text">查看详情</el-button> -->
-          <el-button type="text">查看详情</el-button>
+        <template slot-scope="scope">
+          <el-popover
+            placement="top-start"
+            style="height: 100%"
+            width="200"
+            trigger="click"
+            @show="show(scope.row)"
+          >
+            <div v-if="scope">
+              <el-steps direction="vertical" :active="active" finish-status="finish">
+                <el-step
+                  v-for="item in workflow"
+                  :key="item.ID"
+                  :icon="retWorkflowIcon(item.status)"
+                  :title="item.user ? item.user.name : ''"
+                  :description="retWorkflowLabel(item.status)"
+                >
+                  <template slot="icon">
+                    <i :class="retWorkflowIcon(item.status)" />
+                  </template>
+                </el-step>
+              </el-steps>
+            </div>
+            <el-button slot="reference" type="text">查看详情</el-button>
+          </el-popover>
         </template>
       </el-table-column>
     </el-table>
@@ -81,15 +103,16 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <RemiDrawer ref="remiDrawer" />
+    <RemiDrawer :id="remiDrawerId" ref="remiDrawer" />
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import RemiDrawer from './reimDrawer'
-import { getRemiList } from '@/api/remi'
+import { getRemiList, getRemiDetail } from '@/api/remi'
 import { parseTime } from '@/utils/common'
+import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 export default {
   name: 'RimbursementIndex',
   directives: { permission },
@@ -108,6 +131,9 @@ export default {
         application_date_begin: '',
         application_date_end: ''
       },
+      remiDrawerId: 0,
+      workflow: [],
+      active: 0,
       total: 0,
       planDate: '',
       tableData: [
@@ -125,9 +151,16 @@ export default {
         this.tableData = res.data.list
         this.total = res.data.total
       }
-      console.log(res)
     },
+    retWorkflowLabel,
+    retWorkflowIcon,
     parseTime,
+    getaActive,
+    async show(row) {
+      const res = await getRemiDetail(row.ID)
+      this.active = this.getaActive(res.data.work_flow.nodes)
+      this.workflow = res.data.work_flow.nodes
+    },
     changeSeach() {
       this.init()
     },
@@ -135,8 +168,6 @@ export default {
       this.seachValue.application_date_begin = this.planDate
       const lastDay = new Date(this.planDate.substring(0, 4), this.planDate.substring(5, 7), 0).getDate()
       this.seachValue.application_date_end = `${this.planDate.substring(0, 4)}-${this.planDate.substring(5, 7)}-${lastDay}`
-      console.log(this.seachValue.application_date_begin)
-      console.log(this.seachValue.application_date_end)
       this.init()
     },
     goApply() {
@@ -144,10 +175,20 @@ export default {
         path: 'apply'
       })
     },
-    openDrawer() {
+    async openDrawer(id) {
+      this.remiDrawerId = id
       this.$refs.remiDrawer.openDrawer()
+      // const res = await getRemiDetail(id)
+      // if (res.ret === 0) {
+      //   console.log(res)
+      // }
     },
-    handleClick() {},
+    handleClick() {
+      console.log(this.activeName)
+      this.seachValue.status = this.activeName
+      if (this.activeName === '0') this.seachValue.status = ''
+      this.init()
+    },
     handleSizeChange(val) {
       this.seachValue.pagenum = 1
       this.seachValue.pagesize = val

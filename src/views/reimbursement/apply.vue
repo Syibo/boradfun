@@ -41,7 +41,7 @@
       <el-table-column prop="remarks3" align="center" label="备注三" />
     </el-table>
     <div class="broadfun_block-app">
-      <el-button slot="reference" type="primary" @click="setRemi">提交</el-button>
+      <el-button slot="reference" type="primary" @click="submitForm('ruleForm')">提交</el-button>
       <el-button slot="reference" @click="goBack">取消</el-button>
     </div>
   </div>
@@ -70,7 +70,7 @@ export default {
       },
       rules: {
         project: [
-          { required: true, message: '请输入项目', trigger: 'blur' }
+          { required: true, message: '请输入项目', trigger: 'change' }
         ],
         people: [
           { required: true, message: '请选择审核人', trigger: 'blur' }
@@ -109,7 +109,20 @@ export default {
       } else {
         this.$message.error(response.msg)
       }
-      // this.ruleForm.soft_copy = response.data
+    },
+    submitForm(formName) {
+      if (this.tableData.length === 0) {
+        this.$message.error('无报销信息')
+        return
+      }
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.setRemi()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     async setRemi() {
       const res = await setRemi(this.ruleForm)

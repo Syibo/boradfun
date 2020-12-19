@@ -72,3 +72,12 @@ export function getRemiDetail(id) {
     method: 'get'
   })
 }
+/**
+ * 支付信息统计
+ */
+export function getPaidInfo() {
+  return request({
+    url: `/expense/paid/info`,
+    method: 'get'
+  })
+}

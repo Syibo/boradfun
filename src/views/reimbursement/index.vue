@@ -2,7 +2,7 @@
   <div class="container rimbu-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="全部" name="" />
-      <el-tab-pane label="待审核" name="1" />
+      <el-tab-pane label="待审核" name="NA" />
       <el-tab-pane label="待支付" name="2" />
       <el-tab-pane label="已支付" name="3" />
     </el-tabs>
@@ -14,7 +14,7 @@
               <i class="el-icon-warning" />
             </el-tooltip>
           </div>
-          <div class="num">787</div>
+          <div class="num">null</div>
         </div>
       </el-col>
       <el-col :span="12">
@@ -24,7 +24,7 @@
               <i class="el-icon-warning" />
             </el-tooltip>
           </div>
-          <div class="num">446</div>
+          <div class="num">null</div>
         </div>
       </el-col>
     </el-row>
@@ -114,7 +114,7 @@
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import RemiDrawer from './reimDrawer'
-import { getRemiList, getRemiDetail } from '@/api/remi'
+import { getRemiList, getRemiDetail, getPaidInfo } from '@/api/remi'
 import { parseTime } from '@/utils/common'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import AttStatus from '@/components/Oa/AttStatus'
@@ -147,6 +147,7 @@ export default {
   },
   mounted() {
     this.init()
+    // this.getPaidInfo()
   },
   methods: {
     async init() {
@@ -154,6 +155,12 @@ export default {
       if (res.ret === 0) {
         this.tableData = res.data.list
         this.total = res.data.total
+      }
+    },
+    async getPaidInfo() {
+      const res = await getPaidInfo()
+      if (res.ret === 0) {
+        console.log(res)
       }
     },
     retWorkflowLabel,

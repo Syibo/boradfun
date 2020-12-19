@@ -14,7 +14,7 @@
               <i class="el-icon-warning" />
             </el-tooltip>
           </div>
-          <div class="num">null</div>
+          <div class="num">{{ paidInfo.expense_total }}</div>
         </div>
       </el-col>
       <el-col :span="12">
@@ -24,7 +24,7 @@
               <i class="el-icon-warning" />
             </el-tooltip>
           </div>
-          <div class="num">null</div>
+          <div class="num">{{ paidInfo.expense_paid_total }}</div>
         </div>
       </el-col>
     </el-row>
@@ -137,6 +137,7 @@ export default {
         application_date_begin: '',
         application_date_end: ''
       },
+      paidInfo: {},
       remiDrawerId: 0,
       workflow: [],
       active: 0,
@@ -147,7 +148,7 @@ export default {
   },
   mounted() {
     this.init()
-    // this.getPaidInfo()
+    this.getPaidInfo()
   },
   methods: {
     async init() {
@@ -160,7 +161,7 @@ export default {
     async getPaidInfo() {
       const res = await getPaidInfo()
       if (res.ret === 0) {
-        console.log(res)
+        this.paidInfo = res.data
       }
     },
     retWorkflowLabel,

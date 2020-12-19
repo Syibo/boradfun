@@ -77,7 +77,7 @@ export function getRemiDetail(id) {
  */
 export function getPaidInfo() {
   return request({
-    url: `/expense/paid/info`,
+    url: `/v1/expense/paid/info`,
     method: 'get'
   })
 }

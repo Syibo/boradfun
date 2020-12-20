@@ -22,7 +22,7 @@ export const reimbursementRouter = {
       path: 'audit',
       component: () => import('@/views/reimbursement/audit'),
       name: '我的审核',
-      meta: { title: '我的审核' }
+      meta: { title: '我的审核', roles: [8, 10] }
     },
     {
       path: 'apply',

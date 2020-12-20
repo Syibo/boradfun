@@ -3,8 +3,8 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="全部" name="" />
       <el-tab-pane label="待审核" name="NA" />
-      <el-tab-pane label="待支付" name="2" />
-      <el-tab-pane label="已支付" name="3" />
+      <el-tab-pane label="待支付" name="Unpaid" />
+      <el-tab-pane label="已支付" name="Paid" />
     </el-tabs>
     <el-row :gutter="20" class="three">
       <el-col :span="12">
@@ -210,7 +210,6 @@ export default {
       this.init()
     },
     handleClick() {
-      console.log(this.activeName)
       this.seachValue.status = this.activeName
       if (this.activeName === '0') this.seachValue.status = ''
       this.init()

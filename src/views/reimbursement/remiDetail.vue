@@ -33,7 +33,7 @@
           </template>
         </el-step>
       </el-steps>
-      <el-input type="textarea" :rows="5" />
+      <el-input v-model="putInfo.comment" type="textarea" :rows="5" />
       <el-row class="btn">
         <el-button icon="el-icon-error" type="danger" plain>驳回</el-button>
         <el-button icon="el-icon-success" type="success" plain @click="passfun">通过</el-button>
@@ -56,29 +56,29 @@
           </el-step>
         </el-steps>
         <div class="pass-btn">
-          <el-button>发生邮件通知</el-button>
-          <el-button>通过</el-button>
+          <!-- <el-button>发生邮件通知</el-button> -->
+          <!-- <el-button>通过</el-button> -->
         </div>
       </div>
       <el-divider direction="vertical" style="height: 100%" />
-      <div class="right">
+      <div v-permission="[8]" class="right">
         <Label title="支付流程" />
         <div class="right-item">
           <div class="label">待支付总金额(元)</div>
-          <div class="num">125</div>
+          <div class="num">{{ info.expense_summary }}</div>
         </div>
         <div class="right-item">
           <div class="label">收款账号</div>
-          <div class="num">612697712885464 <el-button type="text">复制</el-button></div>
+          <div id="copy_num" class="num">1234567890000 <el-button type="text" @click="copyFun">复制</el-button></div>
         </div>
         <div class="pass-btn">
-          <el-dropdown>
+          <el-dropdown @command="handleCommand">
             <el-button type="primary">
               待支付<i class="el-icon-arrow-down el-icon--right" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>已支付</el-dropdown-item>
-              <el-dropdown-item>驳回</el-dropdown-item>
+              <el-dropdown-item command="pass">已支付</el-dropdown-item>
+              <el-dropdown-item command="stop">驳回</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -96,7 +96,8 @@
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
-import { getRemiDetail } from '@/api/remi'
+import { getRemiDetail, putRemi, putRemiPaid } from '@/api/remi'
+import { mapGetters } from 'vuex'
 export default {
   name: 'RemiDetail',
   directives: { permission },
@@ -112,11 +113,20 @@ export default {
       active: 0,
       workflow: [],
       tableData: [],
-      id: ''
+      id: '',
+      putInfo: {
+        comment: '', id: '', status: 1
+      }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   mounted() {
     this.id = this.$route.query.id
+    this.putInfo.id = Number(this.$route.query.id)
     this.init()
   },
   methods: {
@@ -127,14 +137,55 @@ export default {
           this.active = this.getaActive(res.data.work_flow.nodes)
           this.info = res.data.info
           this.workflow = res.data.work_flow.nodes
+          if (this.active === 2 && this.roles[0] !== 8) {
+            this.pass = false
+          }
+          if (this.active >= 3 && this.roles[0] === 8) {
+            this.pass = false
+          }
         }
       }
     },
     getaActive,
     retWorkflowLabel,
     retWorkflowIcon,
-    passfun() {
-      this.pass = false
+    async handleCommand(command) {
+      switch (command) {
+        case 'pass':
+          this.putInfo.status = 1
+          break
+        case 'stop':
+          this.putInfo.status = 1
+          break
+        default:
+          break
+      }
+      const res = await putRemiPaid(this.putInfo)
+      if (res.ret === 0) {
+        console.log(res)
+        this.active = this.active + 1
+      }
+    },
+    copyFun() {
+      const el = document.getElementById('copy_num')
+      const selection = window.getSelection()
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      selection.removeAllRanges()
+      selection.addRange(range)
+      const copyState = document.execCommand('copy')
+      if (copyState) {
+        this.$message.success('复制成功')
+      }
+    },
+    async passfun() {
+      this.putInfo.status = 1
+      const res = await putRemi(this.putInfo)
+      if (res.ret === 0) {
+        console.log(res)
+        this.pass = false
+        this.active += 1
+      }
     }
   }
 }

@@ -3,7 +3,9 @@
     <el-tag v-if="status === 'NA'" type="info">待审核</el-tag>
     <el-tag v-else-if="status === 'Approved'" type="success">审核通过</el-tag>
     <el-tag v-else-if="status === 'Rejected'" type="danger">驳回</el-tag>
-    <span v-else type="info">位置状态</span>
+    <el-tag v-else-if="status === 'Unpaid'" type="danger">待支付</el-tag>
+    <el-tag v-else-if="status === 'Paid'" type="success">已支付</el-tag>
+    <span v-else type="info">未知状态</span>
   </span>
 </template>
 

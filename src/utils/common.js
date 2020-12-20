@@ -29,6 +29,12 @@ export function retWorkflowLabel(status) {
     case 'NA':
       s = '未处理'
       break
+    case 'Paid':
+      s = '已支付'
+      break
+    case 'Unpaid':
+      s = '待支付'
+      break
     default:
       break
   }
@@ -56,6 +62,12 @@ export function retWorkflowIcon(status) {
     case 'NA':
       s = 'el-icon-warning'
       break
+    case 'Paid':
+      s = 'el-icon-success'
+      break
+    case 'Unpaid':
+      s = 'el-icon-warning padd-color'
+      break
     default:
       break
   }
@@ -68,11 +80,13 @@ export function retWorkflowIcon(status) {
 export function getaActive(notes) {
   let active = 0
   let Approved = 0
+  let Paid = 0
   var na = notes.map((item) => item.status)
   const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
   active = countOccurences(na, 'Completed')
   Approved = countOccurences(na, 'Approved')
-  return active + Approved
+  Paid = countOccurences(na, 'Paid')
+  return active + Approved + Paid
 }
 /**
  * 返回文件的名称

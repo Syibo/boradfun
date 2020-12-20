@@ -27,9 +27,9 @@ export function getRemiPeople() {
 /**
  * 报销列表
  */
-export function getRemiList({ pagesize = 10, pagenum = 1, searchid = '', status = '', myreq, mytodo, application_date_begin, application_date_end }) {
+export function getRemiList({ pagesize = 10, pagenum = 1, searchid = '', status = '', myreq, mytodo, application_date_begin, application_date_end, todostatus }) {
   return request({
-    url: `/v1/expense?pagesize=${pagesize}&pagenum=${pagenum}&searchid=${searchid}&status=${status}&myreq=${myreq}&mytodo=${mytodo}&application_date_begin=${application_date_begin}&application_date_end=${application_date_end}`,
+    url: `/v1/expense?pagesize=${pagesize}&pagenum=${pagenum}&searchid=${searchid}&status=${status}&myreq=${myreq}&mytodo=${mytodo}&application_date_begin=${application_date_begin}&application_date_end=${application_date_end}&todostatus=${todostatus}`,
     method: 'get'
   })
 }
@@ -46,21 +46,21 @@ export function setRemi(data) {
 /**
  * 更新报销单
  */
-export function putRemi(data) {
+export function putRemi({ comment, id, status }) {
   return request({
     url: `/v1/expense`,
     method: 'put',
-    data
+    data: { comment, id, status }
   })
 }
 /**
  * 支付报销
  */
-export function putRemiPaid(data) {
+export function putRemiPaid({ comment, id, status }) {
   return request({
     url: `/v1/expense/paid`,
     method: 'put',
-    data
+    data: { comment, id, status }
   })
 }
 /**

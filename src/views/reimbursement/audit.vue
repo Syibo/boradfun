@@ -1,9 +1,9 @@
 <template>
   <div class="container audit-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="全部" name="first" />
-      <el-tab-pane label="待办" name="second" />
-      <el-tab-pane label="已办" name="third" />
+      <el-tab-pane label="全部" name="all" />
+      <el-tab-pane label="待办" name="0" />
+      <el-tab-pane label="已办" name="1" />
     </el-tabs>
     <el-row class="table-top">
       <div class="left">
@@ -105,13 +105,14 @@ export default {
   },
   data() {
     return {
-      activeName: 'first',
+      activeName: 'all',
       seachValue: {
         pagesize: 10,
         pagenum: 1,
         searchid: '',
         status: '',
         mytodo: true,
+        todostatus: '',
         application_date_begin: '',
         application_date_end: ''
       },
@@ -155,7 +156,11 @@ export default {
         }
       })
     },
-    handleClick() {},
+    handleClick() {
+      this.seachValue.todostatus = this.activeName
+      if (this.activeName === 'all') this.seachValue.todostatus = ''
+      this.init()
+    },
     handleSizeChange(val) {
       this.seachValue.pagenum = 1
       this.seachValue.pagesize = val

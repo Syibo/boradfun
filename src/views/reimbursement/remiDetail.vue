@@ -35,8 +35,8 @@
       </el-steps>
       <el-input v-model="putInfo.comment" type="textarea" :rows="5" />
       <el-row class="btn">
-        <el-button icon="el-icon-error" type="danger" plain>驳回</el-button>
-        <el-button icon="el-icon-success" type="success" plain @click="passfun">通过</el-button>
+        <el-button icon="el-icon-error" type="danger" plain @click="passfun(0)">驳回</el-button>
+        <el-button icon="el-icon-success" type="success" plain @click="passfun(1)">通过</el-button>
       </el-row>
     </div>
     <div v-else class="two">
@@ -137,7 +137,9 @@ export default {
           this.active = this.getaActive(res.data.work_flow.nodes)
           this.info = res.data.info
           this.workflow = res.data.work_flow.nodes
-          if (this.active === 2 && this.roles[0] !== 8) {
+          console.log(this.active)
+          console.log(this.roles)
+          if (this.active >= 2 && this.roles[0] !== 8) {
             this.pass = false
           }
           if (this.active >= 3 && this.roles[0] === 8) {
@@ -178,13 +180,12 @@ export default {
         this.$message.success('复制成功')
       }
     },
-    async passfun() {
-      this.putInfo.status = 1
+    async passfun(num) {
+      this.putInfo.status = num
       const res = await putRemi(this.putInfo)
       if (res.ret === 0) {
-        console.log(res)
         this.pass = false
-        this.active += 1
+        this.init()
       }
     }
   }

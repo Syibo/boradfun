@@ -181,7 +181,7 @@
             <div v-if="leaveList.length === 0" class="no-data">
               当天无请假记录
             </div>
-            <el-checkbox-group v-model="checkList" @change="checkboxChange">
+            <el-checkbox-group v-model="checkList" :max="1" @change="checkboxChange">
               <el-checkbox v-for="item in leaveList" :key="item.ID" :label="item.ID">{{ retCheclLabel(item) }}</el-checkbox>
             </el-checkbox-group>
             <i slot="reference" class="el-icon-circle-plus-outline" />
@@ -322,7 +322,10 @@ export default {
               this.tableData = tmps
               if (this.tableData[0].leave_id !== 0) {
                 this.checkList = [this.tableData[0].leave_id]
-                this.leaveData = this.leaveList
+                const obj = this.leaveList.find((item) => {
+                  return item.ID === this.checkList[0]
+                })
+                this.leaveData = [obj]
               }
             } else {
               this.tableData = []
@@ -589,7 +592,10 @@ export default {
           await putWorkAttendanceTmp(row)
         }
       } else {
-        this.leaveData = this.leaveList
+        const obj = this.leaveList.find((item) => {
+          return item.ID === this.checkList[0]
+        })
+        this.leaveData = [obj]
         if (this.tableData) {
           const row = this.tableData[0]
           row.leave_id = this.checkList[0]

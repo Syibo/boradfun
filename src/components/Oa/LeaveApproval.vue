@@ -6,10 +6,10 @@
       </div>
       <div class="dialog-title-right">
         <el-button @click="closeVisble">取 消</el-button>
-        <el-button v-if="title === '时长校验'" @click="submitForm(1)">确 定</el-button>
-        <el-button v-if="title === '申请加班' && active !== workflow.length" @click="submitForm(0)">拒 绝</el-button>
-        <el-button v-if="active !== workflow.length && title === '申请加班'" size="small" type="primary" @click="submitForm(1)">同 意</el-button>
-        <el-button v-if="active === workflow.length" @click="closeVisble">关 闭</el-button>
+        <el-button v-if="title === '时长校验'" type="primary" @click="submitForm(1)">确 定</el-button>
+        <el-button v-if="title === '申请请假' && active !== workflow.length" @click="submitForm(0)">拒 绝</el-button>
+        <el-button v-if="active !== workflow.length && title === '申请请假'" size="small" type="primary" @click="submitForm(1)">同 意</el-button>
+        <el-button v-if="active === workflow.length && title === '申请请假'" @click="closeVisble">关 闭</el-button>
       </div>
     </span>
     <div class="work-container">
@@ -203,6 +203,9 @@ export default {
   }
   .el-input-number {
     text-align: left!important;
+  }
+  .el-step__icon {
+    background-color: #F7F9FA;
   }
 }
 </style>

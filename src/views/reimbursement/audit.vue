@@ -7,17 +7,18 @@
     </el-tabs>
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="planDate" placeholder="编号" />
+        <el-input v-model="seachValue.searchid" placeholder="编号" clearable @input="changeSeach" />
         <el-date-picker
           v-model="planDate"
-          style="width: 200px;margin-left: 10px"
+          style="width: 300px;margin-left: 10px"
           type="month"
           placeholder="选择日期"
           format="yyyy 年 MM 月"
           value-format="yyyy-MM-dd"
+          @change="changeDateFun"
         />
       </div>
-      <el-button type="primary" style="margin-left: 10px">重置</el-button>
+      <el-button type="primary" style="margin-left: 10px" @click="resert">重置</el-button>
     </el-row>
 
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
@@ -168,6 +169,33 @@ export default {
     },
     handleCurrentChange(val) {
       this.seachValue.pagenum = val
+      this.init()
+    },
+    changeSeach() {
+      this.init()
+    },
+    changeDateFun() {
+      if (this.planDate) {
+        this.seachValue.application_date_begin = this.planDate
+        const lastDay = new Date(this.planDate.substring(0, 4), this.planDate.substring(5, 7), 0).getDate()
+        this.seachValue.application_date_end = `${this.planDate.substring(0, 4)}-${this.planDate.substring(5, 7)}-${lastDay}`
+      } else {
+        this.seachValue.application_date_begin = ''
+        this.seachValue.application_date_end = ''
+      }
+      this.init()
+    },
+    resert() {
+      this.seachValue = {
+        pagesize: 10,
+        pagenum: 1,
+        searchid: '',
+        status: '',
+        myreq: true,
+        application_date_begin: '',
+        application_date_end: ''
+      }
+      this.planDate = ''
       this.init()
     }
   }

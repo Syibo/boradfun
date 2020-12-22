@@ -87,7 +87,7 @@
           {{ name }} {{ value }} 打卡明细
         </div>
         <div class="dialog-title-right">
-          <el-button v-if="isConfirm === 0" type="text" @click="addAtt"> 添加考勤 </el-button>
+          <el-button type="text" @click="addAtt"> 添加考勤 </el-button>
         </div>
       </span>
       <div class="dialog-content">
@@ -181,8 +181,8 @@
             <div v-if="leaveList.length === 0" class="no-data">
               当天无请假记录
             </div>
-            <el-checkbox-group v-model="checkList" :max="1" @change="checkboxChange">
-              <el-checkbox v-for="item in leaveList" :key="item.ID" :label="item.ID">{{ retCheclLabel(item) }}</el-checkbox>
+            <el-checkbox-group v-model="checkList" @change="checkboxChange">
+              <el-checkbox v-for="item in leaveList" :key="String(item.ID)" :label="String(item.ID)">{{ retCheclLabel(item) }}</el-checkbox>
             </el-checkbox-group>
             <i slot="reference" class="el-icon-circle-plus-outline" />
           </el-popover>
@@ -320,12 +320,20 @@ export default {
                 tmps[index].isEdit = false
               }
               this.tableData = tmps
-              if (this.tableData[0].leave_id !== 0) {
-                this.checkList = [this.tableData[0].leave_id]
-                const obj = this.leaveList.find((item) => {
-                  return item.ID === this.checkList[0]
+              if (this.tableData[0].leave_id) {
+                this.checkList = this.tableData[0].leave_id.split(',')
+                const ta = []
+                this.checkList.forEach((item) => {
+                  const obj = this.leaveList.find((item2) => {
+                    return String(item2.ID) === item
+                  })
+                  ta.push(obj)
                 })
-                this.leaveData = [obj]
+                this.leaveData = ta
+                // const obj = this.leaveList.find((item) => {
+                //   return item.ID === this.checkList[0]
+                // })
+                // this.leaveData = [obj]
               }
             } else {
               this.tableData = []
@@ -584,25 +592,20 @@ export default {
       /**
        * 目前只做了关联一条记录的 后续后端接口支持再优化
        */
-      if (this.checkList.length === 0) {
-        this.leaveData = []
-        if (this.tableData) {
-          const row = this.tableData[0]
-          row.leave_id = 0
-          await putWorkAttendanceTmp(row)
-        }
-      } else {
-        const obj = this.leaveList.find((item) => {
-          return item.ID === this.checkList[0]
+      const ta = []
+      this.checkList.forEach((item) => {
+        const obj = this.leaveList.find((item2) => {
+          return String(item2.ID) === item
         })
-        this.leaveData = [obj]
-        if (this.tableData) {
-          const row = this.tableData[0]
-          row.leave_id = this.checkList[0]
-          const res = await putWorkAttendanceTmp(row)
-          if (res.ret === 0) {
-            this.$message.success('关联请假成功')
-          }
+        ta.push(obj)
+      })
+      this.leaveData = ta
+      if (this.tableData) {
+        const row = this.tableData[0]
+        row.leave_id = this.checkList.join(',')
+        const res = await putWorkAttendanceTmp(row)
+        if (res.ret === 0) {
+          this.$message.success('关联请假成功')
         }
       }
     },
@@ -806,7 +809,7 @@ export default {
         }
         .calendar-day-p3 {
           position: absolute;
-          bottom: -43px;
+          // bottom: -43px;
           left: 0;
         }
         .is-selected {

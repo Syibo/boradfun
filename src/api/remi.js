@@ -81,3 +81,12 @@ export function getPaidInfo() {
     method: 'get'
   })
 }
+/**
+ * 支付银行卡信息
+ */
+export function getDebitCard(id) {
+  return request({
+    url: `/v1/expense/${id}/debit_card`,
+    method: 'get'
+  })
+}

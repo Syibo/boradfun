@@ -69,10 +69,11 @@
         </div>
         <div class="right-item">
           <div class="label">收款账号</div>
-          <div id="copy_num" class="num">1234567890000 <el-button type="text" @click="copyFun">复制</el-button></div>
+          <div id="copy_num" class="num">{{ card }} <el-button type="text" @click="copyFun">复制</el-button></div>
         </div>
         <div class="pass-btn">
-          <el-dropdown @command="handleCommand">
+          <el-button v-if="btnType !== ''" :type="btnType === 'Paid' ? 'success' : 'error'" style="margin-right: 10px">{{ btnType === 'Paid' ? '已支付' : '驳回' }}</el-button>
+          <el-dropdown v-else @command="handleCommand">
             <el-button type="primary">
               待支付<i class="el-icon-arrow-down el-icon--right" />
             </el-button>
@@ -96,7 +97,7 @@
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
-import { getRemiDetail, putRemi, putRemiPaid } from '@/api/remi'
+import { getRemiDetail, putRemi, putRemiPaid, getDebitCard } from '@/api/remi'
 import { mapGetters } from 'vuex'
 export default {
   name: 'RemiDetail',
@@ -107,6 +108,8 @@ export default {
   data() {
     return {
       pass: true,
+      card: '',
+      btnType: '',
       info: {
         expense_details: []
       },
@@ -128,6 +131,7 @@ export default {
     this.id = this.$route.query.id
     this.putInfo.id = Number(this.$route.query.id)
     this.init()
+    this.getDebitCard()
   },
   methods: {
     async init() {
@@ -144,8 +148,18 @@ export default {
           }
           if (this.active >= 3 && this.roles[0] === 8) {
             this.pass = false
+            if (this.active === 4) {
+              console.log(res.data.work_flow.nodes[3].status)
+              this.btnType = res.data.work_flow.nodes[3].status
+            }
           }
         }
+      }
+    },
+    async getDebitCard() {
+      const res = await getDebitCard(this.id)
+      if (res.ret === 0) {
+        this.card = res.data
       }
     },
     getaActive,
@@ -157,15 +171,14 @@ export default {
           this.putInfo.status = 1
           break
         case 'stop':
-          this.putInfo.status = 1
+          this.putInfo.status = 0
           break
         default:
           break
       }
       const res = await putRemiPaid(this.putInfo)
       if (res.ret === 0) {
-        console.log(res)
-        this.active = this.active + 1
+        this.init()
       }
     },
     copyFun() {

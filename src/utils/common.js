@@ -74,19 +74,26 @@ export function retWorkflowIcon(status) {
   return s
 }
 /**
- * 获取当前流程的位置
- * @param {string} status value
+ * 获取当前流程的位置不好含
+ * @param  {Array} notes         当前流程的对象
+ * @param  {Boolean} isRejected  是否需要加上已拒绝的节点
+ * @return {Number}              当前流程所在的节点
+ * @author YiBo.Shen(1335638583@qq.com)
  */
-export function getaActive(notes) {
+export function getaActive(notes, isRejected = false) {
   let active = 0
   let Approved = 0
   let Paid = 0
+  let rejected = 0
   var na = notes.map((item) => item.status)
   const countOccurences = (arr, value) => arr.reduce((a, v) => v === value ? a + 1 : a + 0, 0)
   active = countOccurences(na, 'Completed')
   Approved = countOccurences(na, 'Approved')
   Paid = countOccurences(na, 'Paid')
-  return active + Approved + Paid
+  if (isRejected) {
+    rejected = countOccurences(na, 'Rejected')
+  }
+  return active + Approved + Paid + rejected
 }
 /**
  * 返回文件的名称

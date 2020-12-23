@@ -5,7 +5,7 @@
  * @date 12-16-2020
  */
 import request from '@/utils/request'
-// import requestDown from '@/utils/request-down'
+import requestDown from '@/utils/request-down'
 /**
  * 获取报销项目
  */
@@ -88,5 +88,15 @@ export function getDebitCard(id) {
   return request({
     url: `/v1/expense/${id}/debit_card`,
     method: 'get'
+  })
+}
+/**
+ * 导出待支付信息
+ */
+export function downUnpaid(ids) {
+  return requestDown({
+    url: `/v1/expense/export/unpaid?ids=${ids}`,
+    method: 'get',
+    responseType: 'arraybuffer'
   })
 }

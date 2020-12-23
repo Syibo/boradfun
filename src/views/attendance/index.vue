@@ -383,7 +383,7 @@ export default {
     },
     addAtt() {
       this.tableData.push({
-        ID: '', dept: this.dept, name: this.name, status: '', result: '', check_time: '', employee_id: 0, leave_id: 0, isEdit: true, attendance_date: this.value
+        ID: '', dept: this.dept, name: this.name, status: '', result: '', check_time: '', employee_id: 0, leave_id: '', isEdit: true, attendance_date: this.value
       })
     },
     inChange(value, index) {
@@ -652,11 +652,11 @@ export default {
         return status
       }
       const one = item[0]
-      if (item.length !== 2 && one.leave_id === 0) {
+      if (item.length !== 2 && one.leave_id === '') {
         status = '异常'
         return status
       }
-      if (one.status === 'Exception' && one.leave_id === 0) {
+      if (one.status === 'Exception' && one.leave_id === '') {
         status = one.result
       }
       return status
@@ -667,7 +667,7 @@ export default {
         return status
       }
       const one = item[0]
-      if (one && one.leave_id !== 0) {
+      if (one && one.leave_id !== '') {
         status = one.leave_id
       }
       return status

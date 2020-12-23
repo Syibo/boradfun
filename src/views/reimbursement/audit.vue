@@ -20,12 +20,12 @@
         <el-button type="primary" style="margin-left: 10px" @click="resert">重置</el-button>
       </div>
       <div class="right">
-        <el-button type="primary" @click="downUnPaidFun">导出待支付表格</el-button>
+        <el-button v-permission="[8]" type="primary" @click="downUnPaidFun">导出待支付表格</el-button>
       </div>
     </el-row>
 
     <el-table ref="multipleTable" :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" />
+      <el-table-column v-permission="[8]" type="selection" width="55" :selectable="checkboxSelect" />
       <el-table-column align="center" label="申请编号">
         <template slot-scope="scope">
           <span class="bule-hover" @click="openDrawer(scope.row.ID)"> #{{ scope.row.ID }} </span>
@@ -252,6 +252,13 @@ export default {
         this.seachValue.application_date_end = ''
       }
       this.init()
+    },
+    checkboxSelect(row, rowIndex) {
+      if (row.status === 'Unpaid') {
+        return true // 禁用
+      } else {
+        return false // 不禁用
+      }
     },
     resert() {
       this.seachValue = {

@@ -6,6 +6,8 @@
     <span v-else-if="status === 'Processing'" class="brof_status">待审核</span>
     <span v-else-if="status === 'NA'" class="brof_status">待审核</span>
     <span v-else-if="status === 'Rejected'" class="brof_status stop_col">已驳回</span>
+    <span v-else-if="status === 'Unpaid'" class="brof_status">待支付</span>
+    <span v-else-if="status === 'Paid'" class="brof_status confirm_col">已支付</span>
     <span v-else class="brof_status" />
   </div>
 </template>

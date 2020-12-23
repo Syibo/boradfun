@@ -142,9 +142,6 @@ export default {
           const activeRe = this.getaActive(res.data.work_flow.nodes, true)
           this.info = res.data.info
           this.workflow = res.data.work_flow.nodes
-          console.log(this.active)
-          console.log(this.roles)
-          console.log(activeRe)
           if (activeRe >= 2 && this.roles[0] !== 8) {
             this.pass = false
           }

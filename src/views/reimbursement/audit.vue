@@ -25,7 +25,7 @@
     </el-row>
 
     <el-table ref="multipleTable" :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}" @selection-change="handleSelectionChange">
-      <el-table-column v-permission="[8]" type="selection" width="55" :selectable="checkboxSelect" />
+      <el-table-column v-if="roles[0] === 8" type="selection" width="55" :selectable="checkboxSelect" />
       <el-table-column align="center" label="申请编号">
         <template slot-scope="scope">
           <span class="bule-hover" @click="openDrawer(scope.row.ID)"> #{{ scope.row.ID }} </span>
@@ -103,6 +103,7 @@ import { parseTime } from '@/utils/common'
 import AttStatus from '@/components/Oa/AttStatus'
 import { TableSelections } from '@/mixins/TableSelections'
 import Moment from 'moment'
+import { mapGetters } from 'vuex'
 export default {
   name: 'RimbursementAudit',
   directives: { permission },
@@ -131,6 +132,11 @@ export default {
       planDate: '',
       tableData: []
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   watch: {
     'seachValue.pagenum': {
@@ -237,10 +243,7 @@ export default {
       this.init()
     },
     handleSelectionChange(val) {
-      // console.log(val)
       this.selection(val, 'ID')
-      console.log(this.pageSelection)
-      console.log(this.selectIds)
     },
     changeDateFun() {
       if (this.planDate) {

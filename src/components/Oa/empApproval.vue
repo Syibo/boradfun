@@ -202,6 +202,7 @@ import { addEmployee,
   getDepartmentList,
   getEmployeeDetail } from '@/api/employee'
 import { TYPEVALUE } from '@/utils/const'
+import { retFileName } from '@/utils/common'
 import Label from '@/components/common/Label.vue'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
@@ -300,6 +301,7 @@ export default {
         this.dialogVisible = true
       }
     },
+    retFileName,
     async getDepartmentList() {
       const res = await getDepartmentList()
       this.departmentList = res.data

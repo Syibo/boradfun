@@ -236,7 +236,8 @@ export default {
       userType: 0,
       departmentList: [],
       rules: rules,
-      ruleForm: ruleForm
+      ruleForm: ruleForm,
+      resumeArr: []
     }
   },
   watch: {

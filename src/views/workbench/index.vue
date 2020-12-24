@@ -232,6 +232,7 @@ export default {
     goDetail,
     open(type, id) {
       this.title = '编辑'
+      console.log(type)
       switch (type) {
         case 'Overtime':
           this.WorkApprovalId = id
@@ -251,6 +252,14 @@ export default {
           break
         default:
           break
+      }
+      if (type === 'Expense') {
+        this.$router.push({
+          path: 'reimbursement/remiDetail',
+          query: {
+            id
+          }
+        })
       }
     },
     addSuccApp() {

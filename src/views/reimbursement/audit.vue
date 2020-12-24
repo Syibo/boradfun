@@ -17,11 +17,15 @@
           value-format="yyyy-MM-dd"
           @change="changeDateFun"
         />
+        <el-button type="primary" style="margin-left: 10px" @click="resert">重置</el-button>
       </div>
-      <el-button type="primary" style="margin-left: 10px" @click="resert">重置</el-button>
+      <div class="right">
+        <el-button v-permission="[8]" type="primary" @click="downUnPaidFun">导出待支付表格</el-button>
+      </div>
     </el-row>
 
-    <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
+    <el-table ref="multipleTable" :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}" @selection-change="handleSelectionChange">
+      <el-table-column v-if="roles[0] === 8" type="selection" width="55" :selectable="checkboxSelect" />
       <el-table-column align="center" label="申请编号">
         <template slot-scope="scope">
           <span class="bule-hover" @click="openDrawer(scope.row.ID)"> #{{ scope.row.ID }} </span>
@@ -94,9 +98,12 @@
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import RemiDrawer from './reimDrawer'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
-import { getRemiList, getRemiDetail } from '@/api/remi'
+import { getRemiList, getRemiDetail, downUnpaid } from '@/api/remi'
 import { parseTime } from '@/utils/common'
 import AttStatus from '@/components/Oa/AttStatus'
+import { TableSelections } from '@/mixins/TableSelections'
+import Moment from 'moment'
+import { mapGetters } from 'vuex'
 export default {
   name: 'RimbursementAudit',
   directives: { permission },
@@ -104,6 +111,7 @@ export default {
     RemiDrawer,
     AttStatus
   },
+  mixins: [TableSelections],
   data() {
     return {
       activeName: 'all',
@@ -125,6 +133,19 @@ export default {
       tableData: []
     }
   },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
+  },
+  watch: {
+    'seachValue.pagenum': {
+      handler() {
+        this.pageSelection = []
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.init()
   },
@@ -134,6 +155,53 @@ export default {
       if (res.ret === 0) {
         this.tableData = res.data.list
         this.total = res.data.total
+        this.tableData = res.data.list.map((item) => {
+          if (this.selectIds.includes(item.ID)) {
+            item.CHECKED = true
+          }
+          return item
+        })
+        this.selectionAsDataSource()
+      }
+    },
+    /**
+     * 选择对应的row (供父组件调用)
+     * @param {Number} index 要选中的行
+     */
+    selectionRow(index) {
+      this.$refs.multipleTable.toggleRowSelection(this.tableData[index], true)
+    },
+    /**
+     * 遍历dataSource 选中
+     * 用于参数配置了 CHECKED 属性之后默认选中
+     */
+    selectionAsDataSource() {
+      this.tableData.forEach((item, index) => {
+        if (item['CHECKED']) {
+          this.$nextTick(() => this.selectionRow(index))
+        }
+      })
+    },
+    async downUnPaidFun() {
+      if (this.selectIds.length === 0) {
+        this.$message.error('当前没有选择导出数据')
+        return
+      }
+      const ids = this.selectIds.join(',')
+      const res = await downUnpaid(ids)
+      const blob = new Blob([res])
+      const fileName = `${Moment(new Date()).format('YYYY-MM-DD')}.xlsx`
+      if ('download' in document.createElement('a')) {
+        const link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = fileName
+        link.style.display = 'none'
+        document.body.appendChild(link)
+        link.click()
+        window.URL.revokeObjectURL(link.href)
+        document.body.removeChild(link)
+      } else {
+        window.navigator.msSaveBlob(blob, fileName)
       }
     },
     retWorkflowLabel,
@@ -174,6 +242,9 @@ export default {
     changeSeach() {
       this.init()
     },
+    handleSelectionChange(val) {
+      this.selection(val, 'ID')
+    },
     changeDateFun() {
       if (this.planDate) {
         this.seachValue.application_date_begin = this.planDate
@@ -184,6 +255,13 @@ export default {
         this.seachValue.application_date_end = ''
       }
       this.init()
+    },
+    checkboxSelect(row, rowIndex) {
+      if (row.status === 'Unpaid') {
+        return true // 禁用
+      } else {
+        return false // 不禁用
+      }
     },
     resert() {
       this.seachValue = {

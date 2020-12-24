@@ -72,7 +72,7 @@
           <div id="copy_num" class="num">{{ card }} <el-button type="text" @click="copyFun">复制</el-button></div>
         </div>
         <div class="pass-btn">
-          <el-button v-if="btnType !== ''" :type="btnType === 'Paid' ? 'success' : 'error'" style="margin-right: 10px">{{ btnType === 'Paid' ? '已支付' : '驳回' }}</el-button>
+          <el-button v-if="btnType !== ''" :type="btnType === 'Paid' ? 'success' : 'danger'" style="margin-right: 10px">{{ btnType === 'Paid' ? '已支付' : '驳回' }}</el-button>
           <el-dropdown v-else @command="handleCommand">
             <el-button type="primary">
               待支付<i class="el-icon-arrow-down el-icon--right" />
@@ -139,16 +139,15 @@ export default {
         const res = await getRemiDetail(this.id)
         if (res.ret === 0) {
           this.active = this.getaActive(res.data.work_flow.nodes)
+          const activeRe = this.getaActive(res.data.work_flow.nodes, true)
           this.info = res.data.info
           this.workflow = res.data.work_flow.nodes
-          console.log(this.active)
-          console.log(this.roles)
-          if (this.active >= 2 && this.roles[0] !== 8) {
+          if (activeRe >= 2 && this.roles[0] !== 8) {
             this.pass = false
           }
-          if (this.active >= 3 && this.roles[0] === 8) {
+          if (activeRe >= 3 && this.roles[0] === 8) {
             this.pass = false
-            if (this.active === 4) {
+            if (activeRe === 4) {
               console.log(res.data.work_flow.nodes[3].status)
               this.btnType = res.data.work_flow.nodes[3].status
             }
@@ -159,7 +158,7 @@ export default {
     async getDebitCard() {
       const res = await getDebitCard(this.id)
       if (res.ret === 0) {
-        this.card = res.data
+        this.card = res.data.CardID
       }
     },
     getaActive,

@@ -100,3 +100,31 @@ export function downUnpaid(ids) {
     responseType: 'arraybuffer'
   })
 }
+/**
+ * 项目交付创建
+ */
+export function sublimtProject(data) {
+  return requestDown({
+    url: `/v1/project`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 项目交付过滤字段
+ */
+export function sublimtProjectFilter() {
+  return requestDown({
+    url: `/v1/project/filter`,
+    method: 'get'
+  })
+}
+/**
+ * 项目交付列表
+ */
+export function getProjectList({ pagenum, pagesize, period_time, project_name }) {
+  return requestDown({
+    url: `/v1/project?pagenum=${pagenum}&pagesize=${pagesize}&period_time=${period_time}&project_name=${project_name}`,
+    method: 'get'
+  })
+}

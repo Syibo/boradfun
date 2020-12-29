@@ -62,7 +62,7 @@
         :show-file-list="false"
         :on-success="oneUpload"
       >
-        <el-button icon="el-icon-upload" size="small" type="text">上传结算数据</el-button>
+        <el-button icon="el-icon-upload2" size="small" type="text">上传结算数据</el-button>
       </el-upload>
       <el-table :data="diaData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
         <el-table-column prop="project_name" align="center" label="项目名称" />

@@ -41,8 +41,8 @@
     </div>
 
     <el-dialog title="上传结算数据" :visible.sync="dialogVisible" :close-on-click-modal="false" width="1000px" @close="clsoe">
-      <el-form ref="ruleForm" label-position="top" :model="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="请选择交付周期" prop="name">
+      <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="请选择交付周期" prop="time">
           <el-date-picker
             v-model="ruleForm.time"
             type="daterange"
@@ -101,6 +101,11 @@ export default {
       ruleForm: {
         time: ''
       },
+      rules: {
+        time: [
+          { required: true, message: '请选择交付日期', trigger: 'change' }
+        ]
+      },
       seachValue: {
         pagenum: 1,
         pagesize: 10,
@@ -118,7 +123,7 @@ export default {
   },
   computed: {
     isCeo() {
-      return this.email === 'ralph.ma@broadfun.cn'
+      return this.email === 'qianqian.niu@broadfun.cn'
     }
   },
   async mounted() {
@@ -152,7 +157,6 @@ export default {
       this.seachValue.project_name = ''
       this.seachValue.pagenum = 1
       this.seachValue.pagesize = 10
-      // this.search()
       this.tableData = []
     },
     handleClick() {},
@@ -170,7 +174,6 @@ export default {
     },
     dateChange() {
       this.paramsData.period_time = this.ruleForm.time.join('-')
-      console.log(this.paramsData.period_time)
     },
     oneUpload(response, file, fileList) {
       if (response.ret === 0) {
@@ -179,13 +182,30 @@ export default {
         this.$message.error(response.msg)
       }
     },
-    async submitForm() {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.sublimtProject()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async sublimtProject() {
       const res = await sublimtProject(this.diaData)
       if (res.ret === 0) {
         this.dialogVisible = false
+        this.$message.success('上传数据成功')
       }
     },
-    clsoe() {}
+    clsoe() {
+      this.diaData = []
+      this.ruleForm.time = ''
+      if (this.$refs['ruleForm']) {
+        this.$refs['ruleForm'].resetFields()
+      }
+    }
   }
 }
 </script>

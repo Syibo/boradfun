@@ -18,12 +18,13 @@
                 <span v-else class="level_class B">{{ item.level }}</span>
               </div>
               <div class="cus_type"> {{ item.type === 0 ? "内部客户" : "外部客户" }} </div>
+              <i class="el-icon-edit edit-cla" @click.stop="handEditBtn(item)" />
             </div>
           </el-card>
         </el-col>
       </el-row>
 
-      <el-dialog title="新增客户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @open="open">
+      <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false" width="500px" @close="open">
         <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="客户编号" prop="number">
             <el-input v-model="ruleForm.number" maxlength="10" show-word-limit placeholder="请输入客户编号" />
@@ -86,7 +87,7 @@
 </template>
 
 <script>
-import { getClientList, addClient } from '@/api/customer'
+import { getClientList, addClient, editClient } from '@/api/customer'
 import { getUserList } from '@/api/user'
 import Moment from 'moment'
 export default {
@@ -103,6 +104,7 @@ export default {
         mainManageId: '',
         subManageId: ''
       },
+      title: '新增客户',
       options: [],
       rules: {
         name: [
@@ -145,6 +147,7 @@ export default {
       this.serviceList = res.data.users
     },
     add() {
+      this.title = '新增客户'
       this.dialogVisible = true
     },
     goCusInfo(id) {
@@ -159,7 +162,12 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          this.addClient(form)
+
+          if (this.title === '新增客户') {
+            this.addClient(form)
+          } else {
+            this.editClient(form)
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -173,6 +181,26 @@ export default {
         this.init()
         this.dialogVisible = false
       }
+    },
+    async editClient(form) {
+      const res = await editClient(form)
+      if (res.ret === 0) {
+        this.$message.success('客户编辑成功')
+        this.init()
+        this.dialogVisible = false
+      }
+    },
+    handEditBtn(item) {
+      this.title = '编辑客户'
+      this.ruleForm.ID = item.ID
+      this.ruleForm.name = item.name
+      this.ruleForm.number = item.number
+      this.ruleForm.type = item.type
+      this.ruleForm.level = item.level
+      this.ruleForm.saleId = item.saleId
+      this.ruleForm.mainManageId = item.mainManageId || ''
+      this.ruleForm.subManageId = item.subManageId || ''
+      this.dialogVisible = true
     },
     getMoment(date) {
       return Moment(date).format('YYYY-MM-DD HH:mm:ss')
@@ -209,6 +237,7 @@ export default {
     flex-direction: column;
     margin-bottom: 10px;
     cursor: pointer;
+    position: relative;
     .cus_num {
       color: #999;
       margin-bottom: 10px;
@@ -223,12 +252,23 @@ export default {
         display: flex;
         align-items: center;
       }
+      .edit-cla {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        display: none;
+      }
     }
     .cus_type {
       display: flex;
       flex: 1;
       justify-content: flex-end;
       color: #8592A6;
+    }
+  }
+  .box-card:hover {
+    .edit-cla {
+      display: block;
     }
   }
   .server_info {

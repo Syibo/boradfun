@@ -36,6 +36,25 @@ export function addClient(data) {
 }
 
 /**
+ * 编辑客户
+ */
+export function editClient(data) {
+  return request({
+    url: `/v1/client/${data.ID}`,
+    method: 'put',
+    data: {
+      level: data.level,
+      mainManageId: Number(data.mainManageId),
+      name: data.name,
+      number: data.number,
+      saleId: Number(data.saleId),
+      subManageId: Number(data.subManageId),
+      type: data.type
+    }
+  })
+}
+
+/**
  * 根据客户id查询客户
  * @param id 客户id
  */

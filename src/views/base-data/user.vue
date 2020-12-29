@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button :disabled="true" type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
           <el-button :disabled="true" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -34,7 +34,7 @@
       />
     </div>
 
-    <el-dialog title="新增用户" :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" @close="open">
+    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false" width="400px" @close="open">
       <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="ruleForm.name" placeholder="请输入姓名" />
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { userLeader, addUser, getUserList } from '@/api/user'
+import { userLeader, addUser, getUserList, editUser } from '@/api/user'
 export default {
   name: 'User',
   data() {
@@ -87,6 +87,7 @@ export default {
       pageNum: 1,
       pageSize: 10,
       total: 0,
+      title: '新增用户',
       ruleForm: {
         name: '',
         email: '',
@@ -125,7 +126,17 @@ export default {
     this.getUserLeader()
   },
   methods: {
-    handleClick() {},
+    handleClick(item) {
+      this.ruleForm.ID = item.ID
+      this.ruleForm.name = item.name
+      this.ruleForm.email = item.email
+      this.ruleForm.wx = item.wx
+      this.ruleForm.phone = item.phone
+      this.ruleForm.userType = item.userType
+      this.ruleForm.leaderId = item.leaderId
+      this.title = '编辑用户'
+      this.dialogVisible = true
+    },
     async getUserLeader() {
       const res = await userLeader()
       this.options = res.data
@@ -138,13 +149,18 @@ export default {
       }
     },
     add() {
+      this.title = '新增用户'
       this.dialogVisible = true
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const form = this.ruleForm
-          this.addUser(form)
+          if (this.title === '新增用户') {
+            this.addUser(form)
+          } else {
+            this.editUser(form)
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -155,6 +171,14 @@ export default {
       const res = await addUser(form)
       if (res.ret === 0) {
         this.$message.success('新增用户成功')
+        this.dialogVisible = false
+        this.init()
+      }
+    },
+    async editUser(form) {
+      const res = await editUser(form)
+      if (res.ret === 0) {
+        this.$message.success('编辑用户成功')
         this.dialogVisible = false
         this.init()
       }

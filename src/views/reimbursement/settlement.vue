@@ -57,7 +57,6 @@
       <el-upload
         class="upload-demo"
         :headers="myHeaders"
-        :data="paramsData"
         name="file"
         :action="`${api}/v1/project/details`"
         :show-file-list="false"
@@ -157,6 +156,7 @@ export default {
       this.seachValue.project_name = ''
       this.seachValue.pagenum = 1
       this.seachValue.pagesize = 10
+      this.totalDeliveryValue = ''
       this.tableData = []
     },
     handleClick() {},
@@ -193,15 +193,17 @@ export default {
       })
     },
     async sublimtProject() {
-      const res = await sublimtProject(this.diaData)
+      const res = await sublimtProject(this.paramsData.period_time, this.diaData)
       if (res.ret === 0) {
         this.dialogVisible = false
         this.$message.success('上传数据成功')
+        this.init()
       }
     },
     clsoe() {
       this.diaData = []
       this.ruleForm.time = ''
+      this.paramsData.period_time = ''
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }

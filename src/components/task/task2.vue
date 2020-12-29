@@ -40,9 +40,9 @@
             <el-select v-model="baseData.realServiceId" style="width: 100%" placeholder="请选择任务类型">
               <el-option
                 v-for="item in service"
-                :key="item.ID"
-                :label="item.serviceName"
-                :value="item.ID"
+                :key="item.service_id"
+                :label="item.service_name"
+                :value="item.service_id"
               />
             </el-select>
           </span>
@@ -156,7 +156,7 @@ export default {
       if (res.ret === 0) {
         this.baseData = JSON.parse(JSON.stringify(res.data))
         this.datacopy = JSON.parse(JSON.stringify(res.data))
-        if (res.data.expDeliverTime === '0001-01-01 00:00:00') {
+        if (res.data.expDeliverTime === '0001-01-01 00:00:00' || res.data.expDeliverTime === '') {
           this.baseData.expEndTime = _.replace(this.baseData.expEndDate, '00:00:00', '18:00:00')
           this.baseData.expDeliverTime = Moment(this.baseData.expEndTime).subtract(3, 'hours').format('YYYY-MM-DD HH:mm:ss')
           this.baseData.realServiceId = this.baseData.serviceId
@@ -175,10 +175,10 @@ export default {
         this.$message.error('请保存当前需求')
         return
       }
-      if (this.baseData.taskDetail.instanceTxt === '' || this.baseData.taskDetail.instanceMv === '') {
-        this.$message.error('内网地址不完整')
-        return
-      }
+      // if (this.baseData.taskDetail.instanceTxt === '' || this.baseData.taskDetail.instanceMv === '') {
+      //   this.$message.error('内网地址不完整')
+      //   return
+      // }
       this.$confirm('确认冻结此任务?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
@@ -228,6 +228,7 @@ export default {
       ruleFormInfo.expDeliverTime = this.baseData.expDeliverTime
       ruleFormInfo.expEndTime = this.baseData.expEndTime
       ruleFormInfo.reUse = ruleFormInfo.reUse.join(',')
+      console.log(ruleFormInfo)
       const res = await saveTaskInfo({ id: this.taskId, data: ruleFormInfo })
       if (res.ret === 0) {
         this.$message.success('保存成功')

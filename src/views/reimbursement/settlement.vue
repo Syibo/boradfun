@@ -57,13 +57,12 @@
       <el-upload
         class="upload-demo"
         :headers="myHeaders"
-        :data="paramsData"
         name="file"
         :action="`${api}/v1/project/details`"
         :show-file-list="false"
         :on-success="oneUpload"
       >
-        <el-button icon="el-icon-upload" size="small" type="text">上传结算数据</el-button>
+        <el-button icon="el-icon-upload2" size="small" type="text">上传结算数据</el-button>
       </el-upload>
       <el-table :data="diaData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
         <el-table-column prop="project_name" align="center" label="项目名称" />
@@ -157,6 +156,7 @@ export default {
       this.seachValue.project_name = ''
       this.seachValue.pagenum = 1
       this.seachValue.pagesize = 10
+      this.totalDeliveryValue = ''
       this.tableData = []
     },
     handleClick() {},
@@ -193,15 +193,17 @@ export default {
       })
     },
     async sublimtProject() {
-      const res = await sublimtProject(this.diaData)
+      const res = await sublimtProject(this.paramsData.period_time, this.diaData)
       if (res.ret === 0) {
         this.dialogVisible = false
         this.$message.success('上传数据成功')
+        this.init()
       }
     },
     clsoe() {
       this.diaData = []
       this.ruleForm.time = ''
+      this.paramsData.period_time = ''
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }

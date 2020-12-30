@@ -103,9 +103,9 @@ export function downUnpaid(ids) {
 /**
  * 项目交付创建
  */
-export function sublimtProject(data) {
+export function sublimtProject(period_time, data) {
   return requestDown({
-    url: `/v1/project`,
+    url: `/v1/project?period_time=${period_time}`,
     method: 'post',
     data
   })

@@ -327,13 +327,11 @@ export default {
                   const obj = this.leaveList.find((item2) => {
                     return String(item2.ID) === item
                   })
-                  ta.push(obj)
+                  if (obj) {
+                    ta.push(obj)
+                  }
                 })
                 this.leaveData = ta
-                // const obj = this.leaveList.find((item) => {
-                //   return item.ID === this.checkList[0]
-                // })
-                // this.leaveData = [obj]
               }
             } else {
               this.tableData = []
@@ -597,7 +595,9 @@ export default {
         const obj = this.leaveList.find((item2) => {
           return String(item2.ID) === item
         })
-        ta.push(obj)
+        if (obj) {
+          ta.push(obj)
+        }
       })
       this.leaveData = ta
       if (this.tableData) {

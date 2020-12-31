@@ -41,8 +41,7 @@ export const STATUSVALUEADD = [
 export const TYPEVALUE = [
   { value: 'workday', label: '工作日' },
   { value: 'weekend', label: '周末' },
-  { value: 'holiday', label: '节假日' },
-  { value: 'home', label: '在家办公' }
+  { value: 'holiday', label: '节假日' }
 ]
 
 /**

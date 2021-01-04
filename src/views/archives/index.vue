@@ -138,7 +138,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="身份证号" prop="id_card">
+                  <el-form-item label="身份证号">
                     <el-input v-model="ruleForm.id_card" placeholder="身份证号" />
                   </el-form-item>
                 </el-col>
@@ -451,13 +451,13 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item>
-                  <template slot="label"><span class="form-label-slot">企业邮箱<span>（IT填写）</span></span></template>
+                  <template slot="label"><span class="form-label-slot">企业邮箱<span>（HR填写）</span></span></template>
                   <el-input v-model="ruleForm.email" placeholder="请输入企业邮箱" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item>
-                  <template slot="label"><span class="form-label-slot">企业微信<span>（IT填写）</span></span></template>
+                  <template slot="label"><span class="form-label-slot">企业微信<span>（HR填写）</span></span></template>
                   <el-input v-model="ruleForm.wx_work" placeholder="请输入企业微信" />
                 </el-form-item>
               </el-col>
@@ -465,7 +465,7 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item>
-                  <template slot="label"><span class="form-label-slot">TAPD<span>（IT填写）</span></span></template>
+                  <template slot="label"><span class="form-label-slot">TAPD<span>（HR填写）</span></span></template>
                   <el-input v-model="ruleForm.tapd" placeholder="请输入TAPD" />
                 </el-form-item>
               </el-col>
@@ -559,6 +559,7 @@ import { getEmployeeList,
   putEmployeeDetail,
   getContractsAllDetail,
   getDepartmentLevelList,
+  getDepartmentServiceList,
   getDepartmentList,
   delEmployeeId,
   getContractsDetail } from '@/api/employee'
@@ -586,6 +587,7 @@ export default {
         contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
         trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
       },
+      serviceList: [],
       seachValue: {
         pagenum: 1,
         pagesize: 10,
@@ -729,6 +731,13 @@ export default {
         } else {
           this.levelList = []
         }
+        const resSer = await getDepartmentServiceList(this.ruleForm.department_id)
+        if (resSer.ret === 0 && resSer.data) {
+          this.serviceList = resSer.data
+          console.log(resSer)
+        } else {
+          this.serviceList
+        }
       }
       this.dialogVisible = true
     },
@@ -785,6 +794,13 @@ export default {
         this.levelList = res.data
       } else {
         this.levelList = []
+      }
+      const resSer = await getDepartmentServiceList(value)
+      if (resSer.ret === 0 && resSer.data) {
+        this.serviceList = resSer.data
+        console.log(resSer)
+      } else {
+        this.serviceList
       }
     },
     async openCon(row) {

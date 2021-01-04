@@ -133,7 +133,7 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="身份证号" prop="id_card">
+              <el-form-item label="身份证号">
                 <el-input v-model="ruleForm.id_card" maxlength="18" show-word-limit placeholder="请输入身份证号" />
               </el-form-item>
             </el-col>
@@ -204,7 +204,7 @@
             <el-col :span="12">
               <el-form-item label="服务线" prop="service_line">
                 <el-select v-model="ruleForm.service_line" placeholder="请选择服务线" style="width: 100%">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-option v-for="item in serviceList" :key="item.service_name" :label="item.service_name" :value="item.service_name" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -223,22 +223,22 @@
         <Label :title="'账号信息'" />
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 7 ? 'email' : ''">
-              <template slot="label"><span class="form-label-slot">企业邮箱<span>（IT填写）</span></span></template>
+            <el-form-item prop="email">
+              <template slot="label"><span class="form-label-slot">企业邮箱<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.email" placeholder="请输入企业邮箱" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :prop="userType === 7 ? 'wx_work' : ''">
-              <template slot="label"><span class="form-label-slot">企业微信<span>（IT填写）</span></span></template>
+            <el-form-item prop="wx_work">
+              <template slot="label"><span class="form-label-slot">企业微信<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.wx_work" placeholder="请输入企业微信" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item :prop="userType === 7 ? 'tapd' : ''">
-              <template slot="label"><span class="form-label-slot">TAPD<span>（IT填写）</span></span></template>
+            <el-form-item prop="tapd">
+              <template slot="label"><span class="form-label-slot">TAPD<span>（HR填写）</span></span></template>
               <el-input v-model="ruleForm.tapd" placeholder="请输入TAPD" />
             </el-form-item>
           </el-col>
@@ -290,6 +290,7 @@ import { mapGetters } from 'vuex'
 import { getDepartmentList,
   getEmployeeList,
   getDepartmentLevelList,
+  getDepartmentServiceList,
   addEmployee,
   putEmployeeStatus,
   putEmployee,
@@ -347,7 +348,8 @@ export default {
       userType: 0,
       statusId: 0,
       statusType: 0,
-      resumeArr: []
+      resumeArr: [],
+      serviceList: []
     }
   },
   computed: {
@@ -414,6 +416,13 @@ export default {
       } else {
         this.levelList = []
       }
+      const resSer = await getDepartmentServiceList(value)
+      if (resSer.ret === 0 && resSer.data) {
+        this.serviceList = resSer.data
+        console.log(resSer)
+      } else {
+        this.serviceList
+      }
     },
     async handleClick(row) {
       this.title = '编辑'
@@ -457,6 +466,13 @@ export default {
         this.levelList = resL.data
       } else {
         this.levelList = []
+      }
+      const resSer = await getDepartmentServiceList(res.data.department_id)
+      if (resSer.ret === 0 && resSer.data) {
+        this.serviceList = resSer.data
+        console.log(resSer)
+      } else {
+        this.serviceList
       }
       const resEle = await getEmployeeWorkflow(row.ID)
       this.ruleForm.seat_number = resEle.data.elements[1].value

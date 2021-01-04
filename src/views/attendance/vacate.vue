@@ -57,10 +57,12 @@
                   :key="item.ID"
                   :icon="retWorkflowIcon(item.status)"
                   :title="item.user ? item.user.name : ''"
-                  :description="retWorkflowLabel(item.status)"
                 >
                   <template slot="icon">
                     <i :class="retWorkflowIcon(item.status)" />
+                  </template>
+                  <template slot="description">
+                    <span>{{ retWorkflowLabel(item.status) }}</span>
                   </template>
                 </el-step>
               </el-steps>

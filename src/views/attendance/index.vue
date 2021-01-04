@@ -295,6 +295,7 @@ export default {
       return false
     },
     handDayClick(data) {
+      this.checkList = []
       setTimeout(() => {
         if (Moment(this.nowDate).format('YYYY-MM-DD').substring(5, 7) !== Moment(this.value).format('YYYY-MM-DD').substring(5, 7)) {
           (async() => {
@@ -587,6 +588,7 @@ export default {
       }
     },
     async checkboxChange() {
+      console.log(this.isConfirm)
       /**
        * 目前只做了关联一条记录的 后续后端接口支持再优化
        */
@@ -601,11 +603,34 @@ export default {
       })
       this.leaveData = ta
       if (this.tableData) {
-        const row = this.tableData[0]
-        row.leave_id = this.checkList.join(',')
-        const res = await putWorkAttendanceTmp(row)
-        if (res.ret === 0) {
-          this.$message.success('关联请假成功')
+        /**
+         * 判断是否是已确认的数据
+         */
+        if (this.isConfirm === 1) {
+          const obj = {
+            ID: this.tableData[0].ID,
+            dept: this.tableData[0].dept,
+            name: this.tableData[0].name,
+            attendance_date: this.tableData[0].attendance_date,
+            check_in: this.tableData[0].check_time,
+            check_out: this.tableData[1].check_time,
+            in_status: this.tableData[0].status,
+            out_status: this.tableData[1].status,
+            in_result: this.tableData[0].result,
+            out_result: this.tableData[1].result,
+            leave_id: this.checkList.join(',')
+          }
+          const res = await await putWorkAttendance(obj)
+          if (res.ret === 0) {
+            this.$message.success('修改成功')
+          }
+        } else {
+          const row = this.tableData[0]
+          row.leave_id = this.checkList.join(',')
+          const res = await putWorkAttendanceTmp(row)
+          if (res.ret === 0) {
+            this.$message.success('关联请假成功')
+          }
         }
       }
     },

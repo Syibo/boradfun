@@ -23,6 +23,15 @@ export function getDepartmentLevelList(id) {
     method: 'get'
   })
 }
+/**
+ * 部门下服务线
+ */
+export function getDepartmentServiceList(id) {
+  return request({
+    url: `/v1/department/service/${id}`,
+    method: 'get'
+  })
+}
 
 /**
  * 删除员工
@@ -65,7 +74,7 @@ export function addEmployee({ name, gender, status, mobile, id_card, interview_c
       mobile,
       id_card,
       interview_comment,
-      resume, email, wx_work, tapd, service_line, department_id, leader_id,
+      resume, email, wx_work, tapd, service_line: String(service_line), department_id, leader_id,
       level_id, position, entry_date, seat_number, device_req, plan_date
     }
   })

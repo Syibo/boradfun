@@ -622,14 +622,14 @@ export default {
           }
           const res = await await putWorkAttendance(obj)
           if (res.ret === 0) {
-            this.$message.success('修改成功')
+            this.$message.success('操作成功')
           }
         } else {
           const row = this.tableData[0]
           row.leave_id = this.checkList.join(',')
           const res = await putWorkAttendanceTmp(row)
           if (res.ret === 0) {
-            this.$message.success('关联请假成功')
+            this.$message.success('操作成功')
           }
         }
       }

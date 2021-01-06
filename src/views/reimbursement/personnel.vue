@@ -2,23 +2,67 @@
   <div class="container settlement-container">
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="planDate" placeholder="编号" />
-        <el-date-picker
-          v-model="planDate"
-          style="width: 250px;margin-left: 10px"
-          type="week"
-          placeholder="选择日期"
-          format="yyyy 第 WW 周"
-          :picker-options="optiondate"
-          value-format="yyyy-MM-dd"
-        />
+        <el-select v-model="seachValue.project_name" multiple placeholder="请选择项目" style="width: 200px; margin-right: 20px">
+          <el-option v-for="item in projectList" :key="item" :label="item" :value="item" />
+        </el-select>
+        <el-radio v-model="radio" label="1">按周
+          <el-date-picker
+            v-model="planDate"
+            :disabled="radio === '2'"
+            style="width: 150px;"
+            type="week"
+            placeholder="选择周"
+            format="yyyy 第 WW 周"
+            :picker-options="optiondate"
+            value-format="yyyy-MM-dd"
+          />
+        </el-radio>
+        <el-radio v-model="radio" label="2">按月
+          <el-date-picker
+            v-model="planDate"
+            :disabled="radio === '1'"
+            style="width: 150px;"
+            type="week"
+            placeholder="选择月"
+            format="yyyy 第 WW 周"
+            :picker-options="optiondate"
+            value-format="yyyy-MM-dd"
+          />
+        </el-radio>
+        <el-button type="primary">查询</el-button>
+        <el-button>取消</el-button>
       </div>
       <div class="right">
         <el-button type="primary">上传表格数据</el-button>
       </div>
     </el-row>
 
-    <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
+    <el-row :gutter="20" class="three">
+      <el-col :span="8">
+        <div class="three-item">
+          <div class="top">任务总成本</div>
+          <div class="num">12</div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="three-item">
+          <div class="top">总耗时</div>
+          <div class="num">322</div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="three-item">
+          <div class="top">总人数</div>
+          <div class="num">322</div>
+        </div>
+      </el-col>
+    </el-row>
+
+    <PersonTable />
+    <PersonTable />
+    <PersonTable />
+
+    <!-- <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column label="申请人">
         <template slot-scope="scope">
           <span class="bule-hover"> {{ scope.row.e_name }} </span>
@@ -41,19 +85,26 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
+import PersonTable from './personTable'
+// import { getProjectList } from '@/api/remi'
 export default {
   name: 'Personnel',
   directives: { permission },
+  components: {
+    PersonTable
+  },
   data() {
     return {
-      activeName: 'first',
+      projectList: ['项目1', '项目2', '项目3'],
+      radio: '1',
       seachValue: {
+        project_name: '',
         pagenum: 1,
         pagesize: 10,
         name: '',
@@ -64,13 +115,8 @@ export default {
       },
       total: 0,
       planDate: '',
-      tableData: [
-        { e_name: '#67566', name: '33' }
-      ],
+      tableData: [],
       optiondate: {
-        // disabledDate(date) {
-        //   return date.getDay() === 2 || date.getDay() === 6
-        // },
         'firstDayOfWeek': 1
       }
     }
@@ -97,5 +143,22 @@ export default {
     font-size: 12px;
     margin-bottom: 10px;
   }
+  .three {
+   margin-bottom: 10px;
+   margin-top: 20px;
+   .three-item {
+     min-height: 100px;
+     background: #f0f3f6;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     padding: 0 20px;
+     border-radius: 5px;
+     .top {
+       margin-bottom: 10px;
+       color: #666;
+     }
+   }
+ }
 }
 </style>

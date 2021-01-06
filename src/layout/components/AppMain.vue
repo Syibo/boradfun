@@ -36,11 +36,13 @@ export default {
 }
 .table-top .left {
   display: flex;
+  align-items: center;
 }
 .table-top .right {
   flex: 1;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 .baradfun-top {
   display: flex;

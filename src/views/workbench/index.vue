@@ -2,7 +2,7 @@
   <div class="container workbench-container">
     <el-tabs v-model="activeName" v-permission="[6, 7, 8, 10]" @tab-click="handleClick">
       <el-tab-pane :label="`待办 · ${total}`" name="first">
-        <div v-permission="[6, 7, 10]" class="workbench-con">
+        <div v-permission="[6, 7, 8, 10]" class="workbench-con">
           <div v-for="work in workData" :key="work.ID" class="item">
             <div class="left">
               <el-button type="text" @click="open(work.definition.workflow_purpose, work.EntityID)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>
@@ -48,7 +48,7 @@
         </div>
       </el-tab-pane>
       <el-tab-pane :label="`已完成 · ${totalDone}`" name="second">
-        <div v-permission="[6, 7, 10]" class="workbench-con">
+        <div v-permission="[6, 7, 8, 10]" class="workbench-con">
           <div v-for="work in workDataDone" :key="work.ID" class="item">
             <div class="left">
               <el-button type="text" @click="open(work.definition.workflow_purpose, work.EntityID)">{{ retWorkflowEntity(work.definition.workflow_purpose) }}</el-button>

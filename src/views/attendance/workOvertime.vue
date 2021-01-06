@@ -1,6 +1,6 @@
 <template>
   <div class="container workOvertime-container">
-    <el-tabs v-model="activeName" v-permission="[1, 6, 10]" @tab-click="handleClick">
+    <el-tabs v-model="activeName" v-permission="[1, 6, 9, 10]" @tab-click="handleClick">
       <el-tab-pane v-if="roles.indexOf(6)!=-1" label="加班记录" name="first" />
       <el-tab-pane label="我的申请" name="second" />
       <el-tab-pane label="待我审核" name="third" />
@@ -72,7 +72,7 @@
       <el-table-column v-if="activeName === 'third'" align="center" label="操作">
         <template slot-scope="sope">
           <el-button type="text" :disabled="sope.row.status === 'Approved' || sope.row.status === 'Rejected'" @click="openCheck(sope.row)">编辑</el-button>
-          <el-button v-permission="[6]" type="text" @click="timeCheck(sope.row)">时长校验</el-button>
+          <el-button v-permission="[9]" type="text" @click="timeCheck(sope.row)">时长校验</el-button>
         </template>
       </el-table-column>
     </el-table>

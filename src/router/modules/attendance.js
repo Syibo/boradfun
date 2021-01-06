@@ -16,7 +16,7 @@ const attendanceRouter = {
       path: 'month',
       component: () => import('@/views/attendance/index'),
       name: '考勤日历',
-      meta: { title: '考勤日历', roles: [6] }
+      meta: { title: '考勤日历', roles: [6, 8] }
     },
     // {
     //   path: 'day',

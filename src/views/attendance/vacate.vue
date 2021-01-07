@@ -183,7 +183,7 @@ export default {
           pagesize: 10,
           name: '',
           type: '',
-          status: '',
+          status: 'NA',
           myreq: '',
           mytodo: true
         }

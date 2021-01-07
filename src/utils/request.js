@@ -81,12 +81,6 @@ service.interceptors.response.use(
       title: '错误',
       message: '请求超时，请检查网络！'
     })
-    // Message.closeAll()
-    // Message({
-    //   message: '请求超时，请检查网络！',
-    //   type: 'error',
-    //   duration: 5 * 1000
-    // })
     return Promise.reject(error)
   }
 )

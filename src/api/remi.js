@@ -6,6 +6,10 @@
  */
 import request from '@/utils/request'
 import requestDown from '@/utils/request-down'
+// import requestFormdata from '@/utils/request-formdata'
+// const config = {
+//   headers: { 'Content-Type': 'multipart/form-data' }
+// }
 /**
  * 获取报销项目
  */
@@ -104,7 +108,7 @@ export function downUnpaid(ids) {
  * 项目交付创建
  */
 export function sublimtProject(period_time, data) {
-  return requestDown({
+  return request({
     url: `/v1/project?period_time=${period_time}`,
     method: 'post',
     data
@@ -114,7 +118,7 @@ export function sublimtProject(period_time, data) {
  * 项目交付过滤字段
  */
 export function sublimtProjectFilter() {
-  return requestDown({
+  return request({
     url: `/v1/project/filter`,
     method: 'get'
   })
@@ -123,8 +127,39 @@ export function sublimtProjectFilter() {
  * 项目交付列表
  */
 export function getProjectList({ pagenum, pagesize, period_time, project_name }) {
-  return requestDown({
+  return request({
     url: `/v1/project?pagenum=${pagenum}&pagesize=${pagesize}&period_time=${period_time}&project_name=${project_name}`,
+    method: 'get'
+  })
+}
+/**
+ * 创建engagement
+ */
+export function creatEengagement(fromData) {
+  return request({
+    url: `/v1/engagement`,
+    method: 'post',
+    data: fromData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+/**
+ * 人员管理周数据列表
+ */
+export function getEngagement({ pagenum, pagesize, period_time }) {
+  return request({
+    url: `/v1/engagement/period?pagenum=${pagenum}&pagesize=${pagesize}&period_time=${period_time}`,
+    method: 'get'
+  })
+}
+/**
+ * 人员管理周数据详细
+ */
+export function getEngagementDetail({ period_time }) {
+  return request({
+    url: `/v1/engagement/period/detail?period_time=${period_time}`,
     method: 'get'
   })
 }

@@ -122,7 +122,7 @@ export default {
   },
   computed: {
     isCeo() {
-      return this.email === 'qianqian.niu@broadfun.cn'
+      return this.email === 'ralph.ma@broadfun.cn'
     }
   },
   async mounted() {

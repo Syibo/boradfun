@@ -2,8 +2,8 @@
   <div class="container settlement-container">
     <el-row v-if="isCeo" class="table-top">
       <div class="left">
-        <el-select v-model="listValue.engagement_codes" multiple placeholder="请选择项目" style="width: 200px; margin-right: 20px">
-          <el-option v-for="item in projectList" :key="item" :label="item" :value="item" />
+        <el-select v-model="listValue.engagement_codes" multiple placeholder="请选择项目" style="width: 250px; margin-right: 20px" clearable>
+          <el-option v-for="item in projectList" :key="item.ID" :label="`${item.engagement_code_desc} - ${item.engagement_code}`" :value="item.engagement_code" />
         </el-select>
         <el-radio v-model="radio" label="1">按周
           <el-date-picker
@@ -119,7 +119,7 @@ import PersonTable from './personTable'
 import PersonDetail from './personDetail'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import { creatEengagement, getEngagement, getEngagementList } from '@/api/remi'
+import { creatEengagement, getEngagement, getEngagementList, getEngagementProject } from '@/api/remi'
 import Moment from 'moment'
 export default {
   name: 'Personnel',
@@ -135,7 +135,7 @@ export default {
       api: '',
       dialogVisible: false,
       personDetailVisible: false,
-      projectList: ['10001'],
+      projectList: [],
       radio: '1',
       seachValue: {
         project_name: '',
@@ -193,6 +193,7 @@ export default {
     }
     if (this.isCeo) {
       console.log('not ceo')
+      this.getEngagementProject()
     } else {
       this.getEngagement()
     }
@@ -202,6 +203,12 @@ export default {
       const res = await getEngagement(this.getValue)
       if (res.ret === 0) {
         this.list = res.data
+      }
+    },
+    async getEngagementProject() {
+      const res = await getEngagementProject()
+      if (res.ret === 0) {
+        this.projectList = res.data
       }
     },
     async checkDetail(period_time) {

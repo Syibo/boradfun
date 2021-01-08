@@ -166,9 +166,20 @@ export function getEngagementDetail({ period_time }) {
 /**
  * 项目列表
  */
-export function getEngagementList({ engagement_codes = '10001', begin_time, end_time }) {
+export function getEngagementList({ engagement_codes = [], begin_time, end_time }) {
+  const engagement_codesString = engagement_codes.join(',')
+  console.log(engagement_codesString)
   return request({
-    url: `/v1/engagement?engagement_codes=${engagement_codes}&begin_time=${begin_time}&end_time=${end_time}`,
+    url: `/v1/engagement?engagement_codes=${engagement_codesString}&begin_time=${begin_time}&end_time=${end_time}`,
+    method: 'get'
+  })
+}
+/**
+ * 获取项目
+ */
+export function getEngagementProject() {
+  return request({
+    url: `/v1/engagement/project`,
     method: 'get'
   })
 }

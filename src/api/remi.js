@@ -163,3 +163,12 @@ export function getEngagementDetail({ period_time }) {
     method: 'get'
   })
 }
+/**
+ * 项目列表
+ */
+export function getEngagementList({ engagement_codes = '10001', begin_time, end_time }) {
+  return request({
+    url: `/v1/engagement?engagement_codes=${engagement_codes}&begin_time=${begin_time}&end_time=${end_time}`,
+    method: 'get'
+  })
+}

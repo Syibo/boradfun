@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="详情" :visible.sync="visible" :close-on-click-modal="false" width="80%" @close="closeVisble">
+  <el-dialog title="详情" :visible.sync="visible" :close-on-click-modal="false" width="1000px" @close="closeVisble">
     <el-table :data="diaData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="engagement_code" align="center" label="项目编号" />
       <el-table-column prop="employee_name" align="center" label="员工" />

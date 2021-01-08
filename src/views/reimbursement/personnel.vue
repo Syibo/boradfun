@@ -2,12 +2,12 @@
   <div class="container settlement-container">
     <el-row v-if="isCeo" class="table-top">
       <div class="left">
-        <el-select v-model="seachValue.project_name" multiple placeholder="请选择项目" style="width: 200px; margin-right: 20px">
+        <el-select v-model="listValue.engagement_codes" multiple placeholder="请选择项目" style="width: 200px; margin-right: 20px">
           <el-option v-for="item in projectList" :key="item" :label="item" :value="item" />
         </el-select>
         <el-radio v-model="radio" label="1">按周
           <el-date-picker
-            v-model="planDate"
+            v-model="weekDate"
             :disabled="radio === '2'"
             style="width: 150px;"
             type="week"
@@ -15,22 +15,24 @@
             format="yyyy 第 WW 周"
             :picker-options="optiondate"
             value-format="yyyy-MM-dd"
+            @change="weekChange"
           />
         </el-radio>
         <el-radio v-model="radio" label="2">按月
           <el-date-picker
-            v-model="planDate"
+            v-model="monthDate"
             :disabled="radio === '1'"
             style="width: 150px;"
-            type="week"
+            type="month"
             placeholder="选择月"
-            format="yyyy 第 WW 周"
+            format="yyyy 第 MM 月"
             :picker-options="optiondate"
             value-format="yyyy-MM-dd"
+            @change="monthChange"
           />
         </el-radio>
-        <el-button type="primary">查询</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="search">查询</el-button>
+        <el-button @click="cancel">取消</el-button>
       </div>
       <!-- <div class="right">
         <el-button type="primary" @click="uploadData">上传表格数据</el-button>
@@ -64,24 +66,24 @@
       <el-col :span="8">
         <div class="three-item">
           <div class="top">任务总成本</div>
-          <div class="num">12</div>
+          <div class="num"> {{ detailData.cost_summary }} </div>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="three-item">
           <div class="top">总耗时</div>
-          <div class="num">322</div>
+          <div class="num">{{ detailData.hour_summary }}</div>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="three-item">
           <div class="top">总人数</div>
-          <div class="num">322</div>
+          <div class="num"> {{ detailData.employee_nums }} </div>
         </div>
       </el-col>
     </el-row>
 
-    <PersonTable v-if="false" />
+    <PersonTable v-for="(item, index) in detailData.list" :key="index" :data="item" />
 
     <el-dialog title="" :visible.sync="dialogVisible" :close-on-click-modal="false" width="1000px">
       <el-upload
@@ -117,7 +119,7 @@ import PersonTable from './personTable'
 import PersonDetail from './personDetail'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import { creatEengagement, getEngagement } from '@/api/remi'
+import { creatEengagement, getEngagement, getEngagementList } from '@/api/remi'
 import Moment from 'moment'
 export default {
   name: 'Personnel',
@@ -133,7 +135,7 @@ export default {
       api: '',
       dialogVisible: false,
       personDetailVisible: false,
-      projectList: ['项目1', '项目2', '项目3'],
+      projectList: ['10001'],
       radio: '1',
       seachValue: {
         project_name: '',
@@ -150,6 +152,11 @@ export default {
         pagesize: 100,
         period_time: ''
       },
+      listValue: {
+        engagement_codes: '',
+        begin_time: '',
+        end_time: ''
+      },
       total: 0,
       planDate: '',
       tableData: [],
@@ -160,7 +167,15 @@ export default {
       headerValue: [],
       email: '',
       file: {},
-      list: []
+      list: [],
+      detailData: {
+        cost_summary: 0,
+        employee_nums: 0,
+        hour_summary: 0,
+        list: []
+      },
+      weekDate: '',
+      monthDate: ''
     }
   },
   computed: {
@@ -178,7 +193,6 @@ export default {
     }
     if (this.isCeo) {
       console.log('not ceo')
-      // this.getEngagement()
     } else {
       this.getEngagement()
     }
@@ -207,6 +221,20 @@ export default {
     uploadData() {
       this.dialogVisible = true
     },
+    async search() {
+      const res = await getEngagementList(this.listValue)
+      if (res.ret === 0 && res.data.list) {
+        this.detailData = res.data
+      } else {
+        this.detailData = {
+          cost_summary: 0,
+          employee_nums: 0,
+          hour_summary: 0,
+          list: []
+        }
+        this.$message.error('暂无数据')
+      }
+    },
     beforeUpload(file) {
       this.file = file
     },
@@ -229,6 +257,44 @@ export default {
       } else {
         this.$message.error('导入失败')
       }
+    },
+    // 按周查询
+    weekChange() {
+      if (this.weekDate) {
+        const end = Moment(this.weekDate).add(5, 'days').format('YYYY-MM-DD')
+        const start = Moment(this.weekDate).subtract(1, 'days').format('YYYY-MM-DD')
+        this.listValue.begin_time = start
+        this.listValue.end_time = end
+      } else {
+        this.listValue.begin_time = ''
+        this.listValue.end_time = ''
+      }
+    },
+    // 按月查询
+    monthChange() {
+      if (this.monthDate) {
+        const lastDay = new Date(this.monthDate.substring(0, 4), this.monthDate.substring(5, 7), 0).getDate()
+        this.listValue.begin_time = this.monthDate
+        this.listValue.end_time = `${this.monthDate.substring(0, 4)}-${this.monthDate.substring(5, 7)}-${lastDay}`
+      } else {
+        this.seachValue.application_date_begin = ''
+        this.seachValue.application_date_end = ''
+      }
+    },
+    cancel() {
+      this.detailData = {
+        cost_summary: 0,
+        employee_nums: 0,
+        hour_summary: 0,
+        list: []
+      }
+      this.listValue = {
+        engagement_codes: '',
+        begin_time: '',
+        end_time: ''
+      }
+      this.weekDate = ''
+      this.monthDate = ''
     },
     handleClick() {},
     handleSizeChange(val) {

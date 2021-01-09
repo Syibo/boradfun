@@ -8,6 +8,7 @@ import Layout from '@/layout'
 import employeesRouter from './modules/employees'
 import archivesRouter from './modules/archives'
 import attendanceRouter from './modules/attendance'
+import propertyRouter from './modules/property'
 import { reimbursementRouter, personnelRouter, settlementRouter } from './modules/reimbursement'
 
 /* Router Modules */
@@ -118,7 +119,8 @@ export const asyncRoutes = [
   attendanceRouter,
   reimbursementRouter,
   personnelRouter,
-  settlementRouter
+  settlementRouter,
+  propertyRouter
 
   // {
   //   path: '/base',

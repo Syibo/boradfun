@@ -76,16 +76,7 @@ export default {
   data() {
     return {
       active: 1,
-      tableData: [
-        {
-          name: '沈意波',
-          DepartmentID: '合研',
-          ServiceLine: '前端开发',
-          EntryDate: '2020-02-03',
-          Mobile: 18720573255,
-          Status: '未入职'
-        }
-      ],
+      tableData: [],
       dialogVisible: false,
       innerVisibleCheck: false,
       pageNum: 1,

@@ -1,6 +1,10 @@
 <template>
   <div class="container myproperty-container">
-    我的资产
+    <div class="left">
+      <div class="top">设备</div>
+      <div class="bot">易耗品</div>
+    </div>
+    <div class="right">已归还</div>
   </div>
 </template>
 
@@ -16,6 +20,26 @@ export default {
 
 <style lang="scss" scoped>
 .myproperty-container {
+  // background-color:#F7F8FA;
   background-color: white;
+  display: flex;
+  .left {
+    background-color:#F7F8FA;
+    flex: 1;
+    border-right: 10px solid white;
+    .top {
+      min-height: 200px;
+      border-bottom: 10px solid white;;
+      padding: 10px;
+    }
+    .bot {
+      padding: 10px;
+    }
+  }
+  .right {
+    width: 400px;
+    background-color:#F7F8FA;
+    padding: 10px;
+  }
 }
 </style>

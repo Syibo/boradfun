@@ -43,6 +43,13 @@ export const propertyRouter = {
       meta: { title: '易耗品' }
     },
     {
+      path: 'comsumdetail',
+      component: () => import('@/views/property/comsumdetail'),
+      name: '易耗品详情',
+      hidden: true,
+      meta: { title: '易耗品详情' }
+    },
+    {
       path: 'info',
       component: () => import('@/views/property/info'),
       name: '资产信息表',

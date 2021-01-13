@@ -2,28 +2,55 @@
   <div class="container equipment-container">
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="seachValue.emp_no" placeholder="请输入员工编号" clearable @input="seachFun" />
-        <el-input v-model="seachValue.name" placeholder="请输入员工姓名" style="width: 100%;margin-left: 10px" clearable @input="seachFun" />
-        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%;margin: 0 10px" clearable @change="seachFun">
-          <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
+        <el-select v-model="seachValue.device_category" placeholder="类别" style="width: 100%;margin-right: 10px" clearable>
+          <el-option v-for="item in DECVICECATEGORY" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-button type="primary">搜索</el-button>
+        <el-select v-model="seachValue.device_status" placeholder="状态" style="width: 100%;margin-right: 10px" clearable>
+          <el-option v-for="item in DECVICESTATUS" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+        <el-input v-model="seachValue.keyword" placeholder="搜索" style="width: 100%;margin-right: 10px" clearable />
+        <el-button type="primary" @click="searchFun">搜索</el-button>
       </div>
       <div class="right">
-        <el-button type="primary" @click="putFromFun">设备入库</el-button>
-        <el-button>列设置</el-button>
+        <el-button type="primary" class="margin-r-10 " @click="putFromFun">设备入库</el-button>
+        <!-- <el-button>列设置</el-button> -->
+        <el-popover
+          placement="bottom"
+          width="100"
+          trigger="click"
+        >
+          <el-checkbox-group v-model="checkList">
+            <el-checkbox label="存储容量" />
+            <el-checkbox label="版本" />
+            <el-checkbox label="屏幕尺寸" />
+            <el-checkbox label="分辨率" />
+            <el-checkbox label="屏幕比" />
+          </el-checkbox-group>
+          <el-row class="margin-t-10" type="flex" justify="end">
+            <el-button size="mini">确定</el-button>
+          </el-row>
+          <el-button slot="reference">列设置</el-button>
+        </el-popover>
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="emp_no" align="center" label="资产名称" />
-      <el-table-column prop="name" align="center" label="资产标签" />
-      <el-table-column prop="department.department_name" align="center" label="申请单数量" />
-      <el-table-column prop="position" align="center" label="序列号" />
-      <el-table-column prop="" align="center" label="型号" />
-      <el-table-column prop="req_user" align="center" label="类别" />
-      <el-table-column prop="create_time" align="center" label="状态" />
-      <el-table-column prop="create_time" align="center" label="领用人" />
-      <el-table-column prop="create_time" align="center" label="运存" />
+      <el-table-column prop="device_name" align="center" label="资产名称" />
+      <el-table-column prop="device_code" align="center" label="资产标签" />
+      <el-table-column prop="" align="center" label="申请单数量">
+        <template slot-scope="scope">
+          {{ retNum(scope.row.device_applys) || 0 }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="device_code" align="center" label="序列号" />
+      <el-table-column prop="device_model" align="center" label="型号" />
+      <el-table-column prop="device_category" align="center" label="类别" />
+      <el-table-column prop="device_status" align="center" label="状态" />
+      <el-table-column align="center" label="领用人">
+        <template slot-scope="scope">
+          {{ retName(scope.row.device_applys) || '' }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="mem" align="center" label="运存" />
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="recipientsFun">申请领用</el-button>
@@ -45,7 +72,7 @@
       />
     </div>
 
-    <PutFrom :visible="dialogVisible" @close="close" />
+    <PutFrom :visible="dialogVisible" @close="close" @success="putSuccess" />
     <RecipientsFrom :visible="dialogVisibleRec" @close="close" />
     <LendFrom :visible="dialogVisibleLeng" @close="close" />
   </div>
@@ -55,6 +82,8 @@
 import PutFrom from '@/components/Property/PutFrom'
 import RecipientsFrom from '@/components/Property/RecipientsFrom'
 import LendFrom from '@/components/Property/LendFrom'
+import { getDeviceList } from '@/api/property'
+import { DECVICECATEGORY, DECVICESTATUS } from '@/utils/const'
 export default {
   name: 'Equipment',
   components: {
@@ -64,14 +93,15 @@ export default {
   },
   data() {
     return {
+      checkList: [],
+      DECVICECATEGORY,
+      DECVICESTATUS,
       seachValue: {
         pagenum: 1,
         pagesize: 10,
-        name: '',
-        departmentid: '',
-        status: 3,
-        emp_no: '',
-        flow: 2
+        device_category: '',
+        device_status: '',
+        keyword: ''
       },
       tableData: [
         { emp_no: '三星' }
@@ -83,7 +113,27 @@ export default {
       dialogVisibleLeng: false
     }
   },
+  mounted() {
+    this.init()
+  },
   methods: {
+    async init() {
+      const res = await getDeviceList(this.seachValue)
+      if (res.ret === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      } else {
+        this.tableData = []
+        this.total = 0
+      }
+    },
+    searchFun() {
+      this.init()
+    },
+    putSuccess() {
+      this.dialogVisible = false
+      this.init()
+    },
     putFromFun() {
       this.dialogVisible = true
     },
@@ -101,7 +151,21 @@ export default {
     handleDel() {},
     seachFun() {},
     handleSizeChange() {},
-    handleCurrentChange() {}
+    handleCurrentChange() {},
+    retNum(num) {
+      if (num && num.length) {
+        return num.length
+      } else {
+        return 0
+      }
+    },
+    retName(num) {
+      if (num && num.length) {
+        return num[0].e_name
+      } else {
+        return ''
+      }
+    }
   }
 }
 </script>

@@ -70,6 +70,18 @@ export default {
   color: #1F8DFB;
   cursor: pointer;
 }
+.margin-b-10 {
+  margin-bottom: 10px;
+}
+.margin-t-10 {
+  margin-top: 10px;
+}
+.margin-r-10 {
+  margin-right: 10px;
+}
+.margin-l-10 {
+  margin-left: 10px;
+}
 .dialog-container .el-dialog__header {
   padding: 0;
 }

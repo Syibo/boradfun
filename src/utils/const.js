@@ -78,4 +78,38 @@ export const WORKFLOW = [
   { value: 'Expense', label: '报销流程' }
 ]
 
+/**
+ * 易耗品类别
+ */
+export const CATEGORY = [
+  { value: 'IT', label: 'IT耗件' },
+  { value: 'IT', label: '办公用品' }
+]
+
+/**
+ * 设备分类
+ */
+export const DECVICECATEGORY = [
+  { value: 'PC', label: 'PC' },
+  { value: 'Laptop', label: 'Laptop' },
+  { value: 'iMac', label: 'iMac' },
+  { value: 'Mobile', label: 'Mobile' },
+  { value: 'Pad', label: 'Pad' },
+  { value: 'Monitor', label: 'Monitor' },
+  { value: 'Network', label: 'Network' }
+]
+
+/**
+ * 设备分类
+ */
+export const DECVICESTATUS = [
+  { value: 'Free', label: '空闲' },
+  { value: 'Possessed', label: '占有' },
+  { value: 'Fixing', label: '维修' },
+  { value: 'Ingoing', label: '入库' },
+  { value: 'Outgoing', label: '出库' },
+  { value: 'Scrap', label: '报销' },
+  { value: 'Return', label: '归还' }
+]
+
 export const DOWNURL = 'http://172.16.9.195:9000'

@@ -2,25 +2,35 @@
   <div class="container consumable-container">
     <el-row class="table-top">
       <div class="left">
-        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%" clearable @change="seachFun">
-          <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
+        <el-select v-model="seachValue.category" placeholder="类别" style="width: 150px" clearable>
+          <el-option v-for="item in CATEGORY" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-input v-model="seachValue.emp_no" style="width: 120px;margin: 0 10px" placeholder="请输入员工编号" clearable @input="seachFun" />
-        <el-button type="primary">搜索</el-button>
+        <el-input v-model="seachValue.keyword" style="width: 150px;margin: 0 10px" placeholder="搜索" clearable />
+        <el-button type="primary" @click="seachFun">搜索</el-button>
       </div>
       <div class="right">
-        <el-button type="primary">易耗品入库</el-button>
+        <el-button type="primary" @click="openFrom">易耗品入库</el-button>
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="emp_no" align="center" label="申请编号" />
-      <el-table-column prop="name" align="center" label="资产编号" />
-      <el-table-column prop="department.department_name" align="center" label="品牌" />
-      <el-table-column prop="" align="center" label="型号" />
-      <el-table-column prop="req_user" align="center" label="类别" />
-      <el-table-column prop="create_time" align="center" label="项目" />
-      <el-table-column prop="create_time" align="center" label="申请时间" />
-      <el-table-column prop="create_time" align="center" label="是否需要归还" />
+      <el-table-column prop="emp_no" align="center" label="序号">
+        <template slot-scope="scope">
+          <span class="bule-hover" @click="goDetail(scope.row.ID)">{{ scope.row.ID }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="low_price_article_category" align="center" label="类别" />
+      <el-table-column prop="low_price_article_name" align="center" label="资产名称" />
+      <el-table-column prop="brand" align="center" label="品牌" />
+      <el-table-column prop="total_quantity" align="center" label="入库数量" />
+      <el-table-column prop="ingoing_time" align="center" label="入库时间" />
+      <el-table-column prop="create_time" align="center" label="操作人" />
+      <el-table-column prop="outgoing_quantity" align="center" label="已借出" />
+      <el-table-column prop="create_time" align="center" label="剩余可用" />
+      <el-table-column prop="create_time" align="center" label="是否需要归还">
+        <template slot-scope="scope">
+          {{ scope.row.need_return === 0 ? '否' : '是' }}
+        </template>
+      </el-table-column>
     </el-table>
 
     <div class="broadfun_block">
@@ -34,48 +44,72 @@
         @current-change="handleCurrentChange"
       />
     </div>
+
+    <ConsumableFrom :visible="consumableFromVisible" @close="close" @success="success" />
   </div>
 </template>
 
 <script>
+import { getLowPriceArticle } from '@/api/property'
+import ConsumableFrom from '@/components/Property/ConsumableFrom'
+import { CATEGORY } from '@/utils/const'
 export default {
   name: 'Consumable',
+  components: {
+    ConsumableFrom
+  },
   data() {
     return {
+      CATEGORY,
+      consumableFromVisible: false,
       seachValue: {
         pagenum: 1,
         pagesize: 10,
-        name: '',
-        departmentid: '',
-        status: 3,
-        emp_no: '',
-        flow: 2
+        category: '',
+        keyword: ''
       },
-      tableData: [
-        { emp_no: '三星' }
-      ],
+      tableData: [],
       total: 0,
       departmentList: []
     }
   },
+  mounted() {
+    this.init()
+  },
   methods: {
-    putFromFun() {
-      this.dialogVisible = true
+    async init() {
+      const res = await getLowPriceArticle(this.seachValue)
+      if (res.ret === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      } else {
+        this.tableData = []
+        this.total = 0
+      }
+    },
+    goDetail(id) {
+      this.$router.push({
+        path: '/property/comsumdetail',
+        query: {
+          id
+        }
+      })
+    },
+    openFrom() {
+      this.consumableFromVisible = true
     },
     close() {
-      this.dialogVisible = false
-      this.dialogVisibleRec = false
-      this.dialogVisibleLeng = false
+      this.consumableFromVisible = false
     },
-    recipientsFun() {
-      this.dialogVisibleRec = true
-    },
-    lendFun() {
-      this.dialogVisibleLeng = true
+    success() {
+      this.consumableFromVisible = false
+      this.init()
     },
     handleClick() {},
     handleDel() {},
-    seachFun() {},
+    seachFun() {
+      this.init()
+    },
     handleSizeChange() {},
     handleCurrentChange() {}
   }

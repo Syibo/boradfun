@@ -55,7 +55,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="recipientsFun">申请领用</el-button>
           <el-button type="text" size="small" @click="lendFun(scope.row)">借出</el-button>
-          <el-button type="text" size="small" @click="handleDel(scope.row)">编辑</el-button>
+          <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,7 +72,7 @@
       />
     </div>
 
-    <PutFrom :visible="dialogVisible" @close="close" @success="putSuccess" />
+    <PutFrom :id="putId" :visible="dialogVisible" :title="putTitle" @close="close" @success="putSuccess" />
     <RecipientsFrom :visible="dialogVisibleRec" @close="close" />
     <LendFrom :visible="dialogVisibleLeng" @close="close" />
   </div>
@@ -93,6 +93,8 @@ export default {
   },
   data() {
     return {
+      putTitle: '设备录入',
+      putId: 0,
       checkList: [],
       DECVICECATEGORY,
       DECVICESTATUS,
@@ -135,6 +137,8 @@ export default {
       this.init()
     },
     putFromFun() {
+      this.putTitle = '设备录入'
+      this.putId = 0
       this.dialogVisible = true
     },
     close() {
@@ -147,6 +151,11 @@ export default {
     },
     lendFun() {
       this.dialogVisibleLeng = true
+    },
+    handleEdit(row) {
+      this.putTitle = '编辑设备'
+      this.putId = row.ID
+      this.dialogVisible = true
     },
     handleDel() {},
     seachFun() {},

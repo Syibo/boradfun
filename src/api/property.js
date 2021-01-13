@@ -77,3 +77,22 @@ export function addDevice(data) {
     data
   })
 }
+/**
+ * 编辑设备
+ */
+export function editDevice(data) {
+  return request({
+    url: `v1/device`,
+    method: 'put',
+    data
+  })
+}
+/**
+ * 设备详情
+ */
+export function deviceDetail(id) {
+  return request({
+    url: `v1/device/${id}`,
+    method: 'get'
+  })
+}

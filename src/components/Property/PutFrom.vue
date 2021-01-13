@@ -1,5 +1,6 @@
 <template>
-  <el-dialog title="设备入库" :visible="visible" :close-on-click-modal="false" width="800px" @close="closeVisble">
+  <!-- <div v-if="visible"> -->
+  <el-dialog :title="title" :visible="visible" :close-on-click-modal="false" width="800px" @close="closeVisble">
     <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
       <el-row>
         <el-row :gutter="20">
@@ -116,7 +117,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <!-- line -->
         <!-- line -->
         <el-row :gutter="20">
@@ -192,17 +192,26 @@
       <el-button type="primary" @click="checkBtn">确 定</el-button>
     </span>
   </el-dialog>
+  <!-- </div> -->
 </template>
 
 <script>
 import { rulesCon } from '@/views/archives/config'
-import { addDevice } from '@/api/property'
+import { addDevice, deviceDetail, editDevice } from '@/api/property'
 export default {
   name: 'PutFrom',
   props: {
     visible: {
       type: Boolean,
       default: false
+    },
+    title: {
+      type: String,
+      default: '设备录入'
+    },
+    id: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -230,7 +239,7 @@ export default {
         'retailer': '', // 零售商
         'purchase_price': 0, // 购买价格
         'purchase_date': '', // 购买日期
-        'vat': 12.1, // 增值税金额
+        'vat': 0, // 增值税金额
         'warranty_period': 0, // 保修期限（月）
         'site': '', // 位置
         'is_apply': 1 // 是否可申领
@@ -242,10 +251,41 @@ export default {
       eleContractScanned: []
     }
   },
-  mounted() {},
+  watch: {
+    visible: {
+      handler(value) {
+        if (value && this.id) {
+          this.init()
+        }
+      }
+    }
+  },
   methods: {
+    async init() {
+      if (this.id) {
+        const res = await deviceDetail(this.id)
+        if (res.ret === 0) {
+          this.ruleForm = res.data
+        }
+      }
+    },
     async checkBtn() {
+      if (this.title === '设备录入') {
+        this.addFun()
+      } else {
+        this.editFun()
+      }
+    },
+    async addFun() {
       const res = await addDevice(this.ruleForm)
+      if (res.ret === 0) {
+        this.$emit('success')
+      } else {
+        // this.$emit('close')
+      }
+    },
+    async editFun() {
+      const res = await editDevice(this.ruleForm)
       if (res.ret === 0) {
         this.$emit('success')
       } else {
@@ -279,7 +319,7 @@ export default {
         'retailer': '', // 零售商
         'purchase_price': 0, // 购买价格
         'purchase_date': '', // 购买日期
-        'vat': 12.1, // 增值税金额
+        'vat': 0, // 增值税金额
         'warranty_period': 0, // 保修期限（月）
         'site': '', // 位置
         'is_apply': 1 // 是否可申领

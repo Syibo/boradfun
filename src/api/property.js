@@ -96,3 +96,54 @@ export function deviceDetail(id) {
     method: 'get'
   })
 }
+/**
+ * 申请设备选择项目和审核人
+ */
+export function deviceProjects() {
+  return request({
+    url: `v1/device/projects`,
+    method: 'get'
+  })
+}
+/**
+ * 申请设备基本信息
+ */
+export function deviceApplyInfo({ employee_id, device_id }) {
+  return request({
+    url: `v1/device/apply/info?employee_id=${employee_id}&device_id=${device_id}`,
+    method: 'get'
+  })
+}
+/**
+ * 申请设备
+ */
+export function deviceApply({ engagement_code, device_id, project, leader_id }) {
+  return request({
+    url: `v1/device/apply`,
+    method: 'post',
+    data: {
+      engagement_code,
+      device_id,
+      project,
+      leader_id
+    }
+  })
+}
+/**
+ * 设备已申请列表
+ */
+export function deviceIdApply(id) {
+  return request({
+    url: `v1/device/${id}/apply`,
+    method: 'get'
+  })
+}
+/**
+ * 申请设备列表
+ */
+export function deviceIdApplyList({ pagenum, pagesize, myreq, mytodo, status }) {
+  return request({
+    url: `v1/device/apply?pagenum=${pagenum}&pagesize=${pagesize}&myreq=${myreq}&mytodo=${mytodo}&status=${status}`,
+    method: 'get'
+  })
+}

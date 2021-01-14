@@ -25,6 +25,13 @@ export const propertyRouter = {
       meta: { title: '设备列表' }
     },
     {
+      path: 'equipdetail',
+      component: () => import('@/views/property/equipmentdetail'),
+      name: '资产详情',
+      hidden: true,
+      meta: { title: '资产详情' }
+    },
+    {
       path: 'apply',
       component: () => import('@/views/property/apply'),
       name: '我的申请',

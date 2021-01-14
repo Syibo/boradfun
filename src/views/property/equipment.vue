@@ -34,17 +34,25 @@
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="device_name" align="center" label="资产名称" />
+      <el-table-column prop="device_name" align="center" label="资产名称">
+        <template slot-scope="scope">
+          <span class="bule-hover" @click="goDetail(scope.row.ID)">{{ scope.row.device_name || '未知名称' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="device_code" align="center" label="资产标签" />
       <el-table-column prop="" align="center" label="申请单数量">
         <template slot-scope="scope">
           {{ retNum(scope.row.device_applys) || 0 }}
         </template>
       </el-table-column>
-      <el-table-column prop="device_code" align="center" label="序列号" />
+      <el-table-column prop="" align="center" label="序列号" />
       <el-table-column prop="device_model" align="center" label="型号" />
       <el-table-column prop="device_category" align="center" label="类别" />
-      <el-table-column prop="device_status" align="center" label="状态" />
+      <el-table-column prop="device_status" align="center" label="状态">
+        <template slot-scope="scope">
+          <ProStatus :status="scope.row.device_status" />
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="领用人">
         <template slot-scope="scope">
           {{ retName(scope.row.device_applys) || '' }}
@@ -53,7 +61,7 @@
       <el-table-column prop="mem" align="center" label="运存" />
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="recipientsFun">申请领用</el-button>
+          <el-button type="text" size="small" :disabled="scope.row.device_status !== 'Free'" @click="recipientsFun(scope.row)">申请领用</el-button>
           <el-button type="text" size="small" @click="lendFun(scope.row)">借出</el-button>
           <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
         </template>
@@ -73,8 +81,8 @@
     </div>
 
     <PutFrom :id="putId" :visible="dialogVisible" :title="putTitle" @close="close" @success="putSuccess" />
-    <RecipientsFrom :visible="dialogVisibleRec" @close="close" />
-    <LendFrom :visible="dialogVisibleLeng" @close="close" />
+    <RecipientsFrom :id="recipientsId" :visible="dialogVisibleRec" @close="close" @success="putSuccess" />
+    <LendFrom :id="lendId" :visible="dialogVisibleLeng" @close="close" />
   </div>
 </template>
 
@@ -82,6 +90,7 @@
 import PutFrom from '@/components/Property/PutFrom'
 import RecipientsFrom from '@/components/Property/RecipientsFrom'
 import LendFrom from '@/components/Property/LendFrom'
+import ProStatus from '@/components/Property/ProStatus'
 import { getDeviceList } from '@/api/property'
 import { DECVICECATEGORY, DECVICESTATUS } from '@/utils/const'
 export default {
@@ -89,12 +98,15 @@ export default {
   components: {
     PutFrom,
     RecipientsFrom,
-    LendFrom
+    LendFrom,
+    ProStatus
   },
   data() {
     return {
       putTitle: '设备录入',
       putId: 0,
+      recipientsId: 0,
+      lendId: 0,
       checkList: [],
       DECVICECATEGORY,
       DECVICESTATUS,
@@ -129,11 +141,20 @@ export default {
         this.total = 0
       }
     },
+    goDetail(id) {
+      this.$router.push({
+        path: '/property/equipdetail',
+        query: {
+          id
+        }
+      })
+    },
     searchFun() {
       this.init()
     },
     putSuccess() {
       this.dialogVisible = false
+      this.dialogVisibleRec = false
       this.init()
     },
     putFromFun() {
@@ -146,10 +167,12 @@ export default {
       this.dialogVisibleRec = false
       this.dialogVisibleLeng = false
     },
-    recipientsFun() {
+    recipientsFun(row) {
+      this.recipientsId = row.ID
       this.dialogVisibleRec = true
     },
-    lendFun() {
+    lendFun(row) {
+      this.lendId = row.ID
       this.dialogVisibleLeng = true
     },
     handleEdit(row) {
@@ -159,8 +182,15 @@ export default {
     },
     handleDel() {},
     seachFun() {},
-    handleSizeChange() {},
-    handleCurrentChange() {},
+    handleSizeChange(val) {
+      this.seachValue.pagenum = 1
+      this.seachValue.pagesize = val
+      this.init()
+    },
+    handleCurrentChange(val) {
+      this.seachValue.pagenum = val
+      this.init()
+    },
     retNum(num) {
       if (num && num.length) {
         return num.length

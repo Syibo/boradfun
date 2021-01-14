@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="易耗品入库" :visible="visible" :close-on-click-modal="false" width="600px" @close="closeVisble">
+  <el-dialog title="易耗品借出" :visible="visible" :close-on-click-modal="false" width="600px" @close="closeVisble">
     <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
       <el-row>
         <el-col :span="24">
@@ -27,36 +27,21 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="数量">
-            <!-- <el-input v-model="ruleForm.total_quantity" placeholder="数量" /> -->
             <el-input-number v-model="ruleForm.total_quantity" style="width: 200px;" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="零售商">
-            <el-input v-model="ruleForm.retailer" placeholder="零售商" />
+          <el-form-item label="领用人">
+            <el-input v-model="ruleForm.site" placeholder="领用人" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="购买价格">
-            <el-input-number v-model="ruleForm.purchase_price" style="width: 200px;" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="位置">
+          <el-form-item label="备注">
             <el-input v-model="ruleForm.site" placeholder="位置" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="">
-            <el-checkbox v-model="ruleForm.need_return" :true-label="1" :false-label="0">需归还</el-checkbox>
           </el-form-item>
         </el-col>
       </el-row>
@@ -73,7 +58,7 @@ import { rulesCon } from '@/views/archives/config'
 import { CATEGORY } from '@/utils/const'
 import { addLowPriceArticle } from '@/api/property'
 export default {
-  name: 'ConsumableFrom',
+  name: 'ConsumOutFrom',
   props: {
     visible: {
       type: Boolean,
@@ -107,9 +92,12 @@ export default {
       this.$emit('close')
     },
     async checkBtn() {
+      console.log(this.ruleForm)
       const res = await addLowPriceArticle(this.ruleForm)
       if (res.ret === 0) {
         this.$emit('success')
+      } else {
+        // this.$emit('close')
       }
     }
   }

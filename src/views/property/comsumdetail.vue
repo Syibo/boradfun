@@ -3,8 +3,8 @@
     <div class="top">
       <span>详情</span>
       <div>
-        <el-button type="primary">借出</el-button>
-        <el-button type="primary">报废录入</el-button>
+        <el-button type="primary" @click="openFrom">借出</el-button>
+        <el-button type="primary" @click="scrapFun">报废录入</el-button>
       </div>
     </div>
     <div class="info">
@@ -42,7 +42,7 @@
       </el-col>
       <el-col :span="5">
         <div class="three-item">
-          <div class="num">剩余可用：{{ }}</div>
+          <div class="num">剩余可用：{{ detail.total_quantity - detail.outgoing_quantity - detail.scrap_quantity }}</div>
         </div>
       </el-col>
     </el-row>
@@ -58,7 +58,7 @@
         <el-button type="primary" @click="seachFun">搜索</el-button>
       </div>
       <div class="right">
-        <el-button type="primary" @click="openFrom">批量归还</el-button>
+        <el-button type="primary">批量归还</el-button>
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
@@ -90,19 +90,29 @@
         @current-change="handleCurrentChange"
       />
     </div>
+
+    <ConsumOutFrom :visible="consumableFromVisible" @close="close" @success="success" />
+    <ConsumScrap :visible="consumScrapVisible" @close="close" @success="success" />
   </div>
 </template>
 
 <script>
 import { lowPriceArticleDetail, lowPriceArticleUutgoing } from '@/api/property'
+import ConsumOutFrom from '@/components/Property/ConsumOutFrom'
+import ConsumScrap from '@/components/Property/ConsumScrap'
 import { CATEGORY } from '@/utils/const'
 export default {
   name: 'Comsumdetail',
+  components: {
+    ConsumOutFrom,
+    ConsumScrap
+  },
   data() {
     return {
       CATEGORY,
       detail: {},
       consumableFromVisible: false,
+      consumScrapVisible: false,
       seachValue: {
         pagenum: 1,
         pagesize: 10,
@@ -139,8 +149,12 @@ export default {
     openFrom() {
       this.consumableFromVisible = true
     },
+    scrapFun() {
+      this.consumScrapVisible = true
+    },
     close() {
       this.consumableFromVisible = false
+      this.consumScrapVisible = false
     },
     success() {
       this.consumableFromVisible = false

@@ -83,7 +83,7 @@ export const WORKFLOW = [
  */
 export const CATEGORY = [
   { value: 'IT', label: 'IT耗件' },
-  { value: 'IT', label: '办公用品' }
+  { value: 'Office', label: '办公用品' }
 ]
 
 /**
@@ -110,6 +110,16 @@ export const DECVICESTATUS = [
   { value: 'Outgoing', label: '出库' },
   { value: 'Scrap', label: '报销' },
   { value: 'Return', label: '归还' }
+]
+
+/**
+ * 设备分类
+ */
+export const DECVICETYPE = [
+  { value: 'Hide', label: '隐藏' },
+  { value: 'Received', label: '已领用' },
+  { value: 'Distributed', label: '已分配' },
+  { value: 'Revoked', label: '已撤销' }
 ]
 
 export const DOWNURL = 'http://172.16.9.195:9000'

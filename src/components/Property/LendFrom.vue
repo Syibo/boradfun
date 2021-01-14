@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="设备领用申请" :visible="visible" :close-on-click-modal="false" width="800px" @close="closeVisble">
+  <el-dialog title="借出至" :visible="visible" :close-on-click-modal="false" width="800px" @close="closeVisble">
     <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
       <el-row :gutter="20">
         <el-col :span="24">
@@ -29,12 +29,17 @@
 
 <script>
 import { rulesCon } from '@/views/archives/config'
+import { deviceIdApply } from '@/api/property'
 export default {
   name: 'LengFrom',
   props: {
     visible: {
       type: Boolean,
       default: false
+    },
+    id: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -50,8 +55,21 @@ export default {
       eleContractScanned: []
     }
   },
+  watch: {
+    visible: {
+      handler(value) {
+        if (value && this.id) {
+          this.init()
+        }
+      }
+    }
+  },
   mounted() {},
   methods: {
+    async init() {
+      const res = await deviceIdApply(this.id)
+      console.log(res)
+    },
     closeVisble() {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()

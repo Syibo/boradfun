@@ -7,12 +7,15 @@
     </el-tabs>
     <el-row class="table-top">
       <div class="left">
-        <el-select v-model="seachValue.departmentid" placeholder="所属部门" style="width: 100%" clearable @change="seachFun">
-          <el-option v-for="item in departmentList" :key="item.ID" :label="item.department_name" :value="item.ID" />
+        <el-select v-model="seachValue.device_category" placeholder="类别" style="width: 100%;margin-right: 10px" clearable>
+          <el-option v-for="item in DECVICECATEGORY" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+        <el-select v-model="seachValue.departmentid" placeholder="全部节点" style="width: 100%" clearable>
+          <el-option v-for="item in DECVICETYPE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
       <div class="right">
-        <el-input v-model="seachValue.emp_no" style="width: 120px;margin: 0 10px" placeholder="请输入员工编号" clearable @input="seachFun" />
+        <el-input v-model="seachValue.emp_no" style="width: 120px;margin: 0 10px" placeholder="搜索" clearable @input="seachFun" />
         <el-button type="primary">搜索</el-button>
       </div>
     </el-row>
@@ -48,19 +51,21 @@
 </template>
 
 <script>
+import { deviceIdApplyList } from '@/api/property'
+import { DECVICECATEGORY, DECVICETYPE } from '@/utils/const'
 export default {
   name: 'MyAudit',
   data() {
     return {
+      DECVICECATEGORY,
+      DECVICETYPE,
       activeName: 'first',
       seachValue: {
         pagenum: 1,
         pagesize: 10,
-        name: '',
-        departmentid: '',
-        status: 3,
-        emp_no: '',
-        flow: 2
+        myreq: '',
+        mytodo: true,
+        status: ''
       },
       tableData: [
         { emp_no: '三星' }
@@ -69,7 +74,20 @@ export default {
       departmentList: []
     }
   },
+  mounted() {
+    this.init()
+  },
   methods: {
+    async init() {
+      const res = await deviceIdApplyList(this.seachValue)
+      if (res.ret === 0) {
+        this.tableData = res.data.list
+        this.total = res.data.total
+      } else {
+        this.tableData = []
+        this.total = 0
+      }
+    },
     putFromFun() {
       this.dialogVisible = true
     },

@@ -73,6 +73,9 @@ export default {
 .margin-b-10 {
   margin-bottom: 10px;
 }
+.margin-b-20 {
+  margin-bottom: 20px;
+}
 .margin-t-10 {
   margin-top: 10px;
 }

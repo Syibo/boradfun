@@ -198,11 +198,12 @@ export default {
         }
       }
     },
-    contractParty: {
-      deep: true,
+    visible: {
       handler(value) {
-        this.ruleForm.contract_party = value
-        this.ruleForm.ID = this.id
+        if (value && this.contractParty) {
+          this.ruleForm.contract_party = this.contractParty
+          this.ruleForm.ID = this.id
+        }
       }
     }
   },

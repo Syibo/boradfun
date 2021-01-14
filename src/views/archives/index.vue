@@ -59,7 +59,7 @@
       />
     </div>
 
-    <el-dialog title="新建离职" :visible.sync="dialogVisible" top="50px" :close-on-click-modal="false" :show-close="false" width="80%" class="dialog-container" @close="close">
+    <el-dialog :visible.sync="dialogVisible" top="50px" :close-on-click-modal="false" :show-close="false" width="80%" class="dialog-container" @close="close">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
           员工详情
@@ -720,8 +720,9 @@ export default {
         if (this.ruleForm.employee_basic === null) {
           this.ruleForm.employee_basic = ruleForm.employee_basic
         } else {
-          this.ruleForm.employee_basic.relations = JSON.parse(this.ruleForm.employee_basic.relations)
-          this.ruleForm.employee_basic.contacts = JSON.parse(this.ruleForm.employee_basic.contacts)
+          this.ruleForm.employee_basic.relations = res.data.employee_basic.relations === '' ? [] : JSON.parse(res.data.employee_basic.relations)
+          this.ruleForm.employee_basic.contacts = res.data.employee_basic.contacts === '' ? [] : JSON.parse(res.data.employee_basic.contacts)
+          // console.log(JSON.parse(this.ruleForm.employee_basic.inhabited_city))
           this.ruleForm.employee_basic.inhabited_city = this.ruleForm.employee_basic.inhabited_city ? JSON.parse(this.ruleForm.employee_basic.inhabited_city) : []
           this.getUploadArr()
         }
@@ -734,7 +735,6 @@ export default {
         const resSer = await getDepartmentServiceList(this.ruleForm.department_id)
         if (resSer.ret === 0 && resSer.data) {
           this.serviceList = resSer.data
-          console.log(resSer)
         } else {
           this.serviceList
         }
@@ -774,9 +774,9 @@ export default {
     },
     async editEmp() {
       const parms = JSON.parse(JSON.stringify(this.ruleForm))
-      parms.employee_basic.relations = JSON.stringify(parms.employee_basic.relations)
-      parms.employee_basic.contacts = JSON.stringify(parms.employee_basic.contacts)
-      parms.employee_basic.inhabited_city = JSON.stringify(parms.employee_basic.inhabited_city)
+      parms.employee_basic.relations = parms.employee_basic.relations ? JSON.stringify(parms.employee_basic.relations) : ''
+      parms.employee_basic.contacts = parms.employee_basic.contacts ? JSON.stringify(parms.employee_basic.contacts) : ''
+      parms.employee_basic.inhabited_city = parms.employee_basic.inhabited_city ? JSON.stringify(parms.employee_basic.inhabited_city) : ''
       parms.age = Number(parms.age)
       const res = await putEmployeeDetail(parms)
       if (res.ret === 0) {
@@ -820,8 +820,8 @@ export default {
         if (this.baseData.employee_basic === null) {
           this.baseData.employee_basic = ruleForm.employee_basic
         } else {
-          this.baseData.employee_basic.relations = JSON.parse(res.data.employee_basic.relations)
-          this.baseData.employee_basic.contacts = JSON.parse(res.data.employee_basic.contacts)
+          this.baseData.employee_basic.relations = res.data.employee_basic.relations === '' ? [] : JSON.parse(res.data.employee_basic.relations)
+          this.baseData.employee_basic.contacts = res.data.employee_basic.contacts === '' ? [] : JSON.parse(res.data.employee_basic.contacts)
         }
       }
       this.$refs.archivesDrawer.openDrawer()

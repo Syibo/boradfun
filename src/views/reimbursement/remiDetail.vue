@@ -1,6 +1,15 @@
 <template>
   <div class="container remide-container">
-    <Label title="申请信息" />
+    <el-row type="flex">
+      <el-row style="flex: 1">
+        <Label title="申请信息" />
+      </el-row>
+      <el-row>
+        <!-- <Label title="申请信息" /> -->
+        <el-button type="primary" @click="checkBtn">提交</el-button>
+        <el-button @click="goBack">取消</el-button>
+      </el-row>
+    </el-row>
     <el-row :gutter="20" class="three">
       <el-col :span="8">
         申请人: {{ info.e_name }}
@@ -11,7 +20,13 @@
     </el-row>
     <el-table :data="info.expense_details" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column type="index" width="50" label="序号" />
-      <el-table-column prop="ocurred_date" align="center" label="发生时间" />
+      <el-table-column prop="ocurred_date" align="center" label="发生时间" width="200">
+        <template slot-scope="scope">
+          <el-row type="flex" align="center" justify="center">
+            <el-col> {{ scope.row.ocurred_date }} <el-button class="margin-l-10" type="text" @click="getLeavebydate(scope.row.ocurred_date)"> 查看考勤 </el-button> </el-col>
+          </el-row>
+        </template>
+      </el-table-column>
       <el-table-column prop="expense_account.expense_account_name" align="center" label="报销科目" />
       <el-table-column prop="expense_amount" align="center" label="费用金额" />
       <el-table-column prop="remarks1" align="center" label="备注一" />
@@ -99,6 +114,7 @@ import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import { getRemiDetail, putRemi, putRemiPaid, getDebitCard } from '@/api/remi'
 import { mapGetters } from 'vuex'
+import { getLeavebydate } from '@/api/work'
 export default {
   name: 'RemiDetail',
   directives: { permission },
@@ -161,6 +177,12 @@ export default {
         this.card = res.data.CardID
       }
     },
+    async getLeavebydate(date) {
+      const res = await getLeavebydate({ date, name: this.info.e_name })
+      if (res.ret === 0) {
+        console.log(res)
+      }
+    },
     getaActive,
     retWorkflowLabel,
     retWorkflowIcon,
@@ -194,11 +216,16 @@ export default {
     },
     async passfun(num) {
       this.putInfo.status = num
+    },
+    async checkBtn() {
       const res = await putRemi(this.putInfo)
       if (res.ret === 0) {
         this.pass = false
         this.init()
       }
+    },
+    goBack() {
+      this.$router.go(-1)
     }
   }
 }

@@ -70,6 +70,10 @@ export default {
   color: #1F8DFB;
   cursor: pointer;
 }
+.top-search {
+  width: 200px;
+  margin-right: 10px
+}
 .margin-b-10 {
   margin-bottom: 10px;
 }

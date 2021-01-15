@@ -7,12 +7,16 @@
     </el-tabs>
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="seachValue.searchid" placeholder="编号" clearable @input="changeSeach" />
+        <el-input v-model="seachValue.searchid" placeholder="编号" class="top-search" clearable @input="changeSeach" />
+        <el-input v-model="seachValue.name" placeholder="全部申请人" class="top-search" clearable @input="changeSeach" />
+        <el-select v-model="seachValue.status" placeholder="全部状态" class="top-search" clearable @change="changeSeach">
+          <el-option v-for="item in REIMSVALUE" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
         <el-date-picker
           v-model="planDate"
-          style="width: 300px;margin-left: 10px"
+          class="top-search"
           type="month"
-          placeholder="选择日期"
+          placeholder="选择费用发生日期"
           format="yyyy 年 MM 月"
           value-format="yyyy-MM-dd"
           @change="changeDateFun"
@@ -74,7 +78,7 @@
       </el-table-column>
       <el-table-column prop="name" align="center" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" :disabled="!scope.row.status === 'NA'" @click="goDetail(scope.row.ID)">编辑</el-button>
+          <el-button type="text" :disabled="retDisable(scope.row.status)" @click="goDetail(scope.row.ID)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -104,6 +108,7 @@ import AttStatus from '@/components/Oa/AttStatus'
 import { TableSelections } from '@/mixins/TableSelections'
 import Moment from 'moment'
 import { mapGetters } from 'vuex'
+import { REIMSVALUE } from '@/utils/const'
 export default {
   name: 'RimbursementAudit',
   directives: { permission },
@@ -114,13 +119,16 @@ export default {
   mixins: [TableSelections],
   data() {
     return {
+      REIMSVALUE,
       activeName: 'all',
       seachValue: {
         pagesize: 10,
         pagenum: 1,
+        name: '',
         searchid: '',
         status: '',
         mytodo: true,
+        myreq: false,
         todostatus: '',
         application_date_begin: '',
         application_date_end: ''
@@ -262,6 +270,13 @@ export default {
       } else {
         return false // 不禁用
       }
+    },
+    retDisable(status) {
+      let disabled = false
+      if (status === 'Approved' || status === 'Rejected' || status === 'Paid') {
+        disabled = true
+      }
+      return disabled
     },
     resert() {
       this.seachValue = {

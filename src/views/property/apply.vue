@@ -25,7 +25,11 @@
       <el-table-column prop="req_user" align="center" label="类别" />
       <el-table-column prop="project" align="center" label="项目" />
       <el-table-column prop="CreatedAt" align="center" label="申请时间" />
-      <el-table-column prop="status" align="center" label="当前节点" />
+      <el-table-column align="center" label="当前节点">
+        <template slot-scope="scope">
+          <ProWorkStatus :status="scope.row.status" />
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="recipientsFun">确认领用</el-button>
@@ -51,8 +55,12 @@
 <script>
 import { deviceIdApplyList } from '@/api/property'
 import { DECVICETYPE } from '@/utils/const'
+import ProWorkStatus from '@/components/Property/ProWorkStatus'
 export default {
   name: 'MyApply',
+  components: {
+    ProWorkStatus
+  },
   data() {
     return {
       DECVICETYPE,

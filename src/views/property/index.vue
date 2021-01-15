@@ -9,12 +9,21 @@
 </template>
 
 <script>
+import { employeeOutgoing } from '@/api/property'
 export default {
   name: 'MyProperty',
   data() {
     return {}
   },
-  methods: {}
+  mounted() {
+    // this.init()
+  },
+  methods: {
+    async init() {
+      const res = await employeeOutgoing()
+      console.log(res)
+    }
+  }
 }
 </script>
 

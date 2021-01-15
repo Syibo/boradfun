@@ -147,3 +147,42 @@ export function deviceIdApplyList({ pagenum, pagesize, myreq, mytodo, status }) 
     method: 'get'
   })
 }
+/**
+ * 审核申请设备
+ */
+export function deviceApproval({ id, status, comment }) {
+  return request({
+    url: `v1/device/apply/approval`,
+    method: 'put',
+    data: {
+      id, status, comment
+    }
+  })
+}
+/**
+ * 申请设备详情
+ */
+export function deviceApprovalDetail(id) {
+  return request({
+    url: `v1/device/apply/${id}`,
+    method: 'get'
+  })
+}
+/**
+ * 申请借出
+ */
+export function deviceOutgoing({ id, device_apply_id }) {
+  return request({
+    url: `v1/device/${id}/outgoing?device_apply_id=${device_apply_id}`,
+    method: 'put'
+  })
+}
+/**
+ *  我的资产-设备借出列表
+ */
+export function employeeOutgoing() {
+  return request({
+    url: `v1/device/employee/outgoing`,
+    method: 'get'
+  })
+}

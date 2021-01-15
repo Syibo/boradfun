@@ -4,32 +4,30 @@
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item label="已申请员工" prop="annual_leave">
-            <el-radio-group v-model="ruleForm.use">
-              <el-radio :label="0"> 仗义 </el-radio>
-              <el-radio :label="1"> 沈奕博 </el-radio>
-              <el-radio :label="2"> 王凯丽 </el-radio>
+            <el-radio-group v-model="ruleForm.device_apply_id">
+              <el-radio v-for="item in lendData" :key="item.ID" :label="item.ID"> {{ item.e_name }} </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="24">
-          <el-form-item label="其他员工" prop="trial_period">
-            <el-input v-model="ruleForm.annual_leave" placeholder="设备编号" />
+          <el-form-item label="其他员工">
+            <el-input v-model="ruleForm.annual_leave" disabled placeholder="设备编号" />
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="closeVisble">取 消</el-button>
-      <el-button type="primary" @click="closeVisble">确 定</el-button>
+      <el-button type="primary" @click="checkBtn">确 定</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
 import { rulesCon } from '@/views/archives/config'
-import { deviceIdApply } from '@/api/property'
+import { deviceIdApply, deviceOutgoing } from '@/api/property'
 export default {
   name: 'LengFrom',
   props: {
@@ -45,14 +43,10 @@ export default {
   data() {
     return {
       ruleForm: {
-        contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
-        trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: '', use: 1, type: 'PC'
+        device_apply_id: 0
       },
       rules: rulesCon,
-      myHeaders: {},
-      api: '',
-      eleContract: [],
-      eleContractScanned: []
+      lendData: []
     }
   },
   watch: {
@@ -68,19 +62,25 @@ export default {
   methods: {
     async init() {
       const res = await deviceIdApply(this.id)
-      console.log(res)
+      if (res.ret === 0) {
+        this.lendData = res.data
+      }
+    },
+    async checkBtn() {
+      // console.log(this.ruleForm.device_apply_id)
+      const res = await deviceOutgoing({ id: this.id, device_apply_id: this.ruleForm.device_apply_id })
+      if (res.ret === 0) {
+        this.$emit('success')
+      }
     },
     closeVisble() {
       if (this.$refs['ruleForm']) {
         this.$refs['ruleForm'].resetFields()
       }
       this.ruleForm = {
-        contract_type: '', contract_party: '', contract_main: '', contract_start_date: '', contract_end_date: '',
-        trial_period: 6, annual_leave: '', status, soft_copy: '', scanned_copy: '', ID: ''
+        device_apply_id: 0
       }
       this.$emit('close')
-      this.eleContract = []
-      this.eleContractScanned = []
     }
   }
 }

@@ -82,7 +82,7 @@
 
     <PutFrom :id="putId" :visible="dialogVisible" :title="putTitle" @close="close" @success="putSuccess" />
     <RecipientsFrom :id="recipientsId" :visible="dialogVisibleRec" @close="close" @success="putSuccess" />
-    <LendFrom :id="lendId" :visible="dialogVisibleLeng" @close="close" />
+    <LendFrom :id="lendId" :visible="dialogVisibleLeng" @close="close" @success="putSuccess" />
   </div>
 </template>
 
@@ -155,6 +155,7 @@ export default {
     putSuccess() {
       this.dialogVisible = false
       this.dialogVisibleRec = false
+      this.dialogVisibleLeng = false
       this.init()
     },
     putFromFun() {

@@ -20,18 +20,20 @@
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="emp_no" align="center" label="申请编号" />
-      <el-table-column prop="name" align="center" label="资产编号" />
-      <el-table-column prop="department.department_name" align="center" label="品牌" />
+      <el-table-column prop="ID" align="center" label="申请编号" />
+      <el-table-column prop="device.device_name" align="center" label="名称" />
       <el-table-column prop="" align="center" label="型号" />
-      <el-table-column prop="req_user" align="center" label="类别" />
-      <el-table-column prop="create_time" align="center" label="项目" />
-      <el-table-column prop="create_time" align="center" label="申请时间" />
-      <el-table-column prop="create_time" align="center" label="当前节点" />
+      <el-table-column prop="device.device_category" align="center" label="类别" />
+      <el-table-column prop="project" align="center" label="项目" />
+      <el-table-column prop="UpdatedAt" align="center" label="申请时间" />
+      <el-table-column align="center" label="当前节点">
+        <template slot-scope="scope">
+          <ProWorkStatus :status="scope.row.status" />
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="recipientsFun">确认领用</el-button>
-          <el-button type="text" size="small" @click="lendFun(scope.row)">撤销申请</el-button>
+          <el-button type="text" size="small" @click="putFromFun(scope.row.ID)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,19 +49,29 @@
         @current-change="handleCurrentChange"
       />
     </div>
+
+    <EditFrom :id="editId" :visible="dialogVisible" @close="close" @success="putSuccess" />
   </div>
 </template>
 
 <script>
 import { deviceIdApplyList } from '@/api/property'
 import { DECVICECATEGORY, DECVICETYPE } from '@/utils/const'
+import EditFrom from '@/components/Property/EditFrom'
+import ProWorkStatus from '@/components/Property/ProWorkStatus'
 export default {
   name: 'MyAudit',
+  components: {
+    EditFrom,
+    ProWorkStatus
+  },
   data() {
     return {
       DECVICECATEGORY,
       DECVICETYPE,
       activeName: 'first',
+      dialogVisible: false,
+      editId: 0,
       seachValue: {
         pagenum: 1,
         pagesize: 10,
@@ -67,9 +79,7 @@ export default {
         mytodo: true,
         status: ''
       },
-      tableData: [
-        { emp_no: '三星' }
-      ],
+      tableData: [],
       total: 0,
       departmentList: []
     }
@@ -88,25 +98,29 @@ export default {
         this.total = 0
       }
     },
-    putFromFun() {
+    putFromFun(id) {
+      this.editId = id
       this.dialogVisible = true
     },
     close() {
       this.dialogVisible = false
-      this.dialogVisibleRec = false
-      this.dialogVisibleLeng = false
     },
-    recipientsFun() {
-      this.dialogVisibleRec = true
-    },
-    lendFun() {
-      this.dialogVisibleLeng = true
+    putSuccess() {
+      this.dialogVisible = false
+      this.init()
     },
     handleClick() {},
     handleDel() {},
     seachFun() {},
-    handleSizeChange() {},
-    handleCurrentChange() {}
+    handleSizeChange(val) {
+      this.seachValue.pagenum = 1
+      this.seachValue.pagesize = val
+      this.init()
+    },
+    handleCurrentChange(val) {
+      this.seachValue.pagenum = val
+      this.init()
+    }
   }
 }
 </script>

@@ -105,6 +105,15 @@ export function downUnpaid(ids) {
   })
 }
 /**
+ * 批量支付
+ */
+export function batchPaid(ids) {
+  return request({
+    url: `/v1/expense/paid/batch?ids=${ids}`,
+    method: 'put'
+  })
+}
+/**
  * 项目交付创建
  */
 export function sublimtProject(period_time, data) {

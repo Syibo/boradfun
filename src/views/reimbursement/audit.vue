@@ -28,6 +28,10 @@
       </div>
     </el-row>
 
+    <el-row class="batch-top">
+      批量操作 <el-button class="margin-l-10" type="primary" @click="batchPaid">批量支付</el-button>
+    </el-row>
+
     <el-table ref="multipleTable" :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}" @selection-change="handleSelectionChange">
       <el-table-column v-if="roles[0] === 8" type="selection" width="55" :selectable="checkboxSelect" />
       <el-table-column align="center" label="申请编号">
@@ -102,7 +106,7 @@
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import RemiDrawer from './reimDrawer'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
-import { getRemiList, getRemiDetail, downUnpaid } from '@/api/remi'
+import { getRemiList, getRemiDetail, downUnpaid, batchPaid } from '@/api/remi'
 import { parseTime } from '@/utils/common'
 import AttStatus from '@/components/Oa/AttStatus'
 import { TableSelections } from '@/mixins/TableSelections'
@@ -212,6 +216,21 @@ export default {
         window.navigator.msSaveBlob(blob, fileName)
       }
     },
+    async batchPaid() {
+      if (this.selectIds.length === 0) {
+        this.$message.error('当前没有选择导出数据')
+        return
+      }
+      const ids = this.selectIds.join(',')
+      const res = await batchPaid(ids)
+      if (res.ret === 0) {
+        this.$message.success('操作成功')
+        this.init()
+        this.selectIds = []
+      } else {
+        this.$message.error('操作失败')
+      }
+    },
     retWorkflowLabel,
     retWorkflowIcon,
     getaActive,
@@ -282,9 +301,12 @@ export default {
       this.seachValue = {
         pagesize: 10,
         pagenum: 1,
+        name: '',
         searchid: '',
         status: '',
-        myreq: true,
+        mytodo: true,
+        myreq: false,
+        todostatus: '',
         application_date_begin: '',
         application_date_end: ''
       }
@@ -298,5 +320,11 @@ export default {
 <style lang="scss" scoped>
 .audit-container {
   padding-bottom: 50px;
+  .batch-top {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    margin-bottom: 10px;
+  }
 }
 </style>

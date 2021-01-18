@@ -1,6 +1,6 @@
 <template>
   <div class="container remide-container">
-    <el-row style="padding: 10px">
+    <el-row class="bg-white">
       <el-row type="flex">
         <el-row style="flex: 1">
           <Label title="申请信息" />
@@ -56,45 +56,51 @@
       </el-table>
     </el-row>
     <div class="line" />
-    <Label v-if="pass" title="申请流程" style="padding: 10px" />
-    <el-row v-if="pass" style="padding: 10px">
-      <div class="content">
-        <el-steps style="padding: 10px;margin-bottom: 10px" :active="active" finish-status="finish">
-          <el-step
-            v-for="item in workflow"
-            :key="item.ID"
-            :icon="retWorkflowIcon(item.status)"
-            :title="item.user ? item.user.name : ''"
-            :description="retWorkflowLabel(item.status)"
-          >
-            <template slot="icon">
-              <i :class="retWorkflowIcon(item.status)" />
-            </template>
-          </el-step>
-        </el-steps>
-        <el-input v-model="putInfo.comment" type="textarea" :rows="5" />
-        <el-row class="btn">
-          <el-button icon="el-icon-error" type="danger" plain @click="passfun(0)">驳回</el-button>
-          <el-button icon="el-icon-success" type="success" plain @click="passfun(1)">通过</el-button>
-        </el-row>
-      </div>
-    </el-row>
+    <div v-if="pass" class="bg-white">
+      <Label title="申请流程" />
+      <el-row class="bg-white">
+        <div class="content">
+          <el-steps style="padding: 10px;margin-bottom: 10px" :active="active" finish-status="finish">
+            <el-step
+              v-for="item in workflow"
+              :key="item.ID"
+              :icon="retWorkflowIcon(item.status)"
+              :title="item.user ? item.user.name : ''"
+              :description="retWorkflowLabel(item.status)"
+            >
+              <template slot="icon">
+                <i :class="retWorkflowIcon(item.status)" />
+              </template>
+            </el-step>
+          </el-steps>
+          <el-input v-model="putInfo.comment" type="textarea" :rows="5" />
+          <el-row class="btn">
+            <el-button icon="el-icon-error" type="danger" plain @click="passfun(0)">驳回</el-button>
+            <el-button icon="el-icon-success" type="success" plain @click="passfun(1)">通过</el-button>
+          </el-row>
+        </div>
+      </el-row>
+    </div>
+
     <div v-else class="two">
       <div class="left" style="padding: 10px">
         <Label title="申请流程" />
-        <el-steps style="padding: 0 10px;margin-top: 20px" direction="vertical" :active="active" finish-status="finish">
-          <el-step
-            v-for="item in workflow"
-            :key="item.ID"
-            :icon="retWorkflowIcon(item.status)"
-            :title="item.user ? item.user.name : ''"
-            :description="retWorkflowLabel(item.status)"
-          >
-            <template slot="icon">
-              <i :class="retWorkflowIcon(item.status)" />
-            </template>
-          </el-step>
-        </el-steps>
+        <div class="left-steps">
+          <el-steps direction="vertical" :active="active" finish-status="finish">
+            <el-step
+              v-for="item in workflow"
+              :key="item.ID"
+              :icon="retWorkflowIcon(item.status)"
+              :title="item.user ? item.user.name : ''"
+              :description="retWorkflowLabel(item.status)"
+            >
+              <template slot="icon">
+                <i :class="retWorkflowIcon(item.status)" />
+              </template>
+            </el-step>
+          </el-steps>
+        </div>
+
         <div class="pass-btn">
           <!-- <el-button>发生邮件通知</el-button> -->
           <!-- <el-button>通过</el-button> -->
@@ -271,10 +277,15 @@ export default {
 <style lang="scss" scoped>
 .remide-container {
   padding: 0!important;
+  background-color: #f2f2f2!important;
   // padding-bottom: 50px;
   .pirce {
     font-size: 12px;
     margin-bottom: 10px;
+  }
+  .bg-white {
+    background-color: white;
+    padding: 10px;
   }
   .three {
     padding-left: 5px;
@@ -299,12 +310,18 @@ export default {
     }
   }
   .two {
-    height: 300px;
+    height: 400px;
     display: flex;
+    background-color: white;
     .left {
       flex: 1;
       position: relative;
       border-right: 10px solid #f2f2f2;
+      .left-steps {
+        height: 300px;
+        margin-top: 20px;
+        padding-left: 10px;
+      }
       .pass-btn {
         position: absolute;
         top: 0;

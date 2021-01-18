@@ -1,61 +1,86 @@
 <template>
   <div class="container remide-container">
-    <el-row type="flex">
-      <el-row style="flex: 1">
-        <Label title="申请信息" />
+    <el-row style="padding: 10px">
+      <el-row type="flex">
+        <el-row style="flex: 1">
+          <Label title="申请信息" />
+        </el-row>
+        <el-row>
+          <!-- <Label title="申请信息" /> -->
+          <el-button type="primary" @click="checkBtn">提交</el-button>
+          <el-button @click="goBack">取消</el-button>
+        </el-row>
       </el-row>
-      <el-row>
-        <!-- <Label title="申请信息" /> -->
-        <el-button type="primary" @click="checkBtn">提交</el-button>
-        <el-button @click="goBack">取消</el-button>
+      <el-row :gutter="20" class="three">
+        <el-col :span="8">
+          申请人: {{ info.e_name }}
+        </el-col>
+        <el-col :span="8">
+          申请项目: {{ info.project }}
+        </el-col>
       </el-row>
-    </el-row>
-    <el-row :gutter="20" class="three">
-      <el-col :span="8">
-        申请人: {{ info.e_name }}
-      </el-col>
-      <el-col :span="8">
-        申请项目: {{ info.project }}
-      </el-col>
-    </el-row>
-    <el-table :data="info.expense_details" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column type="index" width="50" label="序号" />
-      <el-table-column prop="ocurred_date" align="center" label="发生时间" width="200">
-        <template slot-scope="scope">
-          <el-row type="flex" align="center" justify="center">
-            <el-col> {{ scope.row.ocurred_date }} <el-button class="margin-l-10" type="text" @click="getLeavebydate(scope.row.ocurred_date)"> 查看考勤 </el-button> </el-col>
-          </el-row>
-        </template>
-      </el-table-column>
-      <el-table-column prop="expense_account.expense_account_name" align="center" label="报销科目" />
-      <el-table-column prop="expense_amount" align="center" label="费用金额" />
-      <el-table-column prop="remarks1" align="center" label="备注一" />
-      <el-table-column prop="remarks2" align="center" label="备注二" />
-      <el-table-column prop="remarks3" align="center" label="备注三" />
-    </el-table>
-    <Label v-if="pass" title="申请流程" style="margin-top: 20px" />
-    <div v-if="pass" class="content">
-      <el-steps style="padding: 0 10px;margin-bottom: 10px" :active="active" finish-status="finish">
-        <el-step
-          v-for="item in workflow"
-          :key="item.ID"
-          :icon="retWorkflowIcon(item.status)"
-          :title="item.user ? item.user.name : ''"
-          :description="retWorkflowLabel(item.status)"
-        >
-          <template slot="icon">
-            <i :class="retWorkflowIcon(item.status)" />
+      <el-table :data="info.expense_details" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
+        <el-table-column type="index" width="50" label="序号" />
+        <el-table-column prop="ocurred_date" align="center" label="发生时间" width="200">
+          <template slot-scope="scope">
+            <el-row type="flex" align="center" justify="center">
+              <el-popover
+                placement="right"
+                width="400"
+                trigger="click"
+              >
+                <el-table :data="gridData">
+                  <el-table-column prop="check_time" label="打卡时间">
+                    <template slot-scope="scope2">
+                      <span>{{ scope2.row.check_time }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="status" label="打卡结果">
+                    <template slot-scope="scope2">
+                      <AttStatus :status="scope2.row.status" />
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <!-- <el-button slot="reference">click 激活</el-button> -->
+                <el-col slot="reference"> {{ scope.row.ocurred_date }} <el-button class="margin-l-10" type="text" @click="getLeavebydate(scope.row.ocurred_date)"> 查看考勤 </el-button> </el-col>
+              </el-popover>
+
+            </el-row>
           </template>
-        </el-step>
-      </el-steps>
-      <el-input v-model="putInfo.comment" type="textarea" :rows="5" />
-      <el-row class="btn">
-        <el-button icon="el-icon-error" type="danger" plain @click="passfun(0)">驳回</el-button>
-        <el-button icon="el-icon-success" type="success" plain @click="passfun(1)">通过</el-button>
-      </el-row>
-    </div>
+        </el-table-column>
+        <el-table-column prop="expense_account.expense_account_name" align="center" label="报销科目" />
+        <el-table-column prop="expense_amount" align="center" label="费用金额" />
+        <el-table-column prop="remarks1" align="center" label="备注一" />
+        <el-table-column prop="remarks2" align="center" label="备注二" />
+        <el-table-column prop="remarks3" align="center" label="备注三" />
+      </el-table>
+    </el-row>
+    <div class="line" />
+    <Label v-if="pass" title="申请流程" style="padding: 10px" />
+    <el-row v-if="pass" style="padding: 10px">
+      <div class="content">
+        <el-steps style="padding: 10px;margin-bottom: 10px" :active="active" finish-status="finish">
+          <el-step
+            v-for="item in workflow"
+            :key="item.ID"
+            :icon="retWorkflowIcon(item.status)"
+            :title="item.user ? item.user.name : ''"
+            :description="retWorkflowLabel(item.status)"
+          >
+            <template slot="icon">
+              <i :class="retWorkflowIcon(item.status)" />
+            </template>
+          </el-step>
+        </el-steps>
+        <el-input v-model="putInfo.comment" type="textarea" :rows="5" />
+        <el-row class="btn">
+          <el-button icon="el-icon-error" type="danger" plain @click="passfun(0)">驳回</el-button>
+          <el-button icon="el-icon-success" type="success" plain @click="passfun(1)">通过</el-button>
+        </el-row>
+      </div>
+    </el-row>
     <div v-else class="two">
-      <div class="left">
+      <div class="left" style="padding: 10px">
         <Label title="申请流程" />
         <el-steps style="padding: 0 10px;margin-top: 20px" direction="vertical" :active="active" finish-status="finish">
           <el-step
@@ -75,8 +100,8 @@
           <!-- <el-button>通过</el-button> -->
         </div>
       </div>
-      <el-divider direction="vertical" style="height: 100%" />
-      <div v-permission="[8]" class="right">
+      <!-- <el-divider direction="vertical" style="height: 100%" /> -->
+      <div v-permission="[8]" class="right" style="padding: 10px">
         <Label title="支付流程" />
         <div class="right-item">
           <div class="label">待支付总金额(元)</div>
@@ -114,12 +139,14 @@ import Label from '@/components/common/Label.vue'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import { getRemiDetail, putRemi, putRemiPaid, getDebitCard } from '@/api/remi'
 import { mapGetters } from 'vuex'
-import { getLeavebydate } from '@/api/work'
+import AttStatus from '@/components/common/AttStatus'
+import { getWorkAttendanceTmpByDay } from '@/api/work'
 export default {
   name: 'RemiDetail',
   directives: { permission },
   components: {
-    Label
+    Label,
+    AttStatus
   },
   data() {
     return {
@@ -135,7 +162,8 @@ export default {
       id: '',
       putInfo: {
         comment: '', id: '', status: 1
-      }
+      },
+      gridData: []
     }
   },
   computed: {
@@ -164,7 +192,6 @@ export default {
           if (activeRe >= 3 && this.roles[0] === 8) {
             this.pass = false
             if (activeRe === 4) {
-              console.log(res.data.work_flow.nodes[3].status)
               this.btnType = res.data.work_flow.nodes[3].status
             }
           }
@@ -178,9 +205,11 @@ export default {
       }
     },
     async getLeavebydate(date) {
-      const res = await getLeavebydate({ date, name: this.info.e_name })
+      const res = await getWorkAttendanceTmpByDay({ date, name: this.info.e_name })
       if (res.ret === 0) {
-        console.log(res)
+        this.gridData = res.data.tmps
+      } else {
+        this.gridData = []
       }
     },
     getaActive,
@@ -241,7 +270,8 @@ export default {
 
 <style lang="scss" scoped>
 .remide-container {
-  padding-bottom: 50px;
+  padding: 0!important;
+  // padding-bottom: 50px;
   .pirce {
     font-size: 12px;
     margin-bottom: 10px;
@@ -254,6 +284,10 @@ export default {
     background-color: #f2f2f2;
     height: 10px;
   }
+  // .line-r {
+  //   background-color: #f2f2f2;
+  //   height: 10px;
+  // }
   .content {
     width: 500px;
     margin: 0 auto;
@@ -267,10 +301,10 @@ export default {
   .two {
     height: 300px;
     display: flex;
-    margin-top: 20px;
     .left {
       flex: 1;
       position: relative;
+      border-right: 10px solid #f2f2f2;
       .pass-btn {
         position: absolute;
         top: 0;
@@ -280,10 +314,11 @@ export default {
     .right {
       flex: 1;
       position: relative;
+      padding-left: 20px;
       .pass-btn {
         position: absolute;
-        top: 0;
-        right: 10px;
+        top: 10px;
+        right: 0px;
       }
       .right-item {
         display: flex;

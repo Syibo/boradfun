@@ -31,7 +31,7 @@ export function getRemiPeople() {
 /**
  * 报销列表
  */
-export function getRemiList({ pagesize = 10, pagenum = 1, searchid = '', name = '', status = '', myreq, mytodo, application_date_begin, application_date_end, todostatus }) {
+export function getRemiList({ pagesize = 10, pagenum = 1, searchid = '', name = '', status = '', myreq, mytodo = '', application_date_begin, application_date_end, todostatus = '' }) {
   return request({
     url: `/v1/expense?pagesize=${pagesize}&pagenum=${pagenum}&searchid=${searchid}&status=${status}&name=${name}&myreq=${myreq}&mytodo=${mytodo}&application_date_begin=${application_date_begin}&application_date_end=${application_date_end}&todostatus=${todostatus}`,
     method: 'get'

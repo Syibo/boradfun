@@ -150,6 +150,15 @@ export function getWorkAttendanceTmp({ name = '', year = '', month = '' }) {
   })
 }
 /**
+ * 按照日期查询人员考勤tmp
+ */
+export function getWorkAttendanceTmpByDay({ name = '', date = '' }) {
+  return request({
+    url: `/v1/work/attendance/tmp/day?name=${name}&date=${date}`,
+    method: 'get'
+  })
+}
+/**
  * 查询已确认考勤
  */
 export function getWorkAttendance({ name = '', year = '', month = '' }) {

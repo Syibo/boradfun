@@ -85,7 +85,7 @@
 
     <PersonTable v-for="(item, index) in detailData.list" :key="index" :data="item" />
 
-    <el-dialog title="" :visible.sync="dialogVisible" :close-on-click-modal="false" width="1000px">
+    <el-dialog title="" :visible.sync="dialogVisible" :close-on-click-modal="false" width="1000px" @close="closeFun">
       <el-upload
         class="upload-demo"
         :headers="myHeaders"
@@ -315,6 +315,9 @@ export default {
     },
     close() {
       this.personDetailVisible = false
+    },
+    closeFun() {
+      this.diaData = []
     }
   }
 }

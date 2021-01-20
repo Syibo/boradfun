@@ -3,7 +3,7 @@
     <h3>设备编号：{{ detailData.device_code }}</h3>
     <el-tabs v-model="activeName">
       <el-tab-pane label="详细信息" name="first">
-        <el-row>
+        <el-row style="color: rgba(0, 0, 0, 0.85); font-size: 14px;">
           <el-row class="margin-b-20">
             <el-col :span="8"><span class="w100">设备类型</span> {{ detailData.device_category }}</el-col>
             <el-col :span="8"><span class="w100">购买日期</span> {{ detailData.purchase_date }}</el-col>
@@ -94,6 +94,8 @@ export default {
 .equipmentdetail-container {
   background-color: white;
   .w100 {
+    font-size: 14px;
+      color: #808387;
       display: inline-block;
       width: 120px;
   }

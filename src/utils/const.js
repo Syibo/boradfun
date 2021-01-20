@@ -72,7 +72,6 @@ export const WORKSTATUSVALUE = [
  */
 export const REIMSVALUE = [
   { value: 'NA', label: '待审核' },
-  { value: 'Approved', label: '审核通过' },
   { value: 'Rejected', label: '驳回' },
   { value: 'Paid', label: '已支付' },
   { value: 'Unpaid', label: '待支付' }

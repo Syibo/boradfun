@@ -28,7 +28,7 @@
       </div>
     </el-row>
 
-    <el-row class="batch-top">
+    <el-row v-permission="[8]" class="batch-top">
       批量操作 <el-button class="margin-l-10" type="primary" @click="batchPaid">批量支付</el-button>
     </el-row>
 
@@ -293,6 +293,12 @@ export default {
     retDisable(status) {
       let disabled = false
       if (status === 'Approved' || status === 'Rejected' || status === 'Paid') {
+        disabled = true
+      }
+      /**
+       * 项目负责人且状态是待支付 不能编辑
+       */
+      if (this.roles[0] === 10 && status === 'Unpaid') {
         disabled = true
       }
       return disabled

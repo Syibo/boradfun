@@ -51,10 +51,10 @@
     </div>
     <el-row class="table-top">
       <div class="left">
-        <el-select v-model="seachValue.category" placeholder="类别" style="width: 150px" clearable>
+        <el-select v-model="seachValue.category" placeholder="类别" class="top-search" clearable>
           <el-option v-for="item in LOWTYPE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-input v-model="seachValue.employee_name" style="width: 150px;margin: 0 10px" placeholder="搜索" clearable />
+        <el-input v-model="seachValue.employee_name" class="top-search" placeholder="搜索" clearable />
         <el-button type="primary" @click="seachFun">搜索</el-button>
       </div>
       <div class="right">
@@ -214,7 +214,10 @@ export default {
       })
     },
     async batchRet() {
-      console.log(this.selectIds.join(','))
+      if (this.selectIds.length === 0) {
+        this.$message.error('当前没有选择归还数据')
+        return
+      }
       const ids = this.selectIds.join(',')
       const res = await postLowPriceArticleReturnBatch(ids)
       if (res.ret === 0) {

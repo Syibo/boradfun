@@ -2,10 +2,10 @@
   <div class="container consumable-container">
     <el-row class="table-top">
       <div class="left">
-        <el-select v-model="seachValue.category" placeholder="类别" style="width: 150px" clearable>
+        <el-select v-model="seachValue.category" placeholder="类别" class="top-search" clearable>
           <el-option v-for="item in CATEGORY" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-input v-model="seachValue.keyword" style="width: 150px;margin: 0 10px" placeholder="搜索" clearable />
+        <el-input v-model="seachValue.keyword" class="top-search" placeholder="搜索" clearable />
         <el-button type="primary" @click="seachFun">搜索</el-button>
       </div>
       <div class="right">

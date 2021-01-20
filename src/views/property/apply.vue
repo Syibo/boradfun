@@ -8,12 +8,11 @@
     </el-tabs>
     <el-row v-if="activeName === 'first'" class="table-top">
       <div class="left">
-        <el-select v-model="seachValue.status" placeholder="全部节点" style="width: 100%" clearable>
+        <el-select v-model="seachValue.status" placeholder="全部节点" class="top-search" clearable>
           <el-option v-for="item in DECVICETYPE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
       <div class="right">
-        <!-- <el-input v-model="seachValue.emp_no" style="width: 120px;margin: 0 10px" placeholder="请输入员工编号" clearable @input="seachFun" /> -->
         <el-button type="primary" @click="init()">搜索</el-button>
       </div>
     </el-row>

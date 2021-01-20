@@ -85,7 +85,8 @@ export const WORKFLOW = [
   { value: 'Leave', label: '请假流程' },
   { value: 'EmployeeEntry', label: '入职流程' },
   { value: 'EmployeeLeave', label: '离职流程' },
-  { value: 'Expense', label: '报销流程' }
+  { value: 'Expense', label: '报销流程' },
+  { value: 'Device', label: '设备流程' }
 ]
 
 /**
@@ -125,6 +126,16 @@ export const DECVICESTATUS = [
 export const DECVICETYPE = [
   { value: 'Approved', label: '审核通过' },
   { value: 'Rejected', label: '驳回' },
+  { value: 'Distributed', label: '已分配' },
+  { value: 'Revoked', label: '已撤销' }
+]
+
+/**
+ * 设备分类
+ */
+export const DECVICETYPE2 = [
+  { value: 'Received', label: '已领用' },
+  { value: 'UnReceived', label: '待领用' },
   { value: 'Distributed', label: '已分配' },
   { value: 'Revoked', label: '已撤销' }
 ]

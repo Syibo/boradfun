@@ -206,9 +206,9 @@ export function deviceIdApply(id) {
 /**
  * 申请设备列表
  */
-export function deviceIdApplyList({ pagenum, pagesize, myreq, mytodo, status }) {
+export function deviceIdApplyList({ pagenum, pagesize, myreq, mytodo, status, category = '', search = '' }) {
   return request({
-    url: `v1/device/apply?pagenum=${pagenum}&pagesize=${pagesize}&myreq=${myreq}&mytodo=${mytodo}&status=${status}`,
+    url: `v1/device/apply?pagenum=${pagenum}&pagesize=${pagesize}&myreq=${myreq}&mytodo=${mytodo}&status=${status}&category=${category}&search=${search}`,
     method: 'get'
   })
 }

@@ -8,6 +8,12 @@
     <span v-else-if="status === 'Rejected'" class="brof_status stop_col">已驳回</span>
     <span v-else-if="status === 'Unpaid'" class="brof_status">待支付</span>
     <span v-else-if="status === 'Paid'" class="brof_status confirm_col">已支付</span>
+
+    <span v-else-if="status === 'Revoked'" class="brof_status confirm_col"> 已撤销</span>
+    <span v-else-if="status === 'Received'" class="brof_status confirm_col"> 已领用</span>
+    <span v-else-if="status === 'Recalled'" class="brof_status confirm_col"> 已归还</span>
+    <span v-else-if="status === 'UnReceived'" class="brof_status confirm_col"> 待领用</span>
+    <span v-else-if="status === 'Distributed'" class="brof_status confirm_col"> 已分配</span>
     <span v-else class="brof_status" />
   </div>
 </template>

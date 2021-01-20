@@ -1,6 +1,6 @@
 <template>
   <div class="container info-container">
-    资产信息表
+    <h2>敬请期待</h2>
   </div>
 </template>
 
@@ -17,5 +17,8 @@ export default {
 <style lang="scss" scoped>
 .info-container {
   background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

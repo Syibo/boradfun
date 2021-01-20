@@ -66,6 +66,9 @@ export default {
   color: #999999;
   font-weight: 400;
 }
+.flex1 {
+  flex: 1;
+}
 .bule-hover {
   color: #1F8DFB;
   cursor: pointer;

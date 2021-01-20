@@ -55,7 +55,7 @@
       </el-table-column>
       <el-table-column align="center" label="领用人">
         <template slot-scope="scope">
-          {{ retName(scope.row.device_applys) || '' }}
+          {{ retName(scope.row.device_apply) || '' }}
         </template>
       </el-table-column>
       <el-table-column prop="mem" align="center" label="运存" />
@@ -200,8 +200,8 @@ export default {
       }
     },
     retName(num) {
-      if (num && num.length) {
-        return num[0].e_name
+      if (num) {
+        return num.e_name
       } else {
         return ''
       }

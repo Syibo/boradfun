@@ -9,7 +9,7 @@
               <el-select v-model="ruleForm.device_category" placeholder="请选择设备类别" style="width: 100%">
                 <el-option key="PC" label="PC" value="PC" />
                 <el-option key="Laptop" label="Laptop" value="Laptop" />
-                <el-option key="NetWork" label="NetWork" value="NetWork" />
+                <el-option key="Network" label="Network" value="Network" />
                 <el-option key="Monitor" label="Monitor" value="Monitor" />
                 <el-option key="Pad" label="Pad" value="Pad" />
                 <el-option key="iMac" label="iMac" value="iMac" />

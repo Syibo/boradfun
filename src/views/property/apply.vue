@@ -6,23 +6,23 @@
       <el-tab-pane label="待领用" name="third" />
       <el-tab-pane label="已领用" name="four" />
     </el-tabs>
-    <el-row class="table-top">
+    <el-row v-if="activeName === 'first'" class="table-top">
       <div class="left">
-        <el-select v-model="seachValue.departmentid" placeholder="全部节点" style="width: 100%" clearable>
+        <el-select v-model="seachValue.status" placeholder="全部节点" style="width: 100%" clearable>
           <el-option v-for="item in DECVICETYPE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
       <div class="right">
         <!-- <el-input v-model="seachValue.emp_no" style="width: 120px;margin: 0 10px" placeholder="请输入员工编号" clearable @input="seachFun" /> -->
-        <el-button type="primary">搜索</el-button>
+        <el-button type="primary" @click="init()">搜索</el-button>
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="ID" align="center" label="申请编号" />
       <el-table-column prop="engagement_code" align="center" label="资产编号" />
-      <el-table-column prop="department.department_name" align="center" label="品牌" />
-      <el-table-column prop="device" align="center" label="型号" />
-      <el-table-column prop="req_user" align="center" label="类别" />
+      <el-table-column prop="device.brand" align="center" label="品牌" />
+      <el-table-column prop="device.device_model" align="center" label="型号" />
+      <el-table-column prop="device.device_category" align="center" label="类别" />
       <el-table-column prop="project" align="center" label="项目" />
       <el-table-column prop="CreatedAt" align="center" label="申请时间" />
       <el-table-column align="center" label="当前节点">
@@ -32,8 +32,8 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="recipientsFun">确认领用</el-button>
-          <el-button type="text" size="small" @click="lendFun(scope.row)">撤销申请</el-button>
+          <el-button type="text" size="small" :disabled="scope.row.status !== 'UnReceived'" @click="recipientsFun(scope.row.device_id)">确认领用</el-button>
+          <el-button class="Danger-color" :disabled="scope.row.status === 'Received'" type="text" size="small" @click="lendFun(scope.row.ID)">撤销申请</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { deviceIdApplyList } from '@/api/property'
+import { deviceIdApplyList, deviceReceive, deviceRevoke } from '@/api/property'
 import { DECVICETYPE } from '@/utils/const'
 import ProWorkStatus from '@/components/Property/ProWorkStatus'
 export default {
@@ -98,20 +98,81 @@ export default {
     },
     close() {
       this.dialogVisible = false
-      this.dialogVisibleRec = false
       this.dialogVisibleLeng = false
     },
-    recipientsFun() {
-      this.dialogVisibleRec = true
+    recipientsFun(id) {
+      this.$confirm('确认领用', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'success'
+      }).then(() => {
+        this.deviceReceive(id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
     },
-    lendFun() {
-      this.dialogVisibleLeng = true
+    async deviceReceive(id) {
+      const res = await deviceReceive(id)
+      if (res.ret === 0) {
+        this.$message.success('领用成功')
+      }
     },
-    handleClick() {},
+    async deviceRevoke(id) {
+      const res = await deviceRevoke(id)
+      if (res.ret === 0) {
+        this.$message.success('撤销成功')
+      }
+    },
+    lendFun(id) {
+      this.$confirm('确认撤销', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        this.deviceRevoke(id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    handleClick() {
+      switch (this.activeName) {
+        case 'first':
+          this.seachValue.status = ''
+          this.init()
+          break
+        case 'second':
+          this.seachValue.status = 'NA'
+          this.init()
+          break
+        case 'third':
+          this.seachValue.status = 'UnReceived'
+          this.init()
+          break
+        case 'four':
+          this.seachValue.status = 'Received'
+          this.init()
+          break
+        default:
+          break
+      }
+    },
     handleDel() {},
     seachFun() {},
-    handleSizeChange() {},
-    handleCurrentChange() {}
+    handleSizeChange(val) {
+      this.seachValue.pagenum = 1
+      this.seachValue.pagesize = val
+      this.init()
+    },
+    handleCurrentChange(val) {
+      this.seachValue.pagenum = val
+      this.init()
+    }
   }
 }
 </script>

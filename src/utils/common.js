@@ -9,7 +9,7 @@
  * 获取当前流程的状态
  * @param {string} status value
  */
-import { WORKFLOW, LEAVEVALUE, TYPEVALUE } from './const.js'
+import { WORKFLOW, LEAVEVALUE, TYPEVALUE, LOWTYPE, CATEGORY } from './const.js'
 import Moment from 'moment'
 export function retWorkflowLabel(status) {
   let s = ''
@@ -187,6 +187,28 @@ export function retLeaveValue(status) {
  */
 export function retWorkValue(status) {
   const leave = TYPEVALUE.find((item) => { return item.value === status })
+  if (leave) {
+    return leave.label || ''
+  } else {
+    return '未知状态'
+  }
+}
+/**
+ * 返回易耗品类型
+ */
+export function retlowValue(status) {
+  const leave = LOWTYPE.find((item) => { return item.value === status })
+  if (leave) {
+    return leave.label || ''
+  } else {
+    return '未知状态'
+  }
+}
+/**
+ * 返回易耗品列类别
+ */
+export function retCatGory(status) {
+  const leave = CATEGORY.find((item) => { return item.value === status })
   if (leave) {
     return leave.label || ''
   } else {

@@ -15,17 +15,25 @@
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="emp_no" align="center" label="序号">
         <template slot-scope="scope">
-          <span class="bule-hover" @click="goDetail(scope.row.ID)">{{ scope.row.ID }}</span>
+          <span class="bule-hover" @click="goDetail(scope.row.ID)">#{{ scope.row.ID }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="low_price_article_category" align="center" label="类别" />
+      <el-table-column align="center" label="类别">
+        <template slot-scope="scope">
+          {{ retCatGory(scope.row.low_price_article_category) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="low_price_article_name" align="center" label="资产名称" />
       <el-table-column prop="brand" align="center" label="品牌" />
       <el-table-column prop="total_quantity" align="center" label="入库数量" />
       <el-table-column prop="ingoing_time" align="center" label="入库时间" />
       <el-table-column prop="create_time" align="center" label="操作人" />
       <el-table-column prop="outgoing_quantity" align="center" label="已借出" />
-      <el-table-column prop="create_time" align="center" label="剩余可用" />
+      <el-table-column prop="create_time" align="center" label="剩余可用">
+        <template slot-scope="scope">
+          {{ scope.row.total_quantity - scope.row.outgoing_quantity - scope.row.scrap_quantity }}
+        </template>
+      </el-table-column>
       <el-table-column prop="create_time" align="center" label="是否需要归还">
         <template slot-scope="scope">
           {{ scope.row.need_return === 0 ? '否' : '是' }}
@@ -53,6 +61,7 @@
 import { getLowPriceArticle } from '@/api/property'
 import ConsumableFrom from '@/components/Property/ConsumableFrom'
 import { CATEGORY } from '@/utils/const'
+import { retCatGory } from '@/utils/common'
 export default {
   name: 'Consumable',
   components: {
@@ -77,6 +86,7 @@ export default {
     this.init()
   },
   methods: {
+    retCatGory,
     async init() {
       const res = await getLowPriceArticle(this.seachValue)
       if (res.ret === 0) {

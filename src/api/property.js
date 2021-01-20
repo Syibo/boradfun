@@ -35,6 +35,51 @@ export function addLowPriceArticle({ low_price_article_category, low_price_artic
   })
 }
 /**
+ * 易耗品借出
+ * @param low_price_article_id 易耗品ID
+ * @param operator_id 操作用户ID
+ * @param associate_employee_id 关联领用用户ID
+ * @param associate_employee_name 关联领用用户名称
+ * @param quantity 数量
+ * @param comment 备注
+ */
+export function postLowPriceArticleOutgoing({ low_price_article_id, operator_id, associate_employee_id, associate_employee_name, quantity, comment }) {
+  return request({
+    url: `v1/low_price_article_requisition/outgoing`,
+    method: 'post',
+    data: {
+      low_price_article_id, operator_id, associate_employee_id, associate_employee_name, quantity, comment
+    }
+  })
+}
+/**
+ * 易耗品操作记录列表
+ * @param low_price_article_id 易耗品ID
+ * @param employee_name 关键字
+ */
+export function getLowPriceArticleList({ pagenum, pagesize, low_price_article_id, employee_name, category }) {
+  return request({
+    url: `v1/low_price_article_requisition?pagenum=${pagenum}&pagesize=${pagesize}&low_price_article_id=${low_price_article_id}&employee_name=${employee_name}&category=${category}`,
+    method: 'get'
+  })
+}
+/**
+ * 易耗品报废
+ * @param low_price_article_id 易耗品ID
+ * @param operator_id 操作用户ID
+ * @param quantity 数量
+ * @param comment 备注
+ */
+export function lowPriceArticleListScrap({ low_price_article_id, operator_id, quantity, comment }) {
+  return request({
+    url: `v1/low_price_article_requisition/scrap`,
+    method: 'post',
+    data: {
+      low_price_article_id, operator_id, quantity, comment
+    }
+  })
+}
+/**
  * 易耗品详情
  * @param id id
  */
@@ -42,6 +87,26 @@ export function lowPriceArticleDetail(id) {
   return request({
     url: `v1/low_price_article/${id}`,
     method: 'get'
+  })
+}
+/**
+ * 易耗品归还
+ * @param id id
+ */
+export function postLowPriceArticleReturn({ id, status }) {
+  return request({
+    url: `v1/low_price_article_requisition/${id}/return?status=${status}`,
+    method: 'post'
+  })
+}
+/**
+ * 易耗品批量归还
+ * @param ids ids
+ */
+export function postLowPriceArticleReturnBatch(ids) {
+  return request({
+    url: `v1/low_price_article_requisition/return/batch?ids=${ids}`,
+    method: 'post'
   })
 }
 /**
@@ -184,5 +249,41 @@ export function employeeOutgoing() {
   return request({
     url: `v1/device/employee/outgoing`,
     method: 'get'
+  })
+}
+/**
+ *  我的资产--易耗品借出列表
+ */
+export function lowPriceArticleOutgoing() {
+  return request({
+    url: `v1/low_price_article/employee/outgoing`,
+    method: 'get'
+  })
+}
+/**
+ *  我的资产--设备归还列表
+ */
+export function lowPriceArticleReturn() {
+  return request({
+    url: `v1/device/employee/return`,
+    method: 'get'
+  })
+}
+/**
+ *  设备领用
+ */
+export function deviceReceive(id) {
+  return request({
+    url: `v1/device/${id}/receive`,
+    method: 'put'
+  })
+}
+/**
+ *  申请设备撤回
+ */
+export function deviceRevoke(id) {
+  return request({
+    url: `v1/device/apply/${id}/revoke`,
+    method: 'put'
   })
 }

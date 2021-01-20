@@ -218,7 +218,7 @@ export default {
     },
     async batchPaid() {
       if (this.selectIds.length === 0) {
-        this.$message.error('当前没有选择导出数据')
+        this.$message.error('当前没有选择待支付数据')
         return
       }
       const ids = this.selectIds.join(',')

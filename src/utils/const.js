@@ -117,20 +117,27 @@ export const DECVICESTATUS = [
   { value: 'Free', label: '空闲' },
   { value: 'Possessed', label: '占有' },
   { value: 'Fixing', label: '维修' },
-  { value: 'Ingoing', label: '入库' },
-  { value: 'Outgoing', label: '出库' },
-  { value: 'Scrap', label: '报销' },
-  { value: 'Return', label: '归还' }
+  { value: 'Scrap', label: '报废' }
 ]
 
 /**
  * 设备分类
  */
 export const DECVICETYPE = [
-  { value: 'Hide', label: '隐藏' },
-  { value: 'Received', label: '已领用' },
+  { value: 'Approved', label: '审核通过' },
+  { value: 'Rejected', label: '驳回' },
   { value: 'Distributed', label: '已分配' },
   { value: 'Revoked', label: '已撤销' }
+]
+
+/**
+ * 设备分类
+ */
+export const LOWTYPE = [
+  { value: 'Ingoing', label: '入库' },
+  { value: 'Outgoing', label: '借出' },
+  { value: 'Scrap', label: '报废' },
+  { value: 'Return', label: '归还' }
 ]
 
 export const DOWNURL = 'http://172.16.9.195:9000'

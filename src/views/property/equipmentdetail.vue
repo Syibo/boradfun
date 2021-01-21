@@ -82,7 +82,6 @@ export default {
     async init() {
       const res = await deviceDetail(this.id)
       if (res.ret === 0) {
-        // console.log(res)
         this.detailData = res.data
       }
     }

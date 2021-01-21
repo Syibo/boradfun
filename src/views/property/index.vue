@@ -6,7 +6,7 @@
         <el-row class="border-top">
           <el-row v-for="item in decviceList" :key="item.ID" class="decvice-item">
             <i class="el-icon-monitor" />
-            <span class="bule-hover margin-l-10">#{{ item.device.device_code }}</span>
+            <span class="bule-hover margin-l-10" @click="openDia(item.device_id)">#{{ item.device.device_code }}</span>
             <span class="flex1 margin-l-10">{{ item.device.device_name }}</span>
             <span>{{ Moment(item.receive_date).format('YYYY-MM-DD HH:mm:ss') }}</span>
           </el-row>
@@ -20,7 +20,7 @@
             <span class="bule-hover margin-l-10">#{{ item.ID }}</span>
             <span class="margin-l-10">{{ item.low_price_article_name }}</span>
             <span class="flex1 margin-l-10">{{ item.low_price_article_requisitions ? item.low_price_article_requisitions.length : 0 }}</span>
-            <span class="bule-hover"> <span v-if="item.need_return" class="need-re margin-r-10">需归还</span> {{ `领用记录` }}</span>
+            <span class="bule-hover" @click="openLow(item)"> <span v-if="item.need_return" class="need-re margin-r-10">需归还</span> {{ `领用记录` }}</span>
           </el-row>
         </el-row>
       </div>
@@ -36,19 +36,44 @@
         </el-row>
       </el-row>
     </div>
+    <DecviceDetail :id="detailId" :visible="visible" @close="close" />
+    <el-dialog title="领用记录" :visible="lowVisible" :close-on-click-modal="false" width="800px" @close="closeVisble">
+      <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
+        <el-table-column prop="operator_name" align="center" label="领用人" />
+        <el-table-column prop="quantity" align="center" label="领用数量" />
+        <el-table-column prop="UpdatedAt" align="center" label="领用日期">
+          <template slot-scope="scope">
+            {{ Moment(scope.row.UpdatedAt).format('YYYY-MM-DD HH:mm:ss') }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="状态">
+          <template slot-scope="scope">
+            {{ retlowValue(scope.row.operator_category) }}
+          </template>
+        </el-table-column>
+      </el-table></el-dialog>
   </div>
 </template>
 
 <script>
 import { employeeOutgoing, lowPriceArticleOutgoing, lowPriceArticleReturn } from '@/api/property'
+import DecviceDetail from '@/components/Property/DecviceDetail'
 import Moment from 'moment'
+import { retlowValue } from '@/utils/common'
 export default {
   name: 'MyProperty',
+  components: {
+    DecviceDetail
+  },
   data() {
     return {
       decviceList: [],
       returnList: [],
-      lowList: []
+      lowList: [],
+      visible: false,
+      lowVisible: false,
+      detailId: 0,
+      tableData: []
     }
   },
   mounted() {
@@ -58,6 +83,7 @@ export default {
   },
   methods: {
     Moment,
+    retlowValue,
     async init() {
       const res = await employeeOutgoing()
       if (res.ret === 0) {
@@ -75,6 +101,21 @@ export default {
       if (res.ret === 0) {
         this.returnList = res.data
       }
+    },
+    openDia(id) {
+      this.detailId = id
+      this.visible = true
+    },
+    openLow(item) {
+      this.tableData = item.low_price_article_requisitions
+      this.lowVisible = true
+    },
+    close() {
+      this.visible = false
+    },
+    closeVisble() {
+      this.tableData = []
+      this.lowVisible = false
     }
   }
 }

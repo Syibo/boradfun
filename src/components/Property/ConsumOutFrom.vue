@@ -85,7 +85,7 @@ export default {
     return {
       CATEGORY,
       ruleForm: {
-        low_price_article_id: '', operator_id: '', associate_employee_id: '', associate_employee_name: '', quantity: 0,
+        low_price_article_id: '', operator_id: '', associate_employee_id: 0, associate_employee_name: '', quantity: 0,
         comment: ''
       },
       rules: rulesCon,
@@ -142,7 +142,6 @@ export default {
       }
     },
     handleSelect(item) {
-      console.log(item)
       this.ruleForm.associate_employee_id = item.ID
     },
     async checkBtn() {

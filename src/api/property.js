@@ -279,6 +279,15 @@ export function deviceReceive(id) {
   })
 }
 /**
+ *  设备分配
+ */
+export function deviceDistribution({ id, employee_id, employee_name, engagement_code, project }) {
+  return request({
+    url: `v1/device/${id}/distribution?employee_id=${employee_id}&employee_name=${employee_name}&engagement_code=${engagement_code}&project=${project}`,
+    method: 'put'
+  })
+}
+/**
  *  申请设备撤回
  */
 export function deviceRevoke(id) {

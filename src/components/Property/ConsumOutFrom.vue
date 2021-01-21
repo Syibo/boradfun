@@ -26,14 +26,14 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="数量">
-            <el-input-number v-model="ruleForm.quantity" style="width: 200px;" />
+          <el-form-item label="数量" prop="quantity">
+            <el-input-number v-model="ruleForm.quantity" :min="1" style="width: 200px;" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="领用人">
+          <el-form-item label="领用人" prop="associate_employee_name">
             <el-autocomplete
               v-model="ruleForm.associate_employee_name"
               style="width: 100%"
@@ -47,7 +47,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注">
-            <el-input v-model="ruleForm.site" placeholder="位置" />
+            <el-input v-model="ruleForm.site" placeholder="备注" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import { rulesCon } from '@/views/archives/config'
 import { CATEGORY } from '@/utils/const'
 import { postLowPriceArticleOutgoing } from '@/api/property'
 import { mapGetters } from 'vuex'
@@ -85,10 +84,17 @@ export default {
     return {
       CATEGORY,
       ruleForm: {
-        low_price_article_id: '', operator_id: '', associate_employee_id: 0, associate_employee_name: '', quantity: 0,
+        low_price_article_id: '', operator_id: '', associate_employee_id: 0, associate_employee_name: '', quantity: 1,
         comment: ''
       },
-      rules: rulesCon,
+      rules: {
+        quantity: [
+          { required: true, message: '请输入数量', trigger: 'blur' }
+        ],
+        associate_employee_name: [
+          { required: true, message: '请选择领用人', trigger: 'change' }
+        ]
+      },
       myHeaders: {},
       api: '',
       eleContract: [],
@@ -145,9 +151,18 @@ export default {
       this.ruleForm.associate_employee_id = item.ID
     },
     async checkBtn() {
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          this.checkFun()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async checkFun() {
       this.ruleForm.low_price_article_id = this.id
       this.ruleForm.operator_id = this.userId
-      console.log(this.ruleForm)
       const res = await postLowPriceArticleOutgoing(this.ruleForm)
       if (res.ret === 0) {
         this.$emit('success')

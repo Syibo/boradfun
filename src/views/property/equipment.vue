@@ -12,22 +12,24 @@
         <el-button type="primary" @click="searchFun">搜索</el-button>
       </div>
       <div class="right">
-        <el-button type="primary" class="margin-r-10 " @click="putFromFun">设备入库</el-button>
-        <!-- <el-button>列设置</el-button> -->
+        <el-button v-permission="[7, 8]" type="primary" class="margin-r-10" @click="putFromFun">设备入库</el-button>
         <el-popover
           placement="bottom"
           width="100"
           trigger="click"
         >
           <el-checkbox-group v-model="checkList">
+            <el-checkbox label="操作系统" />
             <el-checkbox label="存储容量" />
             <el-checkbox label="版本" />
             <el-checkbox label="屏幕尺寸" />
             <el-checkbox label="分辨率" />
             <el-checkbox label="屏幕比" />
+            <el-checkbox label="零售商" />
+            <el-checkbox label="购买价格" />
           </el-checkbox-group>
           <el-row class="margin-t-10" type="flex" justify="end">
-            <el-button size="mini">确定</el-button>
+            <el-button size="mini" @click="handCheckListBtn">确定</el-button>
           </el-row>
           <el-button slot="reference">列设置</el-button>
         </el-popover>
@@ -59,6 +61,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="mem" align="center" label="运存" />
+      <el-table-column v-for="item in checkList" :key="item" :prop="retPops(item)" align="center" :label="item" />
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
           <el-button type="text" size="small" :disabled="scope.row.device_status !== 'Free'" @click="recipientsFun(scope.row)">申请领用</el-button>
@@ -88,13 +91,15 @@
 
 <script>
 import PutFrom from '@/components/Property/PutFrom'
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import RecipientsFrom from '@/components/Property/RecipientsFrom'
 import LendFrom from '@/components/Property/LendFrom'
 import ProStatus from '@/components/Property/ProStatus'
 import { getDeviceList } from '@/api/property'
-import { DECVICECATEGORY, DECVICESTATUS } from '@/utils/const'
+import { DECVICECATEGORY, DECVICESTATUS, CHECKLIST } from '@/utils/const'
 export default {
   name: 'Equipment',
+  directives: { permission },
   components: {
     PutFrom,
     RecipientsFrom,
@@ -117,9 +122,7 @@ export default {
         device_status: '',
         keyword: ''
       },
-      tableData: [
-        { emp_no: '三星' }
-      ],
+      tableData: [],
       total: 0,
       departmentList: [],
       dialogVisible: false,
@@ -129,6 +132,8 @@ export default {
   },
   mounted() {
     this.init()
+    this.checkList = localStorage.getItem('checkList') || '[]'
+    this.checkList = JSON.parse(this.checkList)
   },
   methods: {
     async init() {
@@ -148,6 +153,9 @@ export default {
           id
         }
       })
+    },
+    handCheckListBtn() {
+      localStorage.setItem('checkList', JSON.stringify(this.checkList))
     },
     searchFun() {
       this.init()
@@ -202,6 +210,14 @@ export default {
     retName(num) {
       if (num) {
         return num.e_name
+      } else {
+        return ''
+      }
+    },
+    retPops(status) {
+      const leave = CHECKLIST.find((item) => { return item.label === status })
+      if (leave) {
+        return leave.value || ''
       } else {
         return ''
       }

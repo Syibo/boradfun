@@ -150,4 +150,18 @@ export const LOWTYPE = [
   { value: 'Return', label: '归还' }
 ]
 
+/**
+ * 设备分类
+ */
+export const CHECKLIST = [
+  { value: 'os', label: '操作系统' },
+  { value: 'volume', label: '存储容量' },
+  { value: 'version', label: '版本' },
+  { value: 'screen_size', label: '屏幕尺寸' },
+  { value: 'resolution', label: '分辨率' },
+  { value: 'aspect_ratio', label: '屏幕比' },
+  { value: 'retailer', label: '零售商' },
+  { value: 'purchase_price', label: '购买价格' }
+]
+
 export const DOWNURL = 'http://172.16.9.195:9000'

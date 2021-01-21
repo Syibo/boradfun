@@ -33,7 +33,7 @@
             <el-col :span="8"><span class="w100">位置</span> {{ detailData.site }}</el-col>
           </el-row>
           <el-row class="margin-b-20">
-            <el-col :span="8"><span class="w100">状态</span> {{ detailData.device_status }}</el-col>
+            <el-col :span="8"><span class="w100">状态</span> <ProStatus :status="detailData.device_status" /> </el-col>
           </el-row>
           <el-row class="margin-b-20">
             <el-col :span="8"><span class="w100">序列号</span> {{ detailData.mac_address_1 }}</el-col>
@@ -57,8 +57,12 @@
 import { deviceDetail } from '@/api/property'
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import { mapGetters } from 'vuex'
+import ProStatus from '@/components/Property/ProStatus'
 export default {
   name: 'EquipmentDetail',
+  components: {
+    ProStatus
+  },
   directives: { permission },
   data() {
     return {
@@ -77,6 +81,7 @@ export default {
   mounted() {
     this.id = this.$route.query.id
     this.init()
+    console.log(this.roles)
   },
   methods: {
     async init() {

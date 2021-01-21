@@ -48,13 +48,11 @@
 </template>
 
 <script>
-import permission from '@/directive/permission/index.js' // 权限判断指令
 import store from '@/store'
 import { setRemi, getRemiProjects, getRemiPeople } from '@/api/remi'
 import { getToken } from '@/utils/auth'
 export default {
   name: 'Apply',
-  directives: { permission },
   data() {
     return {
       projectList: [],

@@ -26,8 +26,8 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="数量">
-            <el-input-number v-model="ruleForm.quantity" style="width: 200px;" />
+          <el-form-item label="数量" prop="quantity">
+            <el-input-number v-model="ruleForm.quantity" :min="1" style="width: 200px;" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import { rulesCon } from '@/views/archives/config'
 import { CATEGORY } from '@/utils/const'
 import { lowPriceArticleListScrap } from '@/api/property'
 import { mapGetters } from 'vuex'
@@ -71,9 +70,13 @@ export default {
     return {
       CATEGORY,
       ruleForm: {
-        low_price_article_id: 0, operator_id: 0, quantity: 0, comment: ''
+        low_price_article_id: 0, operator_id: 0, quantity: 1, comment: ''
       },
-      rules: rulesCon,
+      rules: {
+        quantity: [
+          { required: true, message: '请输入数量', trigger: 'blur' }
+        ]
+      },
       myHeaders: {},
       api: '',
       eleContract: [],
@@ -97,6 +100,16 @@ export default {
       this.$emit('close')
     },
     async checkBtn() {
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          this.checkFun()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async checkFun() {
       this.ruleForm.operator_id = this.userId
       this.ruleForm.low_price_article_id = this.id
       const res = await lowPriceArticleListScrap(this.ruleForm)

@@ -41,7 +41,7 @@ export const propertyRouter = {
       path: 'audit',
       component: () => import('@/views/property/audit'),
       name: '待我审核',
-      meta: { title: '待我审核' }
+      meta: { title: '待我审核', roles: [8, 10] }
     },
     {
       path: 'consumable',
@@ -61,13 +61,13 @@ export const propertyRouter = {
       component: () => import('@/views/property/info'),
       name: '资产信息表',
       group: '设置',
-      meta: { title: '资产信息表' }
+      meta: { title: '资产信息表', roles: [8, 10] }
     },
     {
       path: 'depreciation',
       component: () => import('@/views/property/depreciation'),
       name: '折旧表',
-      meta: { title: '折旧表' }
+      meta: { title: '折旧表', roles: [8, 10] }
     }
   ]
 }

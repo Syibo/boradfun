@@ -1,11 +1,10 @@
 <template>
-  <!-- <div v-if="visible"> -->
   <el-dialog :title="title" :visible="visible" :close-on-click-modal="false" width="800px" @close="closeVisble">
     <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
       <el-row>
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item label="设备类别">
+            <el-form-item label="设备类别" prop="device_category">
               <el-select v-model="ruleForm.device_category" placeholder="请选择设备类别" style="width: 100%">
                 <el-option key="PC" label="PC" value="PC" />
                 <el-option key="Laptop" label="Laptop" value="Laptop" />
@@ -20,24 +19,24 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="设备编号">
+            <el-form-item label="设备编号" prop="device_code">
               <el-input v-model="ruleForm.device_code" placeholder="设备编号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="品牌">
+            <el-form-item label="品牌" prop="brand">
               <el-input v-model="ruleForm.brand" placeholder="品牌" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="设备名称">
+            <el-form-item label="设备名称" prop="device_name">
               <el-input v-model="ruleForm.device_name" placeholder="设备名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="设备型号">
+            <el-form-item label="设备型号" prop="device_model">
               <el-input v-model="ruleForm.device_model" placeholder="设备型号" />
             </el-form-item>
           </el-col>
@@ -133,8 +132,7 @@
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="购买日期">
-              <!-- <el-input v-model="ruleForm.purchase_date" placeholder="购买日期" /> -->
+            <el-form-item label="购买日期" prop="purchase_date">
               <el-date-picker
                 v-model="ruleForm.purchase_date"
                 style="width: 300px;"
@@ -146,32 +144,41 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="零售商">
+            <el-form-item label="零售商" prop="retailer">
               <el-input v-model="ruleForm.retailer" placeholder="零售商" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="购买价格">
+            <el-form-item label="购买价格" prop="purchase_price">
               <el-input-number v-model="ruleForm.purchase_price" placeholder="购买价格" style="width: 200px;" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="增值税价格">
+            <el-form-item label="增值税价格" prop="vat">
               <el-input-number v-model="ruleForm.vat" placeholder="增值税价格" style="width: 200px;" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="保修日期(月)">
+            <el-form-item label="保修日期(月)" prop="warranty_period">
               <el-input-number v-model="ruleForm.warranty_period" placeholder="保修日期" style="width: 200px;" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="位置">
               <el-input v-model="ruleForm.site" placeholder="位置" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="title === '编辑设备'" :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="状态">
+              <el-select v-model="ruleForm.device_status" placeholder="状态">
+                <el-option v-for="item in DECVICESTATUS" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -192,12 +199,11 @@
       <el-button type="primary" @click="checkBtn">确 定</el-button>
     </span>
   </el-dialog>
-  <!-- </div> -->
 </template>
 
 <script>
-import { rulesCon } from '@/views/archives/config'
 import { addDevice, deviceDetail, editDevice } from '@/api/property'
+import { DECVICESTATUS } from '@/utils/const'
 export default {
   name: 'PutFrom',
   props: {
@@ -216,6 +222,7 @@ export default {
   },
   data() {
     return {
+      DECVICESTATUS,
       ruleForm: {
         'device_code': '', // 设备编码
         'device_category': 'PC', // 设备分类(PC,Laptop,iMac,Mobile,Pad,Monitor,Network)
@@ -244,11 +251,18 @@ export default {
         'site': '', // 位置
         'is_apply': 1 // 是否可申领
       },
-      rules: rulesCon,
-      myHeaders: {},
-      api: '',
-      eleContract: [],
-      eleContractScanned: []
+      rules: {
+        device_code: [{ required: true, message: '请输入设备编号', trigger: 'blur' }],
+        device_category: [{ required: true, message: '请选择设备类别', trigger: 'change' }],
+        brand: [{ required: true, message: '请输入品牌', trigger: 'blur' }],
+        device_name: [{ required: true, message: '请输入设备名称', trigger: 'blur' }],
+        device_model: [{ required: true, message: '请输入设备型号', trigger: 'blur' }],
+        purchase_date: [{ required: true, message: '请选择购买日期', trigger: 'change' }],
+        retailer: [{ required: true, message: '请输入零售商', trigger: 'blur' }],
+        purchase_price: [{ required: true, message: '请输入购买价格', trigger: 'blur' }],
+        vat: [{ required: true, message: '请输入增值说价格', trigger: 'blur' }],
+        warranty_period: [{ required: true, message: '请输入保修日期', trigger: 'change' }]
+      }
     }
   },
   watch: {
@@ -270,6 +284,16 @@ export default {
       }
     },
     async checkBtn() {
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          this.checkFun()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    async checkFun() {
       if (this.title === '设备录入') {
         this.addFun()
       } else {
@@ -280,16 +304,12 @@ export default {
       const res = await addDevice(this.ruleForm)
       if (res.ret === 0) {
         this.$emit('success')
-      } else {
-        // this.$emit('close')
       }
     },
     async editFun() {
       const res = await editDevice(this.ruleForm)
       if (res.ret === 0) {
         this.$emit('success')
-      } else {
-        // this.$emit('close')
       }
     },
     closeVisble() {

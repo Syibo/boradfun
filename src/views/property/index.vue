@@ -17,7 +17,7 @@
         <el-row class="border-top">
           <el-row v-for="item in lowList" :key="item.ID" class="decvice-item">
             <i class="el-icon-monitor" />
-            <span class="bule-hover margin-l-10">#{{ item.ID }}</span>
+            <span class="bule-hover margin-l-10" @click="openLowFrom(item.ID)">#{{ item.ID }}</span>
             <span class="margin-l-10">{{ item.low_price_article_name }}</span>
             <span class="flex1 margin-l-10">{{ item.low_price_article_requisitions ? item.low_price_article_requisitions.length : 0 }}</span>
             <span class="bule-hover" @click="openLow(item)"> <span v-if="item.need_return" class="need-re margin-r-10">需归还</span> {{ `领用记录` }}</span>
@@ -30,13 +30,14 @@
       <el-row class="border-top">
         <el-row v-for="item in returnList" :key="item.ID" class="decvice-item">
           <i class="el-icon-monitor" />
-          <span class="bule-hover margin-l-10">#{{ item.id }}</span>
+          <span class="margin-l-10">#{{ item.id }}</span>
           <span class="flex1 margin-l-10">{{ item.name }}</span>
           <span class="margin-l-10">{{ Moment(item.created_at).format('YYYY-MM-DD HH:mm:ss') }}</span>
         </el-row>
       </el-row>
     </div>
     <DecviceDetail :id="detailId" :visible="visible" @close="close" />
+    <LowDetail :id="lowId" :visible="lowFromVisible" @close="close" />
     <el-dialog title="领用记录" :visible="lowVisible" :close-on-click-modal="false" width="800px" @close="closeVisble">
       <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
         <el-table-column prop="operator_name" align="center" label="领用人" />
@@ -58,12 +59,14 @@
 <script>
 import { employeeOutgoing, lowPriceArticleOutgoing, lowPriceArticleReturn } from '@/api/property'
 import DecviceDetail from '@/components/Property/DecviceDetail'
+import LowDetail from '@/components/Property/LowDetail'
 import Moment from 'moment'
 import { retlowValue } from '@/utils/common'
 export default {
   name: 'MyProperty',
   components: {
-    DecviceDetail
+    DecviceDetail,
+    LowDetail
   },
   data() {
     return {
@@ -72,7 +75,9 @@ export default {
       lowList: [],
       visible: false,
       lowVisible: false,
+      lowFromVisible: false,
       detailId: 0,
+      lowId: 0,
       tableData: []
     }
   },
@@ -106,12 +111,17 @@ export default {
       this.detailId = id
       this.visible = true
     },
+    openLowFrom(id) {
+      this.lowId = id
+      this.lowFromVisible = true
+    },
     openLow(item) {
       this.tableData = item.low_price_article_requisitions
       this.lowVisible = true
     },
     close() {
       this.visible = false
+      this.lowFromVisible = false
     },
     closeVisble() {
       this.tableData = []

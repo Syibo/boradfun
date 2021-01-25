@@ -129,7 +129,7 @@
           <el-input-number v-model="ruleForm.executeTai" :min="1" controls-position="right" />
         </el-form-item>
         <el-form-item label="外部延误时长" prop="delayTime">
-          <el-input-number v-model="ruleForm.delayTime" :min="1" controls-position="right" />
+          <el-input-number v-model="ruleForm.delayTime" :min="0" controls-position="right" />
         </el-form-item>
         <el-form-item label="整体任务说明" prop="desc">
           <el-input v-model="ruleForm.desc" type="textarea" rows="5" maxlength="250" show-word-limit placeholder="整体任务说明" />

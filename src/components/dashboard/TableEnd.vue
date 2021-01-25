@@ -12,6 +12,18 @@
       <el-table-column prop="exeUser.name" label="执行资源" />
       <el-table-column prop="endTime" label="结单时间" />
     </el-table>
+
+    <div class="broadfun_block">
+      <el-pagination
+        :current-page="pageNum"
+        :page-sizes="[10, 20, 50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
@@ -27,6 +39,10 @@ export default {
       type: Array,
       default: () => []
     },
+    total: {
+      type: Number,
+      default: 0
+    },
     hight: {
       type: Array,
       default: () => []
@@ -34,7 +50,8 @@ export default {
   },
   data() {
     return {
-
+      pageNum: 1,
+      pageSize: 10
     }
   },
   mounted() {
@@ -49,6 +66,15 @@ export default {
           id
         }
       })
+    },
+    handleSizeChange(val) {
+      this.pageNum = 1
+      this.pageSize = val
+      this.$emit('change', { pageNum: this.pageNum, pageSize: this.pageSize })
+    },
+    handleCurrentChange(val) {
+      this.pageNum = val
+      this.$emit('change', { pageNum: this.pageNum, pageSize: this.pageSize })
     },
     tableRowClassName({ row, rowIndex }) {
       if (this.hight.indexOf(row.ID) !== -1) {

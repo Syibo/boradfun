@@ -96,8 +96,8 @@
             <el-table-column prop="expEndTime" label="期望结单时间" />
           </el-table>
         </el-tab-pane>
-        <el-tab-pane :label="`已结单 · ${endData.length}`" name="end" class="tabs_item">
-          <TableEnd :date="endData" :hight="hightArr" />
+        <el-tab-pane :label="`已结单 · ${endTotal}`" name="end" class="tabs_item">
+          <TableEnd :date="endData" :total="endTotal" :hight="hightArr" @change="taskListEnd" />
         </el-tab-pane>
         <el-tab-pane :label="`任务取消 · ${cancelData.length}`" name="cancel" class="tabs_item">
           <TableCancel :date="cancelData" />
@@ -219,6 +219,7 @@ export default {
       executeData: [], // 执行中
       finishData: [], // 待审核
       endData: [], // 已结单
+      endTotal: 0,
       focusData: [], // 已结单
       temData: [], // 明日结单
       dashboardData: [], // 纵览
@@ -415,10 +416,11 @@ export default {
         this.finishData = res.data.list
       }
     },
-    async taskListEnd() {
-      const res = await taskList({ status: 'end', pageSize: '', pageNum: '' })
+    async taskListEnd(page = { pageNum: 1, pageSize: 10 }) {
+      const res = await taskList({ status: 'end', pageSize: page.pageSize || 10, pageNum: page.pageNum || 1 })
       if (res.ret === 0) {
         this.endData = res.data.list
+        this.endTotal = res.data.total
       }
     },
     async getManList() {

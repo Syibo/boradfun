@@ -26,7 +26,11 @@
       <el-table-column prop="service_line" align="center" label="服务线" />
       <el-table-column prop="email" align="center" label="企业邮箱" show-overflow-tooltip />
       <el-table-column prop="mobile" align="center" label="手机号码" />
-      <el-table-column prop="create_time" align="center" label="实际入职时间" show-overflow-tooltip sortable />
+      <el-table-column align="center" label="实际入职时间" show-overflow-tooltip sortable>
+        <template slot-scope="scope">
+          {{ scope.row.entry_date || '' }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="合同信息">
         <template slot-scope="scope">
           <span class="bule-hover" @click="openCon(scope.row)"> 查看详情 </span>

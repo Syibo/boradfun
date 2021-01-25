@@ -13,7 +13,7 @@
       <el-table-column prop="endTime" label="结单时间" />
     </el-table>
 
-    <div class="broadfun_block">
+    <div class="broadfun_blockend">
       <el-pagination
         :current-page="pageNum"
         :page-sizes="[10, 20, 50]"
@@ -100,5 +100,10 @@ export default {
   text-align: center;
   border-radius:2px;
   color: #FF5C5C;
+}
+.broadfun_blockend {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 </style>

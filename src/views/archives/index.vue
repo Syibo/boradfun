@@ -36,7 +36,7 @@
           <span class="bule-hover" @click="openCon(scope.row)"> 查看详情 </span>
         </template>
       </el-table-column>
-      <el-table-column prop="" align="center" label="转正时间" />
+      <el-table-column prop="confirm_date" align="center" label="转正时间" />
       <el-table-column prop="status" align="center" label="员工状态">
         <template slot-scope="scope">
           <EmStatus :status="scope.row.status" />
@@ -201,6 +201,22 @@
                 <el-col :span="12">
                   <el-form-item label="户籍性质">
                     <el-input v-model="ruleForm.employee_basic.huji_type" placeholder="户籍性质" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="转正时间">
+                    <el-date-picker
+                      v-model="ruleForm.confirm_date"
+                      prop="isNeed"
+                      style="width: 100%"
+                      type="date"
+                      placeholder="选择日期"
+                      format="yyyy 年 MM 月 dd 日"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>

@@ -165,3 +165,5 @@ export const CHECKLIST = [
 ]
 
 export const DOWNURL = 'http://172.16.9.195:9000'
+
+export const SUPER_ADMIN_EMAIL = 'ralph.ma@broadfun.cn'

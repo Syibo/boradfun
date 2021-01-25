@@ -16,7 +16,7 @@
           v-model="planDate"
           class="top-search"
           type="month"
-          placeholder="选择费用发生日期"
+          placeholder="提交日期"
           format="yyyy 年 MM 月"
           value-format="yyyy-MM-dd"
           @change="changeDateFun"
@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column prop="e_name" align="center" label="申请人" />
       <el-table-column prop="expense_summary" align="center" label="报销金额" />
-      <el-table-column prop="CreatedAt" align="center" label="提交时间">
+      <el-table-column prop="CreatedAt" align="center" label="提交时间" sortable>
         <template slot-scope="scope">
           {{ parseTime(scope.row.CreatedAt) }}
         </template>

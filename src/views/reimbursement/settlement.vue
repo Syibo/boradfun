@@ -1,7 +1,7 @@
 <template>
   <div class="container personnel-container">
     <el-row class="table-top">
-      <div v-if="isCeo" class="left">
+      <div class="left">
         <el-select v-model="seachValue.project_name" placeholder="请选择项目" style="width: 200px; margin-right: 10px">
           <el-option v-for="item in projectList" :key="item" :label="item" :value="item" />
         </el-select>
@@ -16,11 +16,11 @@
       </div>
     </el-row>
 
-    <el-row v-if="isCeo" class="pirce">
+    <el-row class="pirce">
       总支付价值 {{ totalDeliveryValue || '---' }}
     </el-row>
 
-    <el-table v-if="isCeo" :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
+    <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="project_name" align="center" label="项目名称" />
       <el-table-column prop="project_category_code" align="center" label="项目编码" />
       <el-table-column prop="main_service_amount" align="center" label="主服务交付数量" />
@@ -28,7 +28,7 @@
       <el-table-column prop="project_delivery_value" align="center" label="项目交付价值" />
     </el-table>
 
-    <div v-if="isCeo" class="broadfun_block">
+    <div class="broadfun_block">
       <el-pagination
         :current-page="seachValue.pagenum"
         :page-sizes="[10, 20, 50]"

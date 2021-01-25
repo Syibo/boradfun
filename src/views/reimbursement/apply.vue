@@ -28,7 +28,7 @@
       >
         <el-button icon="el-icon-upload" size="small" type="primary">导入文件</el-button>
       </el-upload>
-      <el-link download="example.xlsx" href="/example.xlsx" type="primary" :underline="false" style="margin-left: 15px">下载示例</el-link>
+      <el-link download="example.xlsx" href="/example.xlsx" type="primary" :underline="false" style="margin-left: 15px">下载模版</el-link>
     </el-row>
 
     <el-table :data="tableData" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">

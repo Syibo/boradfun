@@ -91,19 +91,19 @@ export default {
     retlowValue,
     async init() {
       const res = await employeeOutgoing()
-      if (res.ret === 0) {
+      if (res.ret === 0 && res.data) {
         this.decviceList = res.data
       }
     },
     async outing() {
       const res = await lowPriceArticleOutgoing()
-      if (res.ret === 0) {
+      if (res.ret === 0 && res.data) {
         this.lowList = res.data
       }
     },
     async lowReturn() {
       const res = await lowPriceArticleReturn()
-      if (res.ret === 0) {
+      if (res.ret === 0 && res.data) {
         this.returnList = res.data
       }
     },

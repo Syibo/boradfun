@@ -68,7 +68,7 @@ export const settlementRouter = {
       path: 'index',
       component: () => import('@/views/reimbursement/settlement'),
       name: '项目结算',
-      meta: { title: '项目结算', icon: 'el-icon-s-ticket', roles: [8, 10] }
+      meta: { title: '项目结算', icon: 'el-icon-s-ticket', roles: [8], super: true }
     }
   ]
 }

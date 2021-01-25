@@ -78,3 +78,8 @@ export const WORKFLOW = [
 ]
 
 export const DOWNURL = 'http://172.16.9.195:9000'
+
+export const SUPER_ADMIN_EMAIL = 'ralph.ma@broadfun.cn'
+
+export const HR_BP = 'kk.chen@broadfun.cn'
+

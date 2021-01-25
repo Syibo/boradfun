@@ -1,5 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
-
+import { getToken } from '@/utils/auth'
+import { SUPER_ADMIN_EMAIL, HR_BP } from '@/utils/const'
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -7,7 +8,23 @@ import { asyncRoutes, constantRoutes } from '@/router'
  */
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+    if (route.meta.super) {
+    // console.log()
+    // 第一个if是判断当前用户是不是马总
+    // 因为当前并没有一个超级管理员的权限， 马总的userTpye也是10
+    // 所以目前根据meta里面的super判断当前登录账号的Email是不是 SUPER_ADMIN_EMAIL
+      let userInfo = getToken()
+      if (typeof (day) === 'object') {
+        console.log('isSuper', userInfo)
+      } else {
+        userInfo = JSON.parse(userInfo)
+      }
+      let status = false
+      status = userInfo.email === SUPER_ADMIN_EMAIL || userInfo.email === HR_BP
+      return status
+    } else {
+      return roles.some(role => route.meta.roles.includes(role))
+    }
   } else {
     return true
   }

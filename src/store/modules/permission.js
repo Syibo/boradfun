@@ -20,7 +20,7 @@ function hasPermission(roles, route) {
         userInfo = JSON.parse(userInfo)
       }
       let status = false
-      status = userInfo.email === SUPER_ADMIN_EMAIL || userInfo.email === HR_BP
+      status = userInfo.email === SUPER_ADMIN_EMAIL || userInfo.email === HR_BP || roles.some(role => route.meta.roles.includes(role))
       return status
     } else {
       return roles.some(role => route.meta.roles.includes(role))

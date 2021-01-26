@@ -40,9 +40,9 @@ export function getRemiList({ pagesize = 10, pagenum = 1, searchid = '', name = 
 /**
  * 申请报销
  */
-export function setRemi(data) {
+export function setRemi(data, code) {
   return request({
-    url: `/v1/expense`,
+    url: `/v1/expense?code=${code}`,
     method: 'post',
     data
   })
@@ -97,9 +97,9 @@ export function getDebitCard(id) {
 /**
  * 导出待支付信息
  */
-export function downUnpaid(ids) {
+export function downUnpaid({ pagesize = 10, pagenum = 1, searchid = '', name = '', status = '', myreq, mytodo = '', application_date_begin, application_date_end, todostatus = '', ids }) {
   return requestDown({
-    url: `/v1/expense/export/unpaid?ids=${ids}`,
+    url: `/v1/expense/export/unpaid?pagesize=${pagesize}&pagenum=${pagenum}&searchid=${searchid}&status=${status}&name=${name}&myreq=${myreq}&mytodo=${mytodo}&application_date_begin=${application_date_begin}&application_date_end=${application_date_end}&todostatus=${todostatus}&ids=${ids}`,
     method: 'get',
     responseType: 'arraybuffer'
   })
@@ -107,9 +107,9 @@ export function downUnpaid(ids) {
 /**
  * 批量支付
  */
-export function batchPaid(ids) {
+export function batchPaid({ pagesize = 10, pagenum = 1, searchid = '', name = '', status = '', myreq, mytodo = '', application_date_begin, application_date_end, todostatus = '', ids }) {
   return request({
-    url: `/v1/expense/paid/batch?ids=${ids}`,
+    url: `/v1/expense/paid/batch?pagesize=${pagesize}&pagenum=${pagenum}&searchid=${searchid}&status=${status}&name=${name}&myreq=${myreq}&mytodo=${mytodo}&application_date_begin=${application_date_begin}&application_date_end=${application_date_end}&todostatus=${todostatus}&ids=${ids}`,
     method: 'put'
   })
 }

@@ -40,7 +40,7 @@
     <LowDetail :id="lowId" :visible="lowFromVisible" @close="close" />
     <el-dialog title="领用记录" :visible="lowVisible" :close-on-click-modal="false" width="800px" @close="closeVisble">
       <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-        <el-table-column prop="operator_name" align="center" label="领用人" />
+        <el-table-column prop="associate_employee_name" align="center" label="领用人" />
         <el-table-column prop="quantity" align="center" label="领用数量" />
         <el-table-column prop="UpdatedAt" align="center" label="领用日期">
           <template slot-scope="scope">

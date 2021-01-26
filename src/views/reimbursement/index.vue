@@ -9,7 +9,7 @@
     <el-row :gutter="20" class="three">
       <el-col :span="12">
         <div class="three-item">
-          <div class="top">最近一个月内报销金额合计
+          <div class="top">金额合计
             <el-tooltip class="item" effect="dark" content="最近一个月内提交报销单总金额" placement="right">
               <i class="el-icon-warning" />
             </el-tooltip>
@@ -19,12 +19,12 @@
       </el-col>
       <el-col :span="12">
         <div class="three-item">
-          <div class="top">最近一个月内已支付金额合计
+          <div class="top">最近一次支付金额
             <el-tooltip class="item" effect="dark" content="最近一个月内已支付总金额" placement="right">
               <i class="el-icon-warning" />
             </el-tooltip>
           </div>
-          <div class="num">{{ paidInfo.expense_paid_total }}</div>
+          <div class="num">{{ paidInfo.last_paid_amount }}</div>
         </div>
       </el-col>
     </el-row>

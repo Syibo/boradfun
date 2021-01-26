@@ -197,12 +197,10 @@ export default {
       })
     },
     async downUnPaidFun() {
-      if (this.selectIds.length === 0) {
-        this.$message.error('当前没有选择导出数据')
-        return
-      }
       const ids = this.selectIds.join(',')
-      const res = await downUnpaid(ids)
+      const prams = JSON.parse(JSON.stringify(this.seachValue))
+      prams.ids = ids
+      const res = await downUnpaid(prams)
       const blob = new Blob([res])
       const fileName = `${Moment(new Date()).format('YYYY-MM-DD')}.xlsx`
       if ('download' in document.createElement('a')) {
@@ -219,12 +217,10 @@ export default {
       }
     },
     async batchPaid() {
-      if (this.selectIds.length === 0) {
-        this.$message.error('当前没有选择待支付数据')
-        return
-      }
       const ids = this.selectIds.join(',')
-      const res = await batchPaid(ids)
+      const prams = JSON.parse(JSON.stringify(this.seachValue))
+      prams.ids = ids
+      const res = await batchPaid(prams)
       if (res.ret === 0) {
         this.$message.success('操作成功')
         this.init()

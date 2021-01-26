@@ -2,16 +2,21 @@
   <div class="container apply-container">
     <el-form ref="ruleForm" label-position="top" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm">
       <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="项目" prop="project">
             <el-select v-model="ruleForm.project" placeholder="请选择项目" style="width: 100%" @change="proChange">
               <el-option v-for="item in projectList" :key="item.ID" :label="item.engagement_code_desc" :value="item.engagement_code_desc" />
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="审核人">
             <el-input v-model="people" placeholder="审核人" disabled />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="验证码">
+            <el-input v-model="code" placeholder="验证码" :disabled="codeDisable" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -22,6 +27,7 @@
         class="upload-demo"
         :headers="myHeaders"
         name="file"
+        :data="{ code }"
         :action="`${api}/v1/expense/details`"
         :show-file-list="false"
         :on-success="oneUpload"
@@ -59,6 +65,8 @@ export default {
       api: '',
       myHeaders: {},
       people: '',
+      code: '',
+      codeDisable: false,
       ruleForm: {
         'engagement_code': '',
         'expense_details': [],
@@ -104,6 +112,7 @@ export default {
         this.tableData = response.data.details
         this.ruleForm.import_file = response.data.file_name
         this.ruleForm.expense_details = response.data.details
+        this.codeDisable = true
       } else {
         this.$message.error(response.msg)
       }
@@ -123,7 +132,7 @@ export default {
       })
     },
     async setRemi() {
-      const res = await setRemi(this.ruleForm)
+      const res = await setRemi(this.ruleForm, this.code)
       if (res.ret === 0) {
         this.$message.success('申请报销成功')
         this.$router.go(-1)

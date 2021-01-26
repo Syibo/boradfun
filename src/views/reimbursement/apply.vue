@@ -16,7 +16,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="验证码">
-            <el-input v-model="code" placeholder="验证码" :disabled="codeDisable" />
+            <el-input v-model="code" placeholder="验证码(在当月10号后，再次提交上月被驳回的报销单时，请填写此项)" :disabled="codeDisable" />
           </el-form-item>
         </el-col>
       </el-row>

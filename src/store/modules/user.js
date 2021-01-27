@@ -72,18 +72,13 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      // getInfo(state.token).then(response => {
-      // const { data } = response
       let day = ''
       if (typeof (state.token) === 'object') {
         day = state.token
       } else {
         day = JSON.parse(state.token)
       }
-
       const data = {
-        'avatar': 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-        'introductio': 'I am a super administrator',
         'name': day.name,
         'id': day.ID,
         'roles': [day.userType]
@@ -91,43 +86,25 @@ const actions = {
       if (!data) {
         reject('Verification failed, please Login again.')
       }
-
-      const { roles, name, avatar, introduction, id } = data
-
-      // roles must be a non-empty array
-      // if (!roles || roles.length <= 0) {
-      //   reject('getInfo: roles must be a non-null array!')
-      // }
-
+      const { roles, name, id } = data
       commit('SET_ROLES', roles)
       commit('SET_NAME', name)
       commit('SET_USERID', id)
-      commit('SET_AVATAR', avatar)
-      commit('SET_INTRODUCTION', introduction)
       resolve(data)
-      // }).catch(error => {
-      //   reject(error)
-      // })
     })
   },
 
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      // logout(state.token).then(() => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()
       resetRouter()
-
       // reset visited views and cached views
       // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
       dispatch('tagsView/delAllViews', null, { root: true })
-
       resolve()
-      // }).catch(error => {
-      //   reject(error)
-      // })
     })
   },
 

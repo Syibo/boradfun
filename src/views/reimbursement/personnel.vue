@@ -1,87 +1,90 @@
 <template>
   <div class="container settlement-container">
-    <el-row v-if="isCeo" class="table-top">
-      <div class="left">
-        <el-select v-model="listValue.engagement_codes" multiple placeholder="请选择项目" style="width: 250px; margin-right: 20px" clearable>
-          <el-option v-for="item in projectList" :key="item.ID" :label="`${item.engagement_code_desc} - ${item.engagement_code}`" :value="item.engagement_code" />
-        </el-select>
-        <el-radio v-model="radio" label="1">按周
-          <el-date-picker
-            v-model="weekDate"
-            :disabled="radio === '2'"
-            style="width: 150px;"
-            type="week"
-            placeholder="选择周"
-            format="yyyy 第 WW 周"
-            :picker-options="optiondate"
-            value-format="yyyy-MM-dd"
-            @change="weekChange"
-          />
-        </el-radio>
-        <el-radio v-model="radio" label="2">按月
-          <el-date-picker
-            v-model="monthDate"
-            :disabled="radio === '1'"
-            style="width: 150px;"
-            type="month"
-            placeholder="选择月"
-            format="yyyy 第 MM 月"
-            :picker-options="optiondate"
-            value-format="yyyy-MM-dd"
-            @change="monthChange"
-          />
-        </el-radio>
-        <el-button type="primary" @click="search">查询</el-button>
-        <el-button @click="cancel">取消</el-button>
-      </div>
-      <!-- <div class="right">
-        <el-button type="primary" @click="uploadData">上传表格数据</el-button>
-      </div> -->
-    </el-row>
-    <el-row v-else class="table-top">
-      <div class="left">
-        <el-date-picker
-          v-model="planDate"
-          :disabled="radio === '2'"
-          style="width: 150px;"
-          type="week"
-          placeholder="选择周"
-          format="yyyy 第 WW 周"
-          :picker-options="optiondate"
-          value-format="yyyy-MM-dd"
-          @change="periodTimeChange"
-        />
-      </div>
-      <div class="right">
-        <el-button type="primary" @click="uploadData">上传表格数据</el-button>
-      </div>
-    </el-row>
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="上传数据" name="first">
+        <el-row class="table-top">
+          <div class="left">
+            <el-date-picker
+              v-model="planDate"
+              :disabled="radio === '2'"
+              style="width: 150px;"
+              type="week"
+              placeholder="选择周"
+              format="yyyy 第 WW 周"
+              :picker-options="optiondate"
+              value-format="yyyy-MM-dd"
+              @change="periodTimeChange"
+            />
+          </div>
+          <div class="right">
+            <el-button type="primary" @click="uploadData">上传表格数据</el-button>
+          </div>
+        </el-row>
 
-    <p v-for="item in list" :key="item.ID" class="list-cla">
-      <span size="medium" type="text"> {{ item.period_time }} </span>
-      <el-button size="medium" type="text" @click="checkDetail(item.period_time)"> 查看详情 </el-button>
-    </p>
+        <p v-for="item in list" :key="item.ID" class="list-cla">
+          <span size="medium" type="text"> {{ item.period_time }} </span>
+          <el-button size="medium" type="text" @click="checkDetail(item.period_time)"> 查看详情 </el-button>
+        </p>
+      </el-tab-pane>
 
-    <el-row v-if="isCeo" :gutter="20" class="three">
-      <el-col :span="8">
-        <div class="three-item">
-          <div class="top">任务总成本</div>
-          <div class="num"> {{ detailData.cost_summary }} </div>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="three-item">
-          <div class="top">总耗时</div>
-          <div class="num">{{ detailData.hour_summary }}</div>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="three-item">
-          <div class="top">总人数</div>
-          <div class="num"> {{ detailData.employee_nums }} </div>
-        </div>
-      </el-col>
-    </el-row>
+      <el-tab-pane v-if="roles[0] === 8 || isCeo " label="任务成本" name="second">
+        <el-row class="table-top">
+          <div class="left">
+            <el-select v-model="listValue.engagement_codes" multiple placeholder="请选择项目" style="width: 250px; margin-right: 20px" clearable>
+              <el-option v-for="item in projectList" :key="item.ID" :label="`${item.engagement_code_desc} - ${item.engagement_code}`" :value="item.engagement_code" />
+            </el-select>
+            <el-radio v-model="radio" label="1">按周
+              <el-date-picker
+                v-model="weekDate"
+                :disabled="radio === '2'"
+                style="width: 150px;"
+                type="week"
+                placeholder="选择周"
+                format="yyyy 第 WW 周"
+                :picker-options="optiondate"
+                value-format="yyyy-MM-dd"
+                @change="weekChange"
+              />
+            </el-radio>
+            <el-radio v-model="radio" label="2">按月
+              <el-date-picker
+                v-model="monthDate"
+                :disabled="radio === '1'"
+                style="width: 150px;"
+                type="month"
+                placeholder="选择月"
+                format="yyyy 第 MM 月"
+                :picker-options="optiondate"
+                value-format="yyyy-MM-dd"
+                @change="monthChange"
+              />
+            </el-radio>
+            <el-button type="primary" @click="search">查询</el-button>
+            <el-button @click="cancel">取消</el-button>
+          </div>
+        </el-row>
+        <el-row :gutter="20" class="three">
+          <el-col :span="8">
+            <div class="three-item">
+              <div class="top">任务总成本</div>
+              <div class="num"> {{ round(detailData.cost_summary, 2) }} </div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="three-item">
+              <div class="top">总耗时</div>
+              <div class="num">{{ detailData.hour_summary }}</div>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="three-item">
+              <div class="top">总人数</div>
+              <div class="num"> {{ detailData.employee_nums }} </div>
+            </div>
+          </el-col>
+        </el-row>
+      </el-tab-pane>
+    </el-tabs>
 
     <PersonTable v-for="(item, index) in detailData.list" :key="index" :data="item" />
 
@@ -121,6 +124,8 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import { creatEengagement, getEngagement, getEngagementList, getEngagementProject } from '@/api/remi'
 import Moment from 'moment'
+import round from 'lodash/round'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Personnel',
   directives: { permission },
@@ -130,6 +135,7 @@ export default {
   },
   data() {
     return {
+      activeName: 'first',
       diaData: [],
       myHeaders: {},
       api: '',
@@ -179,6 +185,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'roles'
+    ]),
     isCeo() {
       return this.email === 'ralph.ma@broadfun.cn'
     }
@@ -191,14 +200,11 @@ export default {
         'Authorization': JSON.parse(getToken()).session
       }
     }
-    if (this.isCeo) {
-      console.log('not ceo')
-      this.getEngagementProject()
-    } else {
-      this.getEngagement()
-    }
+    this.getEngagementProject()
+    this.getEngagement()
   },
   methods: {
+    round,
     async getEngagement() {
       const res = await getEngagement(this.getValue)
       if (res.ret === 0) {
@@ -351,6 +357,7 @@ export default {
    display: flex;
    align-items: center;
    padding:0 10px;
+   border-bottom: 1px solid #ddd;
    span {
      flex: 1;
    }

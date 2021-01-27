@@ -13,7 +13,7 @@
       </div>
       <div class="item">
         <span class="leb">任务成本：</span>
-        <span>{{ data.cost_summary }}</span>
+        <span>{{ round(data.cost_summary, 2) }}</span>
       </div>
     </div>
     <div class="mid">
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import round from 'lodash/round'
 export default {
   name: 'PersonTable',
   props: {
@@ -46,7 +47,9 @@ export default {
       return this.data.engagement_list
     }
   },
-  methods: {}
+  methods: {
+    round
+  }
 }
 </script>
 

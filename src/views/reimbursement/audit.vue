@@ -7,9 +7,9 @@
     </el-tabs>
     <el-row class="table-top">
       <div class="left">
-        <el-input v-model="seachValue.searchid" placeholder="编号" class="top-search" clearable @input="changeSeach" />
-        <el-input v-model="seachValue.name" placeholder="全部申请人" class="top-search" clearable @input="changeSeach" />
-        <el-select v-model="seachValue.status" placeholder="全部状态" class="top-search" clearable @change="changeSeach">
+        <el-input v-model="seachValue.searchid" placeholder="编号" class="top-search" clearable @input="changeSeachValue" />
+        <el-input v-model="seachValue.name" placeholder="全部申请人" class="top-search" clearable @input="changeSeachValue" />
+        <el-select v-model="seachValue.status" placeholder="全部状态" class="top-search" clearable @change="changeSeachValue">
           <el-option v-for="item in REIMSVALUE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <el-date-picker
@@ -268,6 +268,10 @@ export default {
       this.init()
     },
     changeSeach() {
+      this.init()
+    },
+    changeSeachValue() {
+      this.seachValue.pagenum = 1
       this.init()
     },
     handleSelectionChange(val) {

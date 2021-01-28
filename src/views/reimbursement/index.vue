@@ -10,7 +10,7 @@
       <el-col :span="12">
         <div class="three-item">
           <div class="top">金额合计
-            <el-tooltip class="item" effect="dark" content="最近一个月内提交报销单总金额" placement="right">
+            <el-tooltip class="item" effect="dark" content="金额合计" placement="right">
               <i class="el-icon-warning" />
             </el-tooltip>
           </div>
@@ -20,7 +20,7 @@
       <el-col :span="12">
         <div class="three-item">
           <div class="top">最近一次支付金额
-            <el-tooltip class="item" effect="dark" content="最近一个月内已支付总金额" placement="right">
+            <el-tooltip class="item" effect="dark" content="最近一次支付金额" placement="right">
               <i class="el-icon-warning" />
             </el-tooltip>
           </div>

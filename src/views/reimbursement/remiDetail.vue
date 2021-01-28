@@ -6,7 +6,6 @@
           <Label title="申请信息" />
         </el-row>
         <el-row>
-          <!-- <Label title="申请信息" /> -->
           <el-button type="primary" @click="checkBtn">提交</el-button>
           <el-button @click="goBack">取消</el-button>
         </el-row>
@@ -41,7 +40,6 @@
                     </template>
                   </el-table-column>
                 </el-table>
-                <!-- <el-button slot="reference">click 激活</el-button> -->
                 <el-col slot="reference"> {{ scope.row.ocurred_date }} <el-button class="margin-l-10" type="text" @click="getLeavebydate(scope.row.ocurred_date)"> 查看考勤 </el-button> </el-col>
               </el-popover>
 
@@ -106,8 +104,7 @@
           <!-- <el-button>通过</el-button> -->
         </div>
       </div>
-      <!-- <el-divider direction="vertical" style="height: 100%" /> -->
-      <div v-permission="[8]" class="right" style="padding: 10px">
+      <div v-if="showRight" v-permission="[8]" class="right" style="padding: 10px">
         <Label title="支付流程" />
         <div class="right-item">
           <div class="label">待支付总金额(元)</div>
@@ -131,11 +128,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="broadfun_block-app">
-      <el-button slot="reference" type="primary">提交</el-button>
-      <el-button slot="reference">取消</el-button>
-    </div> -->
   </div>
 </template>
 
@@ -169,7 +161,8 @@ export default {
       putInfo: {
         comment: '', id: '', status: 1
       },
-      gridData: []
+      gridData: [],
+      showRight: true
     }
   },
   computed: {
@@ -255,6 +248,8 @@ export default {
     async checkBtn() {
       const res = await putRemi(this.putInfo)
       if (res.ret === 0) {
+        // 如果驳回就不显示待支付
+        this.showRight = this.putInfo.status
         this.pass = false
         this.init()
       }

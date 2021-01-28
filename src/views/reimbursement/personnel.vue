@@ -161,7 +161,8 @@ export default {
       listValue: {
         engagement_codes: '',
         begin_time: '',
-        end_time: ''
+        end_time: '',
+        type: 'week' // week ||  month
       },
       total: 0,
       planDate: '',
@@ -282,6 +283,7 @@ export default {
         this.listValue.begin_time = ''
         this.listValue.end_time = ''
       }
+      this.listValue.type = 'week'
     },
     // 按月查询
     monthChange() {
@@ -293,6 +295,7 @@ export default {
         this.seachValue.application_date_begin = ''
         this.seachValue.application_date_end = ''
       }
+      this.listValue.type = 'month'
     },
     cancel() {
       this.detailData = {

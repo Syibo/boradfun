@@ -163,11 +163,11 @@ export default {
     handleSizeChange(val) {
       this.seachValue.pagenum = 1
       this.seachValue.pagesize = val
-      this.init()
+      this.search()
     },
     handleCurrentChange(val) {
       this.seachValue.pagenum = val
-      this.init()
+      this.search()
     },
     uploadData() {
       this.dialogVisible = true

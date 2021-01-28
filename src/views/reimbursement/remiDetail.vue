@@ -159,7 +159,7 @@ export default {
       tableData: [],
       id: '',
       putInfo: {
-        comment: '', id: '', status: 1
+        comment: '', id: '', status: 2
       },
       gridData: [],
       showRight: true
@@ -246,12 +246,16 @@ export default {
       this.putInfo.status = num
     },
     async checkBtn() {
-      const res = await putRemi(this.putInfo)
-      if (res.ret === 0) {
+      if (this.putInfo.status === 0 || this.putInfo.status === 1) {
+        const res = await putRemi(this.putInfo)
+        if (res.ret === 0) {
         // 如果驳回就不显示待支付
-        this.showRight = this.putInfo.status
-        this.pass = false
-        this.init()
+          this.showRight = this.putInfo.status
+          this.pass = false
+          this.init()
+        }
+      } else {
+        this.$message.error('请选择通过或者驳回')
       }
     },
     goBack() {

@@ -5,9 +5,18 @@
         <el-select v-model="seachValue.project_name" placeholder="请选择项目" style="width: 200px; margin-right: 10px">
           <el-option v-for="item in projectList" :key="item" :label="item" :value="item" />
         </el-select>
-        <el-select v-model="seachValue.period_time" placeholder="请选择日期" style="width: 200px">
+        <el-date-picker
+          v-model="periodTime"
+          type="daterange"
+          value-format="yyyy/MM/dd"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @change="periodTimeChange"
+        />
+        <!-- <el-select v-model="seachValue.period_time" placeholder="请选择日期" style="width: 200px">
           <el-option v-for="item in dateList" :key="item" :label="item" :value="item" />
-        </el-select>
+        </el-select> -->
         <el-button type="primary" style="margin-left: 10px" @click="search">查询</el-button>
         <el-button style="margin-left: 10px" @click="reseve">重置</el-button>
       </div>
@@ -115,6 +124,7 @@ export default {
       planDate: '',
       tableData: [],
       diaData: [],
+      periodTime: '',
       // 目前马总和部门负责人的usertype都是10 所以无法通过v-permission进行权限显示，现在根据唯一的邮箱号判断
       // ralph.ma@broadfun.cn
       email: ''
@@ -154,10 +164,12 @@ export default {
     async reseve() {
       this.seachValue.period_time = ''
       this.seachValue.project_name = ''
+      this.seachValue.period_time = ''
       this.seachValue.pagenum = 1
       this.seachValue.pagesize = 10
       this.totalDeliveryValue = ''
       this.tableData = []
+      this.periodTime = ''
     },
     handleClick() {},
     handleSizeChange(val) {
@@ -174,6 +186,9 @@ export default {
     },
     dateChange() {
       this.paramsData.period_time = this.ruleForm.time.join('-')
+    },
+    periodTimeChange() {
+      this.seachValue.period_time = this.periodTime.join('-')
     },
     oneUpload(response, file, fileList) {
       if (response.ret === 0) {

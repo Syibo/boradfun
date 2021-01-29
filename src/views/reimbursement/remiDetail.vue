@@ -17,6 +17,9 @@
         <el-col :span="8">
           申请项目: {{ info.project }}
         </el-col>
+        <el-col :span="8">
+          所属主体: {{ mainBody }}
+        </el-col>
       </el-row>
       <el-table :data="info.expense_details" border style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
         <el-table-column type="index" width="50" label="序号" />
@@ -122,7 +125,7 @@
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="pass">已支付</el-dropdown-item>
-              <el-dropdown-item command="stop">驳回</el-dropdown-item>
+              <!-- <el-dropdown-item command="stop">驳回</el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -150,6 +153,7 @@ export default {
     return {
       pass: true,
       card: '',
+      mainBody: '',
       btnType: '',
       info: {
         expense_details: []
@@ -201,6 +205,7 @@ export default {
       const res = await getDebitCard(this.id)
       if (res.ret === 0) {
         this.card = res.data.CardID
+        this.mainBody = res.data.PaymentName
       }
     },
     async getLeavebydate(date) {

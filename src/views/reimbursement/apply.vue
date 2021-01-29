@@ -134,7 +134,7 @@ export default {
     async setRemi() {
       const res = await setRemi(this.ruleForm, this.code)
       if (res.ret === 0) {
-        this.$message.success('申请报销成功')
+        this.$message.success('申请报销成功，请将对应的报销申请单编号填写在纸质发票并在本月10号前上交至财务')
         this.$router.go(-1)
       }
     },

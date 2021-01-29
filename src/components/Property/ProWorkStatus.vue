@@ -8,7 +8,7 @@
     <span v-else-if="status === 'Rejected'"> <i class="el-icon-error Danger-color" /> 已驳回</span>
     <span v-else-if="status === 'Revoked'"> <i class="el-icon-remove Info-color" /> 已撤销</span>
     <span v-else-if="status === 'Received'"> <i class="el-icon-success Success-color" /> 已领用</span>
-    <span v-else-if="status === 'Recalled'"> <i class="el-icon-info Info-color" /> 已归还</span>
+    <span v-else-if="status === 'Return'"> <i class="el-icon-info Info-color" /> 已归还</span>
     <span v-else-if="status === 'UnReceived'"> <i class="el-icon-question Brand-color" /> 待领用</span>
     <span v-else-if="status === 'Distributed'"><i class="el-icon-success Success-color" /> 已分配</span>
     <span v-else class="brof_status" />

@@ -79,7 +79,8 @@ export default {
         mytodo: true,
         status: '',
         category: '',
-        search: ''
+        search: '',
+        todostatus: ''
       },
       tableData: [],
       total: 0,
@@ -114,15 +115,15 @@ export default {
     handleClick() {
       switch (this.activeName) {
         case 'first':
-          this.seachValue.status = ''
+          this.seachValue.todostatus = ''
           this.init()
           break
         case 'second':
-          this.seachValue.status = 'NA'
+          this.seachValue.todostatus = 0
           this.init()
           break
         case 'third':
-          this.seachValue.status = 'Approved,Rejected'
+          this.seachValue.todostatus = 1
           this.init()
           break
         default:

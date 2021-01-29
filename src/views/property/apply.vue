@@ -31,8 +31,8 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
-          <el-button type="text" size="small" :disabled="scope.row.status !== 'UnReceived'" @click="recipientsFun(scope.row.device_id)">确认领用</el-button>
-          <el-button class="Danger-color" :disabled="scope.row.status === 'Received'" type="text" size="small" @click="lendFun(scope.row.ID)">撤销申请</el-button>
+          <el-button type="text" size="small" :disabled="!scope.row.can_receive" @click="recipientsFun(scope.row.device_id)">确认领用</el-button>
+          <el-button class="Danger-color" :disabled="!scope.row.can_revoke" type="text" size="small" @click="lendFun(scope.row.ID)">撤销申请</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -150,7 +150,7 @@ export default {
           this.init()
           break
         case 'third':
-          this.seachValue.status = 'UnReceived'
+          this.seachValue.status = 'Approved'
           this.init()
           break
         case 'four':

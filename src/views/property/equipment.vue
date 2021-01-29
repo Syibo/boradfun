@@ -64,7 +64,7 @@
       <el-table-column v-for="item in checkList" :key="item" :prop="retPops(item)" align="center" :label="item" />
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
-          <el-button type="text" size="small" :disabled="scope.row.device_status !== 'Free'" @click="recipientsFun(scope.row)">申请领用</el-button>
+          <el-button type="text" size="small" :disabled="!scope.row.can_apply" @click="recipientsFun(scope.row)">申请领用</el-button>
           <el-button type="text" size="small" @click="lendFun(scope.row)">借出</el-button>
           <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
         </template>

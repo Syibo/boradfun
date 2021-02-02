@@ -17,7 +17,7 @@
       <el-table-column prop="name" align="center" label="员工姓名" />
       <el-table-column prop="department.department_name" align="center" label="所属部门" />
       <el-table-column prop="position" align="center" label="岗位" />
-      <el-table-column prop="" align="center" label="部门领导" />
+      <el-table-column prop="resignation_date" align="center" label="离职日期" />
       <el-table-column prop="req_user" align="center" label="创建人" />
       <el-table-column prop="create_time" align="center" label="创建时间" />
       <el-table-column align="center" label="离职原因">

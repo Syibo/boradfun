@@ -47,7 +47,7 @@
           {{ retNum(scope.row.device_applys) || 0 }}
         </template>
       </el-table-column>
-      <el-table-column prop="" align="center" label="序列号" />
+      <el-table-column prop="mac_address_1" align="center" label="序列号" />
       <el-table-column prop="device_model" align="center" label="型号" />
       <el-table-column prop="device_category" align="center" label="类别" />
       <el-table-column prop="device_status" align="center" label="状态">
@@ -65,8 +65,8 @@
       <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
           <el-button type="text" size="small" :disabled="!scope.row.can_apply" @click="recipientsFun(scope.row)">申请领用</el-button>
-          <el-button type="text" size="small" @click="lendFun(scope.row)">借出</el-button>
-          <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button v-if="roles[0] === 7 || roles[0] === 8" type="text" size="small" @click="lendFun(scope.row)">借出</el-button>
+          <el-button v-if="roles[0] === 7 || roles[0] === 8" type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -97,6 +97,7 @@ import LendFrom from '@/components/Property/LendFrom'
 import ProStatus from '@/components/Property/ProStatus'
 import { getDeviceList } from '@/api/property'
 import { DECVICECATEGORY, DECVICESTATUS, CHECKLIST } from '@/utils/const'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Equipment',
   directives: { permission },
@@ -129,6 +130,11 @@ export default {
       dialogVisibleRec: false,
       dialogVisibleLeng: false
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   mounted() {
     this.init()

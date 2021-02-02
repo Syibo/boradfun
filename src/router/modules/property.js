@@ -47,7 +47,7 @@ export const propertyRouter = {
       path: 'consumable',
       component: () => import('@/views/property/consumable'),
       name: '易耗品',
-      meta: { title: '易耗品' }
+      meta: { title: '易耗品', roles: [7, 8, 9] }
     },
     {
       path: 'comsumdetail',

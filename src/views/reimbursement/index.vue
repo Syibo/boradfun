@@ -9,8 +9,8 @@
     <el-row :gutter="20" class="three">
       <el-col :span="12">
         <div class="three-item">
-          <div class="top">金额合计
-            <el-tooltip class="item" effect="dark" content="金额合计" placement="right">
+          <div class="top">最近一个月内申请报销金额合计
+            <el-tooltip class="item" effect="dark" content="最近一个月内申请报销金额合计" placement="right">
               <i class="el-icon-warning" />
             </el-tooltip>
           </div>

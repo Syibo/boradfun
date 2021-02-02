@@ -117,12 +117,14 @@ export default {
       const res = await deviceReceive(id)
       if (res.ret === 0) {
         this.$message.success('领用成功')
+        this.init()
       }
     },
     async deviceRevoke(id) {
       const res = await deviceRevoke(id)
       if (res.ret === 0) {
         this.$message.success('撤销成功')
+        this.init()
       }
     },
     lendFun(id) {

@@ -66,11 +66,12 @@
         </el-row>
         <Label id="familyInfo" title="家庭信息" />
         <el-row class="item" style="margin-bottom: 40px">
-          <el-col class="item-main" :span="12"> <span class="left-label"> 籍贯 </span> {{ baseData.employee_basic.birthplace }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 居住城市 </span> {{ retCodeToText(baseData.employee_basic.inhabited_city) }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 居住地址 </span> {{ baseData.employee_basic.inhabited_address }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 婚姻状况 </span> {{ baseData.employee_basic.marriage }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 家庭及亲属情况 </span> </el-col>
+          <el-col class="item-main" :span="24"> <span class="left-label"> 籍贯 </span> {{ baseData.employee_basic.birthplace }} </el-col>
+          <!-- <el-col class="item-main" :span="12"> <span class="left-label"> 居住城市 </span> {{ retCodeToText(baseData.employee_basic.inhabited_city) }} </el-col> -->
+          <el-col class="item-main" :span="24"> <span class="left-label"> 居住城市 </span> {{ retCodeToText(baseData.employee_basic.inhabited_city) }} </el-col>
+          <el-col class="item-main" :span="24"> <span class="left-label"> 居住地址 </span> {{ baseData.employee_basic.inhabited_address }} </el-col>
+          <el-col class="item-main" :span="24"> <span class="left-label"> 婚姻状况 </span> {{ baseData.employee_basic.marriage }} </el-col>
+          <el-col class="item-main" :span="24"> <span class="left-label"> 家庭及亲属情况 </span> </el-col>
           <el-row :gutter="20">
             <el-col :span="24">
               <el-table :data="baseData.employee_basic.relations" style="width: 100%;margin: 10px 0" :header-cell-style="{background:'#F7F8FA'}">
@@ -95,8 +96,8 @@
         </el-row>
         <Label id="cardInfo" title="卡号信息" />
         <el-row class="item" style="margin-bottom: 40px">
-          <el-col class="item-main" :span="12"> <span class="left-label"> 工商银行卡卡号 </span> {{ baseData.employee_basic.debit_card1 }} </el-col>
-          <el-col class="item-main" :span="12"> <span class="left-label"> 招商银行卡卡号 </span> {{ baseData.employee_basic.debit_card2 }} </el-col>
+          <el-col class="item-main" :span="24"> <span class="left-label"> 工商银行卡卡号 </span> {{ baseData.employee_basic.debit_card1 }} </el-col>
+          <el-col class="item-main" :span="24"> <span class="left-label"> 招商银行卡卡号 </span> {{ baseData.employee_basic.debit_card2 }} </el-col>
         </el-row>
         <Label id="accountInfo" title="账号信息" />
         <el-row class="item" style="margin-bottom: 40px">

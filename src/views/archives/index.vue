@@ -26,13 +26,17 @@
       <el-table-column prop="service_line" align="center" label="服务线" />
       <el-table-column prop="email" align="center" label="企业邮箱" show-overflow-tooltip />
       <el-table-column prop="mobile" align="center" label="手机号码" />
-      <el-table-column prop="create_time" align="center" label="实际入职时间" show-overflow-tooltip sortable />
+      <el-table-column align="center" label="实际入职时间" show-overflow-tooltip sortable>
+        <template slot-scope="scope">
+          {{ scope.row.entry_date || '' }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="合同信息">
         <template slot-scope="scope">
           <span class="bule-hover" @click="openCon(scope.row)"> 查看详情 </span>
         </template>
       </el-table-column>
-      <el-table-column prop="" align="center" label="转正时间" />
+      <el-table-column prop="confirm_date" align="center" label="转正时间" />
       <el-table-column prop="status" align="center" label="员工状态">
         <template slot-scope="scope">
           <EmStatus :status="scope.row.status" />
@@ -59,7 +63,7 @@
       />
     </div>
 
-    <el-dialog title="新建离职" :visible.sync="dialogVisible" top="50px" :close-on-click-modal="false" :show-close="false" width="80%" class="dialog-container" @close="close">
+    <el-dialog :visible.sync="dialogVisible" top="50px" :close-on-click-modal="false" :show-close="false" width="80%" class="dialog-container" @close="close">
       <span slot="title" class="dialog-title">
         <div class="dialog-title-left">
           员工详情
@@ -198,6 +202,22 @@
                 <el-col :span="12">
                   <el-form-item label="户籍性质">
                     <el-input v-model="ruleForm.employee_basic.huji_type" placeholder="户籍性质" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="转正时间">
+                    <el-date-picker
+                      v-model="ruleForm.confirm_date"
+                      prop="isNeed"
+                      style="width: 100%"
+                      type="date"
+                      placeholder="选择日期"
+                      format="yyyy 年 MM 月 dd 日"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -721,8 +741,9 @@ export default {
         if (this.ruleForm.employee_basic === null) {
           this.ruleForm.employee_basic = ruleForm.employee_basic
         } else {
-          this.ruleForm.employee_basic.relations = JSON.parse(this.ruleForm.employee_basic.relations)
-          this.ruleForm.employee_basic.contacts = JSON.parse(this.ruleForm.employee_basic.contacts)
+          this.ruleForm.employee_basic.relations = res.data.employee_basic.relations === '' ? [] : JSON.parse(res.data.employee_basic.relations)
+          this.ruleForm.employee_basic.contacts = res.data.employee_basic.contacts === '' ? [] : JSON.parse(res.data.employee_basic.contacts)
+          // console.log(JSON.parse(this.ruleForm.employee_basic.inhabited_city))
           this.ruleForm.employee_basic.inhabited_city = this.ruleForm.employee_basic.inhabited_city ? JSON.parse(this.ruleForm.employee_basic.inhabited_city) : []
           this.getUploadArr()
         }
@@ -735,7 +756,6 @@ export default {
         const resSer = await getDepartmentServiceList(this.ruleForm.department_id)
         if (resSer.ret === 0 && resSer.data) {
           this.serviceList = resSer.data
-          console.log(resSer)
         } else {
           this.serviceList
         }
@@ -775,9 +795,9 @@ export default {
     },
     async editEmp() {
       const parms = JSON.parse(JSON.stringify(this.ruleForm))
-      parms.employee_basic.relations = JSON.stringify(parms.employee_basic.relations)
-      parms.employee_basic.contacts = JSON.stringify(parms.employee_basic.contacts)
-      parms.employee_basic.inhabited_city = JSON.stringify(parms.employee_basic.inhabited_city)
+      parms.employee_basic.relations = parms.employee_basic.relations ? JSON.stringify(parms.employee_basic.relations) : ''
+      parms.employee_basic.contacts = parms.employee_basic.contacts ? JSON.stringify(parms.employee_basic.contacts) : ''
+      parms.employee_basic.inhabited_city = parms.employee_basic.inhabited_city ? JSON.stringify(parms.employee_basic.inhabited_city) : ''
       parms.age = Number(parms.age)
       const res = await putEmployeeDetail(parms)
       if (res.ret === 0) {
@@ -821,8 +841,8 @@ export default {
         if (this.baseData.employee_basic === null) {
           this.baseData.employee_basic = ruleForm.employee_basic
         } else {
-          this.baseData.employee_basic.relations = JSON.parse(res.data.employee_basic.relations)
-          this.baseData.employee_basic.contacts = JSON.parse(res.data.employee_basic.contacts)
+          this.baseData.employee_basic.relations = res.data.employee_basic.relations === '' ? [] : JSON.parse(res.data.employee_basic.relations)
+          this.baseData.employee_basic.contacts = res.data.employee_basic.contacts === '' ? [] : JSON.parse(res.data.employee_basic.contacts)
         }
       }
       this.$refs.archivesDrawer.openDrawer()

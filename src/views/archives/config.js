@@ -27,6 +27,7 @@ export const ruleForm = {
   position: '',
   plan_date: '',
   entry_date: '',
+  confirm_date: '',
   resignation_date: '',
   reason: '',
   req_user: '',

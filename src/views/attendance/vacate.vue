@@ -74,7 +74,7 @@
       <el-table-column v-if="activeName === 'third'" align="center" label="操作">
         <template slot-scope="sope">
           <el-button type="text" :disabled="sope.row.status === 'Approved' || sope.row.status === 'Rejected'" @click="openCheck(sope.row)">编辑</el-button>
-          <el-button v-permission="[9]" type="text" @click="timeCheck(sope.row)">时长校验</el-button>
+          <el-button v-permission="[6, 9]" type="text" @click="timeCheck(sope.row)">时长校验</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -183,7 +183,7 @@ export default {
           pagesize: 10,
           name: '',
           type: '',
-          status: '',
+          status: 'NA',
           myreq: '',
           mytodo: true
         }

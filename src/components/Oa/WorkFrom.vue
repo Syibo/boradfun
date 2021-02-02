@@ -136,6 +136,9 @@ export default {
         ],
         end_time: [
           { required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        cause: [
+          { required: true, message: '请输入备注', trigger: 'blur' }
         ]
       },
       projectList: [],

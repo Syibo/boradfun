@@ -158,7 +158,8 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="出生年月" prop="employee_basic.birthday">
-                    <el-date-picker
+                    <el-input v-model="ruleForm.employee_basic.birthday" placeholder="出生年月" />
+                    <!-- <el-date-picker
                       v-model="ruleForm.employee_basic.birthday"
                       prop="isNeed"
                       style="width: 100%"
@@ -167,7 +168,7 @@
                       format="yyyy 年 MM 月 dd 日"
                       value-format="yyyy-MM-dd HH:mm:ss"
                       @change="birthdayChange"
-                    />
+                    /> -->
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">

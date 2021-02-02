@@ -197,6 +197,9 @@ export default {
         ],
         others: [
           { required: true, message: '请选择审核人', trigger: 'blur' }
+        ],
+        cause: [
+          { required: true, message: '请输入备注', trigger: 'blur' }
         ]
       },
       myHeaders: {},

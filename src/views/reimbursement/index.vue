@@ -82,10 +82,12 @@
                   :key="item.ID"
                   :icon="retWorkflowIcon(item.status)"
                   :title="item.user ? item.user.name : ''"
-                  :description="retWorkflowLabel(item.status)"
                 >
                   <template slot="icon">
                     <i :class="retWorkflowIcon(item.status)" />
+                  </template>
+                  <template slot="description">
+                    <span>{{ retWorkflowLabel(item.status) }}</span><br><span v-if="item.value">{{ item.value }}</span>
                   </template>
                 </el-step>
               </el-steps>
@@ -172,6 +174,9 @@ export default {
       const res = await getRemiDetail(row.ID)
       this.active = this.getaActive(res.data.work_flow.nodes)
       this.workflow = res.data.work_flow.nodes
+      for (let i = 0; i < this.workflow.length; i++) {
+        this.workflow[i].value = res.data.work_flow.elements[i].value
+      }
     },
     changeSeach() {
       this.init()

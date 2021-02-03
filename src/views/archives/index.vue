@@ -26,7 +26,7 @@
       <el-table-column prop="service_line" align="center" label="服务线" />
       <el-table-column prop="email" align="center" label="企业邮箱" show-overflow-tooltip />
       <el-table-column prop="mobile" align="center" label="手机号码" />
-      <el-table-column align="center" label="实际入职时间" show-overflow-tooltip sortable>
+      <el-table-column align="center" width="150" label="实际入职时间" show-overflow-tooltip sortable>
         <template slot-scope="scope">
           {{ scope.row.entry_date || '' }}
         </template>
@@ -34,6 +34,23 @@
       <el-table-column align="center" label="合同信息">
         <template slot-scope="scope">
           <span class="bule-hover" @click="openCon(scope.row)"> 查看详情 </span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="查看假期">
+        <template slot-scope="scope">
+          <el-popover
+            placement="bottom-start"
+            style="height: 100%"
+            width="200"
+            trigger="click"
+            @show="show(scope.row)"
+          >
+            <div>
+              <el-row>调休剩余天数：{{ Holiday.weekend }}</el-row>
+              <el-row>年假剩余天数：{{ Holiday.annual }}</el-row>
+            </div>
+            <el-button slot="reference" type="text">假期详情</el-button>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column prop="confirm_date" align="center" label="转正时间" />
@@ -584,6 +601,7 @@ import { getEmployeeList,
   getDepartmentList,
   delEmployeeId,
   getContractsDetail } from '@/api/employee'
+import { getHolidayById } from '@/api/work'
 import { ruleForm, rules } from './config'
 import { STATUSVALUE, DOWNURL, STATUSVALUEAll, STATUSVALUEDIS } from '@/utils/const'
 import store from '@/store'
@@ -646,6 +664,10 @@ export default {
         { value: '未入职', label: '未入职' },
         { value: '已入职', label: '已入职' }
       ],
+      Holiday: {
+        annual: 0,
+        weekend: 0
+      },
       rules,
       myHeaders: {},
       api: '',
@@ -670,6 +692,17 @@ export default {
   },
   methods: {
     retFileName,
+    async show(row) {
+      const res = await getHolidayById(row.ID)
+      if (res.ret === 0) {
+        this.Holiday = res.data
+      } else {
+        this.Holiday = {
+          annual: 0,
+          weekend: 0
+        }
+      }
+    },
     async init() {
       const res = await getEmployeeList(this.seachValue)
       if (res.ret === 0) {

@@ -264,3 +264,12 @@ export function getHoliday() {
     method: 'get'
   })
 }
+/**
+ * 获取剩余年假by id
+ */
+export function getHolidayById(id) {
+  return request({
+    url: `/v1/work/remain/holiday?id=${id}`,
+    method: 'get'
+  })
+}

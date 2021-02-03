@@ -13,6 +13,11 @@ import { reimbursementRouter, personnelRouter, settlementRouter } from './module
 
 /* Router Modules */
 // import nestedRouter from './modules/nested'
+// 6 hr
+// 7 it
+// 8 财务
+// 9 前台
+// 10 部门负责人
 
 /**
  * Note: sub-menu only appear when route children.length >= 1

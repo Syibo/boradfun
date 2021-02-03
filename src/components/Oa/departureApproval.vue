@@ -23,6 +23,21 @@
             <el-col :span="6"> 离职日期：{{ ruleForm.resignation_date }} </el-col>
             <el-col :span="6"> 离职原因：{{ ruleForm.reason }} </el-col>
           </el-row>
+          <el-row>
+            <el-popover
+              placement="bottom-start"
+              style="height: 100%"
+              width="200"
+              trigger="click"
+              @show="show"
+            >
+              <div>
+                <el-row>调休剩余天数：{{ Holiday.weekend }}</el-row>
+                <el-row>年假剩余天数：{{ Holiday.annual }}</el-row>
+              </div>
+              <el-button slot="reference" type="text">查看考勤</el-button>
+            </el-popover>
+          </el-row>
         </el-row>
         <div v-else>
           <el-row>
@@ -184,6 +199,7 @@
 import { leaveEmployee,
   editLeaveEmployee,
   leaveEmployeeDetail } from '@/api/employee'
+import { getHolidayById } from '@/api/work'
 import Label from '@/components/common/Label.vue'
 import DepartureFrom from '@/components/Oa/departureFrom.vue'
 import store from '@/store'
@@ -218,7 +234,11 @@ export default {
       comment: '',
       userType: 0,
       rules: rulesDep,
-      ruleForm: ruleFormDep
+      ruleForm: ruleFormDep,
+      Holiday: {
+        annual: 0,
+        weekend: 0
+      }
     }
   },
   watch: {
@@ -238,7 +258,6 @@ export default {
     async init() {
       if (this.id !== 0) {
         const res = await leaveEmployeeDetail(this.id)
-        console.log(res)
         this.ruleForm.ID = res.data.Emp.ID
         this.ruleForm.name = res.data.Emp.name
         this.ruleForm.employeeID = res.data.Emp.ID
@@ -260,7 +279,17 @@ export default {
         this.ruleForm.things_day = res.data.FlowInfo.things_day
         this.ruleForm.salary_day = res.data.FlowInfo.salary_day
         this.ruleForm.annual_day = res.data.FlowInfo.annual_day
-        console.log(this.ruleForm)
+      }
+    },
+    async show(row) {
+      const res = await getHolidayById(this.id)
+      if (res.ret === 0) {
+        this.Holiday = res.data
+      } else {
+        this.Holiday = {
+          annual: 0,
+          weekend: 0
+        }
       }
     },
     closeFunApp() {

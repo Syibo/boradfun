@@ -53,6 +53,21 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <el-row>
+              <el-popover
+                placement="bottom-start"
+                style="height: 100%"
+                width="200"
+                trigger="click"
+                @show="show"
+              >
+                <div>
+                  <el-row>调休剩余天数：{{ Holiday.weekend }}</el-row>
+                  <el-row>年假剩余天数：{{ Holiday.annual }}</el-row>
+                </div>
+                <el-button slot="reference" type="text">查看考勤</el-button>
+              </el-popover>
+            </el-row>
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="所属部门">
@@ -282,6 +297,10 @@ export default {
       }
     },
     async show(row) {
+      if (this.id === 0) {
+        this.$message.error('当前没有选择员工')
+        return
+      }
       const res = await getHolidayById(this.id)
       if (res.ret === 0) {
         this.Holiday = res.data
@@ -297,6 +316,7 @@ export default {
     },
     addSuccApp(row) {
       this.ruleForm.ID = row.ID
+      this.id = row.ID
       this.ruleForm.name = row.name
       this.ruleForm.employeeID = row.ID
       this.ruleForm.department_id = row.department.department_name

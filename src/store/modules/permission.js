@@ -1,6 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
 import { getToken } from '@/utils/auth'
-import { SUPER_ADMIN_EMAIL, HR_BP } from '@/utils/const'
+import { SUPER_ADMIN_EMAIL, HR_BP, FINANCE } from '@/utils/const'
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -20,7 +20,7 @@ function hasPermission(roles, route) {
         userInfo = JSON.parse(userInfo)
       }
       let status = false
-      status = userInfo.email === SUPER_ADMIN_EMAIL || userInfo.email === HR_BP || roles.some(role => route.meta.roles.includes(role))
+      status = userInfo.email === SUPER_ADMIN_EMAIL || userInfo.email === HR_BP || userInfo.email === FINANCE || roles.some(role => route.meta.roles.includes(role))
       return status
     } else {
       return roles.some(role => route.meta.roles.includes(role))

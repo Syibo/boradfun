@@ -170,3 +170,4 @@ export const SUPER_ADMIN_EMAIL = 'ralph.ma@broadfun.cn'
 
 export const HR_BP = 'kk.chen@broadfun.cn'
 
+export const FINANCE = 'theresa.he@broadfun.cn'

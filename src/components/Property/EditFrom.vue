@@ -2,10 +2,39 @@
   <el-dialog title="设备领用审核" :visible="visible" :close-on-click-modal="false" width="800px" @close="closeVisble">
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
       <el-table-column prop="ID" align="center" label="申请编号" />
-      <el-table-column prop="device.device_name" align="center" label="资产编号" />
+      <el-table-column align="center" label="资产编号">
+        <template slot-scope="scope">
+          <span> {{ scope.row.device.device_name }} </span>
+          <el-popover
+            placement="bottom-start"
+            width="200"
+            trigger="hover"
+          >
+            <el-row>
+              <el-row class="margin-b-10">
+                <el-col :span="12">设备类型</el-col> <el-col :span="12">{{ device.device_category }}</el-col>
+              </el-row>
+              <el-row class="margin-b-10"> <el-col :span="12">资产编号</el-col> <el-col :span="12">{{ device.device_code }}</el-col> </el-row>
+              <el-row class="margin-b-10"> <el-col :span="12">设备名称</el-col> <el-col :span="12">{{ device.device_name }}</el-col> </el-row>
+              <el-row class="margin-b-10"> <el-col :span="12">CPU</el-col> <el-col :span="12">{{ device.cpu }}</el-col> </el-row>
+              <el-row class="margin-b-10"> <el-col :span="12">运存</el-col> <el-col :span="12">{{ device.mem }}</el-col> </el-row>
+              <el-row class="margin-b-10"> <el-col :span="12">显卡</el-col> <el-col :span="12">{{ }}</el-col> </el-row>
+              <el-row class="margin-b-10"> <el-col :span="12">储存容量</el-col> <el-col :span="12">{{ device.volume }}</el-col> </el-row>
+              <el-row class="margin-b-10"> <el-col :span="12">状态</el-col> <el-col :span="12"> <ProStatus :status="device.device_status" /></el-col> </el-row>
+              <el-row class="margin-b-10"> <el-col :span="12">序列号</el-col> <el-col :span="12">{{ device.mac_address_1 }}</el-col> </el-row>
+            </el-row>
+            <i slot="reference" class="el-icon-warning" style="color: #999" />
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column prop="device.device_category" align="center" label="类别" />
+      <el-table-column prop="" align="center" label="折旧信息" />
       <el-table-column prop="project" align="center" label="项目" />
-      <el-table-column prop="UpdatedAt" align="center" label="申请时间" />
+      <el-table-column align="center" label="申请时间" width="200">
+        <template slot-scope="scope">
+          <span> {{ Moment(scope.row.UpdatedAt).format('YYYY-MM-DD HH:mm:ss') }} </span>
+        </template>
+      </el-table-column>
     </el-table>
     <el-row class="mid-cen">
       <el-row class="work-cla">
@@ -51,8 +80,13 @@
 import { rulesCon } from '@/views/archives/config'
 import { retWorkflowLabel, retWorkflowIcon, getaActive } from '@/utils/common'
 import { deviceApprovalDetail, deviceApproval } from '@/api/property'
+import ProStatus from '@/components/Property/ProStatus'
+import Moment from 'moment'
 export default {
   name: 'EditFrom',
+  components: {
+    ProStatus
+  },
   props: {
     visible: {
       type: Boolean,
@@ -73,6 +107,7 @@ export default {
       tableData: [],
       workflow: [],
       active: 0,
+      device: {},
       rules: rulesCon
     }
   },
@@ -87,6 +122,7 @@ export default {
   },
   mounted() {},
   methods: {
+    Moment,
     getaActive,
     retWorkflowLabel,
     retWorkflowIcon,
@@ -96,6 +132,7 @@ export default {
         this.tableData = [res.data.info]
         this.active = this.getaActive(res.data.work_flow.nodes)
         this.workflow = res.data.work_flow.nodes
+        this.device = res.data.info.device
         for (let i = 0; i < this.workflow.length; i++) {
           this.workflow[i].value = res.data.work_flow.elements[i].value
         }

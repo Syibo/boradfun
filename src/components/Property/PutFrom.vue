@@ -66,7 +66,7 @@
           </el-col>
         </el-row>
         <el-row
-          v-if="ruleForm.device_category === 'PC' || ruleForm.device_category === 'Monitor' || ruleForm.device_category === 'iPad' || ruleForm.device_category === 'iMac' || ruleForm.device_category === 'Mobile'"
+          v-if="ruleForm.device_category === 'PC' || ruleForm.device_category === 'Monitor' || ruleForm.device_category === 'Pad' || ruleForm.device_category === 'iMac' || ruleForm.device_category === 'Mobile'"
           :gutter="20"
         >
           <el-col :span="12">
@@ -81,7 +81,7 @@
           </el-col>
         </el-row>
         <el-row
-          v-if="ruleForm.device_category === 'PC' || ruleForm.device_category === 'Monitor' || ruleForm.device_category === 'iPad' || ruleForm.device_category === 'iMac' || ruleForm.device_category === 'Mobile'"
+          v-if="ruleForm.device_category === 'PC' || ruleForm.device_category === 'Monitor' || ruleForm.device_category === 'Pad' || ruleForm.device_category === 'iMac' || ruleForm.device_category === 'Mobile'"
           :gutter="20"
         >
           <el-col :span="12">

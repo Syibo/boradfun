@@ -5,6 +5,7 @@
       <el-tab-pane label="待审核" name="second" />
       <el-tab-pane label="待领用" name="third" />
       <el-tab-pane label="已领用" name="four" />
+      <el-tab-pane label="已撤销" name="five" />
     </el-tabs>
     <el-row v-if="activeName === 'first'" class="table-top">
       <div class="left">
@@ -17,13 +18,25 @@
       </div>
     </el-row>
     <el-table :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
-      <el-table-column prop="ID" align="center" label="申请编号" />
-      <el-table-column prop="engagement_code" align="center" label="资产编号" />
+      <el-table-column align="center" label="申请编号">
+        <template slot-scope="scope">
+          <span class="bule-hover" @click="openDra(scope.row)"> {{ scope.row.ID }} </span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="资产编号">
+        <template slot-scope="scope">
+          <span class="bule-hover" @click="openDra(scope.row)"> {{ scope.row.engagement_code }} </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="device.brand" align="center" label="品牌" />
       <el-table-column prop="device.device_model" align="center" label="型号" />
       <el-table-column prop="device.device_category" align="center" label="类别" />
       <el-table-column prop="project" align="center" label="项目" />
-      <el-table-column prop="CreatedAt" align="center" label="申请时间" />
+      <el-table-column align="center" label="申请 / 分配时间">
+        <template slot-scope="scope">
+          <span> {{ Moment(scope.row.CreatedAt).format('YYYY-MM-DD HH:mm:ss') }} </span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="当前节点">
         <template slot-scope="scope">
           <ProWorkStatus :status="scope.row.status" />
@@ -48,17 +61,22 @@
         @current-change="handleCurrentChange"
       />
     </div>
+
+    <PropertyDrawer :id="propertyId" ref="PropertyDrawer" :time="new Date().getTime()" />
   </div>
 </template>
 
 <script>
 import { deviceIdApplyList, deviceReceive, deviceRevoke } from '@/api/property'
 import { DECVICETYPE } from '@/utils/const'
+import Moment from 'moment'
 import ProWorkStatus from '@/components/Property/ProWorkStatus'
+import PropertyDrawer from '@/components/Property/PropertyDrawer'
 export default {
   name: 'MyApply',
   components: {
-    ProWorkStatus
+    ProWorkStatus,
+    PropertyDrawer
   },
   data() {
     return {
@@ -71,17 +89,17 @@ export default {
         mytodo: '',
         status: ''
       },
-      tableData: [
-        { emp_no: '三星' }
-      ],
+      tableData: [],
       total: 0,
-      departmentList: []
+      departmentList: [],
+      propertyId: 0
     }
   },
   mounted() {
     this.init()
   },
   methods: {
+    Moment,
     async init() {
       const res = await deviceIdApplyList(this.seachValue)
       if (res.ret === 0) {
@@ -91,6 +109,10 @@ export default {
         this.tableData = []
         this.total = 0
       }
+    },
+    async openDra(row) {
+      this.propertyId = row.ID
+      this.$refs.PropertyDrawer.openDrawer()
     },
     putFromFun() {
       this.dialogVisible = true
@@ -142,6 +164,7 @@ export default {
       })
     },
     handleClick() {
+      this.seachValue.pagenum = 1
       switch (this.activeName) {
         case 'first':
           this.seachValue.status = ''
@@ -157,6 +180,10 @@ export default {
           break
         case 'four':
           this.seachValue.status = 'Received'
+          this.init()
+          break
+        case 'five':
+          this.seachValue.status = 'Revoked'
           this.init()
           break
         default:

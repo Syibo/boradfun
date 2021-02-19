@@ -41,7 +41,7 @@
                     <el-row class="margin-b-10"> <el-col :span="12">状态</el-col> <el-col :span="12"> <ProStatus :status="device.device_status" /></el-col> </el-row>
                     <el-row class="margin-b-10"> <el-col :span="12">序列号</el-col> <el-col :span="12">{{ device.mac_address_1 }}</el-col> </el-row>
                   </el-row>
-                  <i slot="reference" class="el-icon-warning" />
+                  <i slot="reference" class="el-icon-warning" style="color: #999" />
                 </el-popover>
               </el-row>
               <el-row><span>已领用设备</span>{{ collect_devices || '' }}</el-row>

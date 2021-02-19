@@ -63,7 +63,11 @@
     </el-row>
     <el-table ref="multipleTable" :data="tableData" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" :selectable="checkboxSelect" />
-      <el-table-column prop="UpdatedAt" align="center" label="操作时间" />
+      <el-table-column align="center" label="操作时间">
+        <template slot-scope="scope">
+          <span> {{ Moment(scope.row.UpdatedAt).format('YYYY-MM-DD HH:mm:ss') }} </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="operator_name" align="center" label="操作人" />
       <el-table-column align="center" label="类别">
         <template slot-scope="scope">
@@ -122,6 +126,7 @@ import ConsumScrap from '@/components/Property/ConsumScrap'
 import { LOWTYPE } from '@/utils/const'
 import { retlowValue } from '@/utils/common'
 import { parseTime } from '@/utils'
+import Moment from 'moment'
 import { TableSelections } from '@/mixins/TableSelections'
 export default {
   name: 'Comsumdetail',
@@ -172,6 +177,7 @@ export default {
   methods: {
     retlowValue,
     parseTime,
+    Moment,
     async init() {
       const res = await lowPriceArticleDetail(this.id)
       if (res.ret === 0) {
@@ -224,6 +230,7 @@ export default {
         this.$message.success('操作成功')
         this.selectIds = []
         this.list()
+        this.init()
       }
     },
     openFrom() {
@@ -240,6 +247,7 @@ export default {
       this.consumableFromVisible = false
       this.consumScrapVisible = false
       this.list()
+      this.init()
     },
     lowReturn(item) {
       this.associateEmployeeName = item.associate_employee_name
@@ -251,6 +259,7 @@ export default {
       if (res.ret === 0) {
         this.$message.success('归还成功')
         this.list()
+        this.init()
       }
       this.retVisible = false
     },

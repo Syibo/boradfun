@@ -10,7 +10,7 @@
         <el-select v-model="seachValue.category" placeholder="类别" class="top-search" clearable>
           <el-option v-for="item in DECVICECATEGORY" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-select v-if="activeName === 'first'" v-model="seachValue.status" placeholder="全部节点" clearable>
+        <el-select v-if="activeName === 'first'" v-model="seachValue.status" placeholder="状态" clearable>
           <el-option v-for="item in DECVICETYPE2" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
@@ -25,7 +25,11 @@
       <el-table-column prop="device.device_model" align="center" label="型号" />
       <el-table-column prop="device.device_category" align="center" label="类别" />
       <el-table-column prop="project" align="center" label="项目" />
-      <el-table-column prop="UpdatedAt" align="center" label="申请时间" />
+      <el-table-column prop="UpdatedAt" align="center" label="申请时间">
+        <template slot-scope="scope">
+          <span> {{ Moment(scope.row.UpdatedAt).format('YYYY-MM-DD HH:mm:ss') }} </span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="当前节点">
         <template slot-scope="scope">
           <ProWorkStatus :status="scope.row.status" />
@@ -58,6 +62,7 @@
 import { deviceIdApplyList } from '@/api/property'
 import { DECVICECATEGORY, DECVICETYPE2 } from '@/utils/const'
 import EditFrom from '@/components/Property/EditFrom'
+import Moment from 'moment'
 import ProWorkStatus from '@/components/Property/ProWorkStatus'
 export default {
   name: 'MyAudit',
@@ -91,6 +96,7 @@ export default {
     this.init()
   },
   methods: {
+    Moment,
     async init() {
       const res = await deviceIdApplyList(this.seachValue)
       if (res.ret === 0) {

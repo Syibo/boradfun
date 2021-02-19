@@ -270,7 +270,7 @@ export default {
         this.ruleForm.service_line = res.data.service_line
         this.ruleForm.position = res.data.position
         this.ruleForm.level_id = res.data.level_id
-        this.ruleForm.level = res.data.level
+        // this.ruleForm.level = res.data.level
         /**
        * 如果邮箱没有@符号为空
        */

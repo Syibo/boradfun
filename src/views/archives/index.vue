@@ -771,12 +771,12 @@ export default {
       const res = await getEmployeeAllDetail(item.ID)
       if (res.ret === 0) {
         this.ruleForm = res.data
+        delete this.ruleForm.level
         if (this.ruleForm.employee_basic === null) {
           this.ruleForm.employee_basic = ruleForm.employee_basic
         } else {
           this.ruleForm.employee_basic.relations = res.data.employee_basic.relations === '' ? [] : JSON.parse(res.data.employee_basic.relations)
           this.ruleForm.employee_basic.contacts = res.data.employee_basic.contacts === '' ? [] : JSON.parse(res.data.employee_basic.contacts)
-          // console.log(JSON.parse(this.ruleForm.employee_basic.inhabited_city))
           this.ruleForm.employee_basic.inhabited_city = this.ruleForm.employee_basic.inhabited_city ? JSON.parse(this.ruleForm.employee_basic.inhabited_city) : []
           this.getUploadArr()
         }

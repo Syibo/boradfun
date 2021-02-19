@@ -47,7 +47,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注">
-            <el-input v-model="ruleForm.site" placeholder="备注" />
+            <el-input v-model="ruleForm.comment" placeholder="备注" />
           </el-form-item>
         </el-col>
       </el-row>

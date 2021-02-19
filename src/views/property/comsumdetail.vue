@@ -79,7 +79,7 @@
       <el-table-column prop="comment" align="center" label="备注" />
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button :disabled="scope.row.operator_category !== 'Outgoing'" type="text" @click="lowReturn(scope.row)">归还</el-button>
+          <el-button :disabled="scope.row.operator_category !== 'Outgoing' || scope.row.is_return === 1" type="text" @click="lowReturn(scope.row)">归还</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -287,10 +287,10 @@ export default {
       this.selection(val, 'ID')
     },
     checkboxSelect(row, rowIndex) {
-      if (row.operator_category === 'Outgoing') {
-        return true // 禁用
+      if (row.operator_category !== 'Outgoing' || row.is_return === 1) {
+        return false // 禁用
       } else {
-        return false // 不禁用
+        return true // 不禁用
       }
     }
   }

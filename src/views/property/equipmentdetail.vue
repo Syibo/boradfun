@@ -41,7 +41,7 @@
           </el-row>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane v-if="roles[0] === 7 || isCeo" label="活动记录" name="second">
+      <el-tab-pane v-if="roles[0] === 7 || isCeo || roles[0] === 8 || roles[0] === 9" label="活动记录" name="second">
         <el-table :data="detailData.device_requisitions" style="width: 100%" :header-cell-style="{background:'#F7F8FA'}">
           <el-table-column align="center" label="日期">
             <template slot-scope="scope">

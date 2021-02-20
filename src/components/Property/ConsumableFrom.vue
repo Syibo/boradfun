@@ -27,7 +27,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="数量" prop="total_quantity">
-            <el-input-number v-model="ruleForm.total_quantity" style="width: 200px;" />
+            <el-input-number v-model="ruleForm.total_quantity" :min="1" style="width: 200px;" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -41,7 +41,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="购买价格" prop="purchase_price">
-            <el-input-number v-model="ruleForm.purchase_price" style="width: 200px;" />
+            <el-input-number v-model="ruleForm.purchase_price" :min="0" style="width: 200px;" />
           </el-form-item>
         </el-col>
       </el-row>

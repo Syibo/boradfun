@@ -29,7 +29,7 @@ const employeesRouter = {
       path: 'departure',
       component: () => import('@/views/employees/departure'),
       name: '员工离职',
-      meta: { title: '员工离职', roles: [6, 7, 8, 9, 10] }
+      meta: { title: '员工离职', roles: [6, 7, 8, 9] }
     }
   ]
 }

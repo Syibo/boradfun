@@ -27,14 +27,14 @@
       <el-table-column prop="brand" align="center" label="品牌" />
       <el-table-column prop="total_quantity" align="center" label="入库数量" />
       <el-table-column prop="ingoing_time" align="center" label="入库时间" />
-      <el-table-column prop="create_time" align="center" label="操作人" />
+      <el-table-column prop="ingoing_operator_name" align="center" label="操作人" />
       <el-table-column prop="outgoing_quantity" align="center" label="已借出" />
-      <el-table-column prop="create_time" align="center" label="剩余可用">
+      <el-table-column align="center" label="剩余可用">
         <template slot-scope="scope">
           {{ scope.row.total_quantity - scope.row.outgoing_quantity - scope.row.scrap_quantity }}
         </template>
       </el-table-column>
-      <el-table-column prop="create_time" align="center" label="是否需要归还">
+      <el-table-column align="center" label="是否需要归还">
         <template slot-scope="scope">
           {{ scope.row.need_return === 0 ? '否' : '是' }}
         </template>

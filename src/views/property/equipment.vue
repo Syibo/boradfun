@@ -14,6 +14,7 @@
       <div class="right">
         <el-button v-permission="[7, 8]" type="primary" class="margin-r-10" @click="putFromFun">设备入库</el-button>
         <el-popover
+          v-model="popoverStatus"
           placement="bottom"
           width="100"
           trigger="click"
@@ -128,7 +129,8 @@ export default {
       departmentList: [],
       dialogVisible: false,
       dialogVisibleRec: false,
-      dialogVisibleLeng: false
+      dialogVisibleLeng: false,
+      popoverStatus: false
     }
   },
   computed: {
@@ -161,6 +163,7 @@ export default {
       })
     },
     handCheckListBtn() {
+      this.popoverStatus = false
       localStorage.setItem('checkList', JSON.stringify(this.checkList))
     },
     searchFun() {
